@@ -32,7 +32,7 @@ module Nydp
         Cond.build expression.cdr
       elsif sym?(key, :quote)
         Literal.build expression.cadr
-      elsif sym?(key, "@")
+      elsif sym?(key, :assign)
         Assignment.build expression.cdr
       elsif sym?(key, :fn)
         InterpretedFunction.build expression.cadr, expression.cddr
