@@ -46,7 +46,19 @@ class Nydp::Pair
   end
 
   def to_s
-    inspect
+    "(#{to_s_rest})"
+  end
+
+  def to_s_rest
+    cdr_s = if cdr.is_a?(self.class)
+              cdr.to_s_rest
+            elsif cdr == Nydp::NIL
+              nil
+            else
+              ". #{cdr.to_s}"
+            end
+
+    [car.to_s, cdr_s].compact.join " "
   end
 
   def inspect_rest
