@@ -9,7 +9,7 @@ class Nydp::Symbol
     self.name == nm.to_sym
   end
 
-  def self.mk name, ns=Nydp.root_ns
+  def self.mk name, ns
     name = name.to_sym
     sym = ns[name]
     unless sym
