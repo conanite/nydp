@@ -9,7 +9,6 @@ module Nydp
     end
 
     def thread expr
-      puts expr
       instructions.push expr
       while instructions.length > 0
         if NIL.is?(instructions.last)
@@ -34,6 +33,10 @@ module Nydp
 
     def pop_arg
       args.pop
+    end
+
+    def peek_arg
+      args.last
     end
 
     def pop_args count, tail=NIL
