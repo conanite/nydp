@@ -1,3 +1,5 @@
+require "strscan"
+
 module Nydp
   class Tokeniser
     def initialize str

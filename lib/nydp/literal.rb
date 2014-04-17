@@ -25,5 +25,9 @@ module Nydp
     def inspect
       "literal:#{@expression}"
     end
+
+    def coerce _
+      [_, expression]
+    end
   end
 end

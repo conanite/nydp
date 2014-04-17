@@ -1,4 +1,3 @@
-
 module Nydp
   def self.compile_and_eval vm, expr
     vm.thread Pair.new(Compiler.compile(expr), NIL)
@@ -9,7 +8,9 @@ module Nydp
     Symbol.mk(:cons, root_ns).assign(Nydp::Builtin::Cons.new)
     Symbol.mk(:car,  root_ns).assign(Nydp::Builtin::Car.new)
     Symbol.mk(:cdr,  root_ns).assign(Nydp::Builtin::Cdr.new)
+    Symbol.mk(:+,    root_ns).assign(Nydp::Builtin::Plus.new)
     Symbol.mk(:PI,   root_ns).assign Literal.new(3.1415)
+    Symbol.mk(:nil,  root_ns).assign NIL
     vm = VM.new
     parser = Nydp::Parser.new(root_ns)
     while !$stdin.eof?
@@ -31,4 +32,3 @@ require "nydp/tokeniser"
 require "nydp/parser"
 require "nydp/compiler"
 require "nydp/vm"
-require "strscan"

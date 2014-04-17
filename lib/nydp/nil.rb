@@ -3,10 +3,9 @@ module Nydp
     def car;  self; end
     def cdr;  self; end
     def size; 0   ; end
-    def is? other
-      other == self
-    end
+    def is?   other; other == self; end
+    def isnt? other; other != self; end
   end
 
-  NIL = Nil.new  
+  NIL = Nil.new
 end
