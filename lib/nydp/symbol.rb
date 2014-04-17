@@ -24,6 +24,10 @@ class Nydp::Symbol
   end
 
   def inspect
+    "Symbol:#{name.inspect}"
+  end
+
+  def to_s
     name.to_s
   end
 
