@@ -12,6 +12,10 @@ module Nydp
       Nydp::Pair.new a, b
     end
 
+    def list *args
+      Nydp::Pair.from_list args
+    end
+
     def literal? expr
       case expr
       when String, Float, Integer, Fixnum, Nydp::NIL, Nydp::Symbol

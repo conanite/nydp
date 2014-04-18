@@ -9,6 +9,44 @@ describe Nydp::Pair do
   let(:foo)              { Nydp::Symbol.mk :foo,                ns }
   let(:dot)              { Nydp::Symbol.mk ".".to_sym,          ns }
 
+  describe :== do
+    it "should be true for two empty lists" do
+      expect(Nydp::Pair.new(NIL, NIL)).to eq Nydp::Pair.new(NIL, NIL)
+    end
+
+    it "should be true for nested empty lists" do
+      e1 = Nydp::Pair.new(NIL, NIL)
+      e2 = Nydp::Pair.new(NIL, NIL)
+      e3 = Nydp::Pair.new(NIL, NIL)
+      e4 = Nydp::Pair.new(NIL, NIL)
+      expect(Nydp::Pair.new(e1, e2)).to eq Nydp::Pair.new(e3, e4)
+    end
+
+    it "should define #== to return true for an identical list" do
+      p1 = Nydp::Pair.from_list [:a, :b, :c, :d]
+      p2 = Nydp::Pair.from_list [:a, :b, :c, :d]
+      expect(p1).to eq p2
+    end
+
+    it "should define #== to return true for identical improper lists" do
+      p1 = Nydp::Pair.from_list [:a, :b, :c, :d], 4
+      p2 = Nydp::Pair.from_list [:a, :b, :c, :d], 4
+      expect(p1).to eq p2
+    end
+
+    it "should define #== to return false for a non-identical list" do
+      p1 = Nydp::Pair.from_list [:a, :b, :c, :d]
+      p2 = Nydp::Pair.from_list [:a, :b, :c, 22]
+      expect(p1).not_to eq p2
+    end
+
+    it "should define #== to return false for lists which differ only in their terminating element" do
+      p1 = Nydp::Pair.from_list [:a, :b, :c], :d
+      p2 = Nydp::Pair.from_list [:a, :b, :c], 22
+      expect(p1).not_to eq p2
+    end
+  end
+
   it "should create a new pair" do
     p = Nydp::Pair.mk :a, :b
     expect(p.car).to eq :a
@@ -30,30 +68,6 @@ describe Nydp::Pair do
     p = p.cdr
     expect(p.car).to eq Nydp::NIL
     expect(p.cdr).to eq Nydp::NIL
-  end
-
-  it "should define #== to return true for an identical list" do
-    p1 = Nydp::Pair.from_list [:a, :b, :c, :d]
-    p2 = Nydp::Pair.from_list [:a, :b, :c, :d]
-    expect(p1).to eq p2
-  end
-
-  it "should define #== to return true for identical improper lists" do
-    p1 = Nydp::Pair.from_list [:a, :b, :c, :d], 4
-    p2 = Nydp::Pair.from_list [:a, :b, :c, :d], 4
-    expect(p1).to eq p2
-  end
-
-  it "should define #== to return false for a non-identical list" do
-    p1 = Nydp::Pair.from_list [:a, :b, :c, :d]
-    p2 = Nydp::Pair.from_list [:a, :b, :c, 22]
-    expect(p1).not_to eq p2
-  end
-
-  it "should define #== to return false for lists which differ only in their terminating element" do
-    p1 = Nydp::Pair.from_list [:a, :b, :c], :d
-    p2 = Nydp::Pair.from_list [:a, :b, :c], 22
-    expect(p1).not_to eq p2
   end
 
   it "should have size zero when empty" do

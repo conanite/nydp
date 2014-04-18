@@ -1,16 +1,20 @@
 module Nydp
   def self.compile_and_eval vm, expr
-    vm.thread Pair.new(Compiler.compile(expr), NIL)
+    vm.thread Pair.new(Compiler.compile(expr, NIL), NIL)
+  end
+
+  def self.setup ns
+    Symbol.mk(:cons, ns).assign(Nydp::Builtin::Cons.new)
+    Symbol.mk(:car,  ns).assign(Nydp::Builtin::Car.new)
+    Symbol.mk(:cdr,  ns).assign(Nydp::Builtin::Cdr.new)
+    Symbol.mk(:+,    ns).assign(Nydp::Builtin::Plus.new)
+    Symbol.mk(:PI,   ns).assign Literal.new(3.1415)
+    Symbol.mk(:nil,  ns).assign NIL
   end
 
   def self.repl
     root_ns = { }
-    Symbol.mk(:cons, root_ns).assign(Nydp::Builtin::Cons.new)
-    Symbol.mk(:car,  root_ns).assign(Nydp::Builtin::Car.new)
-    Symbol.mk(:cdr,  root_ns).assign(Nydp::Builtin::Cdr.new)
-    Symbol.mk(:+,    root_ns).assign(Nydp::Builtin::Plus.new)
-    Symbol.mk(:PI,   root_ns).assign Literal.new(3.1415)
-    Symbol.mk(:nil,  root_ns).assign NIL
+    setup(root_ns)
     vm = VM.new
     parser = Nydp::Parser.new(root_ns)
     while !$stdin.eof?
@@ -20,6 +24,7 @@ module Nydp
   end
 end
 
+require "nydp/nil"
 require "nydp/version"
 require "nydp/helper"
 require "nydp/symbol"
@@ -27,7 +32,6 @@ require "nydp/symbol_lookup"
 require "nydp/pair"
 require "nydp/assignment"
 require "nydp/builtin"
-require "nydp/nil"
 require "nydp/tokeniser"
 require "nydp/parser"
 require "nydp/compiler"

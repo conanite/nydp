@@ -17,8 +17,8 @@ module Nydp
   class FunctionInvocation
     extend Helper
 
-    def self.build expression
-      new cons(InvokeFunctionInstruction.new(expression.size)), Compiler.compile_each(expression)
+    def self.build expression, bindings
+      new cons(InvokeFunctionInstruction.new(expression.size)), Compiler.compile_each(expression, bindings)
     end
 
     def initialize function_instruction, argument_instructions

@@ -13,11 +13,11 @@ class Nydp::Cond
     end
   end
 
-  def self.build expressions
+  def self.build expressions, bindings
     if expr.is_a? Pair
-      cond = Compiler.compile expressions.car
-      when_true = Compiler.compile expressions.cdr.car
-      when_false = Compiler.compile expressions.cdr.cdr
+      cond = Compiler.compile expressions.car, bindings
+      when_true = Compiler.compile expressions.cdr.car, bindings
+      when_false = Compiler.compile expressions.cdr.cdr, bindings
       Nydp::Cond.new cond, when_true, when_false
     else
       raise "can't compile Cond: #{expr.inspect}"

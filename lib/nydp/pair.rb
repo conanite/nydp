@@ -52,7 +52,7 @@ class Nydp::Pair
   def to_s_rest
     cdr_s = if cdr.is_a?(self.class)
               cdr.to_s_rest
-            elsif cdr == Nydp::NIL
+            elsif Nydp::NIL.is? cdr
               nil
             else
               ". #{cdr.to_s}"

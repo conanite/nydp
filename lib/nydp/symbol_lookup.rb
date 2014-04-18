@@ -1,19 +1,37 @@
-class Nydp::SymbolLookup
-  attr_reader :expression
+require 'nydp/context_symbol'
 
-  def initialize expression
-    @expression = expression
-  end
+module Nydp
+  class SymbolLookup
+    attr_reader :expression
 
-  def execute vm
-    vm.push_arg expression.value
-  end
+    def initialize expression
+      @expression = expression
+    end
 
-  def self.build expression
-    new expression
-  end
+    def execute vm
+      vm.push_arg expression.value vm.peek_context
+    end
 
-  def inspect
-    "lookup_symbol:#{@expression.inspect}"
+    def self.build name, bindings
+      depth = 0
+      while NIL.isnt? bindings
+        here = bindings.car
+        if here.key? name
+          return new ContextSymbol.new(depth, name)
+        else
+          depth += 1
+          bindings = bindings.cdr
+        end
+      end
+      new name
+    end
+
+    def to_s
+      "lookup:#{expression}"
+    end
+
+    def inspect
+      "lookup_symbol:#{@expression.inspect}"
+    end
   end
 end

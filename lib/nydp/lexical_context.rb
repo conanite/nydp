@@ -1,4 +1,4 @@
-class Nydp::LexicalClosure
+class Nydp::LexicalContext
   attr_reader :values, :parent
 
   def initialize parent

@@ -1,11 +1,12 @@
 module Nydp
   class VM
     include Helper
-    attr_accessor :instructions, :args
+    attr_accessor :instructions, :args, :contexts
 
     def initialize
       @instructions = []
       @args = []
+      @contexts = []
     end
 
     def thread expr
@@ -23,21 +24,13 @@ module Nydp
       pop_arg
     end
 
-    def push_instructions ii
-      instructions.push ii
-    end
-
-    def push_arg a
-      args.push a
-    end
-
-    def pop_arg
-      args.pop
-    end
-
-    def peek_arg
-      args.last
-    end
+    def push_context lc;      contexts.push lc;     end
+    def peek_context;         contexts.last;        end
+    def pop_context;          contexts.pop;         end
+    def push_arg a;           args.push a;          end
+    def peek_arg;             args.last;            end
+    def pop_arg;              args.pop;             end
+    def push_instructions ii; instructions.push ii; end
 
     def pop_args count, tail=NIL
       case count

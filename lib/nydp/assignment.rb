@@ -12,15 +12,15 @@ module Nydp
   class Assignment
     include Helper
 
-    def self.build args
-      Assignment.new args.car, args.cdr.car
+    def self.build args, bindings
+      name = args.car
+      raise "can't assign to #{name.inspect}" unless name.respond_to?(:assign)
+      Assignment.new name, Compiler.compile(args.cdr.car, bindings)
     end
 
     def initialize name, value
-      raise "can't assign to #{name.inspect}" unless name.respond_to?(:assign)
       n = AssignmentInstruction.new name
-      v = Compiler.compile(value)
-      @instructions = cons(v, cons(n))
+      @instructions = cons(value, cons(n))
     end
 
     def execute vm

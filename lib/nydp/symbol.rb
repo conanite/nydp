@@ -1,5 +1,5 @@
 class Nydp::Symbol
-  attr_accessor :name, :value
+  attr_accessor :name
 
   def initialize name
     @name = name.to_sym
@@ -7,6 +7,10 @@ class Nydp::Symbol
 
   def is? nm
     self.name == nm.to_sym
+  end
+
+  def value context=nil
+    @value
   end
 
   def self.mk name, ns
@@ -31,7 +35,7 @@ class Nydp::Symbol
     name.to_s
   end
 
-  def assign value
-    self.value = value
+  def assign value, context=nil
+    @value = value
   end
 end

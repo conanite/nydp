@@ -10,7 +10,7 @@ module Nydp
       expression
     end
 
-    def self.build expression
+    def self.build expression, bindings
       new expression
     end
 
@@ -28,6 +28,10 @@ module Nydp
 
     def coerce _
       [_, expression]
+    end
+
+    def == other
+      other.is_a?(Literal) && (self.expression == other.expression)
     end
   end
 end
