@@ -30,6 +30,14 @@ module Nydp
       [_, expression]
     end
 
+    def > other
+      other < expression
+    end
+
+    def < other
+      other > expression
+    end
+
     def == other
       other.is_a?(Literal) && (self.expression == other.expression)
     end

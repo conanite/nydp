@@ -9,6 +9,8 @@ module Nydp
     Symbol.mk(:cdr,  ns).assign(Nydp::Builtin::Cdr.new)
     Symbol.mk(:+,    ns).assign(Nydp::Builtin::Plus.new)
     Symbol.mk(:*,    ns).assign(Nydp::Builtin::Times.new)
+    Symbol.mk(:>,    ns).assign(Nydp::Builtin::GreaterThan.new)
+    Symbol.mk(:<,    ns).assign(Nydp::Builtin::LessThan.new)
     Symbol.mk(:PI,   ns).assign Literal.new(3.1415)
     Symbol.mk(:nil,  ns).assign Nydp.NIL
   end

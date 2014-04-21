@@ -34,6 +34,13 @@ describe Nydp do
     expect(run "(* 7 11)").to eq 77
   end
 
+  it "should compare integers" do
+    expect(run "(> 13 17)").to eq Nydp.NIL
+    expect(run "(> 29 23)").to eq Nydp.T
+    expect(run "(< 13 17)").to eq Nydp.T
+    expect(run "(< 29 23)").to eq Nydp.NIL
+  end
+
   it "should execute an inline list function" do
     expected = Nydp::Pair.from_list (1..3).map { |x| Nydp::Literal.new x }
     expect(run "((fn a a) 1 2 3)").to eq expected
@@ -50,4 +57,5 @@ describe Nydp do
     result = run "#{f2} #{f3}"
     expect(result).to eq 100
   end
+
 end
