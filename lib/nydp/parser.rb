@@ -51,7 +51,7 @@ module Nydp
     end
 
     def next_form token, token_stream
-      return NIL if token.nil?
+      return Nydp.NIL if token.nil?
       case token.first
       when :left_paren
         prefix_list token[1], read_list(token_stream, :right_paren)

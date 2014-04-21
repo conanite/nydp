@@ -8,7 +8,7 @@ module Nydp
       expr.is_a?(Nydp::Pair)
     end
 
-    def cons a, b=NIL
+    def cons a, b=Nydp.NIL
       Nydp::Pair.new a, b
     end
 
@@ -18,7 +18,7 @@ module Nydp
 
     def literal? expr
       case expr
-      when String, Float, Integer, Fixnum, Nydp::NIL, Nydp::Symbol
+      when String, Float, Integer, Fixnum, Nydp.NIL, Nydp::Symbol
         true
       else
         false

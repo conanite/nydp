@@ -19,7 +19,7 @@ module Nydp
       if pair? names
         context.set names.car, values.car
         setup_context context, names.cdr, values.cdr
-      elsif NIL.isnt? names
+      elsif Nydp.NIL.isnt? names
         context.set names, values
       end
     end
@@ -27,7 +27,6 @@ module Nydp
     def self.build arg_list, body, bindings
       my_params = { }
       index_parameters arg_list, my_params
-      puts "indexed params: #{my_params.inspect}"
       ifn = Nydp::InterpretedFunction.new
       ifn.arg_names = arg_list
       ifn.body = Nydp::Compiler.compile_each body, cons(my_params, bindings)
@@ -35,12 +34,10 @@ module Nydp
     end
 
     def self.index_parameters arg_list, hsh
-      return if Nydp::NIL.is?(arg_list)
-
       if pair? arg_list
         index_parameters arg_list.car, hsh
         index_parameters arg_list.cdr, hsh
-      else
+      elsif Nydp.NIL.isnt? arg_list
         hsh[arg_list] = hsh.size
       end
     end

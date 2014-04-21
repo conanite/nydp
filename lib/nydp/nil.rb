@@ -11,9 +11,13 @@ module Nydp
     end
 
     def inspect
-      "nil"
+      "nil[Nydp::Nil]"
     end
   end
 
-  NIL = Nil.new
+  @@nil = Nil.new
+
+  def self.NIL
+    @@nil
+  end
 end

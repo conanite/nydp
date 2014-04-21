@@ -18,7 +18,7 @@ module Nydp
     end
 
     def self.compile_each expr, bindings
-      if NIL.is?(expr)
+      if Nydp.NIL.is?(expr)
         expr
       elsif pair?(expr)
         cons compile(expr.car, bindings), compile_each(expr.cdr, bindings)

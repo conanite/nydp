@@ -4,7 +4,7 @@ class Nydp::Builtin::Plus
   end
 
   def sum args, accum
-    if Nydp::NIL.is? args
+    if Nydp.NIL.is? args
       accum
     else
       sum(args.cdr, (accum + args.car))

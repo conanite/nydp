@@ -25,7 +25,7 @@ class Nydp::Pair
     end
   end
 
-  def self.from_list list, last=Nydp::NIL, n=0
+  def self.from_list list, last=Nydp.NIL, n=0
     if n >= list.size
       last
     else
@@ -52,7 +52,7 @@ class Nydp::Pair
   def to_s_rest
     cdr_s = if cdr.is_a?(self.class)
               cdr.to_s_rest
-            elsif Nydp::NIL.is? cdr
+            elsif Nydp.NIL.is? cdr
               nil
             else
               ". #{cdr.to_s}"
@@ -64,7 +64,7 @@ class Nydp::Pair
   def inspect_rest
     cdr_s = if cdr.is_a?(self.class)
               cdr.inspect_rest
-            elsif cdr == Nydp::NIL
+            elsif cdr == Nydp.NIL
               nil
             else
               ". #{cdr.inspect}"

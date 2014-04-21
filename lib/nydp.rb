@@ -1,6 +1,6 @@
 module Nydp
   def self.compile_and_eval vm, expr
-    vm.thread Pair.new(Compiler.compile(expr, NIL), NIL)
+    vm.thread Pair.new(Compiler.compile(expr, Nydp.NIL), Nydp.NIL)
   end
 
   def self.setup ns
@@ -8,8 +8,9 @@ module Nydp
     Symbol.mk(:car,  ns).assign(Nydp::Builtin::Car.new)
     Symbol.mk(:cdr,  ns).assign(Nydp::Builtin::Cdr.new)
     Symbol.mk(:+,    ns).assign(Nydp::Builtin::Plus.new)
+    Symbol.mk(:*,    ns).assign(Nydp::Builtin::Times.new)
     Symbol.mk(:PI,   ns).assign Literal.new(3.1415)
-    Symbol.mk(:nil,  ns).assign NIL
+    Symbol.mk(:nil,  ns).assign Nydp.NIL
   end
 
   def self.repl

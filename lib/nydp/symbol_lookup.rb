@@ -14,7 +14,7 @@ module Nydp
 
     def self.build name, bindings
       depth = 0
-      while NIL.isnt? bindings
+      while Nydp.NIL.isnt? bindings
         here = bindings.car
         if here.key? name
           return new ContextSymbol.new(depth, name)

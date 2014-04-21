@@ -15,10 +15,10 @@ describe Nydp::Pair do
     end
 
     it "should be true for nested empty lists" do
-      e1 = Nydp::Pair.new(NIL, NIL)
-      e2 = Nydp::Pair.new(NIL, NIL)
-      e3 = Nydp::Pair.new(NIL, NIL)
-      e4 = Nydp::Pair.new(NIL, NIL)
+      e1 = Nydp::Pair.new(Nydp.NIL, Nydp.NIL)
+      e2 = Nydp::Pair.new(Nydp.NIL, Nydp.NIL)
+      e3 = Nydp::Pair.new(Nydp.NIL, Nydp.NIL)
+      e4 = Nydp::Pair.new(Nydp.NIL, Nydp.NIL)
       expect(Nydp::Pair.new(e1, e2)).to eq Nydp::Pair.new(e3, e4)
     end
 
@@ -63,11 +63,11 @@ describe Nydp::Pair do
     p = p.cdr
     expect(p.car).to eq :d
     p = p.cdr
-    expect(p.car).to eq Nydp::NIL
-    expect(p.cdr).to eq Nydp::NIL
+    expect(p.car).to eq Nydp.NIL
+    expect(p.cdr).to eq Nydp.NIL
     p = p.cdr
-    expect(p.car).to eq Nydp::NIL
-    expect(p.cdr).to eq Nydp::NIL
+    expect(p.car).to eq Nydp.NIL
+    expect(p.cdr).to eq Nydp.NIL
   end
 
   it "should have size zero when empty" do

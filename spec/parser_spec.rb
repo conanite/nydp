@@ -20,7 +20,7 @@ describe Nydp::Parser do
     Nydp::Parser.new(ns).expression(Nydp::Tokeniser.new txt)
   end
 
-  def pair_list xs, last=Nydp::NIL
+  def pair_list xs, last=Nydp.NIL
     Nydp::Pair.from_list xs, last
   end
 
@@ -41,11 +41,12 @@ describe Nydp::Parser do
   end
 
   it "should parse an empty expression" do
-    expect(parse "").to eq Nydp::NIL
+    result = parse ""
+    expect(parse "").to eq Nydp.NIL
   end
 
   it "should parse an empty expression" do
-    expect(parse "()").to eq Nydp::NIL
+    expect(parse "()").to eq Nydp.NIL
   end
 
   it "should parse a lisp expression" do

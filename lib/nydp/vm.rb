@@ -12,7 +12,7 @@ module Nydp
     def thread expr
       instructions.push expr
       while instructions.length > 0
-        if NIL.is?(instructions.last)
+        if Nydp.NIL.is?(instructions.last)
           instructions.pop
         else
           ii = instructions.pop
@@ -32,7 +32,7 @@ module Nydp
     def pop_arg;              args.pop;             end
     def push_instructions ii; instructions.push ii; end
 
-    def pop_args count, tail=NIL
+    def pop_args count, tail=Nydp.NIL
       case count
       when 0
         tail
