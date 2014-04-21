@@ -1,4 +1,7 @@
 module Nydp
+  class Truth
+  end
+
   class Nil
     def car;  self; end
     def cdr;  self; end
@@ -16,8 +19,8 @@ module Nydp
   end
 
   @@nil = Nil.new
+  @@t = Truth.new
 
-  def self.NIL
-    @@nil
-  end
+  def self.NIL; @@nil; end
+  def self.T;   @@t;   end
 end
