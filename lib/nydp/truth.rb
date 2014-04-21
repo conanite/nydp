@@ -1,5 +1,7 @@
 module Nydp
   class Truth
+    def to_s; 't'; end
+    def inspect; 't[nydp::Truth]'; end
   end
 
   class Nil
