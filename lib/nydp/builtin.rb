@@ -3,9 +3,6 @@ require 'nydp'
 module Nydp::Builtin
 end
 
-require 'nydp/builtin/car'
-require 'nydp/builtin/cdr'
-require 'nydp/builtin/cons'
-require 'nydp/builtin/puts'
-require 'nydp/builtin/plus'
-require 'nydp/builtin/times'
+Dir[File.join(File.dirname(__FILE__), "builtin", "**/*.rb")].each {|f|
+  require f
+}
