@@ -10,7 +10,6 @@ describe Nydp do
     expressions = []
     expr = parser.expression(tokens)
     while (expr != nil) && Nydp.NIL.isnt?(expr)
-      puts "read #{expr}"
       expressions << expr
       expr = parser.expression(tokens)
     end

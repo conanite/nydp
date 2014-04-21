@@ -12,7 +12,6 @@ module Nydp
       elsif literal? expression
         Literal.build expression, bindings
       elsif expression.is_a? Nydp::Pair
-        puts "compiling #{expression}"
         compile_pair expression, bindings
       end
     end
