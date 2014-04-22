@@ -27,7 +27,6 @@ module Nydp
     end
 
     def execute vm
-      puts "Cond#execute #{self}"
       vm.push_instructions conditional
       vm.push_instructions condition
     end
