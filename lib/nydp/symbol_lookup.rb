@@ -2,6 +2,8 @@ require 'nydp/context_symbol'
 
 module Nydp
   class SymbolLookup
+    extend Helper
+
     attr_reader :expression
 
     def initialize expression
@@ -27,11 +29,11 @@ module Nydp
     end
 
     def to_s
-      "lookup:#{expression}"
+      "#lookup:#{expression}"
     end
 
     def inspect
-      "lookup_symbol:#{@expression.inspect}"
+      "#lookup_symbol:#{@expression.inspect}"
     end
   end
 end

@@ -15,14 +15,15 @@ module Nydp
     end
 
     def execute vm
-      vm.push_arg self
+      vm.push_arg expression
     end
 
     def to_s
       expression
     end
 
-    def inspect
+    def inspect; to_s; end
+    def to_s
       "literal:#{@expression}"
     end
 

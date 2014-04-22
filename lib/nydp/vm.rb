@@ -18,6 +18,7 @@ module Nydp
           ii = instructions.pop
           i = ii.car
           instructions.push ii.cdr
+          # puts "executing #{i}"
           i.execute(self)
         end
       end

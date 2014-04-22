@@ -16,6 +16,10 @@ module Nydp
       Nydp::Pair.from_list args
     end
 
+    def sym name, ns
+      Nydp::Symbol.mk name, ns
+    end
+
     def literal? expr
       case expr
       when String, Float, Integer, Fixnum, Nydp.NIL, Nydp::Symbol

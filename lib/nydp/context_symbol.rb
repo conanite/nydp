@@ -14,6 +14,7 @@ module Nydp
       context.nth(depth).set(name, value)
     end
 
+    def inspect; to_s; end
     def to_s
       "[#{depth}]#{name}"
     end

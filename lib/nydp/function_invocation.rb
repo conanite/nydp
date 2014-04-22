@@ -10,7 +10,11 @@ module Nydp
     end
 
     def inspect
-      "invoke function with #{@arg_count - 1} args"
+      to_s
+    end
+
+    def to_s
+      "(#invoke #{@arg_count - 1})"
     end
   end
 
@@ -30,8 +34,9 @@ module Nydp
       vm.push_instructions @argument_instructions
     end
 
-    def inspect
-      "function_invocation:#{@argument_instructions.inspect}"
+    def inspect; to_s; end
+    def to_s
+      "#function_invocation:#{@argument_instructions.inspect}"
     end
   end
 end

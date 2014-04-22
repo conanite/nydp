@@ -42,7 +42,7 @@ describe Nydp do
   end
 
   it "should execute an inline list function" do
-    expected = Nydp::Pair.from_list (1..3).map { |x| Nydp::Literal.new x }
+    expected = Nydp::Pair.from_list (1..3).to_a
     expect(run "((fn a a) 1 2 3)").to eq expected
   end
 
@@ -58,4 +58,15 @@ describe Nydp do
     expect(result).to eq 100
   end
 
+  describe :cond do
+    it "should execute false conditionals" do
+      cond = "(if (> 31 37) 'foo 'bar)"
+      expect(run cond).to eq sym(:bar, root_ns)
+    end
+
+    it "should execute conditionals" do
+      cond = "(if (> 37 31) 'foo 'bar)"
+      expect(run cond).to eq sym(:foo, root_ns)
+    end
+  end
 end

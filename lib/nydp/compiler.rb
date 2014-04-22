@@ -1,3 +1,4 @@
+require 'nydp/cond'
 require 'nydp/function_invocation'
 require 'nydp/interpreted_function'
 require 'nydp/literal'

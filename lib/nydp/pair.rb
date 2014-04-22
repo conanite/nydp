@@ -72,4 +72,15 @@ class Nydp::Pair
 
     [car.inspect, cdr_s].compact.join " "
   end
+
+  def append pair
+    if Nydp.NIL.is? self.cdr
+      self.cdr = pair
+    elsif pair? self.cdr
+      self.cdr.append pair
+    else
+      raise "can't append #{pair} to list #{self} : cdr is #{self.cdr.inspect}"
+    end
+    self
+  end
 end
