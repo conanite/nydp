@@ -1,5 +1,5 @@
 class Nydp::Pair
-  include Nydp::Helper
+  include Nydp::Helper, Enumerable
   extend Nydp::Helper
 
   attr_accessor :car, :cdr
@@ -39,6 +39,11 @@ class Nydp::Pair
 
   def size
     1 + (cdr.is_a?(Nydp::Pair) ? cdr.size : 0)
+  end
+
+  def each &block
+    yield car
+    cdr.each(&block) unless Nydp.NIL.is?(cdr)
   end
 
   def inspect
