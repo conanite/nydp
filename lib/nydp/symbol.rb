@@ -10,7 +10,7 @@ class Nydp::Symbol
   end
 
   def value context=nil
-    @value
+    @value || Nydp.NIL
   end
 
   def self.mk name, ns
