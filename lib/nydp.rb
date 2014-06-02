@@ -16,17 +16,48 @@ module Nydp
     Symbol.mk(:PI,   ns).assign Literal.new(3.1415)
     Symbol.mk(:nil,  ns).assign Nydp.NIL
     Symbol.mk(:"vm-info", ns).assign Nydp::Builtin::VmInfo.new
+    Symbol.mk(:"pre-compile", ns).assign Nydp::Builtin::PreCompile.new
+  end
+
+  class Repl
+    attr_accessor :vm, :ns, :stream, :parser
+
+    def initialize vm, ns, stream
+      @vm = vm
+      @ns = ns
+      @stream = stream
+      @precompile = Symbol.mk(:"pre-compile", ns)
+      @quote = Symbol.mk(:quote, ns)
+      @parser = Nydp::Parser.new(ns)
+    end
+
+    def repl
+      print "nypd > "
+      while !stream.eof?
+        expr = parser.expression(Nydp::Tokeniser.new stream.readline)
+        puts Nydp.compile_and_eval(vm, pre_compile(expr)).to_s
+        print "nypd > "
+      end
+    end
+
+    def quote expr
+      Pair.from_list [@quote, expr]
+    end
+
+    def precompile expr
+      Pair.from_list [@precompile, quote(expr)]
+    end
+
+    def pre_compile expr
+      Nydp.compile_and_eval(vm, precompile(expr))
+    end
   end
 
   def self.repl
     root_ns = { }
     setup(root_ns)
     vm = VM.new
-    parser = Nydp::Parser.new(root_ns)
-    while !$stdin.eof?
-      expr = parser.expression(Nydp::Tokeniser.new $stdin.readline)
-      puts compile_and_eval(vm, expr).to_s
-    end
+    Repl.new(vm, root_ns, $stdin).repl
   end
 end
 
