@@ -15,8 +15,11 @@ module Nydp
     Symbol.mk(:hash, ns).assign(Nydp::Builtin::Hash.new)
     Symbol.mk(:hash, ns).assign(Nydp::Builtin::Hash.new)
     Symbol.mk(:quit, ns).assign(Nydp::Builtin::Quit.new)
+    Symbol.mk(:p,    ns).assign(Nydp::Builtin::Puts.new)
     Symbol.mk(:PI,   ns).assign Literal.new(3.1415)
     Symbol.mk(:nil,  ns).assign Nydp.NIL
+    Symbol.mk(:"pair?",       ns).assign(Nydp::Builtin::IsPair.new)
+    Symbol.mk(:"cdr-set",     ns).assign(Nydp::Builtin::CdrSet.new)
     Symbol.mk(:"hash-get",    ns).assign(Nydp::Builtin::HashGet.new)
     Symbol.mk(:"hash-set",    ns).assign(Nydp::Builtin::HashSet.new)
     Symbol.mk(:"vm-info",     ns).assign Nydp::Builtin::VmInfo.new
@@ -33,12 +36,13 @@ module Nydp
       @precompile = Symbol.mk(:"pre-compile", ns)
       @quote = Symbol.mk(:quote, ns)
       @parser = Nydp::Parser.new(ns)
+      @tokens = Nydp::Tokeniser.new stream
     end
 
     def repl
       print "nypd > "
       while !stream.eof?
-        expr = parser.expression(Nydp::Tokeniser.new stream.readline)
+        expr = parser.expression(@tokens)
         puts Nydp.compile_and_eval(vm, pre_compile(expr)).to_s
         print "nypd > "
       end
@@ -53,7 +57,10 @@ module Nydp
     end
 
     def pre_compile expr
-      Nydp.compile_and_eval(vm, precompile(expr))
+      puts "precompiling #{expr} with #{precompile(expr)}"
+      precompiled = Nydp.compile_and_eval(vm, precompile(expr))
+      puts "precompiled #{expr} to #{precompiled}"
+      precompiled
     end
   end
 

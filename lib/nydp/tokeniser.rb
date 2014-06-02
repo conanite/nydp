@@ -2,16 +2,18 @@ require "strscan"
 
 module Nydp
   class Tokeniser
-    def initialize str
-      @in = StringScanner.new(str)
+    def initialize stream
+      @stream = stream
+      @scanner = StringScanner.new ""
     end
 
     def next_token
-      s = @in
+      s = @scanner
       tok = nil
       while !tok
         if s.eos?
-          return nil
+          return nil if @stream.eof?
+          s << @stream.readline
         elsif comment = s.scan(/;.*$/)
           tok = [:comment, comment[1..-1].strip]
         elsif s.scan(/"/)
