@@ -8,7 +8,7 @@ class Nydp::Builtin::HashGet
   def invoke vm, args
     hash = args.car
     key = args.cdr.car
-    vm.push_arg hash[key]
+    vm.push_arg(hash[key] || Nydp.NIL)
   end
 end
 

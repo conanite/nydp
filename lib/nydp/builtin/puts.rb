@@ -1,5 +1,7 @@
 class Nydp::Builtin::Puts
-  def lisp_call args
-    puts args.car
+  def invoke vm, args
+    s = args.map { |a| a.to_s }
+    puts s.join ' '
+    vm.push_arg args.car
   end
 end
