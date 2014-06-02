@@ -12,10 +12,14 @@ module Nydp
     Symbol.mk(:*,    ns).assign(Nydp::Builtin::Times.new)
     Symbol.mk(:>,    ns).assign(Nydp::Builtin::GreaterThan.new)
     Symbol.mk(:<,    ns).assign(Nydp::Builtin::LessThan.new)
+    Symbol.mk(:hash, ns).assign(Nydp::Builtin::Hash.new)
+    Symbol.mk(:hash, ns).assign(Nydp::Builtin::Hash.new)
     Symbol.mk(:quit, ns).assign(Nydp::Builtin::Quit.new)
     Symbol.mk(:PI,   ns).assign Literal.new(3.1415)
     Symbol.mk(:nil,  ns).assign Nydp.NIL
-    Symbol.mk(:"vm-info", ns).assign Nydp::Builtin::VmInfo.new
+    Symbol.mk(:"hash-get",    ns).assign(Nydp::Builtin::HashGet.new)
+    Symbol.mk(:"hash-set",    ns).assign(Nydp::Builtin::HashSet.new)
+    Symbol.mk(:"vm-info",     ns).assign Nydp::Builtin::VmInfo.new
     Symbol.mk(:"pre-compile", ns).assign Nydp::Builtin::PreCompile.new
   end
 
