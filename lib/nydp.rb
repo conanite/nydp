@@ -18,6 +18,7 @@ module Nydp
     Symbol.mk(:p,    ns).assign(Nydp::Builtin::Puts.new)
     Symbol.mk(:PI,   ns).assign Literal.new(3.1415)
     Symbol.mk(:nil,  ns).assign Nydp.NIL
+    Symbol.mk(:"eq?",         ns).assign(Nydp::Builtin::IsEqual.new)
     Symbol.mk(:"pair?",       ns).assign(Nydp::Builtin::IsPair.new)
     Symbol.mk(:"cdr-set",     ns).assign(Nydp::Builtin::CdrSet.new)
     Symbol.mk(:"hash-get",    ns).assign(Nydp::Builtin::HashGet.new)
