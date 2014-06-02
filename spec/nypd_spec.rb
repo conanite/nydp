@@ -30,6 +30,10 @@ describe Nydp do
     expect(run "(+ 1 2)").to eq 3
   end
 
+  it "should diff integers" do
+    expect(run "(- 144 121)").to eq 23
+  end
+
   it "should multiply integers" do
     expect(run "(* 7 11)").to eq 77
   end
@@ -56,6 +60,22 @@ describe Nydp do
     f3 = "(f1 36 64)"
     result = run "#{f2} #{f3}"
     expect(result).to eq 100
+  end
+
+  it "should call functions in a chain" do
+    f1 = "(fn (a b) (+ a b))"
+    f2 = "(assign f1 #{f1})"
+    f3 = "(fn (x y) (* x y))"
+    f4 = "(assign f3 #{f3})"
+    f5 = "(f1 (f3 6 6) (f3 8 8))"
+    result = run "#{f2} #{f4} #{f5}"
+    expect(result).to eq 100
+  end
+
+  it "should recurse without consuming extra memory" do
+    program = "(assign f1 (fn (x acc) (if (< x 1) (vm-info) (f1 (- x 1) (+ x acc))))) (f1 100)"
+    expected = parse '(("contexts" . 0) ("instruction lists" . 0) ("args" . 0))'
+    expect(run program).to eq expected.first
   end
 
   describe :cond do

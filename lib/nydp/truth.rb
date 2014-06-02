@@ -18,6 +18,10 @@ module Nydp
     def inspect
       "nil[Nydp::Nil]"
     end
+
+    def repush _, contexts
+      contexts.pop
+    end
   end
 
   @@nil = Nil.new

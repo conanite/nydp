@@ -30,8 +30,8 @@ module Nydp
     end
 
     def execute vm
-      vm.push_instructions @function_instruction
-      vm.push_instructions @argument_instructions
+      vm.push_instructions @function_instruction,  vm.peek_context
+      vm.push_instructions @argument_instructions, vm.peek_context
     end
 
     def inspect; to_s; end

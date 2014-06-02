@@ -8,11 +8,14 @@ module Nydp
     Symbol.mk(:car,  ns).assign(Nydp::Builtin::Car.new)
     Symbol.mk(:cdr,  ns).assign(Nydp::Builtin::Cdr.new)
     Symbol.mk(:+,    ns).assign(Nydp::Builtin::Plus.new)
+    Symbol.mk(:-,    ns).assign(Nydp::Builtin::Minus.new)
     Symbol.mk(:*,    ns).assign(Nydp::Builtin::Times.new)
     Symbol.mk(:>,    ns).assign(Nydp::Builtin::GreaterThan.new)
     Symbol.mk(:<,    ns).assign(Nydp::Builtin::LessThan.new)
+    Symbol.mk(:quit, ns).assign(Nydp::Builtin::Quit.new)
     Symbol.mk(:PI,   ns).assign Literal.new(3.1415)
     Symbol.mk(:nil,  ns).assign Nydp.NIL
+    Symbol.mk(:"vm-info", ns).assign Nydp::Builtin::VmInfo.new
   end
 
   def self.repl

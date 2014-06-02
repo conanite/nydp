@@ -29,7 +29,7 @@ module Nydp
     end
 
     def to_s
-      "#lookup:#{expression}"
+      "#lookup:#{expression}:"
     end
 
     def inspect

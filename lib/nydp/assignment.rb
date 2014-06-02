@@ -7,6 +7,10 @@ module Nydp
     def execute vm
       @name.assign vm.peek_arg
     end
+
+    def to_s
+      "#assign #{@name}"
+    end
   end
 
   class Assignment
@@ -24,7 +28,7 @@ module Nydp
     end
 
     def execute vm
-      vm.push_instructions @instructions
+      vm.push_instructions @instructions, vm.peek_context
     end
   end
 end

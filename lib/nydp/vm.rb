@@ -1,7 +1,7 @@
 module Nydp
   class VM
     include Helper
-    attr_accessor :instructions, :args, :contexts
+    attr_accessor :instructions, :args, :contexts, :current_context
 
     def initialize
       @instructions = []
@@ -12,26 +12,39 @@ module Nydp
     def thread expr
       instructions.push expr
       while instructions.length > 0
-        if Nydp.NIL.is?(instructions.last)
-          instructions.pop
-        else
-          ii = instructions.pop
-          i = ii.car
-          instructions.push ii.cdr
-          # puts "executing #{i}"
-          i.execute(self)
-        end
+        # puts "instruction stack"
+        # puts "================="
+        # instructions.each_with_index do |ii, ix|
+        #   puts "instructions##{ix} : #{ii}"
+        # end
+        # puts
+        # puts
+        # puts "context stack"
+        # puts "================="
+        # contexts.each_with_index do |ctx, ix|
+        #   puts "context##{ix} : #{ctx}"
+        # end
+        # puts
+        # puts
+        self.current_context = contexts.last
+        ii = instructions.pop
+        i = ii.car
+        ii.cdr.repush instructions, contexts
+        i.execute(self)
       end
       pop_arg
     end
 
-    def push_context lc;      contexts.push lc;     end
-    def peek_context;         contexts.last;        end
-    def pop_context;          contexts.pop;         end
-    def push_arg a;           args.push a;          end
-    def peek_arg;             args.last;            end
-    def pop_arg;              args.pop;             end
-    def push_instructions ii; instructions.push ii; end
+    def peek_context;  current_context;      end
+    def pop_context;   contexts.pop;         end
+    def push_arg a;    args.push a;          end
+    def peek_arg;      args.last;            end
+    def pop_arg;       args.pop;             end
+
+    def push_instructions ii, ctx
+      instructions.push ii
+      contexts.push ctx
+    end
 
     def pop_args count, tail=Nydp.NIL
       case count

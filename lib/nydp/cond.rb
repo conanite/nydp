@@ -8,7 +8,7 @@ module Nydp
     end
 
     def execute vm
-      vm.push_instructions (Nydp.NIL.is?(vm.pop_arg) ? when_false : when_true)
+      vm.push_instructions (Nydp.NIL.is?(vm.pop_arg) ? when_false : when_true), vm.peek_context
     end
 
     def inspect; to_s; end
@@ -27,8 +27,8 @@ module Nydp
     end
 
     def execute vm
-      vm.push_instructions conditional
-      vm.push_instructions condition
+      vm.push_instructions conditional, vm.peek_context
+      vm.push_instructions condition,   vm.peek_context
     end
 
     def inspect; to_s; end

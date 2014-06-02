@@ -2,6 +2,16 @@ require 'nydp/lexical_context'
 require 'nydp/closure'
 
 module Nydp
+  class PopArg
+    def self.execute vm
+      vm.pop_arg
+    end
+
+    def self.to_s
+      "#pop_arg"
+    end
+  end
+
   class InterpretedFunction
     include Helper
     extend Helper
@@ -11,8 +21,7 @@ module Nydp
     def invoke vm, parent_context, arg_values
       lc = LexicalContext.new parent_context
       setup_context lc, arg_names, arg_values
-      vm.push_context lc
-      vm.push_instructions self.body
+      vm.push_instructions self.body, lc
     end
 
     def setup_context context, names, values
@@ -29,8 +38,20 @@ module Nydp
       index_parameters arg_list, my_params
       ifn = Nydp::InterpretedFunction.new
       ifn.arg_names = arg_list
-      ifn.body = Nydp::Compiler.compile_each body, cons(my_params, bindings)
+      ifn.body = compile_body body, cons(my_params, bindings), []
       ifn
+    end
+
+    def self.compile_body body_forms, bindings, instructions
+      instructions << Nydp::Compiler.compile(body_forms.car, bindings)
+
+      rest = body_forms.cdr
+      if Nydp.NIL.is? rest
+        return Pair.from_list(instructions)
+      else
+        instructions << PopArg
+        compile_body rest, bindings, instructions
+      end
     end
 
     def self.index_parameters arg_list, hsh

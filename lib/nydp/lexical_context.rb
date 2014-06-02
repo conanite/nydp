@@ -24,4 +24,15 @@ class Nydp::LexicalContext
   def set name, value
     values[name] = value
   end
+
+  def to_s_with_indent str
+    me = @values.map { |k, v|
+      [str, k, "=>", v].join ' '
+    }.join "\n"
+    me + (parent ? parent.to_s_with_indent("  #{str}") : '')
+  end
+
+  def to_s
+    to_s_with_indent ''
+  end
 end
