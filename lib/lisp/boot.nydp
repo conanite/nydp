@@ -1,0 +1,114 @@
+; -*- lisp-mode -*-
+
+(assign last-cons (fn (xs)
+  (if (pair? (cdr xs))
+      (last-cons (cdr xs))
+      xs)))
+
+(assign append-list! (fn (list-1 list-2)
+  (cdr-set (last-cons list-1) list-2)
+  list-1))
+
+(assign list (fn args args))
+
+(assign build-def (fn (name args body)
+  (list 'assign name (append-list! (list 'fn args) body))))
+
+(assign caar (fn (arg) (car (car arg))))
+(assign cadr (fn (arg) (car (cdr arg))))
+(assign cddr (fn (arg) (cdr (cdr arg))))
+
+(assign mac-expand (fn (macfn name body)
+;  (if macfn (p "mac-expand" name "on" body))
+  (if macfn
+      (pre-compile (macfn body))
+      (cons name body))))
+
+(assign macs (hash))
+
+(assign pre-compile-expr (fn (name body)
+  (mac-expand (hash-get macs name) name body)))
+
+(assign pre-compile-each (fn (args)
+;  (if args (p "pre-compile-each" (car args)))
+  (if args
+      (cons (pre-compile (car args))
+            (pre-compile-each (cdr args))))))
+
+(assign pre-compile (fn (arg)
+  (p "pre-compile" arg)
+  (if (pair? arg)
+      (pre-compile-each (pre-compile-expr (car arg) (cdr arg)))
+      arg)))
+
+(hash-set macs 'def (fn (body)
+  (build-def (car body) (cadr body) (cddr body))))
+
+; arg is "(unquote x)"
+; rest is another form
+; returns (list 'cons x (qq-quasiquote rest))
+(def qq-unquote-unq (arg rest)
+;  (p "qq-unquote-unq" arg "." rest)
+  (p (list 'cons (cadr arg) (qq-quasiquote rest)))
+  (list 'cons (cadr arg) (qq-quasiquote rest)))
+
+(def qq-unquote-recurse (arg rest)
+        (list 'cons
+              (qq-quasiquote arg)
+              (qq-quasiquote rest)))
+
+(def qq-unquote? (arg rest)
+  (if (no (pair? arg)) (p "qq-unquote? atom" arg rest))
+;  (if (pair? arg) (p "qq-unquote?" (car arg)))
+  (if (pair? arg)
+      (if (eq? (car arg) 'unquote)
+          (qq-unquote-unq arg rest)
+          (if (eq? (car arg) 'unquote-splicing)
+              (list 'append-list!
+                    (cadr arg)
+                    (qq-quasiquote rest))
+              (qq-unquote-recurse arg rest)))
+      (list 'cons
+            (list 'quote arg)
+            (qq-quasiquote rest))))
+
+(def no (arg)
+  (eq? arg nil))
+
+(def qq-quasiquote (xs)
+  (if (no xs)
+      nil
+      (if (pair? xs)
+          (if (eq? (car xs) 'unquote)
+              (cadr xs)
+              (qq-unquote? (car xs) (cdr xs)))
+          xs)))
+
+(hash-set macs 'quasiquote (fn (body)
+  (p "quasiquote" body)
+  (qq-quasiquote (car body))))
+
+(def build-mac (name body)
+  `(hash-set macs ',name (fn ,@body)))
+
+(assign name 'foo)
+(assign body '((a) (b) (c)))
+;`(hash-set macs ',name (fn ,@body))
+; `((fn nil ,@body))
+
+;(helloworld)
+
+(hash-set macs 'mac (fn (body)
+  (build-mac (car body) (cdr body))))
+
+(mac do args
+  (p "do, args are" args)
+  `((fn nil ,@args)))
+
+(do
+  (p "hello,")
+  (p "you are in")
+  (p "a progn!"))
+
+;(mac when (condition . body)
+;  `(if ,condition (do ,@body)))
