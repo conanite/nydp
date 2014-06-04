@@ -18,6 +18,7 @@ module Nydp
     Symbol.mk(:p,    ns).assign(Nydp::Builtin::Puts.new)
     Symbol.mk(:PI,   ns).assign Literal.new(3.1415)
     Symbol.mk(:nil,  ns).assign Nydp.NIL
+    Symbol.mk(:comment,       ns).assign(Nydp::Builtin::Comment.new)
     Symbol.mk(:"eq?",         ns).assign(Nydp::Builtin::IsEqual.new)
     Symbol.mk(:"pair?",       ns).assign(Nydp::Builtin::IsPair.new)
     Symbol.mk(:"cdr-set",     ns).assign(Nydp::Builtin::CdrSet.new)
@@ -27,7 +28,7 @@ module Nydp
     Symbol.mk(:"pre-compile", ns).assign Nydp::Builtin::PreCompile.new
   end
 
-  class Repl
+  class Runner
     attr_accessor :vm, :ns, :stream, :parser
 
     def initialize vm, ns, stream
@@ -40,15 +41,6 @@ module Nydp
       @tokens = Nydp::Tokeniser.new stream
     end
 
-    def repl
-      print "nypd > "
-      while !stream.eof?
-        expr = parser.expression(@tokens)
-        puts Nydp.compile_and_eval(vm, pre_compile(expr)).to_s
-        print "nypd > "
-      end
-    end
-
     def quote expr
       Pair.from_list [@quote, expr]
     end
@@ -58,10 +50,26 @@ module Nydp
     end
 
     def pre_compile expr
-      puts "precompiling #{expr} with #{precompile(expr)}"
-      precompiled = Nydp.compile_and_eval(vm, precompile(expr))
-      puts "precompiled #{expr} to #{precompiled}"
-      precompiled
+      prec = Nydp.compile_and_eval(vm, precompile(expr))
+      puts "replaced\n#{expr}\nwith#{prec}\n\n"
+      prec
+    end
+
+    def run
+      while !stream.eof?
+        Nydp.compile_and_eval(vm, pre_compile(parser.expression(@tokens)))
+      end
+    end
+  end
+
+  class Repl < Runner
+    def run
+      print "nypd > "
+      while !stream.eof?
+        expr = parser.expression(@tokens)
+        puts Nydp.compile_and_eval(vm, pre_compile(expr)).to_s
+        print "nypd > "
+      end
     end
   end
 
@@ -69,7 +77,12 @@ module Nydp
     root_ns = { }
     setup(root_ns)
     vm = VM.new
-    Repl.new(vm, root_ns, $stdin).repl
+    boot_path = File.join File.expand_path(File.dirname(__FILE__)), 'lisp/boot.nydp'
+    puts "boot path #{boot_path}"
+    boot = File.new boot_path
+    puts boot
+    Runner.new(vm, root_ns, boot).run
+    Repl.new(vm, root_ns, $stdin).run
   end
 end
 
