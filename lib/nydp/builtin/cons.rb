@@ -9,8 +9,8 @@ module Nydp::Builtin
     include Nydp::Helper
     def invoke vm, args
       arg = args.car
-      puts "arg #{arg} is pair? #{pair?(arg).inspect}"
-      vm.push_arg (pair?(arg) ? arg : Nydp.NIL)
+      result = pair?(arg) ? Nydp.T : Nydp.NIL
+      vm.push_arg result
     end
   end
 end
