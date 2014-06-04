@@ -1,12 +1,15 @@
 module Nydp
   class InvokeFunctionInstruction
-    def initialize arg_count
+    def initialize arg_count, source_expression
+      @source_expression = source_expression
       @arg_count = arg_count
     end
 
     def execute vm
       args = vm.pop_args @arg_count
       args.car.invoke vm, args.cdr
+    rescue Exception => e
+      raise "Error invoking #{@source_expression}\n#{e.message}"
     end
 
     def inspect
@@ -22,7 +25,7 @@ module Nydp
     extend Helper
 
     def self.build expression, bindings
-      new cons(InvokeFunctionInstruction.new(expression.size)), Compiler.compile_each(expression, bindings)
+      new cons(InvokeFunctionInstruction.new(expression.size, expression)), Compiler.compile_each(expression, bindings)
     end
 
     def initialize function_instruction, argument_instructions
