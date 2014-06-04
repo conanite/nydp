@@ -38,13 +38,13 @@ module Nydp
     def parse_symbol txt
       case txt
       when /^'(.+)$/
-        Pair.from_list [sym(:quote), sym($1)]
+        Pair.from_list [sym(:quote), parse_symbol($1)]
       when /^`(.+)$/
-        Pair.from_list [sym(:quasiquote), sym($1)]
+        Pair.from_list [sym(:quasiquote), parse_symbol($1)]
       when /^,@(.+)$/
-        Pair.from_list [sym(:"unquote-splicing"), sym($1)]
+        Pair.from_list [sym(:"unquote-splicing"), parse_symbol($1)]
       when /^,(.+)$/
-        Pair.from_list [sym(:unquote), sym($1)]
+        Pair.from_list [sym(:unquote), parse_symbol($1)]
       else
         sym txt
       end

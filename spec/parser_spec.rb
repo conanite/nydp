@@ -77,6 +77,10 @@ describe Nydp::Parser do
     expect(parse "'foo").to eq pair_list([quote, foo])
   end
 
+  it "should quote-unquote symbols" do
+    expect(parse "',foo").to eq pair_list([quote, pair_list([unquote, foo])])
+  end
+
   it "should quote lists" do
     expect(parse "'(foo)").to eq pair_list([quote, pair_list([foo])])
   end
