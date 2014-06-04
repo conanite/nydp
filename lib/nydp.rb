@@ -87,6 +87,7 @@ module Nydp
   end
 end
 
+require "nydp/error"
 require "nydp/truth"
 require "nydp/version"
 require "nydp/helper"
