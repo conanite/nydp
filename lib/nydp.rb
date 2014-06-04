@@ -14,6 +14,7 @@ module Nydp
     Symbol.mk(:<,     ns).assign(Nydp::Builtin::LessThan.new)
     Symbol.mk(:hash,  ns).assign(Nydp::Builtin::Hash.new)
     Symbol.mk(:apply, ns).assign(Nydp::Builtin::Apply.new)
+    Symbol.mk(:error, ns).assign(Nydp::Builtin::Error.new)
     Symbol.mk(:quit,  ns).assign(Nydp::Builtin::Quit.new)
     Symbol.mk(:p,     ns).assign(Nydp::Builtin::Puts.new)
     Symbol.mk(:PI,    ns).assign Literal.new(3.1415)
