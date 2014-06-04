@@ -4,7 +4,7 @@ module Nydp
   class Tokeniser
     def initialize stream
       @stream = stream
-      @scanner = StringScanner.new ""
+      @scanner = StringScanner.new(stream.is_a?(String) ? stream : "")
     end
 
     def next_token
@@ -12,7 +12,7 @@ module Nydp
       tok = nil
       while !tok
         if s.eos?
-          return nil if @stream.eof?
+          return nil if @stream.is_a?(String) || @stream.eof?
           s << @stream.readline
         elsif comment = s.scan(/;.*$/)
           tok = [:comment, comment[1..-1].strip]
