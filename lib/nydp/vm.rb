@@ -54,5 +54,30 @@ module Nydp
         pop_args(count - 1, cons(pop_arg, tail))
       end
     end
+
+    def error e
+      puts "     error"
+      puts e
+      puts "================="
+      puts
+      puts "instruction stack"
+      puts "================="
+      instructions.each_with_index do |ii, ix|
+        puts "instructions##{ix} : #{ii} #{ii.source if ii.respond_to?(:source)}"
+      end
+      puts
+      puts
+      puts "context stack"
+      puts "================="
+      contexts.each_with_index do |ctx, ix|
+        puts "context##{ix} : #{ctx}"
+      end
+      puts
+      puts
+
+      instructions = []
+      contexts     = []
+      args = [Nydp.NIL]
+    end
   end
 end
