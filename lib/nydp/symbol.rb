@@ -28,11 +28,15 @@ class Nydp::Symbol
   end
 
   def inspect
-    "Symbol:#{name.inspect}"
+    "(sym #{name.inspect})"
   end
 
   def to_s
     name.to_s
+  end
+
+  def == other
+    other.is_a?(Nydp::Symbol) && (self.name == other.name)
   end
 
   def assign value, context=nil
