@@ -4,11 +4,11 @@ http://tvtropes.org/pmwiki/pmwiki.php/Main/NotYourDaddysX
 http://xkcd.com/297/
 https://en.wikipedia.org/wiki/NYPD_Blue
 
-NYDP is "Not Your Daddy's Parentheses", a reference to Xkcd 297, as well as to
-the meme "Not Your Daddy's Q", where Q is a modern, improved Q unlike the Q
-your daddy used. "NYDP" also shamelessly piggypacks on the catchiness and popularity
-of the "NYPD" abbreviation ("New York Police Department", for those who have no
-interest in popular US TV or authoritarian politics).
+NYDP is "Not Your Daddy's Parentheses", a reference to Xkcd 297 (itself a reference
+to Star Wars), as well as to the meme "Not Your Daddy's Q", where Q is a modern,
+improved Q unlike the Q your daddy used. "NYDP" also shamelessly piggypacks on the
+catchiness and popularity of the "NYPD" abbreviation ("New York Police Department",
+for those who have no interest in popular US TV or authoritarian politics).
 
 
 (def pre-compile (expr)
@@ -28,15 +28,11 @@ VM
   has-a execution-stack
 
 
-Flame wars:
-
 We do not wish to suggest by "Not Your Daddy's Parentheses" that Common Lisp,
 Scheme, Racket, Arc, Clojure or your favourite other lisp are somehow
-old-fashioned or in need of improvement.
+old-fashioned, inferior, or in need of improvement in any way.
 
 
-
-TODO: Write a gem description
 
 ## Installation
 
