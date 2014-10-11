@@ -17,11 +17,15 @@ module Nydp
       end
     end
 
+    def self.maybe_cons a, b
+      Nydp.NIL.is?(a) ? b : cons(a, b)
+    end
+
     def self.compile_each expr, bindings
       if Nydp.NIL.is?(expr)
         expr
       elsif pair?(expr)
-        cons compile(expr.car, bindings), compile_each(expr.cdr, bindings)
+        maybe_cons compile(expr.car, bindings), compile_each(expr.cdr, bindings)
       else
         compile(expr, bindings)
       end

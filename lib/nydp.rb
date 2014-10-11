@@ -25,6 +25,7 @@ module Nydp
     Symbol.mk(:"cdr-set",     ns).assign(Nydp::Builtin::CdrSet.new)
     Symbol.mk(:"hash-get",    ns).assign(Nydp::Builtin::HashGet.new)
     Symbol.mk(:"hash-set",    ns).assign(Nydp::Builtin::HashSet.new)
+    Symbol.mk(:"hash-keys",   ns).assign(Nydp::Builtin::HashKeys.new)
     Symbol.mk(:"vm-info",     ns).assign Nydp::Builtin::VmInfo.new
     Symbol.mk(:"pre-compile", ns).assign Nydp::Builtin::PreCompile.new
   end
@@ -51,9 +52,7 @@ module Nydp
     end
 
     def pre_compile expr
-      prec = Nydp.compile_and_eval(vm, precompile(expr))
-      puts "replaced\n#{expr}\nwith#{prec}\n\n"
-      prec
+      Nydp.compile_and_eval(vm, precompile(expr))
     end
 
     def run
@@ -65,11 +64,11 @@ module Nydp
 
   class Repl < Runner
     def run
-      print "nypd > "
+      print "nydp > "
       while !stream.eof?
         expr = parser.expression(@tokens)
         puts Nydp.compile_and_eval(vm, pre_compile(expr)).to_s
-        print "nypd > "
+        print "nydp > "
       end
     end
   end
@@ -79,10 +78,7 @@ module Nydp
     setup(root_ns)
     vm = VM.new
     boot_path = File.join File.expand_path(File.dirname(__FILE__)), 'lisp/boot.nydp'
-    puts "boot path #{boot_path}"
-    boot = File.new boot_path
-    puts boot
-    Runner.new(vm, root_ns, boot).run
+    Runner.new(vm, root_ns, File.new(boot_path)).run
     Repl.new(vm, root_ns, $stdin).run
   end
 end
@@ -96,7 +92,11 @@ require "nydp/symbol_lookup"
 require "nydp/pair"
 require "nydp/assignment"
 require "nydp/builtin"
+require "nydp/string_atom"
+require "nydp/string_token"
 require "nydp/tokeniser"
+require "nydp/external_text"
 require "nydp/parser"
+require "nydp/embedded"
 require "nydp/compiler"
 require "nydp/vm"

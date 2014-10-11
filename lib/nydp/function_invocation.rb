@@ -9,11 +9,15 @@ module Nydp
       args = vm.pop_args @arg_count
       args.car.invoke vm, args.cdr
     rescue Exception => e
-      raise "Error invoking #{@source_expression}\n#{e.message}"
+      vm.error e
     end
 
     def inspect
       to_s
+    end
+
+    def source
+      @source_expression
     end
 
     def to_s

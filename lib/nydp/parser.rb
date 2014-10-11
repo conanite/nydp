@@ -7,7 +7,7 @@ module Nydp
     end
 
     def sym name
-      Nydp::Symbol.mk name, ns
+      Nydp::Symbol.mk name.to_sym, ns
     end
 
     def read_list token_stream, termination_token
@@ -35,6 +35,10 @@ module Nydp
       end
     end
 
+    def split_sym syms, pfx
+      return Pair.from_list [pfx] + syms.map { |s| parse_symbol s }
+    end
+
     def parse_symbol txt
       case txt
       when /^'(.+)$/
@@ -46,13 +50,43 @@ module Nydp
       when /^,(.+)$/
         Pair.from_list [sym(:unquote), parse_symbol($1)]
       else
+        syms = txt.to_s.split /\./
+        return split_sym syms, sym(:"dot-syntax") if syms.length > 1
+
+        syms = txt.split /::/
+        return split_sym syms, sym(:"colon-colon-syntax") if syms.length > 1
+
+        syms = txt.split /:/
+        return split_sym syms, sym(:"colon-syntax") if syms.length > 1
+
+        syms = txt.split /->/
+        return split_sym syms, sym(:"arrow-syntax") if syms.length > 1
+
+        syms = txt.split(/=>/)
+        return split_sym syms, sym(:"rocket-syntax") if syms.length > 1
+
         sym txt
+      end
+    end
+
+    def close_delimiter_for opener
+      case opener
+      when '"'
+        /"/
+      when /.*{$/
+        /}/
+      when /<<(.+)$/
+        Regexp.new $1
       end
     end
 
     def next_form token, token_stream
       return Nydp.NIL if token.nil?
       case token.first
+      when :embed_suffix
+        Nydp.NIL
+      when :string_open_delim
+        string token_stream, token.last, close_delimiter_for(token.last)
       when :left_paren
         prefix_list token[1], read_list(token_stream, :right_paren)
       when :symbol
@@ -66,6 +100,24 @@ module Nydp
 
     def expression token_stream
       next_form token_stream.next_token, token_stream
+    end
+
+    def string token_stream, open_delimiter, close_delimiter
+      fragments = [sym(:"string-pieces")]
+      string_token = token_stream.next_string_fragment(open_delimiter, close_delimiter)
+      fragments << string_token
+      while !(string_token.is_a? StringFragmentCloseToken)
+        fragments << expression(token_stream)
+        string_token = token_stream.next_string_fragment('', close_delimiter)
+        fragments << string_token
+      end
+
+      if fragments.size == 2
+        tok = fragments[1]
+        return Nydp::StringAtom.new tok.string, tok
+      else
+        return Pair.from_list fragments
+      end
     end
   end
 end

@@ -19,13 +19,17 @@ module Nydp
       "nil[Nydp::Nil]"
     end
 
+    def execute vm
+      vm.push_arg self
+    end
+
     def repush _, contexts
       contexts.pop
     end
   end
 
   @@nil = Nil.new
-  @@t = Truth.new
+  @@t   = Truth.new
 
   def self.NIL; @@nil; end
   def self.T;   @@t;   end

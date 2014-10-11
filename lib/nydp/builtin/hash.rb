@@ -21,3 +21,10 @@ class Nydp::Builtin::HashSet
     vm.push_arg value
   end
 end
+
+class Nydp::Builtin::HashKeys
+  def invoke vm, args
+    hash = args.car
+    vm.push_arg Nydp::Pair.from_list hash.keys
+  end
+end
