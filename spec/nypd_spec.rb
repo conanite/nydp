@@ -38,6 +38,10 @@ describe Nydp do
     expect(run "(* 7 11)").to eq 77
   end
 
+  it "should convert items to strings" do
+    expect(run "(to-string 3.1415)").to eq "3.1415"
+  end
+
   it "should compare integers" do
     expect(run "(> 13 17)").to eq Nydp.NIL
     expect(run "(> 29 23)").to eq Nydp.T

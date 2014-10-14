@@ -20,6 +20,7 @@ module Nydp
     Symbol.mk(:PI,    ns).assign Literal.new(3.1415)
     Symbol.mk(:nil,   ns).assign Nydp.NIL
     Symbol.mk(:comment,       ns).assign(Nydp::Builtin::Comment.new)
+    Symbol.mk("to-string",    ns).assign(Nydp::Builtin::ToString.new)
     Symbol.mk(:"eq?",         ns).assign(Nydp::Builtin::IsEqual.new)
     Symbol.mk(:"pair?",       ns).assign(Nydp::Builtin::IsPair.new)
     Symbol.mk(:"cdr-set",     ns).assign(Nydp::Builtin::CdrSet.new)
@@ -95,8 +96,6 @@ require "nydp/builtin"
 require "nydp/string_atom"
 require "nydp/string_token"
 require "nydp/tokeniser"
-require "nydp/external_text"
 require "nydp/parser"
-require "nydp/embedded"
 require "nydp/compiler"
 require "nydp/vm"
