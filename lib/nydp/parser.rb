@@ -81,7 +81,7 @@ module Nydp
     end
 
     def next_form token, token_stream
-      return Nydp.NIL if token.nil?
+      return nil if token.nil?
       case token.first
       when :embed_suffix
         Nydp.NIL

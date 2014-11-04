@@ -50,7 +50,7 @@ describe Nydp::Parser do
   end
 
   it "should parse an empty expression" do
-    expect(parse "").to eq Nydp.NIL
+    expect(parse "").to be_nil
   end
 
   it "should parse an empty expression" do
@@ -80,6 +80,18 @@ describe Nydp::Parser do
     expected = pair_list [x1, x2, x3]
 
     expect(parse '(1 "hello there" 3)').to eq expected
+  end
+
+  it "should parse a string" do
+    x1 = sym 'join'
+    x2 = " - "
+    x3 = 1
+    x4 = 2
+    x5 = 3
+
+    expected = pair_list [x1, x2, x3, x4, x5]
+
+    expect(parse '(join " - " 1 2 3)').to eq expected
   end
 
   it "should not get confused by embedded lisp in a string" do
