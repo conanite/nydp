@@ -89,7 +89,6 @@ class Nydp::Pair
     self
   end
 
-
   def repush instructions, _
     instructions.push self
   end
