@@ -35,7 +35,9 @@
 
 (assign pre-compile (fn (arg)
   (if (pair? arg)
-      (pre-compile-each (pre-compile-expr (car arg) (cdr arg)))
+      (if (eq? (car arg) 'quote)
+          arg
+          (pre-compile-each (pre-compile-expr (car arg) (cdr arg))))
       arg)))
 
 (hash-set macs 'def (fn (name args . body)
@@ -85,3 +87,46 @@
 
 (mac when (condition . body)
   `(if ,condition (do ,@body)))
+
+(mac let (var val . body)
+  `((fn (,var) ,@body) ,val))
+
+(def each (f acc things)
+  (if things
+      (each f (f acc (car things)) (cdr things))
+      acc))
+
+(def eachr (f things)
+     (when things
+       (eachr f (cdr things))
+       (f (car things))))
+
+(def zip (a b)
+  (if a
+      (cons (list (car a) (car b))
+            (zip (cdr a) (cdr b)))))
+
+(def flatten (things)
+  (let acc nil
+       (let flattenize nil
+            (assign flattenize (fn (x)
+                                   (if (pair? x)
+                                       (do
+                                           (eachr flattenize (cdr x))
+                                           (flattenize (car x)))
+                                     (assign acc (cons x acc)))))
+            (flattenize things))
+       acc))
+
+(def joinstr (txt things)
+     (apply +
+            (to-string (car things))
+            (flatten (zip (map (fn (_) txt) (cdr things))
+                          (map to-string (cdr things))))))
+
+(def nil? (arg) (eq? arg nil))
+
+(def map (f things)
+  (if (nil? things)
+      nil
+      (cons (f (car things)) (map f (cdr things)))))
