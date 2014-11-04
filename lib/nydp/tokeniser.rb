@@ -5,13 +5,18 @@ module Nydp
     attr_accessor :state, :finished
 
     def initialize stream
-      @stream = stream
-      @scanner = StringScanner.new(stream.is_a?(String) ? stream : stream.read)
+      @stream = stream.is_a?(String) ? nil : stream
+      @scanner = StringScanner.new(stream.is_a?(String) ? stream : "")
       @state = :lisp
     end
 
+    def no_more?
+      @scanner << @stream.readline if @scanner.eos? && @stream && !@stream.eof?
+      @scanner.eos?
+    end
+
     def close_delimiter? scanner, delim
-      return (scanner.eos? ? '' : nil) if (delim == :eof)
+      return (no_more? ? '' : nil) if (delim == :eof)
       scanner.scan(delim)
     end
 
@@ -19,7 +24,7 @@ module Nydp
       s = @scanner
       rep = "#{open_delimiter}"
       string = ""
-      while (!s.eos?)
+      while (!no_more?)
         if esc = s.scan(/\\/)
           rep    << esc
           ch = s.getch
@@ -45,7 +50,7 @@ module Nydp
       s = @scanner
       tok = nil
       while !tok
-        if s.eos?
+        if no_more?
           @finished = true
           return nil
         elsif comment = s.scan(/;.*$/)
