@@ -12,20 +12,6 @@ module Nydp
     def thread expr
       instructions.push expr
       while instructions.length > 0
-        # puts "instruction stack"
-        # puts "================="
-        # instructions.each_with_index do |ii, ix|
-        #   puts "instructions##{ix} : #{ii}"
-        # end
-        # puts
-        # puts
-        # puts "context stack"
-        # puts "================="
-        # contexts.each_with_index do |ctx, ix|
-        #   puts "context##{ix} : #{ctx}"
-        # end
-        # puts
-        # puts
         self.current_context = contexts.last
         ii = instructions.pop
         i = ii.car
@@ -71,6 +57,13 @@ module Nydp
       puts "================="
       contexts.each_with_index do |ctx, ix|
         puts "context##{ix} : #{ctx}"
+      end
+      puts
+      puts
+      puts "ruby backtrace"
+      puts "================="
+      (e.backtrace || []).each_with_index do |ctx, ix|
+        puts "#{ctx}"
       end
       puts
       puts
