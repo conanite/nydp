@@ -22,7 +22,7 @@ module Nydp
 
     def literal? expr
       case expr
-      when String, Float, Integer, Fixnum, Nydp.NIL, Nydp::Symbol
+      when String, Float, Integer, Fixnum, Nydp.NIL, Nydp::Symbol, Nydp::StringAtom
         true
       else
         false
