@@ -9,6 +9,9 @@ module Nydp
       args = vm.pop_args @arg_count
       args.car.invoke vm, args.cdr
     rescue Exception => e
+      puts "failed to execute fn #{args.inspect}"
+      puts "source was #{source}"
+      puts "function was #{args.car.inspect}"
       vm.error e
     end
 
@@ -21,7 +24,7 @@ module Nydp
     end
 
     def to_s
-      "(#invoke #{@arg_count - 1})"
+      source
     end
   end
 
@@ -43,7 +46,7 @@ module Nydp
 
     def inspect; to_s; end
     def to_s
-      "#function_invocation:#{@argument_instructions.inspect}"
+      "#function_invocation:#{@function_instruction.car.source} #{@argument_instructions.inspect}"
     end
   end
 end
