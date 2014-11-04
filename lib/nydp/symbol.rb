@@ -28,7 +28,7 @@ class Nydp::Symbol
   end
 
   def inspect
-    "(sym #{name.inspect})"
+    "(sym #{name.to_s})"
   end
 
   def to_s
