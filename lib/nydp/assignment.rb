@@ -5,7 +5,7 @@ module Nydp
     end
 
     def execute vm
-      @name.assign vm.peek_arg
+      @name.assign vm.peek_arg, vm.peek_context
     end
 
     def to_s
@@ -17,14 +17,20 @@ module Nydp
     include Helper
 
     def self.build args, bindings
-      name = args.car
-      raise "can't assign to #{name.inspect}" unless name.respond_to?(:assign)
-      Assignment.new name, Compiler.compile(args.cdr.car, bindings)
+      name = Compiler.compile args.car, bindings
+      raise "can't assign to #{name.inspect} : expression was #{args}" unless name.respond_to?(:assign)
+      value_expr = args.cdr.car
+      Assignment.new name, Compiler.compile(value_expr, bindings), value_expr
     end
 
-    def initialize name, value
+    def initialize name, value, value_src
+      @value_src = value_src
       n = AssignmentInstruction.new name
       @instructions = cons(value, cons(n))
+    end
+
+    def to_s
+      "#assignment #{@instructions.cdr.car} #{@value_src}"
     end
 
     def execute vm
