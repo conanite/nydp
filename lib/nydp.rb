@@ -56,25 +56,32 @@ module Nydp
       Nydp.compile_and_eval(vm, precompile(expr))
     end
 
+    def prompt *_
+    end
+
     def run
-      while !stream.eof?
-        Nydp.compile_and_eval(vm, pre_compile(parser.expression(@tokens)))
+      res = Nydp.NIL
+      prompt
+      while !@tokens.finished
+        expr = parser.expression(@tokens)
+        unless expr.nil?
+          res = Nydp.compile_and_eval(vm, pre_compile(expr))
+          prompt res
+        end
       end
+      res
     end
   end
 
   class Repl < Runner
-    def run
+    def prompt val=nil
+      puts val if val
       print "nydp > "
-      while !stream.eof?
-        expr = parser.expression(@tokens)
-        puts Nydp.compile_and_eval(vm, pre_compile(expr)).to_s
-        print "nydp > "
-      end
     end
   end
 
   def self.repl
+    puts "welcome to nydp"
     root_ns = { }
     setup(root_ns)
     vm = VM.new
