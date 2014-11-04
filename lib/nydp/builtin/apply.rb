@@ -1,5 +1,16 @@
 class Nydp::Builtin::Apply
+  include Nydp::Helper
+
   def invoke vm, args
-    args.car.invoke vm, args.cdr.car
+    args.car.invoke vm, apply_args(args.cdr)
+  end
+
+  private
+
+  def apply_args args
+    raise "Apply: expected a list : got #{args.inspect}" unless pair? args
+    raise "Apply: improper list : cdr is ruby nil" if args.cdr.nil?
+    return args.car if Nydp.NIL.is? args.cdr
+    cons args.car, apply_args(args.cdr)
   end
 end
