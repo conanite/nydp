@@ -5,6 +5,10 @@ describe Nydp do
   let(:parser)                { Nydp::Parser.new(root_ns) }
   let(:vm)                    { Nydp::VM.new }
 
+  def sym name
+    Nydp::Symbol.mk name.to_sym, root_ns
+  end
+
   def parse txt
     tokens = Nydp::Tokeniser.new txt
     expressions = []
@@ -85,12 +89,12 @@ describe Nydp do
   describe :cond do
     it "should execute false conditionals" do
       cond = "(if (> 31 37) 'foo 'bar)"
-      expect(run cond).to eq sym(:bar, root_ns)
+      expect(run cond).to eq sym(:bar)
     end
 
     it "should execute conditionals" do
       cond = "(if (> 37 31) 'foo 'bar)"
-      expect(run cond).to eq sym(:foo, root_ns)
+      expect(run cond).to eq sym(:foo)
     end
   end
 end
