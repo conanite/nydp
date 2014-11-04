@@ -34,6 +34,10 @@ describe Nydp do
     expect(run "(+ 1 2)").to eq 3
   end
 
+  it "should add strings" do
+    expect(run '(+ "hello" " " "world")').to eq "hello world"
+  end
+
   it "should diff integers" do
     expect(run "(- 144 121)").to eq 23
   end
