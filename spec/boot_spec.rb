@@ -7,7 +7,7 @@ describe Nydp do
   before {
     Nydp.setup ns
     boot_path = File.expand_path File.join File.expand_path(File.dirname(__FILE__)), '../lib/lisp/boot.nydp'
-    Nydp::Runner.new(vm, ns, File.new(boot_path)).run
+    Nydp::StreamRunner.new(vm, ns, File.new(boot_path)).run
   }
 
   def sym name
@@ -15,7 +15,7 @@ describe Nydp do
   end
 
   def run txt
-    Nydp::Runner.new(vm, ns, txt).run
+    Nydp::StreamRunner.new(vm, ns, txt).run
   end
 
   it "should map a function over a list of numbers" do

@@ -12,6 +12,7 @@ module Nydp
     Symbol.mk(:*,     ns).assign(Nydp::Builtin::Times.new)
     Symbol.mk(:>,     ns).assign(Nydp::Builtin::GreaterThan.new)
     Symbol.mk(:<,     ns).assign(Nydp::Builtin::LessThan.new)
+    Symbol.mk(:eval,  ns).assign(Nydp::Builtin::Eval.new(ns))
     Symbol.mk(:hash,  ns).assign(Nydp::Builtin::Hash.new)
     Symbol.mk(:apply, ns).assign(Nydp::Builtin::Apply.new)
     Symbol.mk(:error, ns).assign(Nydp::Builtin::Error.new)
@@ -34,16 +35,13 @@ module Nydp
   end
 
   class Runner
-    attr_accessor :vm, :ns, :stream, :parser
+    attr_accessor :vm, :ns
 
-    def initialize vm, ns, stream
+    def initialize vm, ns
       @vm = vm
       @ns = ns
-      @stream = stream
       @precompile = Symbol.mk(:"pre-compile", ns)
-      @quote = Symbol.mk(:quote, ns)
-      @parser = Nydp::Parser.new(ns)
-      @tokens = Nydp::Tokeniser.new stream
+      @quote      = Symbol.mk(:quote, ns)
     end
 
     def quote expr
@@ -58,6 +56,21 @@ module Nydp
       Nydp.compile_and_eval(vm, precompile(expr))
     end
 
+    def evaluate expr
+      Nydp.compile_and_eval(vm, pre_compile(expr))
+    end
+  end
+
+  class StreamRunner < Runner
+    attr_accessor :stream, :parser
+
+    def initialize vm, ns, stream
+      super vm, ns
+      @stream = stream
+      @parser = Nydp::Parser.new(ns)
+      @tokens = Nydp::Tokeniser.new stream
+    end
+
     def prompt *_
     end
 
@@ -67,7 +80,7 @@ module Nydp
       while !@tokens.finished
         expr = parser.expression(@tokens)
         unless expr.nil?
-          res = Nydp.compile_and_eval(vm, pre_compile(expr))
+          res = evaluate expr
           prompt res
         end
       end
@@ -75,7 +88,7 @@ module Nydp
     end
   end
 
-  class Repl < Runner
+  class Repl < StreamRunner
     def prompt val=nil
       puts val if val
       print "nydp > "

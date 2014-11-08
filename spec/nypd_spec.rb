@@ -117,4 +117,11 @@ describe Nydp do
       expect(run cond).to eq sym(:foo)
     end
   end
+
+  describe "eval" do
+    it "should eval the given expression and return the result" do
+      code = "(eval '(+ 2 (* 3 5)))"
+      expect(run code).to eq 17
+    end
+  end
 end
