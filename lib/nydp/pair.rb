@@ -33,6 +33,14 @@ class Nydp::Pair
     end
   end
 
+  def copy
+    cons(car, cdr.copy)
+  end
+
+  def + other
+    copy.append other
+  end
+
   def == other
     (other.respond_to? :car) && (self.car == other.car) && (self.cdr == other.cdr)
   end

@@ -5,15 +5,14 @@ module Nydp
   end
 
   class Nil
-    def car;  self; end
-    def cdr;  self; end
-    def size; 0   ; end
-    def is?   other; other == self; end
-    def isnt? other; other != self; end
-
-    def to_s
-      "nil"
-    end
+    def car         ; self          ; end
+    def cdr         ; self          ; end
+    def size        ; 0             ; end
+    def is?   other ; other == self ; end
+    def isnt? other ; other != self ; end
+    def to_s        ; "nil"         ; end
+    def + other     ; other         ; end
+    def copy        ; self          ; end
 
     def inspect
       "nil[Nydp::Nil]"

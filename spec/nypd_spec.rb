@@ -42,6 +42,18 @@ describe Nydp do
     expect(run '(+ "hello" " " "world")').to eq "hello world"
   end
 
+  it "should add Pairs" do
+    expect(run "(+ '(a b) '(c d))").to eq Nydp::Pair.from_list([sym(:a), sym(:b), sym(:c), sym(:d)])
+  end
+
+  it "should add Pairs without recursing" do
+    alist = Nydp::Pair.from_list([sym(:a), sym(:a)])
+    blist = Nydp::Pair.from_list([sym(:b), sym(:b)])
+    clist = Nydp::Pair.from_list([sym(:c), sym(:c)])
+    dlist = Nydp::Pair.from_list([sym(:d), sym(:d)])
+    expect(run "(+ '((a a) (b b)) '((c c) (d d)))").to eq Nydp::Pair.from_list([alist, blist, clist, dlist])
+  end
+
   it "should diff integers" do
     expect(run "(- 144 121)").to eq 23
   end

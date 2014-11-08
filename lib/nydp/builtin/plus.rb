@@ -15,6 +15,8 @@ class Nydp::Builtin::Plus
     case obj
     when Fixnum
       0
+    when Nydp::Pair
+      Nydp.NIL
     when String, Nydp::StringAtom
       Nydp::StringAtom.new ""
     end
