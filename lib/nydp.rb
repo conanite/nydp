@@ -20,6 +20,7 @@ module Nydp
     Symbol.mk(:PI,    ns).assign Literal.new(3.1415)
     Symbol.mk(:nil,   ns).assign Nydp.NIL
     Symbol.mk(:comment,       ns).assign(Nydp::Builtin::Comment.new)
+    Symbol.mk(:millisecs,     ns).assign(Nydp::Builtin::Millisecs.new)
     Symbol.mk("to-string",    ns).assign(Nydp::Builtin::ToString.new)
     Symbol.mk(:"eq?",         ns).assign(Nydp::Builtin::IsEqual.new)
     Symbol.mk(:"pair?",       ns).assign(Nydp::Builtin::IsPair.new)
