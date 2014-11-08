@@ -30,6 +30,10 @@ describe Nydp do
     result
   end
 
+  it "should make a symbol from a string" do
+    expect(run '(sym "the-family")').to eq sym(:"the-family")
+  end
+
   it "should sum integers" do
     expect(run "(+ 1 2)").to eq 3
   end
@@ -85,19 +89,19 @@ describe Nydp do
   end
 
   it "should recurse without consuming extra memory" do
-    program = "(assign f1 (fn (x acc) (if (< x 1) (vm-info) (f1 (- x 1) (+ x acc))))) (f1 1000)"
+    program = "(assign f1 (fn (x acc) (cond (< x 1) (vm-info) (f1 (- x 1) (+ x acc))))) (f1 1000)"
     expected = parse "((contexts . 0) (instructions . 0) (args . 0))"
     expect(run program).to eq expected.first
   end
 
   describe :cond do
     it "should execute false conditionals" do
-      cond = "(if (> 31 37) 'foo 'bar)"
+      cond = "(cond (> 31 37) 'foo 'bar)"
       expect(run cond).to eq sym(:bar)
     end
 
     it "should execute conditionals" do
-      cond = "(if (> 37 31) 'foo 'bar)"
+      cond = "(cond (> 37 31) 'foo 'bar)"
       expect(run cond).to eq sym(:foo)
     end
   end

@@ -19,6 +19,7 @@ module Nydp
     Symbol.mk(:p,     ns).assign(Nydp::Builtin::Puts.new)
     Symbol.mk(:PI,    ns).assign Literal.new(3.1415)
     Symbol.mk(:nil,   ns).assign Nydp.NIL
+    Symbol.mk(:sym,   ns).assign Nydp::Builtin::ToSym.new(ns)
     Symbol.mk(:comment,       ns).assign(Nydp::Builtin::Comment.new)
     Symbol.mk(:millisecs,     ns).assign(Nydp::Builtin::Millisecs.new)
     Symbol.mk("to-string",    ns).assign(Nydp::Builtin::ToString.new)
