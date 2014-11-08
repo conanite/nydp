@@ -16,7 +16,7 @@ module Nydp
     end
 
     def inspect
-      to_s
+      "#{self.class.name}:#{source}"
     end
 
     def source
