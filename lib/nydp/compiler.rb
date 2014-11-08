@@ -33,7 +33,7 @@ module Nydp
 
     def self.compile_pair expression, bindings
       key = expression.car
-      if sym?(key, :if)
+      if sym?(key, :cond)
         Cond.build expression.cdr, bindings
       elsif sym?(key, :quote)
         Literal.build expression.cadr, bindings

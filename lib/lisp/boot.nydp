@@ -1,9 +1,9 @@
 ; -*- lisp -*-
 
 (assign last-cons (fn (xs)
-  (if (pair? (cdr xs))
-      (last-cons (cdr xs))
-      xs)))
+  (cond (pair? (cdr xs))
+        (last-cons (cdr xs))
+        xs)))
 
 (assign append-list! (fn (list-1 list-2)
   (cdr-set (last-cons list-1) list-2)
@@ -17,9 +17,9 @@
 (assign   no (fn (arg) (eq? arg nil)))
 
 (assign mac-expand (fn (macfn name body)
-  (if macfn
-      (pre-compile (apply macfn body))
-      (cons name body))))
+  (cond macfn
+        (pre-compile (apply macfn body))
+        (cons name body))))
 
 (assign macs (hash))
 
@@ -27,18 +27,19 @@
   (mac-expand (hash-get macs name) name body)))
 
 (assign pre-compile-each (fn (args)
-  (if args
-      (if (pair? args)
-          (cons (pre-compile (car args))
-                (pre-compile-each (cdr args)))
-          args))))
+  (cond args
+        (cond (pair? args)
+              (cons (pre-compile (car args))
+                    (pre-compile-each (cdr args)))
+              args))))
 
-(assign pre-compile (fn (arg)
-  (if (pair? arg)
-      (if (eq? (car arg) 'quote)
-          arg
-          (pre-compile-each (pre-compile-expr (car arg) (cdr arg))))
-      arg)))
+(assign pre-compile
+        (fn (arg)
+            (cond (pair? arg)
+                  (cond (eq? (car arg) 'quote)
+                        arg
+                        (pre-compile-each (pre-compile-expr (car arg) (cdr arg))))
+                  arg)))
 
 (hash-set macs 'def (fn (name args . body)
   (list 'assign name (append-list! (list 'fn args) body))))
@@ -55,26 +56,26 @@
               (qq-quasiquote rest)))
 
 (def qq-unquote? (arg rest)
-  (if (pair? arg)
-      (if (eq? (car arg) 'unquote)
-          (qq-unquote-unq arg rest)
-          (if (eq? (car arg) 'unquote-splicing)
-              (list 'append-list!
-                    (cadr arg)
-                    (qq-quasiquote rest))
-              (qq-unquote-recurse arg rest)))
-      (list 'cons
-            (list 'quote arg)
-            (qq-quasiquote rest))))
+     (cond (pair? arg)
+           (cond (eq? (car arg) 'unquote)
+                 (qq-unquote-unq arg rest)
+                 (cond (eq? (car arg) 'unquote-splicing)
+                       (list 'append-list!
+                             (cadr arg)
+                             (qq-quasiquote rest))
+                       (qq-unquote-recurse arg rest)))
+           (list 'cons
+                 (list 'quote arg)
+                 (qq-quasiquote rest))))
 
 (def qq-quasiquote (xs)
-  (if (no xs)
-      nil
-      (if (pair? xs)
-          (if (eq? (car xs) 'unquote)
-              (cadr xs)
-              (qq-unquote? (car xs) (cdr xs)))
-          xs)))
+     (cond (no xs)
+           nil
+           (cond (pair? xs)
+                 (cond (eq? (car xs) 'unquote)
+                       (cadr xs)
+                       (qq-unquote? (car xs) (cdr xs)))
+                 xs)))
 
 (hash-set macs 'quasiquote (fn (arg)
   (qq-quasiquote arg)))
@@ -82,14 +83,38 @@
 (hash-set macs 'mac (fn (name args . body)
   `(hash-set macs ',name (fn ,args ,@body))))
 
+(mac if args
+     (cond (no args) nil
+           (cond (cadr args)
+                 (cond (cddr args)
+                       `(cond ,(car args) ,(cadr args) (if ,@(cddr args)))
+                       `(cond ,(car args) ,(cadr args)))
+                 (car args))))
+
 (mac do args
   `((fn nil ,@args)))
 
 (mac when (condition . body)
   `(if ,condition (do ,@body)))
 
+(def map (f things)
+  (cond (no things)
+        nil
+        (cons (f (car things)) (map f (cdr things)))))
+
+(def pairs (things)
+     (if (no things)       nil
+       (no (cdr things)) (list (list (car things)))
+       (cons (list (car things) (cadr things))
+             (pairs (cddr things)))))
+
+(mac with (parms . body)
+     `((fn ,(map car (pairs parms))
+           ,@body)
+       ,@(map cadr (pairs parms))))
+
 (mac let (var val . body)
-  `((fn (,var) ,@body) ,val))
+     `(with (,var ,val) ,@body))
 
 (def each (f acc things)
   (if things
@@ -126,7 +151,11 @@
 
 (def nil? (arg) (eq? arg nil))
 
-(def map (f things)
-  (if (nil? things)
-      nil
-      (cons (f (car things)) (map f (cdr things)))))
+(mac push (x things)
+  `(assign ,things (cons ,x ,things)))
+
+(mac fpop (xs)
+  (w/uniq gp
+  `(let ,gp (car ,xs)
+     (assign ,xs (cdr ,xs))
+     ,gp)))
