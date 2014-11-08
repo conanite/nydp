@@ -32,11 +32,11 @@ module Nydp
     extend Helper
 
     def self.build expression, bindings
-      new cons(InvokeFunctionInstruction.new(expression.size, expression)), Compiler.compile_each(expression, bindings)
+      new cons(InvokeFunctionInstruction.new(expression.size, expression)), Compiler.compile_each(expression, bindings), expression
     end
 
-    def initialize function_instruction, argument_instructions
-      @function_instruction, @argument_instructions = function_instruction, argument_instructions
+    def initialize function_instruction, argument_instructions, source
+      @function_instruction, @argument_instructions, @source = function_instruction, argument_instructions, source
     end
 
     def execute vm
@@ -44,9 +44,9 @@ module Nydp
       vm.push_instructions @argument_instructions, vm.peek_context
     end
 
-    def inspect; to_s; end
+    def inspect; "#function_invocation:#{to_s}"; end
     def to_s
-      "#function_invocation:#{@function_instruction.car.source} #{@argument_instructions.inspect}"
+      @source.to_s
     end
   end
 end

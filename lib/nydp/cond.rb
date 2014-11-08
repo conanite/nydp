@@ -13,9 +13,11 @@ module Nydp
       vm.push_instructions (truth ? when_true : when_false), vm.peek_context
     end
 
-    def inspect; to_s; end
+    def inspect
+      "when_true:#{when_true.inspect}:when_false:#{when_false.inspect}"
+    end
     def to_s
-      "when_true:#{when_true}:when_false:#{when_false}"
+      "#{when_true.car.to_s} #{when_false.car.to_s}"
     end
   end
 
@@ -33,9 +35,11 @@ module Nydp
       vm.push_instructions condition,   vm.peek_context
     end
 
-    def inspect; to_s; end
+    def inspect
+      "cond:#{condition.inspect}:#{conditional.inspect}"
+    end
     def to_s
-      "cond:#{condition}:#{conditional}"
+      "(cond #{condition.car.to_s} #{conditional.to_s})"
     end
 
     def self.build expressions, bindings

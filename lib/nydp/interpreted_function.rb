@@ -8,6 +8,10 @@ module Nydp
     end
 
     def self.to_s
+      ""
+    end
+
+    def self.inspect
       "#pop_arg"
     end
   end
@@ -69,7 +73,7 @@ module Nydp
 
     def inspect; to_s; end
     def to_s
-      "(fn #{arg_names} #{body})"
+      "(fn #{arg_names.to_s} #{body.map { |b| b.to_s}.join(' ')})"
     end
   end
 end
