@@ -95,12 +95,14 @@
   `((fn nil ,@args)))
 
 (mac when (condition . body)
-  `(if ,condition (do ,@body)))
+  `(cond ,condition (do ,@body)))
 
 (def map (f things)
-  (cond (no things)
-        nil
-        (cons (f (car things)) (map f (cdr things)))))
+  (if (no things)
+      nil
+    (pair? things)
+    (cons (f (car things)) (map f (cdr things)))
+    (map f (list things))))
 
 (def pairs (things)
      (if (no things)       nil
@@ -149,7 +151,8 @@
             (flatten (zip (map (fn (_) txt) (cdr things))
                           (map to-string (cdr things))))))
 
-(def nil? (arg) (eq? arg nil))
+(def uniq (prefix)
+     (joinstr "-" (list prefix (millisecs))))
 
 (mac push (x things)
   `(assign ,things (cons ,x ,things)))
