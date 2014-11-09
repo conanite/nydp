@@ -10,6 +10,7 @@ module Nydp
     Symbol.mk(:+,     ns).assign(Nydp::Builtin::Plus.new)
     Symbol.mk(:-,     ns).assign(Nydp::Builtin::Minus.new)
     Symbol.mk(:*,     ns).assign(Nydp::Builtin::Times.new)
+    Symbol.mk(:/,     ns).assign(Nydp::Builtin::Divide.new)
     Symbol.mk(:>,     ns).assign(Nydp::Builtin::GreaterThan.new)
     Symbol.mk(:<,     ns).assign(Nydp::Builtin::LessThan.new)
     Symbol.mk(:eval,  ns).assign(Nydp::Builtin::Eval.new(ns))
@@ -20,6 +21,7 @@ module Nydp
     Symbol.mk(:p,     ns).assign(Nydp::Builtin::Puts.new)
     Symbol.mk(:PI,    ns).assign Literal.new(3.1415)
     Symbol.mk(:nil,   ns).assign Nydp.NIL
+    Symbol.mk(:t,     ns).assign Nydp.T
     Symbol.mk(:sym,   ns).assign Nydp::Builtin::ToSym.new(ns)
     Symbol.mk(:comment,       ns).assign(Nydp::Builtin::Comment.new)
     Symbol.mk(:millisecs,     ns).assign(Nydp::Builtin::Millisecs.new)
@@ -101,8 +103,30 @@ module Nydp
     setup(root_ns)
     vm = VM.new
     boot_path = File.join File.expand_path(File.dirname(__FILE__)), 'lisp/boot.nydp'
-    Runner.new(vm, root_ns, File.new(boot_path)).run
+    StreamRunner.new(vm, root_ns, File.new(boot_path)).run
     Repl.new(vm, root_ns, $stdin).run
+  end
+
+  def self.tests
+    puts "welcome to nydp : running tests"
+    root_ns = { }
+    setup(root_ns)
+    vm = VM.new
+    boot_path = File.join File.expand_path(File.dirname(__FILE__)), 'lisp/boot.nydp'
+    test_runner_path = File.join File.expand_path(File.dirname(__FILE__)), 'lisp/test-runner.nydp'
+    tests = Dir.glob(File.join File.expand_path(File.dirname(__FILE__)), 'lisp/tests/**/*.nydp')
+    puts boot_path
+    puts test_runner_path
+    puts tests.inspect
+    StreamRunner.new(vm, root_ns, File.new(boot_path)).run
+    puts "finished boot; running #{test_runner_path}"
+    StreamRunner.new(vm, root_ns, File.new(test_runner_path)).run
+    puts "finished test runner; loading tests"
+    tests.each do |tst|
+      puts "loading #{tst}"
+      StreamRunner.new(vm, root_ns, File.new(tst)).run
+    end
+    StreamRunner.new(vm, root_ns, "(run-all-tests)").run
   end
 end
 
