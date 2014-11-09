@@ -24,8 +24,13 @@
 
 (assign macs (hash))
 
-(assign pre-compile-expr (fn (name body)
-  (mac-expand (hash-get macs name) name body)))
+(assign debug-pre-compile
+        (fn (arg)
+            (assign *debug-pre-compile* arg)))
+
+(assign pre-compile-expr
+        (fn (name body)
+            (mac-expand (hash-get macs name) name body)))
 
 (assign pre-compile-each
         (fn (args)
@@ -96,7 +101,7 @@
 
 (mac if args
      (cond (no args) nil
-           (cond (cadr args)
+           (cond (cdr args)
                  (cond (cddr args)
                        `(cond ,(car args) ,(cadr args) (if ,@(cddr args)))
                        `(cond ,(car args) ,(cadr args)))
@@ -136,6 +141,10 @@
 (mac let (var val . body)
      `(with (,var ,val) ,@body))
 
+;; (debug-pre-compile t)
+;; (let a b c d e)
+;; (debug-pre-compile nil)
+
 (def each (f acc things)
   (if things
       (each f (f acc (car things)) (cdr things))
@@ -151,17 +160,18 @@
       (cons (list (car a) (car b))
             (zip (cdr a) (cdr b)))))
 
+(mac push (x things)
+  `(assign ,things (cons ,x ,things)))
+
 (def flatten (things)
-  (let acc nil
-       (let flattenize nil
-            (assign flattenize (fn (x)
-                                   (if (pair? x)
-                                       (do
-                                           (eachr flattenize (cdr x))
-                                           (flattenize (car x)))
-                                     (assign acc (cons x acc)))))
-            (flattenize things))
-       acc))
+     (let acc nil
+          (let flattenize nil
+               (assign flattenize (fn (x)
+                                      (if (pair? x)
+                                          (eachr flattenize x)
+                                        (push x acc))))
+               (flattenize things))
+          acc))
 
 (def joinstr (txt things)
      (apply +
@@ -178,21 +188,11 @@
      (def reset-uniq-counter ()
           (assign uniq-counter 0)))
 
-(def debug-pre-compile (arg)
-     (assign *debug-pre-compile* arg))
-
-
 (mac w/uniq (vars . body)
-     (pre-compile-msg "w/uniq: vars :" vars)
-     (pre-compile-msg "w/uniq: body :" body)
      (if (pair? vars)
          `(with ,(apply + (map (fn (n) (list n '(uniq ',n))) vars))
                 ,@body)
        `(let ,vars (uniq ',vars) ,@body)))
-
-(mac push (x things)
-  `(assign ,things (cons ,x ,things)))
-
 
 (mac or args
      (cond args
@@ -200,25 +200,20 @@
                    `(let ,ora ,(car args)
                          (cond ,ora ,ora (or ,@(cdr args)))))))
 
-;; (debug-pre-compile t)
-;; (pre-compile (or a b c d e))
-;; (debug-pre-compile nil)
-
 (mac pop (xs)
-  (w/uniq gp
-  `(let ,gp (car ,xs)
-     (assign ,xs (cdr ,xs))
-     ,gp)))
+     (w/uniq gp
+             `(let ,gp (car ,xs)
+                   (assign ,xs (cdr ,xs))
+                   ,gp)))
 
 (def nth (n things)
      (if (eq? n 0)
          (car things)
        (nth (- n 1) (cdr things))))
 
-
 (def iso (x y)
-  (or (eq? x y)
-      (and (pair? x)
-           (pair? y)
-           (iso (car x) (car y))
-           (iso (cdr x) (cdr y)))))
+     (or (eq? x y)
+         (and (pair? x)
+              (pair? y)
+              (iso (car x) (car y))
+              (iso (cdr x) (cdr y)))))

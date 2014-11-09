@@ -13,7 +13,7 @@ describe Nydp do
     tokens = Nydp::Tokeniser.new txt
     expressions = []
     expr = parser.expression(tokens)
-    while (expr != nil) && Nydp.NIL.isnt?(expr)
+    while (expr != nil)
       expressions << expr
       expr = parser.expression(tokens)
     end

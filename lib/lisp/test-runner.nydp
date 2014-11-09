@@ -29,8 +29,8 @@
         (if (iso result expected)
             (passf)
             (do (p desc " - " (car test) " - FAILED:
-   expected " expected ",
-   got " result "
+   expected " (inspect expected) ",
+   got " (inspect result) "
 ")
                 (failf)))))
 
