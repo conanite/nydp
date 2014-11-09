@@ -1,0 +1,6 @@
+(register-test '(suite "Foundation Tests"
+  (suite "Lists"
+    (suite "cons"
+      ("cons creates a list"
+        (cons 'a '(b c))
+        (a b c))))))

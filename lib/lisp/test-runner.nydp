@@ -1,0 +1,39 @@
+(assign show-failed-only t)
+(assign all-tests nil)
+
+(def register-test (test)
+  "register a test to be run later by 'run-all-tests"
+  (push test all-tests))
+
+(def run-all-tests ()
+  "runs all tests that have been registered with 'register-test"
+  (with (passed 0 failed 0)
+    (with (f-pass (fn nil (assign passed (+ 1 passed)))
+           f-fail (fn nil (assign failed (+ 1 failed))))
+      (run-tests `(suite "all tests" ,@all-tests) f-pass f-fail)
+      (p "passed: " passed)
+      (p "failed: " failed)
+      (/ passed (+ passed failed)))))
+
+(def run-tests (tests passf failf)
+  (execute-test "" tests passf failf)
+  results)
+
+(def execute-test (desc test passf failf)
+  (if (eq? 'suite (car test))
+      (execute-tests (+ desc " - " (cadr test)) (cddr test) passf failf)
+      (execute-single-test desc test passf failf)))
+
+(def execute-single-test (desc test passf failf)
+  (with (expected (nth 2 test) result (eval (nth 1 test)))
+        (if (iso result expected)
+            (passf)
+            (do (p desc " - " (car test) " - FAILED:
+   expected " expected ",
+   got " result "
+")
+                (failf)))))
+
+(def execute-tests (desc tests passf failf)
+  (execute-test desc (car tests) passf failf)
+  (if (cdr tests) (execute-tests desc (cdr tests) passf failf)))

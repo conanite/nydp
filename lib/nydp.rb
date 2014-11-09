@@ -115,15 +115,9 @@ module Nydp
     boot_path = File.join File.expand_path(File.dirname(__FILE__)), 'lisp/boot.nydp'
     test_runner_path = File.join File.expand_path(File.dirname(__FILE__)), 'lisp/test-runner.nydp'
     tests = Dir.glob(File.join File.expand_path(File.dirname(__FILE__)), 'lisp/tests/**/*.nydp')
-    puts boot_path
-    puts test_runner_path
-    puts tests.inspect
     StreamRunner.new(vm, root_ns, File.new(boot_path)).run
-    puts "finished boot; running #{test_runner_path}"
     StreamRunner.new(vm, root_ns, File.new(test_runner_path)).run
-    puts "finished test runner; loading tests"
     tests.each do |tst|
-      puts "loading #{tst}"
       StreamRunner.new(vm, root_ns, File.new(tst)).run
     end
     StreamRunner.new(vm, root_ns, "(run-all-tests)").run
