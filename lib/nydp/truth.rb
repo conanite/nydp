@@ -1,7 +1,8 @@
 module Nydp
   class Truth
-    def to_s; 't'; end
-    def inspect; 't[nydp::Truth]'; end
+    def to_s      ; 't'              ; end
+    def inspect   ; 't[nydp::Truth]' ; end
+    def assign *_ ; self             ; end
   end
 
   class Nil
@@ -13,6 +14,7 @@ module Nydp
     def to_s        ; "nil"         ; end
     def + other     ; other         ; end
     def copy        ; self          ; end
+    def assign *_   ; self          ; end
 
     def inspect
       "nil[Nydp::Nil]"
