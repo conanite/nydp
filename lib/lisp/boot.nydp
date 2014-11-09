@@ -15,10 +15,11 @@
 (assign cadr (fn (arg) (car (cdr arg))))
 (assign cddr (fn (arg) (cdr (cdr arg))))
 (assign   no (fn (arg) (eq? arg nil)))
+(assign just (fn (arg) arg))
 
 (assign mac-expand (fn (macfn name body)
   (cond macfn
-        (pre-compile (apply macfn body))
+        (pre-compile-do (apply macfn body))
         (cons name body))))
 
 (assign macs (hash))
@@ -26,14 +27,19 @@
 (assign pre-compile-expr (fn (name body)
   (mac-expand (hash-get macs name) name body)))
 
-(assign pre-compile-each (fn (args)
-  (cond args
-        (cond (pair? args)
-              (cons (pre-compile (car args))
-                    (pre-compile-each (cdr args)))
-              args))))
+(assign pre-compile-each
+        (fn (args)
+            (cond args
+                  (cond (pair? args)
+                        (cons (pre-compile-do (car args))
+                              (pre-compile-each (cdr args)))
+                        args))))
 
-(assign pre-compile
+(assign pre-compile-msg
+        (fn args
+            (cond *debug-pre-compile* (apply p args) (car args))))
+
+(assign pre-compile-do
         (fn (arg)
             (cond (pair? arg)
                   (cond (eq? (car arg) 'quote)
@@ -41,14 +47,17 @@
                         (pre-compile-each (pre-compile-expr (car arg) (cdr arg))))
                   arg)))
 
-(hash-set macs 'def (fn (name args . body)
-  (list 'assign name (append-list! (list 'fn args) body))))
+(assign pre-compile
+        (fn (arg)
+            (pre-compile-msg "pre-compile" arg)
+            (pre-compile-msg (pre-compile-do arg))))
 
-; arg is "(unquote x)"
-; rest is another form
-; returns (list 'cons x (qq-quasiquote rest))
-(def qq-unquote-unq (arg rest)
-  (list 'cons (cadr arg) (qq-quasiquote rest)))
+(hash-set macs 'def
+          (fn (name args . body)
+              (list 'assign
+                    name
+                    (+ (list 'fn args)
+                       body))))
 
 (def qq-unquote-recurse (arg rest)
         (list 'cons
@@ -58,11 +67,13 @@
 (def qq-unquote? (arg rest)
      (cond (pair? arg)
            (cond (eq? (car arg) 'unquote)
-                 (qq-unquote-unq arg rest)
+                 (list 'cons (cadr arg) (qq-quasiquote rest))
                  (cond (eq? (car arg) 'unquote-splicing)
-                       (list 'append-list!
+                       (cond (no rest)
                              (cadr arg)
-                             (qq-quasiquote rest))
+                             (list '+
+                                   (cadr arg)
+                                   (qq-quasiquote rest)))
                        (qq-unquote-recurse arg rest)))
            (list 'cons
                  (list 'quote arg)
@@ -75,7 +86,7 @@
                  (cond (eq? (car xs) 'unquote)
                        (cadr xs)
                        (qq-unquote? (car xs) (cdr xs)))
-                 xs)))
+                 (list 'quote xs))))
 
 (hash-set macs 'quasiquote (fn (arg)
   (qq-quasiquote arg)))
@@ -90,6 +101,13 @@
                        `(cond ,(car args) ,(cadr args) (if ,@(cddr args)))
                        `(cond ,(car args) ,(cadr args)))
                  (car args))))
+
+(mac and args
+  (if args
+      (if (cdr args)
+          `(if ,(car args) (and ,@(cdr args)))
+          (car args))
+      't))
 
 (mac do args
   `((fn nil ,@args)))
@@ -151,14 +169,56 @@
             (flatten (zip (map (fn (_) txt) (cdr things))
                           (map to-string (cdr things))))))
 
-(def uniq (prefix)
-     (joinstr "-" (list prefix (millisecs))))
+(let uniq-counter 0
+     (def uniq (prefix)
+          (sym (joinstr "-"
+                        (list prefix
+                              (assign uniq-counter
+                                      (+ uniq-counter 1))))))
+     (def reset-uniq-counter ()
+          (assign uniq-counter 0)))
+
+(def debug-pre-compile (arg)
+     (assign *debug-pre-compile* arg))
+
+
+(mac w/uniq (vars . body)
+     (pre-compile-msg "w/uniq: vars :" vars)
+     (pre-compile-msg "w/uniq: body :" body)
+     (if (pair? vars)
+         `(with ,(apply + (map (fn (n) (list n '(uniq ',n))) vars))
+                ,@body)
+       `(let ,vars (uniq ',vars) ,@body)))
 
 (mac push (x things)
   `(assign ,things (cons ,x ,things)))
 
-(mac fpop (xs)
+
+(mac or args
+     (cond args
+           (w/uniq ora
+                   `(let ,ora ,(car args)
+                         (cond ,ora ,ora (or ,@(cdr args)))))))
+
+;; (debug-pre-compile t)
+;; (pre-compile (or a b c d e))
+;; (debug-pre-compile nil)
+
+(mac pop (xs)
   (w/uniq gp
   `(let ,gp (car ,xs)
      (assign ,xs (cdr ,xs))
      ,gp)))
+
+(def nth (n things)
+     (if (eq? n 0)
+         (car things)
+       (nth (- n 1) (cdr things))))
+
+
+(def iso (x y)
+  (or (eq? x y)
+      (and (pair? x)
+           (pair? y)
+           (iso (car x) (car y))
+           (iso (cdr x) (cdr y)))))

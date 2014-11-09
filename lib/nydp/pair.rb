@@ -59,7 +59,15 @@ class Nydp::Pair
   end
 
   def to_s
-    "(#{to_s_rest})"
+    if car.is_a?(Nydp::Symbol) && car.is?(:quote)
+      if Nydp.NIL.is? cdr.cdr
+        "'#{cdr.car.to_s}"
+      else
+        "'#{cdr.to_s}"
+      end
+    else
+      "(#{to_s_rest})"
+    end
   end
 
   def to_s_rest

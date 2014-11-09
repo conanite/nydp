@@ -14,12 +14,51 @@ describe Nydp do
     Nydp::Symbol.mk name.to_sym, ns
   end
 
+  def list *things
+    Nydp::Pair.from_list things.map { |thing|
+      case thing
+      when Symbol
+        sym(thing)
+      when Array
+        list(*thing)
+      else
+        thing
+      end
+    }
+  end
+
   def run txt
     Nydp::StreamRunner.new(vm, ns, txt).run
   end
 
   it "should map a function over a list of numbers" do
     expect(run "(map (fn (x) (* x x)) '(1 2 3))").to eq Nydp::Pair.from_list [1, 4, 9]
+  end
+
+  describe "quasiquote" do
+    it "should quasiquote a standalone item" do
+      expect(run "`a").to eq sym(:a)
+    end
+
+    it "should quasiquote a plain list" do
+      expect(run "`(a b c)").to eq list :a, :b, :c
+    end
+
+    it "should quasiquote a plain list with a variable substitution" do
+      expect(run "(assign b 10) `(a ,b c)").to eq list :a, 10, :c
+    end
+
+    it "should quasiquote a plain list with a list-variable substitution" do
+      expect(run "(assign b '(1 2 3)) `(a ,@b c)").to eq list :a, 1, 2, 3, :c
+    end
+
+    it "should quasiquote a plain list with a list-variable substitution at the end" do
+      expect(run "(assign b '(1 2 3)) `(a ,b ,@b)").to eq list :a, [1,2,3], 1, 2, 3
+    end
+
+    it "should quasiquote a plain list with a list-variable substitution at the end" do
+      expect(run "(assign d '(1 2 3)) (assign g '(x y z)) `(a (b c ,d (e f ,@g)))").to eq list :a, [:b, :c, [1, 2, 3], [:e, :f, :x, :y, :z]]
+    end
   end
 
   describe "pairs" do
@@ -42,7 +81,28 @@ describe Nydp do
     it "should return a flat list of things" do
       lisp = "(flatten '((poo (x) (* x x)) (1 2 3)))"
       result = run lisp
-      expect(result).to eq Nydp::Pair.from_list [(sym :poo), (sym :x), (sym :"*"), (sym :x), (sym :x), 1, 2, 3]
+      expect(result).to eq list :poo, :x, :"*", :x, :x, 1, 2, 3
+    end
+  end
+
+  describe :and do
+    it "should produce some nested conds" do
+      result = run "(pre-compile '(and a b c))"
+      expect(result).to eq list :cond, :a, [:cond, :b, :c]
+    end
+  end
+
+  describe :w_uniq do
+    it "should handle single-var case" do
+      result = run "(reset-uniq-counter) (pre-compile '(w/uniq a foo))"
+      expect(result).to eq list [:fn, [:a], :foo], [:uniq, [:quote, :a]]
+    end
+  end
+
+  describe :or do
+    it "should produce some nested conds" do
+      result = run "(reset-uniq-counter) (pre-compile '(or a b c))"
+      expect(result.to_s).to eq "((fn (ora-3) (cond ora-3 ora-3 ((fn (ora-4) (cond ora-4 ora-4 ((fn (ora-5) (cond ora-5 ora-5)) c))) b))) a)"
     end
   end
 

@@ -4,7 +4,7 @@ class Nydp::Builtin::Eval
   end
 
   def invoke vm, args
-    evaluator = Nydp::Runner.new vm, @ns
+    evaluator = Nydp::Runner.new Nydp::VM.new, @ns
     vm.push_arg evaluator.evaluate args.car
   end
 
