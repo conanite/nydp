@@ -6,25 +6,27 @@ improved Q unlike the Q your daddy used. "NYDP" also shamelessly piggypacks on t
 catchiness and popularity of the "NYPD" abbreviation ("New York Police Department",
 for those who have no interest in popular US TV or authoritarian politics).
 
-"Not Your Daddy's X":http://tvtropes.org/pmwiki/pmwiki.php/Main/NotYourDaddysX
+[Not Your Daddy's X](http://tvtropes.org/pmwiki/pmwiki.php/Main/NotYourDaddysX)
 
-"xkcd 297":http://xkcd.com/297/
+[xkcd 297](http://xkcd.com/297/)
 
-"NYPD":https://en.wikipedia.org/wiki/NYPD_Blue
+[NYPD](https://en.wikipedia.org/wiki/NYPD_Blue)
 
-
+```
   (def pre-compile (expr)
     (map pre-compile
       (if (mac-names (car expr))
           (pre-compile (mac-expand (car expr) (cdr expr)))
           expr)))
+```
 
 ; blah blah
 
+```
   ==> (comment "blah blah")
 
   ==> (mac comment (txt) nil)
-
+```
 
 We do not wish to suggest by "Not Your Daddy's Parentheses" that Common Lisp,
 Scheme, Racket, Arc, Clojure or your favourite other lisp are somehow
