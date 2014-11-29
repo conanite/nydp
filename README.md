@@ -1,23 +1,21 @@
 # Nydp
 
-NYDP is "Not Your Daddy's Parentheses", a reference to Xkcd 297 (itself a reference
-to Star Wars), as well as to the meme "Not Your Daddy's Q", where Q is a modern,
+NYDP is "Not Your Daddy's Parentheses", a reference to [Xkcd 297](http://xkcd.com/297/) (itself a reference
+to Star Wars), as well as to the meme [Not Your Daddy's Q](http://tvtropes.org/pmwiki/pmwiki.php/Main/NotYourDaddysX), where Q is a modern,
 improved Q unlike the Q your daddy used. "NYDP" also shamelessly piggypacks on the
-catchiness and popularity of the "NYPD" abbreviation ("New York Police Department",
+catchiness and popularity of the [NYPD](https://en.wikipedia.org/wiki/NYPD_Blue) abbreviation ("New York Police Department",
 for those who have no interest in popular US TV or authoritarian politics).
 
-[Not Your Daddy's X](http://tvtropes.org/pmwiki/pmwiki.php/Main/NotYourDaddysX)
-
-[xkcd 297](http://xkcd.com/297/)
-
-[NYPD](https://en.wikipedia.org/wiki/NYPD_Blue)
+Macro-expansion is not built-in to the interpreter; however, the compiler will invoke 'pre-compile before compiling, passing
+the expression to compile as an argument. You can override 'pre-compile to transform the expression in any way you wish. By default,
+nydp provides an implementation of 'pre-compile that performs macro-expansion.
 
 ```
-  (def pre-compile (expr)
-    (map pre-compile
-      (if (mac-names (car expr))
-          (pre-compile (mac-expand (car expr) (cdr expr)))
-          expr)))
+(def pre-compile (expr)
+  (map pre-compile
+    (if (mac-names (car expr))
+        (pre-compile (mac-expand (car expr) (cdr expr)))
+        expr)))
 ```
 
 ; blah blah
