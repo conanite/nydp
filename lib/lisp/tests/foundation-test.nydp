@@ -25,7 +25,4 @@
       ("car returns car of argument"
         (car '(foo 12.34 "bar"))
         foo)
-    )
-
-
-)))
+    ))))

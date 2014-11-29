@@ -26,6 +26,7 @@ module Nydp
     Symbol.mk(:inspect,       ns).assign(Nydp::Builtin::Inspect.new)
     Symbol.mk(:comment,       ns).assign(Nydp::Builtin::Comment.new)
     Symbol.mk(:millisecs,     ns).assign(Nydp::Builtin::Millisecs.new)
+    Symbol.mk("random-string",ns).assign(Nydp::Builtin::RandomString.new)
     Symbol.mk("to-string",    ns).assign(Nydp::Builtin::ToString.new)
     Symbol.mk(:"eq?",         ns).assign(Nydp::Builtin::IsEqual.new)
     Symbol.mk(:"pair?",       ns).assign(Nydp::Builtin::IsPair.new)
