@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["conan@conandalton.net"]
   spec.description   = %q{Not Your Daddy's Parentheses}
   spec.summary       = %q{A new lisp for a new age}
-  spec.homepage      = ""
+  spec.homepage      = "http://github.com/conanite/nydp"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
