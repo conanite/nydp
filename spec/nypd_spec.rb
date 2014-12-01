@@ -22,12 +22,7 @@ describe Nydp do
 
   def run txt
     Nydp.setup root_ns
-    expressions = parse(txt)
-    result = nil
-    expressions.each do |expr|
-      result = Nydp.compile_and_eval vm, expr
-    end
-    result
+    Nydp::StreamRunner.new(vm, root_ns, txt).run
   end
 
   it "should make a symbol from a string" do

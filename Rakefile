@@ -1,4 +1,4 @@
 require "bundler/gem_tasks"
 require "nydp"
 
-Nydp.rake_tasks
+Nydp.load_rake_tasks
