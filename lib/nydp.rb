@@ -1,4 +1,18 @@
 module Nydp
+  LOADFILES = []
+
+  def self.rake_tasks
+    load relative_path 'tasks/tests.rake'
+  end
+
+  def self.relative_path name
+    File.join File.expand_path(File.dirname(__FILE__)), name
+  end
+
+  LOADFILES << relative_path('lisp/boot.nydp')
+  LOADFILES << relative_path('lisp/test-runner.nydp')
+  Dir.glob(relative_path 'lisp/tests/**/*.nydp').each { |f| LOADFILES << f }
+
   def self.compile_and_eval vm, expr
     vm.thread Pair.new(Compiler.compile(expr, Nydp.NIL), Nydp.NIL)
   end
@@ -104,8 +118,7 @@ module Nydp
     root_ns = { }
     setup(root_ns)
     vm = VM.new
-    boot_path = File.join File.expand_path(File.dirname(__FILE__)), 'lisp/boot.nydp'
-    StreamRunner.new(vm, root_ns, File.new(boot_path)).run
+    LOADFILES.each { |f| StreamRunner.new(vm, root_ns, File.new(f)).run }
     Repl.new(vm, root_ns, $stdin).run
   end
 
@@ -114,14 +127,7 @@ module Nydp
     root_ns = { }
     setup(root_ns)
     vm = VM.new
-    boot_path = File.join File.expand_path(File.dirname(__FILE__)), 'lisp/boot.nydp'
-    test_runner_path = File.join File.expand_path(File.dirname(__FILE__)), 'lisp/test-runner.nydp'
-    tests = Dir.glob(File.join File.expand_path(File.dirname(__FILE__)), 'lisp/tests/**/*.nydp')
-    StreamRunner.new(vm, root_ns, File.new(boot_path)).run
-    StreamRunner.new(vm, root_ns, File.new(test_runner_path)).run
-    tests.each do |tst|
-      StreamRunner.new(vm, root_ns, File.new(tst)).run
-    end
+    LOADFILES.each { |f| StreamRunner.new(vm, root_ns, File.new(f)).run }
     StreamRunner.new(vm, root_ns, "(run-all-tests)").run
   end
 end
