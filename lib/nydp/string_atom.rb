@@ -5,9 +5,8 @@ module Nydp
       @string, @token = string, token
     end
 
-    def to_s
-      string
-    end
+    def nydp_type ; :string ; end
+    def to_s      ;  string ; end
 
     def inspect
       token ? token.rep : string.inspect
@@ -20,5 +19,6 @@ module Nydp
     def + other
       StringAtom.new "#{@string}#{other}"
     end
+
   end
 end

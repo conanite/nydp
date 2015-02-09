@@ -21,6 +21,6 @@ class Nydp::Builtin::StringPieces
   end
 
   def invoke vm, args
-    vm.push_arg to_string(args.car, args.cdr)
+    vm.push_arg Nydp::StringAtom.new to_string(args.car, args.cdr)
   end
 end

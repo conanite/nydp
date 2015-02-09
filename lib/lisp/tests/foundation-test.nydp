@@ -1,4 +1,19 @@
 (register-test '(suite "Foundation Tests"
+  (suite "strings"
+    (suite "type-of"
+      ("returns 'string"
+        (type-of "foobar")
+        string)
+
+      ("interpolates a string"
+        "foobar %%(+ 1 2) you know"
+        "foobar 3 you know")
+
+      ("returns 'string for an interpolated string"
+        (type-of "foobar %%(+ 1 2)")
+        string)
+
+))
   (suite "Lists"
     (suite "cons"
       ("cons creates a list"
