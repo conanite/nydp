@@ -5,26 +5,27 @@
   "register a test to be run later by 'run-all-tests"
   (push test all-tests))
 
-(def run-all-tests ()
+(def run-all-tests (verbose)
   "runs all tests that have been registered with 'register-test"
   (with (passed 0 failed 0)
     (with (f-pass (fn nil (assign passed (+ 1 passed)))
            f-fail (fn nil (assign failed (+ 1 failed))))
-      (run-tests `(suite "all tests" ,@all-tests) f-pass f-fail)
+      (run-tests `(suite "all tests" ,@all-tests) f-pass f-fail verbose)
       (p "passed: " passed)
       (p "failed: " failed)
       (/ passed (+ passed failed)))))
 
-(def run-tests (tests passf failf)
-  (execute-test "" tests passf failf)
+(def run-tests (tests passf failf verbose)
+  (execute-test "" tests passf failf verbose)
   results)
 
-(def execute-test (desc test passf failf)
+(def execute-test (desc test passf failf verbose)
   (if (eq? 'suite (car test))
-      (execute-tests (+ desc " - " (cadr test)) (cddr test) passf failf)
-      (execute-single-test desc test passf failf)))
+      (execute-tests (+ desc " - " (cadr test)) (cddr test) passf failf verbose)
+      (execute-single-test desc test passf failf verbose)))
 
-(def execute-single-test (desc test passf failf)
+(def execute-single-test (desc test passf failf verbose)
+  (if verbose (p desc " - " (car test)))
   (with (expected (nth 2 test) result (eval (nth 1 test)))
         (if (iso result expected)
             (passf)
@@ -34,6 +35,6 @@
 ")
                 (failf)))))
 
-(def execute-tests (desc tests passf failf)
-  (execute-test desc (car tests) passf failf)
-  (if (cdr tests) (execute-tests desc (cdr tests) passf failf)))
+(def execute-tests (desc tests passf failf verbose)
+  (execute-test desc (car tests) passf failf verbose)
+  (if (cdr tests) (execute-tests desc (cdr tests) passf failf verbose)))
