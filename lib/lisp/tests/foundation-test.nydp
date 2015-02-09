@@ -7,7 +7,15 @@
 
       ("cons conses two strings"
         (cons "a" "b")
-        ("a" . "b")))
+        ("a" . "b"))
+
+      ("len returns length of proper list"
+        (len (cons "a" (cons "b" nil)))
+        2)
+
+      ("type-of returns pair"
+        (type-of (cons "a" "b"))
+        pair))
 
     (suite "car"
       ("car of nil is nil"

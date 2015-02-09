@@ -12,10 +12,11 @@ class Nydp::Pair
     new a, b
   end
 
-  def caar; car.car; end
-  def cadr; cdr.car; end
-  def cdar; car.cdr; end
-  def cddr; cdr.cdr; end
+  def nydp_type ; :pair   ; end
+  def caar      ; car.car ; end
+  def cadr      ; cdr.car ; end
+  def cdar      ; car.cdr ; end
+  def cddr      ; cdr.cdr ; end
 
   def self.parse_list list
     if sym? list.slice(-2), "."
