@@ -2,6 +2,8 @@ require 'nydp'
 
 module Nydp
   class Core
+    def name ; "Nydp Core" ; end
+
     def relative_path name
       File.join File.expand_path(File.dirname(__FILE__)), name
     end
@@ -45,6 +47,8 @@ module Nydp
       Symbol.mk(:millisecs,     ns).assign(Nydp::Builtin::Millisecs.new)
       Symbol.mk("random-string",ns).assign(Nydp::Builtin::RandomString.new)
       Symbol.mk("to-string",    ns).assign(Nydp::Builtin::ToString.new)
+      Symbol.mk("string-pieces",ns).assign(Nydp::Builtin::StringPieces.new)
+      Symbol.mk("type-of",      ns).assign(Nydp::Builtin::TypeOf.new(ns))
       Symbol.mk(:"eq?",         ns).assign(Nydp::Builtin::IsEqual.new)
       Symbol.mk(:"pair?",       ns).assign(Nydp::Builtin::IsPair.new)
       Symbol.mk(:"cdr-set",     ns).assign(Nydp::Builtin::CdrSet.new)

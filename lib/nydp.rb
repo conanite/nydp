@@ -6,6 +6,7 @@ module Nydp
   def self.setup ns;        PLUGINS.each { |plg| plg.setup ns } ; end
   def self.loadfiles;       PLUGINS.map(&:loadfiles).flatten    ; end
   def self.testfiles;       PLUGINS.map(&:testfiles).flatten    ; end
+  def self.plugin_names   ; PLUGINS.map(&:name)                 ; end
   def self.loadall vm, ns, files
     files.each { |f| StreamRunner.new(vm, ns, File.new(f)).run }
   end
@@ -28,6 +29,7 @@ module Nydp
     loadall vm, ns, testfiles
     StreamRunner.new(vm, ns, "(run-all-tests)").run
   end
+
 end
 
 require "nydp/core"
