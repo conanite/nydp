@@ -96,7 +96,7 @@ describe Nydp do
   end
 
   it "should recurse without consuming extra memory" do
-    program = "(assign f1 (fn (x acc) (cond (< x 1) (vm-info) (f1 (- x 1) (+ x acc))))) (f1 1000)"
+    program = "(assign f1 (fn (x acc) (cond (< x 1) (vm-info) (f1 (- x 1) (+ x acc))))) (f1 1000 0)"
     expected = parse "((contexts . 0) (instructions . 0) (args . 0))"
     expect(run program).to eq expected.first
   end

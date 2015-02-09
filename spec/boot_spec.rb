@@ -102,7 +102,7 @@ describe Nydp do
   describe :or do
     it "should produce some nested conds" do
       result = run "(reset-uniq-counter) (pre-compile '(or a b c))"
-      expect(result.to_s).to eq "((fn (ora-3) (cond ora-3 ora-3 ((fn (ora-4) (cond ora-4 ora-4 ((fn (ora-5) (cond ora-5 ora-5)) c))) b))) a)"
+      expect(result.to_s).to eq "((fn (ora-1) (cond ora-1 ora-1 ((fn (ora-2) (cond ora-2 ora-2 ((fn (ora-3) (cond ora-3 ora-3 nil)) c))) b))) a)"
     end
   end
 
