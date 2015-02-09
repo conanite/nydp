@@ -217,3 +217,8 @@
               (pair? y)
               (iso (car x) (car y))
               (iso (cdr x) (cdr y)))))
+
+(def len (xs)
+  (if (pair? xs)
+      (+ 1 (len (cdr xs)))
+      0))
