@@ -105,16 +105,15 @@ module Nydp
     def string token_stream, open_delimiter, close_delimiter
       fragments = [sym(:"string-pieces")]
       string_token = token_stream.next_string_fragment(open_delimiter, close_delimiter)
-      fragments << string_token
+      fragments << Nydp::StringAtom.new(string_token.string, string_token)
       while !(string_token.is_a? StringFragmentCloseToken)
         fragments << expression(token_stream)
         string_token = token_stream.next_string_fragment('', close_delimiter)
-        fragments << string_token
+        fragments << Nydp::StringAtom.new(string_token.string, string_token)
       end
 
       if fragments.size == 2
-        tok = fragments[1]
-        return Nydp::StringAtom.new tok.string, tok
+        return fragments[1]
       else
         return Pair.from_list fragments
       end

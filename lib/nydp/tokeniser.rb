@@ -28,8 +28,12 @@ module Nydp
         if esc = s.scan(/\\/)
           rep    << esc
           ch = s.getch
-          string << ch
-          rep    << ch
+          case ch
+            when "n" ; string << "\n"
+            when "t" ; string << "\t"
+            else       string << ch
+          end
+          rep << ch
         elsif closer = close_delimiter?(s, close_delimiter)
           rep << closer
           return StringFragmentCloseToken.new(string, rep)

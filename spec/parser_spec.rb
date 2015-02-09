@@ -120,6 +120,12 @@ describe Nydp::Parser do
     expect(parse '(1 "hello there \"jimmy\"" 3)').to eq expected
   end
 
+  it "should handle escaped tabs and newlines inside a string" do
+    expected = Nydp::StringAtom.new "hello\tworld\nnice day"
+    parsed = parse "\"hello\\tworld\\nnice day\""
+    expect(parsed).to eq expected
+  end
+
   it "should parse a plain symbol" do
     expect(parse "foo").to eq foo
   end

@@ -55,8 +55,10 @@ describe Nydp::Parser do
   it "should parse a string with embedded code, delimited by eof" do
     x1 = sym('string-pieces')
     x2 = Nydp::StringFragmentToken.new('a fluffy bunny! ',':a fluffy bunny! %%')
+    x2 = Nydp::StringAtom.new(x2.string, x2)
     x3 = sym('expr')
     x4 = Nydp::StringFragmentCloseToken.new(' a purple cow!',' a purple cow!')
+    x4 = Nydp::StringAtom.new(x4.string, x4)
 
     expected = pair_list([x1,x2,x3,x4])
     actual   = parse_string "a fluffy bunny! %%expr a purple cow!", ':', :eof
@@ -71,8 +73,10 @@ describe Nydp::Parser do
 
     x1 = sym('string-pieces')
     x2 = Nydp::StringFragmentToken.new('a fluffy bunny! ','------->a fluffy bunny! %%')
+    x2 = Nydp::StringAtom.new(x2.string, x2)
     x3 = pair_list [n1, n2, n3, n4]
     x4 = Nydp::StringFragmentCloseToken.new(' a purple cow!',' a purple cow!')
+    x4 = Nydp::StringAtom.new(x4.string, x4)
 
     expected = pair_list([x1,x2,x3,x4])
     actual   = parse_string "a fluffy bunny! %%(foo bar \"an embedded bunny :)\" zop) a purple cow!", '------->', :eof
@@ -85,8 +89,10 @@ describe Nydp::Parser do
 
     s1 = sym('string-pieces')
     s2 = Nydp::StringFragmentToken.new('a rather ','"a rather %%')
+    s2 = Nydp::StringAtom.new(s2.string, s2)
     s3 = pair_list [e1, e2]
     s4 = Nydp::StringFragmentCloseToken.new(' bunny :)',' bunny :)"')
+    s4 = Nydp::StringAtom.new(s4.string, s4)
 
     n1 = sym(:foo)
     n2 = sym(:bar)
@@ -95,8 +101,10 @@ describe Nydp::Parser do
 
     x1 = sym('string-pieces')
     x2 = Nydp::StringFragmentToken.new('a fluffy bunny! ','------->a fluffy bunny! %%')
+    x2 = Nydp::StringAtom.new(x2.string, x2)
     x3 = pair_list [n1, n2, n3, n4]
     x4 = Nydp::StringFragmentCloseToken.new(' a purple cow!',' a purple cow!')
+    x4 = Nydp::StringAtom.new(x4.string, x4)
 
     expected = pair_list([x1,x2,x3,x4])
     actual   = parse_string "a fluffy bunny! %%(foo bar \"a rather %%(describe bunny) bunny :)\" zop) a purple cow!", '------->', :eof
