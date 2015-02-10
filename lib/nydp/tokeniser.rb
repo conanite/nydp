@@ -72,7 +72,7 @@ module Nydp
           tok = [:number, number.to_f]
         elsif integer = s.scan(/[-+]?[0-9]+/)
           tok = [:number, integer.to_i]
-        elsif atom = s.scan(/[^\s()]+/)
+        elsif atom = s.scan(/[^\s()"]+/)
           tok = [:symbol, atom]
         else
           s.getch
