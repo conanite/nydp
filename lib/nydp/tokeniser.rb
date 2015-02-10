@@ -66,13 +66,15 @@ module Nydp
           tok = [:embed_suffix, embed_suffix]
         elsif list_prefix = s.scan(/[^\s()]*\(/)
           tok = [:left_paren, list_prefix[0...-1]]
+        elsif list_prefix = s.scan(/[^\s()]*\{/)
+          tok = [:left_brace, list_prefix[0...-1]]
         elsif s.scan(/\)/)
           tok = [:right_paren]
         elsif number = s.scan(/[-+]?[0-9]*\.[0-9]+([eE][-+]?[0-9]+)?/)
           tok = [:number, number.to_f]
         elsif integer = s.scan(/[-+]?[0-9]+/)
           tok = [:number, integer.to_i]
-        elsif atom = s.scan(/[^\s()"]+/)
+        elsif atom = s.scan(/[^\s()"{}]+/)
           tok = [:symbol, atom]
         else
           s.getch

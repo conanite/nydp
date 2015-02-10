@@ -10,8 +10,7 @@ module Nydp
       Nydp::Symbol.mk name.to_sym, ns
     end
 
-    def read_list token_stream, termination_token
-      list = []
+    def read_list token_stream, termination_token, list=[]
       token = token_stream.next_token
       while token != nil && token.first != termination_token
         list << next_form(token, token_stream)
@@ -89,6 +88,8 @@ module Nydp
         string token_stream, token.last, close_delimiter_for(token.last)
       when :left_paren
         prefix_list token[1], read_list(token_stream, :right_paren)
+      when :left_brace
+        prefix_list token[1], read_list(token_stream, :right_brace, [sym("brace-list")])
       when :symbol
         parse_symbol token.last
       when :comment

@@ -112,6 +112,10 @@ describe Nydp::Parser do
     expect(parsed).to eq expected
   end
 
+  it "should parse a brace list" do
+    expect(parse "{a b c d}").to eq pair_list [sym("brace-list"), a, b, c, d]
+  end
+
   it "should parse a plain symbol" do
     expect(parse "foo").to eq foo
   end
