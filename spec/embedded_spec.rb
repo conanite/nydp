@@ -42,14 +42,14 @@ describe Nydp::Parser do
   it "should parse external text" do
     actual   = parse_string "a fluffy bunny!", 'EAT ', /!/
     expect(actual)        .to eq "a fluffy bunny"
-    expect(actual.inspect).to eq "EAT a fluffy bunny!"
+    expect(actual.inspect).to eq '"a fluffy bunny"'
   end
 
   it "should parse a string delimited by eof" do
     expected = pair_list([sym('string-pieces'), Nydp::StringFragmentCloseToken.new('a fluffy bunny!','a fluffy bunny!')])
     actual   = parse_string "a fluffy bunny!", '', :eof
     expect(actual)        .to eq "a fluffy bunny!"
-    expect(actual.inspect).to eq "a fluffy bunny!"
+    expect(actual.inspect).to eq '"a fluffy bunny!"'
   end
 
   it "should parse a string with embedded code, delimited by eof" do

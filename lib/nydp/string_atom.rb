@@ -9,7 +9,7 @@ module Nydp
     def to_s      ;  string ; end
 
     def inspect
-      token ? token.rep : string.inspect
+      string.inspect
     end
 
     def == other
