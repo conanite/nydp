@@ -41,36 +41,29 @@ module Nydp
       end
     end
 
-    def error e
-      puts "     error"
-      puts e
-      puts "================="
-      puts
-      puts "instruction stack"
-      puts "================="
+    def error
+      msg = ""
+      msg << "\n"
+      msg << "\ninstruction stack"
+      msg << "\n================="
       instructions.each_with_index do |ii, ix|
-        puts "instructions##{ix} : #{ii} #{ii.source if ii.respond_to?(:source)}"
+        msg << "\ninstructions##{ix} : #{ii} #{ii.source if ii.respond_to?(:source)}"
       end
-      puts
-      puts
-      puts "context stack"
-      puts "================="
+      msg << "\n"
+      msg << "\n"
+      msg << "\ncontext stack"
+      msg << "\n================="
       contexts.each_with_index do |ctx, ix|
-        puts "context##{ix} : #{ctx}"
+        msg << "\ncontext##{ix} : #{ctx}"
       end
-      puts
-      puts
-      puts "ruby backtrace"
-      puts "================="
-      (e.backtrace || []).each_with_index do |ctx, ix|
-        puts "#{ctx}"
-      end
-      puts
-      puts
+      msg << "\n"
+      msg << "\n"
 
       instructions = []
       contexts     = []
       args = [Nydp.NIL]
+
+      msg
     end
   end
 end
