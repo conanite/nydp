@@ -24,17 +24,9 @@ module Nydp
       raise i_f
     end
 
-    def inspect
-      "#{self.class.name}:#{source}"
-    end
-
-    def source
-      @source_expression
-    end
-
-    def to_s
-      source
-    end
+    def inspect ; source.inspect     ; end
+    def source  ; @source_expression ; end
+    def to_s    ; source.to_s        ; end
   end
 
   class FunctionInvocation
@@ -53,9 +45,7 @@ module Nydp
       vm.push_instructions @argument_instructions, vm.peek_context
     end
 
-    def inspect; "#function_invocation:#{to_s}"; end
-    def to_s
-      @source.to_s
-    end
+    def inspect ; @source.inspect ; end
+    def to_s    ; @source.to_s    ; end
   end
 end
