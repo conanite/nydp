@@ -120,6 +120,10 @@ describe Nydp::Parser do
     expect(parse "foo.bar").to eq  pair_list([dotsyn, foo, bar])
   end
 
+  it "should parse a dotted symbol" do
+    expect(parse "(list a b foo.bar c)").to eq  pair_list([sym(:list), a, b, pair_list([dotsyn, foo, bar]), c])
+  end
+
   it "should parse a colon-colon symbol" do
     expect(parse "foo::bar").to eq  pair_list([cocosyn, foo, bar])
   end
