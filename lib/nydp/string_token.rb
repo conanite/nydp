@@ -10,9 +10,7 @@ module Nydp
     end
 
     def == other
-      %i{ string rep class }.inject(true) { |bool, attr|
-          bool && (self.send(attr) == other.send(attr))
-        }
+      (self.class == other.class) && (self.string == other.string)
     end
   end
 
