@@ -3,6 +3,7 @@ module Nydp
     def to_s      ; 't'              ; end
     def inspect   ; 't[nydp::Truth]' ; end
     def assign *_ ; self             ; end
+    def nydp_type ; :truth           ; end
   end
 
   class Nil
@@ -11,11 +12,12 @@ module Nydp
     def size        ; 0             ; end
     def is?   other ; (self.equal? other) ; end
     def isnt? other ; !is?(other)   ; end
-    def to_s        ; "nil"         ; end
+    def to_s        ; ""            ; end
     def + other     ; other         ; end
     def copy        ; self          ; end
     def assign *_   ; self          ; end
     def inspect     ; "nil"         ; end
+    def nydp_type   ; :nil          ; end
 
     def execute vm
       vm.push_arg self
