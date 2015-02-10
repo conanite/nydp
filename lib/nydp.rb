@@ -1,7 +1,7 @@
 module Nydp
   PLUGINS = []
 
-  def self.plug_in plugin;  PLUGINS << plugin                   ; end
+  def self.plug_in plugin ; PLUGINS << plugin                   ; end
   def self.load_rake_tasks; PLUGINS.each &:load_rake_tasks      ; end
   def self.setup ns;        PLUGINS.each { |plg| plg.setup ns } ; end
   def self.loadfiles;       PLUGINS.map(&:loadfiles).flatten    ; end
@@ -20,14 +20,15 @@ module Nydp
     Repl.new(vm, ns, $stdin).run
   end
 
-  def self.tests
+  def self.tests *options
+    verbose = options.include?(:verbose) ? "t" : "nil"
     puts "welcome to nydp : running tests"
     ns = { }
     setup(ns)
     vm = VM.new
     loadall vm, ns, loadfiles
     loadall vm, ns, testfiles
-    StreamRunner.new(vm, ns, "(run-all-tests)").run
+    StreamRunner.new(vm, ns, "(run-all-tests #{verbose})").run
   end
 
 end
