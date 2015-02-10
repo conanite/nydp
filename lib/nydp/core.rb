@@ -48,6 +48,8 @@ module Nydp
       Symbol.mk("random-string",ns).assign(Nydp::Builtin::RandomString.new)
       Symbol.mk("to-string",    ns).assign(Nydp::Builtin::ToString.new)
       Symbol.mk("string-pieces",ns).assign(Nydp::Builtin::StringPieces.new)
+      Symbol.mk("string-replace", ns).assign(Nydp::Builtin::StringReplace.new)
+      Symbol.mk("string-split"  , ns).assign(Nydp::Builtin::StringSplit.new  )
       Symbol.mk("type-of",      ns).assign(Nydp::Builtin::TypeOf.new(ns))
       Symbol.mk(:"eq?",         ns).assign(Nydp::Builtin::IsEqual.new)
       Symbol.mk(:"pair?",       ns).assign(Nydp::Builtin::IsPair.new)

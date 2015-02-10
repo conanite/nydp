@@ -1,5 +1,15 @@
 (register-test '(suite "Foundation Tests"
   (suite "strings"
+    (suite "string-split"
+      ("splits a string using given expression"
+        (string-split "a and b and c and d" " and ")
+        ("a" "b" "c" "d")))
+
+    (suite "string-replace"
+      ("replaces parts of a string with the given replacement"
+        (string-replace "and" "or" "a and b and c and d")
+        "a or b or c or d"))
+
     (suite "type-of"
       ("returns 'string"
         (type-of "foobar")
@@ -11,9 +21,8 @@
 
       ("returns 'string for an interpolated string"
         (type-of "foobar %%(+ 1 2)")
-        string)
+        string)))
 
-))
   (suite "Lists"
     (suite "cons"
       ("cons creates a list"
