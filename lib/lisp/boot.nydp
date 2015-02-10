@@ -174,6 +174,8 @@
           acc))
 
 (def joinstr (txt things)
+     (if (no (pair? things))
+         (error "joinstr : 'things is a %%(type-of things) expected a list : %%(inspect things)"))
      (apply +
             (to-string (car things))
             (flatten (zip (map (fn (_) txt) (cdr things))
@@ -217,6 +219,10 @@
               (pair? y)
               (iso (car x) (car y))
               (iso (cdr x) (cdr y)))))
+
+(def isa (type obj) (eq? (type-of obj) type))
+(mac just (arg) arg)
+(def quotify (arg) `(quote ,arg))
 
 (def len (xs)
   (if (pair? xs)
