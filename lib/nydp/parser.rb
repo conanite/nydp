@@ -51,19 +51,19 @@ module Nydp
         Pair.from_list [sym(:unquote), parse_symbol($1)]
       else
         syms = txt.to_s.split /\./
-        return split_sym syms, sym(:"dot-syntax") if syms.length > 1
+        return split_sym syms, sym("dot-syntax") if syms.length > 1
 
         syms = txt.split /::/
-        return split_sym syms, sym(:"colon-colon-syntax") if syms.length > 1
+        return split_sym syms, sym("colon-colon-syntax") if syms.length > 1
 
         syms = txt.split /:/
-        return split_sym syms, sym(:"colon-syntax") if syms.length > 1
+        return split_sym syms, sym("colon-syntax") if syms.length > 1
 
         syms = txt.split /->/
-        return split_sym syms, sym(:"arrow-syntax") if syms.length > 1
+        return split_sym syms, sym("arrow-syntax") if syms.length > 1
 
         syms = txt.split(/=>/)
-        return split_sym syms, sym(:"rocket-syntax") if syms.length > 1
+        return split_sym syms, sym("rocket-syntax") if syms.length > 1
 
         sym txt
       end
