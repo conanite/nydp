@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe Nydp do
-  let(:ns)                    { { } }
   let(:vm)                    { Nydp::VM.new }
 
   before {
@@ -9,10 +8,6 @@ describe Nydp do
     boot_path = File.expand_path File.join File.expand_path(File.dirname(__FILE__)), '../lib/lisp/boot.nydp'
     Nydp::StreamRunner.new(vm, ns, File.new(boot_path)).run
   }
-
-  def sym name
-    Nydp::Symbol.mk name.to_sym, ns
-  end
 
   def list *things
     Nydp::Pair.from_list things.map { |thing|
@@ -102,7 +97,7 @@ describe Nydp do
   describe :or do
     it "should produce some nested conds" do
       result = run "(reset-uniq-counter) (pre-compile '(or a b c))"
-      expect(result.to_s).to eq "((fn (ora-1) (cond ora-1 ora-1 ((fn (ora-2) (cond ora-2 ora-2 ((fn (ora-3) (cond ora-3 ora-3 nil)) c))) b))) a)"
+      expect(result).to eq parse "((fn (ora-1) (cond ora-1 ora-1 ((fn (ora-2) (cond ora-2 ora-2 ((fn (ora-3) (cond ora-3 ora-3 nil)) c))) b))) a)"
     end
   end
 

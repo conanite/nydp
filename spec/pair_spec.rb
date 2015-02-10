@@ -1,7 +1,6 @@
 require "spec_helper"
 
 describe Nydp::Pair do
-  let(:ns)               { { } }
   let(:a)                { Nydp::Symbol.mk :a,                  ns }
   let(:b)                { Nydp::Symbol.mk :b,                  ns }
   let(:c)                { Nydp::Symbol.mk :c,                  ns }
@@ -23,26 +22,26 @@ describe Nydp::Pair do
     end
 
     it "should define #== to return true for an identical list" do
-      p1 = Nydp::Pair.from_list [:a, :b, :c, :d]
-      p2 = Nydp::Pair.from_list [:a, :b, :c, :d]
+      p1 = pair_list [:a, :b, :c, :d]
+      p2 = pair_list [:a, :b, :c, :d]
       expect(p1).to eq p2
     end
 
     it "should define #== to return true for identical improper lists" do
-      p1 = Nydp::Pair.from_list [:a, :b, :c, :d], 4
-      p2 = Nydp::Pair.from_list [:a, :b, :c, :d], 4
+      p1 = pair_list [:a, :b, :c, :d], 4
+      p2 = pair_list [:a, :b, :c, :d], 4
       expect(p1).to eq p2
     end
 
     it "should define #== to return false for a non-identical list" do
-      p1 = Nydp::Pair.from_list [:a, :b, :c, :d]
-      p2 = Nydp::Pair.from_list [:a, :b, :c, 22]
+      p1 = pair_list [:a, :b, :c, :d]
+      p2 = pair_list [:a, :b, :c, 22]
       expect(p1).not_to eq p2
     end
 
     it "should define #== to return false for lists which differ only in their terminating element" do
-      p1 = Nydp::Pair.from_list [:a, :b, :c], :d
-      p2 = Nydp::Pair.from_list [:a, :b, :c], 22
+      p1 = pair_list [:a, :b, :c], :d
+      p2 = pair_list [:a, :b, :c], 22
       expect(p1).not_to eq p2
     end
   end
@@ -54,7 +53,7 @@ describe Nydp::Pair do
   end
 
   it "should convert a ruby list" do
-    p = Nydp::Pair.from_list [:a, :b, :c, :d]
+    p = pair_list [:a, :b, :c, :d]
     expect(p.car).to eq :a
     p = p.cdr
     expect(p.car).to eq :b
@@ -71,32 +70,32 @@ describe Nydp::Pair do
   end
 
   it "should have size zero when empty" do
-    expect(Nydp::Pair.from_list([]).size).to eq 0
+    expect(pair_list([]).size).to eq 0
   end
 
   it "should report the number of elements is contains" do
-    expect(Nydp::Pair.from_list([:a, :b, :c]).size).to eq 3
+    expect(pair_list([:a, :b, :c]).size).to eq 3
   end
 
   it "should report the number of elements in an improper list, excluding last item" do
-    expect(Nydp::Pair.from_list([:a, :b, :c, :d], :foo).size).to eq 4
+    expect(pair_list([:a, :b, :c, :d], :foo).size).to eq 4
   end
 
   it "should represent itself as a string" do
-    expect(Nydp::Pair.from_list([a, b, c, d]).to_s).to eq "(a b c d)"
+    expect(pair_list([a, b, c, d]).to_s).to eq "(a b c d)"
   end
 
   it "should represent an improper list as a string" do
-    expect(Nydp::Pair.from_list([a, b, c, d], foo).to_s).to eq "(a b c d . foo)"
+    expect(pair_list([a, b, c, d], foo).to_s).to eq "(a b c d . foo)"
   end
 
   it "should parse a list" do
-    p = Nydp::Pair.from_list [a, b, c, d]
+    p = pair_list [a, b, c, d]
     expect(Nydp::Pair.parse_list([a, b, c, d])).to eq p
   end
 
   it "should parse a list" do
-    p = Nydp::Pair.from_list [a, b, c, d], foo
+    p = pair_list [a, b, c, d], foo
     expect(Nydp::Pair.parse_list([a, b, c, d, dot, foo])).to eq p
   end
 end

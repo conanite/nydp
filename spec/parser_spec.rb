@@ -1,8 +1,6 @@
 require 'spec_helper'
 
 describe Nydp::Parser do
-
-  let(:ns)               { { } }
   let(:aa)               { Nydp::Symbol.mk :aa,                   ns }
   let(:a)                { Nydp::Symbol.mk :a,                    ns }
   let(:b)                { Nydp::Symbol.mk :b,                    ns }
@@ -20,18 +18,6 @@ describe Nydp::Parser do
   let(:dotsyn)           { Nydp::Symbol.mk :"dot-syntax",         ns }
   let(:cocosyn)          { Nydp::Symbol.mk :"colon-colon-syntax", ns }
   let(:colosyn)          { Nydp::Symbol.mk :"colon-syntax",       ns }
-
-  def sym name
-    Nydp::Symbol.mk name.to_sym, ns
-  end
-
-  def parse txt
-    Nydp::Parser.new(ns).expression(Nydp::Tokeniser.new txt)
-  end
-
-  def pair_list xs, last=Nydp.NIL
-    Nydp::Pair.from_list xs, last
-  end
 
   it "should return a stream of tokens" do
     t = Nydp::Tokeniser.new ""

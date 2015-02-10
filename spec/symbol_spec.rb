@@ -1,8 +1,6 @@
 require 'spec_helper'
 
 describe Nydp::Symbol do
-  let(:ns) { { } }
-
   it "should not recognise an unknown symbol" do
     sym = Nydp::Symbol.find :foo, ns
     expect(sym).to eq nil

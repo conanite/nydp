@@ -1,28 +1,12 @@
 require 'spec_helper'
 
 describe Nydp do
-  let(:root_ns)               { { } }
-  let(:parser)                { Nydp::Parser.new(root_ns) }
+  let(:parser)                { Nydp::Parser.new(ns) }
   let(:vm)                    { Nydp::VM.new }
 
-  def sym name
-    Nydp::Symbol.mk name.to_sym, root_ns
-  end
-
-  def parse txt
-    tokens = Nydp::Tokeniser.new txt
-    expressions = []
-    expr = parser.expression(tokens)
-    while (expr != nil)
-      expressions << expr
-      expr = parser.expression(tokens)
-    end
-    expressions
-  end
-
   def run txt
-    Nydp.setup root_ns
-    Nydp::StreamRunner.new(vm, root_ns, txt).run
+    Nydp.setup ns
+    Nydp::StreamRunner.new(vm, ns, txt).run
   end
 
   it "should make a symbol from a string" do
@@ -98,7 +82,7 @@ describe Nydp do
   it "should recurse without consuming extra memory" do
     program = "(assign f1 (fn (x acc) (cond (< x 1) (vm-info) (f1 (- x 1) (+ x acc))))) (f1 1000 0)"
     expected = parse "((contexts . 0) (instructions . 0) (args . 0))"
-    expect(run program).to eq expected.first
+    expect(run program).to eq expected
   end
 
   describe :cond do

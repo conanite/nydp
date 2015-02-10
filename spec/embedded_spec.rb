@@ -1,8 +1,6 @@
 require 'spec_helper'
 
 describe Nydp::Parser do
-
-  let(:ns)               { { } }
   let(:aa)               { Nydp::Symbol.mk :aa,                   ns }
   let(:a)                { Nydp::Symbol.mk :a,                    ns }
   let(:b)                { Nydp::Symbol.mk :b,                    ns }
@@ -21,16 +19,8 @@ describe Nydp::Parser do
   let(:cocosyn)          { Nydp::Symbol.mk :"colon-colon-syntax", ns }
   let(:colosyn)          { Nydp::Symbol.mk :"colon-syntax",       ns }
 
-  def sym name
-    Nydp::Symbol.mk name.to_sym, ns
-  end
-
   def parse_string txt, open_delim, close_delim
     Nydp::Parser.new(ns).string(Nydp::Tokeniser.new(txt), open_delim, close_delim)
-  end
-
-  def pair_list xs, last=Nydp.NIL
-    Nydp::Pair.from_list xs, last
   end
 
   it "should parse empty string" do
