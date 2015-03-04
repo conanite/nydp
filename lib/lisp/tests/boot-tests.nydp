@@ -1,0 +1,22 @@
+(mac meta-mult (arg n . body)
+     `(mac ,arg (x) `(* ,,n ,x)))
+
+(meta-mult five 5)
+(meta-mult seven 7)
+(meta-mult eleven 11)
+
+(register-test '(suite "Boot Tests"
+  (suite "build-keyword-args"
+         ("takes a list of lists and returns the list with the first item of each sublist quoted"
+          (build-keyword-args '( (a 1) (b c) (d e "f" 22) ))
+          ((list 'a 1) (list 'b c) (list 'd e "f" 22))))
+  (suite "meta-macros can create macros"
+         ("meta-mult example generates a multiply-by-seven expression"
+          (seven 6)
+          42)
+         ("meta-mult example generates a multiply-by-eleven expression"
+          (eleven 20)
+          220)
+         ("meta-mult example expressions can be nested"
+          (eleven (five (seven 2)))
+          770))))

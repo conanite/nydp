@@ -1,13 +1,16 @@
 ; -*- lisp -*-
 
 (assign last-cons (fn (xs)
-  (cond (pair? (cdr xs))
-        (last-cons (cdr xs))
-        xs)))
+                      (cond (pair? (cdr xs))
+                            (last-cons (cdr xs))
+                            xs)))
+
+(assign last (fn (xs)
+                 (car (last-cons xs))))
 
 (assign append-list! (fn (list-1 list-2)
-  (cdr-set (last-cons list-1) list-2)
-  list-1))
+                         (cdr-set (last-cons list-1) list-2)
+                         list-1))
 
 (assign list (fn args args))
 
@@ -64,37 +67,62 @@
                     (+ (list 'fn args)
                        body))))
 
-(def qq-unquote-recurse (arg rest)
-        (list 'cons
-              (qq-quasiquote arg)
-              (qq-quasiquote rest)))
+(def qq-handle-unquote-splicing (arg rest level)
+     (cond (no rest)
+           arg
+           (list '+
+                 arg
+                 (qq-quasiquote rest level))))
 
-(def qq-unquote? (arg rest)
+(def qq-handle-quasiquote (arg rest level)
+     (list 'cons
+           (list 'quasiquote (qq-quasiquote arg level))
+           (qq-quasiquote rest level)))
+
+(def qq-handle-unquote (arg rest level)
+     (list 'cons
+           (qq-maybe-unquote arg level)
+           (qq-quasiquote rest level)))
+
+(def qq-unquote-recurse (arg rest level)
+        (list 'cons
+              (qq-quasiquote arg level)
+              (qq-quasiquote rest level)))
+
+(def qq-handle-plain (arg rest level)
+     (list 'cons
+           (list 'quote arg)
+           (qq-quasiquote rest level)))
+
+(def qq-unquote? (arg rest level)
      (cond (pair? arg)
            (cond (eq? (car arg) 'unquote)
-                 (list 'cons (cadr arg) (qq-quasiquote rest))
+                 (qq-handle-unquote (cadr arg) rest level)
                  (cond (eq? (car arg) 'unquote-splicing)
-                       (cond (no rest)
-                             (cadr arg)
-                             (list '+
-                                   (cadr arg)
-                                   (qq-quasiquote rest)))
-                       (qq-unquote-recurse arg rest)))
-           (list 'cons
-                 (list 'quote arg)
-                 (qq-quasiquote rest))))
+                       (qq-handle-unquote-splicing (cadr arg) rest level)
+                       (cond (eq? (car arg) 'quasiquote)
+                             (qq-handle-quasiquote (cadr arg) rest level)
+                             (qq-unquote-recurse arg rest level))))
+           (qq-handle-plain arg rest level)))
 
-(def qq-quasiquote (xs)
+(def qq-maybe-unquote (xs level)
+     (cond (eq? level 0)
+           xs
+           (list 'unquote (qq-quasiquote xs (- level 1)))))
+
+(def qq-quasiquote (xs level)
      (cond (no xs)
            nil
            (cond (pair? xs)
                  (cond (eq? (car xs) 'unquote)
-                       (cadr xs)
-                       (qq-unquote? (car xs) (cdr xs)))
+                       (qq-maybe-unquote (cadr xs) level)
+                       (cond (eq? (car xs) 'quasiquote)
+                             (cons 'quasiquote (qq-quasiquote (cdr xs) (+ level 1)))
+                             (qq-unquote? (car xs) (cdr xs) level)))
                  (list 'quote xs))))
 
 (hash-set macs 'quasiquote (fn (arg)
-  (qq-quasiquote arg)))
+  (qq-quasiquote arg 0)))
 
 (hash-set macs 'mac (fn (name args . body)
   `(hash-set macs ',name (fn ,args ,@body))))
@@ -120,6 +148,10 @@
 (mac when (condition . body)
   `(cond ,condition (do ,@body)))
 
+(def print-and-return args
+     (apply p args)
+     (last args))
+
 (def map (f things)
   (if (no things)
       nil
@@ -140,10 +172,6 @@
 
 (mac let (var val . body)
      `(with (,var ,val) ,@body))
-
-;; (debug-pre-compile t)
-;; (let a b c d e)
-;; (debug-pre-compile nil)
 
 (def each (f acc things)
   (if things
@@ -228,3 +256,6 @@
   (if (pair? xs)
       (+ 1 (len (cdr xs)))
       0))
+
+(def build-keyword-args (pairs)
+  (map (fn (ab) `(list (quote ,(car ab)) ,@(cdr ab))) pairs))
