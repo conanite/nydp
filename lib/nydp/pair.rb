@@ -66,6 +66,24 @@ class Nydp::Pair
       else
         "'#{cdr.to_s}"
       end
+    elsif car.is_a?(Nydp::Symbol) && car.is?(:quasiquote)
+      if Nydp.NIL.is? cdr.cdr
+        "`#{cdr.car.to_s}"
+      else
+        "`#{cdr.to_s}"
+      end
+    elsif car.is_a?(Nydp::Symbol) && car.is?(:unquote)
+      if Nydp.NIL.is? cdr.cdr
+        ",#{cdr.car.to_s}"
+      else
+        ",#{cdr.to_s}"
+      end
+    elsif car.is_a?(Nydp::Symbol) && car.is?(:"unquote-splicing")
+      if Nydp.NIL.is? cdr.cdr
+        ",@#{cdr.car.to_s}"
+      else
+        ",@#{cdr.to_s}"
+      end
     else
       "(#{to_s_rest})"
     end
