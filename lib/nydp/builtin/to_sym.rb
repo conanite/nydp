@@ -13,9 +13,3 @@ class Nydp::Builtin::ToSym
     vm.push_arg val
   end
 end
-
-
-
-
-
-
