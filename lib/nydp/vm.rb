@@ -54,7 +54,7 @@ module Nydp
       msg << "\ncontext stack"
       msg << "\n================="
       contexts.each_with_index do |ctx, ix|
-        msg << "\ncontext##{ix} : #{ctx}"
+        msg << "\ncontext##{ix} :\n#{ctx}"
       end
       msg << "\n"
       msg << "\n"
