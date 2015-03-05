@@ -18,8 +18,9 @@ module Nydp
       vm.push_arg expression
     end
 
-    def inspect; @expression.inspect; end
-    def to_s   ; @expression.to_s   ; end
+    def nydp_type ; :literal            ; end
+    def inspect   ; @expression.inspect ; end
+    def to_s      ; @expression.to_s    ; end
 
     def coerce _
       [_, expression]
