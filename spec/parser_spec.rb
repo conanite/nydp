@@ -156,6 +156,18 @@ describe Nydp::Parser do
     expect(parse ",(bar)").to eq pair_list([unquote, pair_list([bar])])
   end
 
+  it "should do some complicated unquote stuff with lists" do
+    expect(parse("`(a b `(c d ,(+ 1 2) ,,(+ 3 4)))").inspect).to eq "(quasiquote (a b (quasiquote (c d (unquote (+ 1 2)) (unquote (unquote (+ 3 4)))))))"
+  end
+
+  it "should do some complicated unquote stuff with lists" do
+    expect(parse("`(a b `(c d ,(+ 1 2) ,,@(list 3 4)))").inspect).to eq "(quasiquote (a b (quasiquote (c d (unquote (+ 1 2)) (unquote (unquote-splicing (list 3 4)))))))"
+  end
+
+  it "should do some complicated unquote stuff with symbols" do
+    expect(parse("`(a b `(c d ,(+ 1 2) ,,x))").inspect).to eq "(quasiquote (a b (quasiquote (c d (unquote (+ 1 2)) (unquote (unquote x))))))"
+  end
+
   it "should unquote-splicing atoms" do
     expect(parse ",@foo").to eq pair_list([unquote_splicing, foo])
   end

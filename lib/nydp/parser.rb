@@ -20,15 +20,16 @@ module Nydp
     end
 
     def prefix_list prefix, list
+      return list if prefix == ''
       case prefix
-      when "'"
-        Pair.from_list [sym(:quote), list]
-      when "`"
-        Pair.from_list [sym(:quasiquote), list]
-      when ","
-        Pair.from_list [sym(:unquote), list]
-      when ",@"
-        Pair.from_list [sym(:"unquote-splicing"), list]
+      when /^(.*)'$/
+        prefix_list $1, Pair.from_list([sym(:quote), list])
+      when /^(.*)`$/
+        prefix_list $1, Pair.from_list([sym(:quasiquote), list])
+      when /^(.*),$/
+        prefix_list $1, Pair.from_list([sym(:unquote), list])
+      when /^(.*),@$/
+        prefix_list $1, Pair.from_list([sym(:"unquote-splicing"), list])
       else
         list
       end
