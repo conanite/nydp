@@ -5,24 +5,23 @@
                             (last-cons (cdr xs))
                             xs)))
 
-(assign last (fn (xs)
-                 (car (last-cons xs))))
 
 (assign append-list! (fn (list-1 list-2)
                          (cdr-set (last-cons list-1) list-2)
                          list-1))
 
-(assign list (fn args args))
-
-(assign caar (fn (arg) (car (car arg))))
-(assign cadr (fn (arg) (car (cdr arg))))
-(assign cddr (fn (arg) (cdr (cdr arg))))
-(assign   no (fn (arg) (eq? arg nil)))
-(assign just (fn (arg) arg))
+(assign list  (fn args args))
+(assign last  (fn (arg) (car (last-cons arg))))
+(assign caar  (fn (arg) (car (car arg))))
+(assign cadr  (fn (arg) (car (cdr arg))))
+(assign cddr  (fn (arg) (cdr (cdr arg))))
+(assign   no  (fn (arg) (eq? arg nil)))
+(assign just  (fn (arg) arg))
+(assign pargs (fn args (apply p args) (last args)))
 
 (assign mac-expand (fn (macfn name body)
   (cond macfn
-        (pre-compile-do (apply macfn body))
+        (pre-compile (apply macfn body))
         (cons name body))))
 
 (assign macs (hash))
@@ -39,26 +38,24 @@
         (fn (args)
             (cond args
                   (cond (pair? args)
-                        (cons (pre-compile-do (car args))
+                        (cons (pre-compile (car args))
                               (pre-compile-each (cdr args)))
                         args))))
 
 (assign pre-compile-msg
         (fn args
-            (cond *debug-pre-compile* (apply p args) (car args))))
-
-(assign pre-compile-do
-        (fn (arg)
-            (cond (pair? arg)
-                  (cond (eq? (car arg) 'quote)
-                        arg
-                        (pre-compile-each (pre-compile-expr (car arg) (cdr arg))))
-                  arg)))
+            (cond *debug-pre-compile* (apply p args))
+            (last args)))
 
 (assign pre-compile
         (fn (arg)
-            (pre-compile-msg "pre-compile" arg)
-            (pre-compile-msg (pre-compile-do arg))))
+            (pre-compile-msg
+             "pre-compile" arg "\n  -> "
+             (cond (pair? arg)
+                   (cond (eq? (car arg) 'quote)
+                         arg
+                         (pre-compile-each (pre-compile-expr (car arg) (cdr arg))))
+                   arg))))
 
 (hash-set macs 'def
           (fn (name args . body)
@@ -71,12 +68,12 @@
      (cond (no rest)
            arg
            (list '+
-                 arg
+                 (pre-compile arg)
                  (qq-quasiquote rest level))))
 
 (def qq-handle-quasiquote (arg rest level)
      (list 'cons
-           (list 'quasiquote (qq-quasiquote arg level))
+           (list 'quasiquote (qq-quasiquote arg (+ level 1)))
            (qq-quasiquote rest level)))
 
 (def qq-handle-unquote (arg rest level)
@@ -107,19 +104,19 @@
 
 (def qq-maybe-unquote (xs level)
      (cond (eq? level 0)
-           xs
+           (pre-compile xs)
            (list 'unquote (qq-quasiquote xs (- level 1)))))
 
 (def qq-quasiquote (xs level)
-     (cond (no xs)
-           nil
-           (cond (pair? xs)
-                 (cond (eq? (car xs) 'unquote)
-                       (qq-maybe-unquote (cadr xs) level)
-                       (cond (eq? (car xs) 'quasiquote)
-                             (cons 'quasiquote (qq-quasiquote (cdr xs) (+ level 1)))
-                             (qq-unquote? (car xs) (cdr xs) level)))
-                 (list 'quote xs))))
+            (cond (no xs)
+                  nil
+                  (cond (pair? xs)
+                        (cond (eq? (car xs) 'unquote)
+                              (qq-maybe-unquote (cadr xs) level)
+                              (cond (eq? (car xs) 'quasiquote)
+                                    (cons 'quasiquote (qq-quasiquote (cdr xs) (+ level 1)))
+                                    (qq-unquote? (car xs) (cdr xs) level)))
+                        (list 'quote xs))))
 
 (hash-set macs 'quasiquote (fn (arg)
   (qq-quasiquote arg 0)))
@@ -147,10 +144,6 @@
 
 (mac when (condition . body)
   `(cond ,condition (do ,@body)))
-
-(def print-and-return args
-     (apply p args)
-     (last args))
 
 (def map (f things)
   (if (no things)

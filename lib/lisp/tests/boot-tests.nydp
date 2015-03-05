@@ -1,22 +1,38 @@
-(mac meta-mult (arg n . body)
-     `(mac ,arg (x) `(* ,,n ,x)))
+;
+; this is to test that macros that generate macros that generate expressions are likely to work
+;
+(mac make-make-op (opname op)
+  `(mac ,opname (name n . body)
+        `(mac ,name (x)
+              `(,',',op ,,n ,x))))
 
-(meta-mult five 5)
-(meta-mult seven 7)
-(meta-mult eleven 11)
+(make-make-op make-mult *)
+(make-make-op make-plus +)
 
-(register-test '(suite "Boot Tests"
-  (suite "build-keyword-args"
-         ("takes a list of lists and returns the list with the first item of each sublist quoted"
-          (build-keyword-args '( (a 1) (b c) (d e "f" 22) ))
-          ((list 'a 1) (list 'b c) (list 'd e "f" 22))))
-  (suite "meta-macros can create macros"
-         ("meta-mult example generates a multiply-by-seven expression"
-          (seven 6)
-          42)
-         ("meta-mult example generates a multiply-by-eleven expression"
-          (eleven 20)
-          220)
-         ("meta-mult example expressions can be nested"
-          (eleven (five (seven 2)))
-          770))))
+(make-mult *five 5)
+(make-mult *seven 7)
+(make-mult *eleven 11)
+
+(make-plus +five 5)
+(make-plus +seven 7)
+(make-plus +eleven 11)
+
+(register-test
+ '(suite "Boot Tests"
+         (suite "build-keyword-args"
+                ("takes a list of lists and returns the list with the first item of each sublist quoted"
+                 (build-keyword-args '( (a 1) (b c) (d e "f" 22) ))
+                 ((list 'a 1) (list 'b c) (list 'd e "f" 22))))
+         (suite "make-macros can create macros"
+                ("make-plus example generates a plus-seven expression"
+                 (+seven 6)
+                 13)
+                ("make-mult example generates a multiply-by-seven expression"
+                 (*seven 6)
+                 42)
+                ("make-mult example generates a multiply-by-eleven expression"
+                 (*eleven 20)
+                 220)
+                ("make-make example expressions can be nested"
+                 (*eleven (*five (+seven 2)))
+                 495))))
