@@ -1,5 +1,8 @@
 ;
-; this is to test that macros that generate macros that generate expressions are likely to work
+; absurd contrived exaggerated example to test that macros that generate
+; macros that generate macros that generate expressions are likely to work
+;
+; may you never need to do this in real life
 ;
 (mac make-make-op (opname op)
   `(mac ,opname (name n . body)
@@ -19,10 +22,23 @@
 
 (register-test
  '(suite "Boot Tests"
+
+         (suite "quasiquote"
+                ("peeks inside nested quotes"
+                 `(a b '(c ,(+ 1 2)))
+                 (a b '(c 3)))
+                ("handles nested unquote-splicing"
+                 ``(a ,,@(list '+ 1 2) b)
+                 `((a ,(+ 1 2) b)))
+                ("returns nested quasiquotes"
+                 `(a b `(c d ,(+ 1 2) ,,(+ 3 4)))
+                 (a b `(c d ,(+ 1 2) ,7))))
+
          (suite "build-keyword-args"
                 ("takes a list of lists and returns the list with the first item of each sublist quoted"
                  (build-keyword-args '( (a 1) (b c) (d e "f" 22) ))
                  ((list 'a 1) (list 'b c) (list 'd e "f" 22))))
+
          (suite "make-macros can create macros"
                 ("make-plus example generates a plus-seven expression"
                  (+seven 6)
