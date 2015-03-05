@@ -124,6 +124,18 @@ describe Nydp::Parser do
     expect(parse "foo.bar").to eq  pair_list([dotsyn, foo, bar])
   end
 
+  it "should spot numbers hiding in special syntax" do
+    parsed = parse("foo.2:3:4")
+    expect(parsed.inspect).to eq "(dot-syntax foo (colon-syntax 2 3 4))"
+
+    numbers = parsed.cdr.cdr.car.cdr
+    two = numbers.car
+    three = numbers.cdr.car
+    four = numbers.cdr.cdr.car
+
+    expect([two, three, four].map &:class).to eq [Fixnum, Fixnum, Fixnum]
+  end
+
   it "should parse a dotted symbol" do
     expect(parse "(list a b foo.bar c)").to eq  pair_list([sym(:list), a, b, pair_list([dotsyn, foo, bar]), c])
   end
@@ -140,8 +152,30 @@ describe Nydp::Parser do
     expect(parse "'foo").to eq pair_list([quote, foo])
   end
 
+  it "should not let quote decorations trick it into thinking numbers are symbols" do
+    two = parse("'2").cdr.car
+    expect(two.class).to eq 2.class
+    expect(two).to eq 2
+  end
+
+  it "should not let unquote decorations trick it into thinking numbers are symbols" do
+    two = parse(",2").cdr.car
+    expect(two.class).to eq 2.class
+    expect(two).to eq 2
+  end
+
+  it "should not let unquote-splicing decorations trick it into thinking numbers are symbols" do
+    two = parse(",@2").cdr.car
+    expect(two.class).to eq 2.class
+    expect(two).to eq 2
+  end
+
   it "should quote-unquote symbols" do
     expect(parse "',foo").to eq pair_list([quote, pair_list([unquote, foo])])
+  end
+
+  it "should unquote-unquote_splicing symbols" do
+    expect(parse(",,@foo").inspect).to eq "(unquote (unquote-splicing foo))"
   end
 
   it "should quote lists" do
@@ -158,6 +192,12 @@ describe Nydp::Parser do
 
   it "should do some complicated unquote stuff with lists" do
     expect(parse("`(a b `(c d ,(+ 1 2) ,,(+ 3 4)))").inspect).to eq "(quasiquote (a b (quasiquote (c d (unquote (+ 1 2)) (unquote (unquote (+ 3 4)))))))"
+  end
+
+  it "should do some complicated unquote stuff with mixed lists and symbols" do
+    expect(parse("`(a b `(c d ,,@foo e f))").inspect).to eq "(quasiquote (a b (quasiquote (c d (unquote (unquote-splicing foo)) e f))))"
+    expect(parse("`(a b `(c d ,@,foo e f))").inspect).to eq "(quasiquote (a b (quasiquote (c d (unquote-splicing (unquote foo)) e f))))"
+    expect(parse("`(a b `(c d ,',foo e f))").inspect).to eq "(quasiquote (a b (quasiquote (c d (unquote (quote (unquote foo))) e f))))"
   end
 
   it "should do some complicated unquote stuff with lists" do

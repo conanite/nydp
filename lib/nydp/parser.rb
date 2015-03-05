@@ -41,6 +41,10 @@ module Nydp
 
     def parse_symbol txt
       case txt
+      when /^[-+]?[0-9]*\.[0-9]+([eE][-+]?[0-9]+)?$/
+        txt.to_f
+      when /^[-+]?[0-9]+$/
+        txt.to_i
       when /^'(.+)$/
         Pair.from_list [sym(:quote), parse_symbol($1)]
       when /^`(.+)$/
