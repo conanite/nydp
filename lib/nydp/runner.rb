@@ -35,7 +35,6 @@ module Nydp
 
     def initialize vm, ns, stream
       super vm, ns
-      @stream = stream
       @parser = Nydp::Parser.new(ns)
       @tokens = Nydp::Tokeniser.new stream
     end
