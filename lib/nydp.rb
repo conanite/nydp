@@ -8,7 +8,10 @@ module Nydp
   def self.testfiles;       PLUGINS.map(&:testfiles).flatten    ; end
   def self.plugin_names   ; PLUGINS.map(&:name)                 ; end
   def self.loadall vm, ns, files
-    files.each { |f| StreamRunner.new(vm, ns, File.new(f)).run }
+    files.each { |f|
+      reader = Nydp::StreamReader.new(File.new(f))
+      Nydp::Runner.new(vm, ns, reader).run
+    }
   end
 
   def self.repl
@@ -28,7 +31,8 @@ module Nydp
     vm = VM.new
     loadall vm, ns, loadfiles
     loadall vm, ns, testfiles
-    StreamRunner.new(vm, ns, "(run-all-tests #{verbose})").run
+    reader = Nydp::StringReader.new "(run-all-tests #{verbose})"
+    Nydp::Runner.new(vm, ns, reader).run
   end
 
 end

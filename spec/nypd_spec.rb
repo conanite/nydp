@@ -6,7 +6,7 @@ describe Nydp do
 
   def run txt
     Nydp.setup ns
-    Nydp::StreamRunner.new(vm, ns, txt).run
+    Nydp::Runner.new(vm, ns, Nydp::StringReader.new(txt)).run
   end
 
   it "should make a symbol from a string" do

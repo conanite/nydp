@@ -6,7 +6,8 @@ describe Nydp do
   before {
     Nydp.setup ns
     boot_path = File.expand_path File.join File.expand_path(File.dirname(__FILE__)), '../lib/lisp/boot.nydp'
-    Nydp::StreamRunner.new(vm, ns, File.new(boot_path)).run
+    reader = Nydp::StreamReader.new(File.new(boot_path))
+    Nydp::Runner.new(vm, ns, reader).run
   }
 
   def list *things
@@ -23,7 +24,7 @@ describe Nydp do
   end
 
   def run txt
-    Nydp::StreamRunner.new(vm, ns, txt).run
+    Nydp::Runner.new(vm, ns, Nydp::StringReader.new(txt)).run
   end
 
   it "should map a function over a list of numbers" do

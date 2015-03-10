@@ -4,14 +4,19 @@ module Nydp
   class Tokeniser
     attr_accessor :state, :finished
 
-    def initialize stream
-      @stream = stream.is_a?(String) ? nil : stream
-      @scanner = StringScanner.new(stream.is_a?(String) ? stream : "")
+    def initialize reader
+      @reader = reader
+      @scanner = StringScanner.new("")
+
+      # @stream = stream.is_a?(String) ? nil : stream
+      # @scanner = StringScanner.new(stream.is_a?(String) ? stream : "")
+
       @state = :lisp
     end
 
     def no_more?
-      @scanner << @stream.readline if @scanner.eos? && @stream && !@stream.eof?
+      @scanner << @reader.nextline if @scanner.eos?
+      # @scanner << @stream.readline if @scanner.eos? && @stream && !@stream.eof?
       @scanner.eos?
     end
 

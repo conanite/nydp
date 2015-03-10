@@ -1,5 +1,28 @@
 module Nydp
-  class Runner
+  class StringReader
+    def initialize string ; @string = string ; end
+    def nextline
+      s = @string ; @string = "" ; s
+    end
+  end
+
+  class StreamReader
+    def initialize stream ; @stream = stream ; end
+    def nextline
+      (@stream && !@stream.eof?) ? @stream.readline : ""
+    end
+  end
+
+  class RawlineReader
+    def initialize stream, prompt
+      @prompt = prompt
+      @editor = Rawline::Editor.new stream
+    end
+
+    def nextline ; @editor.read @prompt ; end
+  end
+
+  class Evaluator
     attr_accessor :vm, :ns
 
     def initialize vm, ns
@@ -30,36 +53,22 @@ module Nydp
     end
   end
 
-  class StreamRunner < Runner
-    attr_accessor :stream, :parser
-
+  class Runner < Evaluator
     def initialize vm, ns, stream
       super vm, ns
-      @parser = Nydp::Parser.new(ns)
-      @tokens = Nydp::Tokeniser.new stream
-    end
-
-    def prompt *_
+      @parser     = Nydp::Parser.new(ns)
+      @tokens     = Nydp::Tokeniser.new stream
     end
 
     def run
       res = Nydp.NIL
-      prompt
       while !@tokens.finished
-        expr = parser.expression(@tokens)
+        expr = @parser.expression(@tokens)
         unless expr.nil?
           res = evaluate expr
-          prompt res
         end
       end
       res
-    end
-  end
-
-  class Repl < StreamRunner
-    def prompt val=nil
-      puts val if val
-      print "nydp > "
     end
   end
 end

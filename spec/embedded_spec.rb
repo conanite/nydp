@@ -20,7 +20,8 @@ describe Nydp::Parser do
   let(:colosyn)          { Nydp::Symbol.mk :"colon-syntax",       ns }
 
   def parse_string txt, open_delim, close_delim
-    Nydp::Parser.new(ns).string(Nydp::Tokeniser.new(txt), open_delim, close_delim)
+    reader = Nydp::StringReader.new txt
+    Nydp::Parser.new(ns).string(Nydp::Tokeniser.new(reader), open_delim, close_delim)
   end
 
   it "should parse empty string" do

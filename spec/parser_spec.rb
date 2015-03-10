@@ -20,12 +20,14 @@ describe Nydp::Parser do
   let(:colosyn)          { Nydp::Symbol.mk :"colon-syntax",       ns }
 
   it "should return a stream of tokens" do
-    t = Nydp::Tokeniser.new ""
+    reader = Nydp::StringReader.new ""
+    t = Nydp::Tokeniser.new reader
     expect(t.next_token).to eq nil
   end
 
   it "should return another stream of tokens" do
-    t = Nydp::Tokeniser.new "(a b c 1 2 3)"
+    reader = Nydp::StringReader.new "(a b c 1 2 3)"
+    t = Nydp::Tokeniser.new reader
     tt = []
     tok = t.next_token
     while tok
