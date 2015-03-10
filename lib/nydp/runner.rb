@@ -1,4 +1,5 @@
 require 'readline'
+require 'nydp/readline_history'
 
 module Nydp
   class StringReader
@@ -16,8 +17,11 @@ module Nydp
   end
 
   class ReadlineReader
+    include Nydp::ReadlineHistory
+
     def initialize stream, prompt
       @prompt = prompt
+      setup_readline_history
     end
 
     # with thanks to http://ruby-doc.org/stdlib-1.9.3/libdoc/readline/rdoc/Readline.html
