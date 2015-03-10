@@ -20,8 +20,15 @@ module Nydp
       @prompt = prompt
     end
 
+    # with thanks to http://ruby-doc.org/stdlib-1.9.3/libdoc/readline/rdoc/Readline.html
+    # and http://bogojoker.com/readline/
     def nextline
-      Readline.readline(@prompt, true)
+      line = Readline.readline(@prompt, true)
+      return nil if line.nil?
+      if line =~ /^\s*$/ or Readline::HISTORY.to_a[-2] == line
+        Readline::HISTORY.pop
+      end
+      line
     end
   end
 
