@@ -7,17 +7,17 @@ module Nydp
     def initialize reader
       @reader = reader
       @scanner = StringScanner.new("")
-
-      # @stream = stream.is_a?(String) ? nil : stream
-      # @scanner = StringScanner.new(stream.is_a?(String) ? stream : "")
-
       @state = :lisp
     end
 
     def no_more?
-      @scanner << @reader.nextline if @scanner.eos?
-      # @scanner << @stream.readline if @scanner.eos? && @stream && !@stream.eof?
-      @scanner.eos?
+      if @scanner.eos?
+        nextline = @reader.nextline
+        return true if nextline.nil?
+        @scanner << nextline
+      end
+
+      false
     end
 
     def close_delimiter? scanner, delim

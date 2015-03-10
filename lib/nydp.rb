@@ -20,7 +20,8 @@ module Nydp
     setup(ns)
     vm = VM.new
     loadall vm, ns, loadfiles
-    Repl.new(vm, ns, $stdin).run
+    reader = Nydp::ReadlineReader.new $stdin, "nydp > "
+    Nydp::Runner.new(vm, ns, reader, $stdout).run
   end
 
   def self.tests *options

@@ -1,25 +1,28 @@
+require 'readline'
+
 module Nydp
   class StringReader
     def initialize string ; @string = string ; end
     def nextline
-      s = @string ; @string = "" ; s
+      s = @string ; @string = nil ; s
     end
   end
 
   class StreamReader
     def initialize stream ; @stream = stream ; end
     def nextline
-      (@stream && !@stream.eof?) ? @stream.readline : ""
+      @stream.readline unless @stream.eof?
     end
   end
 
-  class RawlineReader
+  class ReadlineReader
     def initialize stream, prompt
       @prompt = prompt
-      @editor = Rawline::Editor.new stream
     end
 
-    def nextline ; @editor.read @prompt ; end
+    def nextline
+      Readline.readline(@prompt, true)
+    end
   end
 
   class Evaluator
@@ -54,10 +57,15 @@ module Nydp
   end
 
   class Runner < Evaluator
-    def initialize vm, ns, stream
+    def initialize vm, ns, stream, printer=nil
       super vm, ns
+      @printer    = printer
       @parser     = Nydp::Parser.new(ns)
       @tokens     = Nydp::Tokeniser.new stream
+    end
+
+    def print val
+      @printer.puts val if @printer
     end
 
     def run
@@ -65,7 +73,7 @@ module Nydp
       while !@tokens.finished
         expr = @parser.expression(@tokens)
         unless expr.nil?
-          res = evaluate expr
+          print(res = evaluate(expr))
         end
       end
       res
