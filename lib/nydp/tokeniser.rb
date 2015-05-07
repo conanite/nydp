@@ -66,9 +66,6 @@ module Nydp
           tok = [:comment, comment[1..-1].strip]
         elsif open_str = s.scan(/"/)
           tok = [:string_open_delim, open_str]
-        elsif embed_suffix = s.scan(/\]#/)
-          self.state = :external_text
-          tok = [:embed_suffix, embed_suffix]
         elsif list_prefix = s.scan(/[^\s()]*\(/)
           tok = [:left_paren, list_prefix[0...-1]]
         elsif list_prefix = s.scan(/[^\s()]*\{/)

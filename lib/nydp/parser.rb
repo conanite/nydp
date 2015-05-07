@@ -87,8 +87,6 @@ module Nydp
     def next_form token, token_stream
       return nil if token.nil?
       case token.first
-      when :embed_suffix
-        Nydp.NIL
       when :string_open_delim
         string token_stream, token.last, close_delimiter_for(token.last)
       when :left_paren
