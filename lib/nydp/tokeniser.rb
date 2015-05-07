@@ -42,8 +42,8 @@ module Nydp
         elsif closer = close_delimiter?(s, close_delimiter)
           rep << closer
           return StringFragmentCloseToken.new(string, rep)
-        elsif embed_suffix = s.scan(/%%/)
-          rep << embed_suffix
+        elsif start_interpolation = s.scan(/~/)
+          rep << start_interpolation
           return StringFragmentToken.new(string, rep)
         else
           ch = s.getch
