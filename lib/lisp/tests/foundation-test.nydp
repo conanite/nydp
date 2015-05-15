@@ -16,7 +16,7 @@
         string)
 
       ("interpolates a string"
-        "foobar %%(+ 1 2) you know"
+        "foobar ~(+ 1 2) you know"
         "foobar 3 you know")
 
       ("returns 'string for an interpolated string"
