@@ -24,6 +24,24 @@
  '(suite "Boot Tests"
 
          (suite "quasiquote"
+                ("same as quote for standalone item"
+                 `a
+                 a)
+                ("same as quote for standalone list"
+                 `(a b c)
+                 (a b c))
+                ("substitutes single variables"
+                 (let b 10 `(a ,b c))
+                 (a 10 c))
+                ("substitutes a list"
+                 (let b '(1 2 3) `(a ,@b c))
+                 (a 1 2 3 c))
+                ("substitutes a list at the end of a given list"
+                 (let b '(1 2 3) `(a ,b ,@b))
+                 (a (1 2 3) 1 2 3))
+                ("more complicated substitution example"
+                 (with (d '(1 2 3) g '(x y z)) `(a (b c ,d (e f ,@g))))
+                 (a (b c (1 2 3) (e f x y z))))
                 ("peeks inside nested quotes"
                  `(a b '(c ,(+ 1 2)))
                  (a b '(c 3)))

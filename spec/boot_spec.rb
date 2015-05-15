@@ -31,32 +31,6 @@ describe Nydp do
     expect(run "(map (fn (x) (* x x)) '(1 2 3))").to eq Nydp::Pair.from_list [1, 4, 9]
   end
 
-  describe "quasiquote" do
-    it "should quasiquote a standalone item" do
-      expect(run "`a").to eq sym(:a)
-    end
-
-    it "should quasiquote a plain list" do
-      expect(run "`(a b c)").to eq list :a, :b, :c
-    end
-
-    it "should quasiquote a plain list with a variable substitution" do
-      expect(run "(assign b 10) `(a ,b c)").to eq list :a, 10, :c
-    end
-
-    it "should quasiquote a plain list with a list-variable substitution" do
-      expect(run "(assign b '(1 2 3)) `(a ,@b c)").to eq list :a, 1, 2, 3, :c
-    end
-
-    it "should quasiquote a plain list with a list-variable substitution at the end" do
-      expect(run "(assign b '(1 2 3)) `(a ,b ,@b)").to eq list :a, [1,2,3], 1, 2, 3
-    end
-
-    it "should quasiquote a plain list with a list-variable substitution at the end" do
-      expect(run "(assign d '(1 2 3)) (assign g '(x y z)) `(a (b c ,d (e f ,@g)))").to eq list :a, [:b, :c, [1, 2, 3], [:e, :f, :x, :y, :z]]
-    end
-  end
-
   describe "pairs" do
     it "should break a list into pairs" do
       result   = run "(pairs '(1 a 2 b 3 c))"
