@@ -42,6 +42,7 @@ module Nydp
       Symbol.mk(:nil,   ns).assign Nydp.NIL
       Symbol.mk(:t,     ns).assign Nydp.T
       Symbol.mk(:sym,   ns).assign Nydp::Builtin::ToSym.new(ns)
+      Symbol.mk(:ensuring,      ns).assign(Nydp::Builtin::Ensuring.new)
       Symbol.mk(:inspect,       ns).assign(Nydp::Builtin::Inspect.new)
       Symbol.mk(:comment,       ns).assign(Nydp::Builtin::Comment.new)
       Symbol.mk(:millisecs,     ns).assign(Nydp::Builtin::Millisecs.new)

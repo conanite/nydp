@@ -40,6 +40,14 @@
           (type-of nil)
           nil))
 
+  (suite "Ensuring"
+    ("gets called on the way out"
+      (let x 10
+        (ensuring (fn () (assign x (+ x 11)))
+                  (fn () (assign x (+ x 22))))
+        x)
+      43))
+
   (suite "Lists"
     (suite "cons"
       ("cons creates a list"
