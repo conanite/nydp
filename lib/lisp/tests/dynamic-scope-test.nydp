@@ -1,0 +1,14 @@
+(dynamic foodynamic)
+
+(def listfoody ()
+     (list (foodynamic)
+           (+ 6 (foodynamic))
+           (+ 10 (foodynamic))))
+
+(register-test '(suite "dynamic scoping"
+       ("relies on thread-locals"
+        (list
+         (w/foodynamic 101 (listfoody))
+         (w/foodynamic 0   (listfoody))
+         (w/foodynamic 666 (listfoody)))
+        ((101 107 111) (0 6 10) (666 672 676)))))
