@@ -84,7 +84,14 @@ module Nydp
       while !@tokens.finished
         expr = @parser.expression(@tokens)
         unless expr.nil?
-          print(res = evaluate(expr))
+          begin
+            print(res = evaluate(expr))
+          rescue Exception => e
+            puts e.message
+            e.backtrace.each do |b|
+              puts b
+            end
+          end
         end
       end
       res
