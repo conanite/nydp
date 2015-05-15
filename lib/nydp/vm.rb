@@ -1,12 +1,13 @@
 module Nydp
   class VM
     include Helper
-    attr_accessor :instructions, :args, :contexts, :current_context
+    attr_accessor :instructions, :args, :contexts, :current_context, :locals
 
     def initialize
       @instructions = []
-      @args = []
-      @contexts = []
+      @args         = []
+      @contexts     = []
+      @locals       = { }
     end
 
     def thread expr
