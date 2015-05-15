@@ -22,6 +22,19 @@
 
 (register-test
  '(suite "Boot Tests"
+         (suite "list management"
+                ("'pair breaks a list into pairs"
+                 (pairs '(1 a 2 b 3 c))
+                 ((1 a) (2 b) (3 c)))
+
+                ("'flatten returns a flat list of things"
+                 (flatten '((poo (x) (* x x)) (1 2 3)))
+                 (poo x * x x 1 2 3)))
+
+         (suite "map"
+                ("maps a function over a list of numbers"
+                 (map (fn (x) (* x x)) '(1 2 3))
+                 (1 4 9)))
 
          (suite "quasiquote"
                 ("same as quote for standalone item"
