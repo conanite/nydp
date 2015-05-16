@@ -262,7 +262,8 @@
               (iso (car x) (car y))
               (iso (cdr x) (cdr y)))))
 
-(def isa (type obj) (eq? (type-of obj) type))
+(def isa   (type   obj) (eq? (type-of obj) type))
+(def caris (obj things) (eq? (car things)  obj ))
 (mac just (arg) arg)
 (def quotify (arg) `(quote ,arg))
 
@@ -303,3 +304,15 @@
   (build-hash-getters names nil))
 
 (mac dot-syntax names `(hash-lookup ,names))
+
+(def dot-syntax-assignment (names value-expr)
+  (let rnames (rev names)
+    `(hash-set ,(build-hash-getters (rev (cdr rnames)) nil)
+               ',(car rnames)
+               ,value-expr)))
+
+(mac = (name value)
+  (if (isa 'symbol name)
+      `(assign ,name ,value)
+    (and (isa 'pair name) (caris 'dot-syntax name))
+      (dot-syntax-assignment (cdr name) value)))
