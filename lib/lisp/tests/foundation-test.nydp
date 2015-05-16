@@ -48,6 +48,19 @@
         x)
       43))
 
+  (suite "parse"
+    ("parses a colon-syntax symbol"
+     (parse "this:that")
+     ((colon-syntax this that)) )
+
+    ("parses a dot-syntax symbol"
+     (parse "this.that.zozo")
+     ((dot-syntax this that zozo)) )
+
+    ("parses an expression"
+     (parse "(foo bar \"hello, String\") 1 2 (3 t nil) nil")
+     ((foo bar "hello, String") 1 2 (3 t nil))))
+
   (suite "isa"
     ("t for 'pair for list"
       (isa 'pair '(a b c))

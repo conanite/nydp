@@ -37,6 +37,7 @@ module Nydp
       Symbol.mk(:apply, ns).assign(Nydp::Builtin::Apply.new)
       Symbol.mk(:error, ns).assign(Nydp::Builtin::Error.new)
       Symbol.mk(:quit,  ns).assign(Nydp::Builtin::Quit.new)
+      Symbol.mk(:parse, ns).assign(Nydp::Builtin::Parse.new(ns))
       Symbol.mk(:p,     ns).assign(Nydp::Builtin::Puts.new)
       Symbol.mk(:PI,    ns).assign Literal.new(3.1415)
       Symbol.mk(:nil,   ns).assign Nydp.NIL
