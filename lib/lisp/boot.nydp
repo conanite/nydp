@@ -30,6 +30,8 @@
         (fn (arg)
             (assign *debug-pre-compile* arg)))
 
+(assign *debug-pre-compile* nil)
+
 (assign pre-compile-expr
         (fn (name body)
             (mac-expand (hash-get macs name) name body)))
