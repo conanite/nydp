@@ -48,6 +48,8 @@ module Nydp
 
     def compile_and_eval expr
       vm.thread Pair.new(Compiler.compile(expr, Nydp.NIL), Nydp.NIL)
+    rescue Exception => e
+      raise "failed to eval #{expr.inspect},\nerror was #{e.message}\nvm state is #{vm.error}"
     end
 
     def quote expr

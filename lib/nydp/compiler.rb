@@ -8,6 +8,12 @@ module Nydp
     extend Helper
 
     def self.compile expression, bindings
+      compile_expr expression, bindings
+    rescue Exception => e
+      raise "failed to compile expression #{expression.inspect},\nerror was #{e.message}"
+    end
+
+    def self.compile_expr expression, bindings
       if expression.is_a? Nydp::Symbol
         SymbolLookup.build expression, bindings
       elsif literal? expression
