@@ -16,8 +16,7 @@
       (/ passed (+ passed failed)))))
 
 (def run-tests (tests passf failf verbose)
-  (execute-test "" tests passf failf verbose)
-  results)
+  (execute-test "" tests passf failf verbose))
 
 (def execute-test (desc test passf failf verbose)
   (if (eq? 'suite (car test))
