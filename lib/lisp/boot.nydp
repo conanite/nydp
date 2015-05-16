@@ -264,7 +264,10 @@
 (def build-keyword-args (pairs)
   (map (fn (ab) `(list (quote ,(car ab)) ,@(cdr ab))) pairs))
 
+(assign dynamics (hash))
+
 (mac dynamic (name)
+  (hash-set dynamics name t)
   (let with-mac-name (sym "w/~name")
     (w/uniq prev
       `(do
