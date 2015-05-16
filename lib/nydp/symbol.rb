@@ -1,8 +1,15 @@
 class Nydp::Symbol
+  EMPTY = :""
   attr_accessor :name
 
   def initialize name
     @name = name.to_sym
+    @inspection = name.to_s
+    @inspection = "|#{name}|" if untidy(@inspection)
+  end
+
+  def untidy str
+    (str == "") || (str == nil) || (str =~ /\s/)
   end
 
   def is? nm
@@ -29,9 +36,9 @@ class Nydp::Symbol
     ns[name.to_sym]
   end
 
-  def nydp_type ; :symbol    ; end
-  def inspect   ; to_s       ; end
-  def to_s      ; name.to_s  ; end
+  def nydp_type ; :symbol     ; end
+  def inspect   ; @inspection ; end
+  def to_s      ; name.to_s   ; end
 
   def == other
     other.is_a?(Nydp::Symbol) && (self.name == other.name)

@@ -49,6 +49,13 @@ describe Nydp::Parser do
     expect(parse "(foo bar)").to eq pair_list([foo, bar])
   end
 
+  it "should parse untidy symbols" do
+    s0 = sym "foo bar"
+    s1 = sym ""
+    s2 = sym '" hello, there, silly billy!"'
+    expect(parse "(|foo bar| || |\" hello, there, silly billy!\"|)").to eq pair_list([s0, s1, s2])
+  end
+
   it "should parse numbers expression" do
     expect(parse "(1 2 3)").to eq pair_list([1, 2, 3])
   end
@@ -136,6 +143,11 @@ describe Nydp::Parser do
     four = numbers.cdr.cdr.car
 
     expect([two, three, four].map &:class).to eq [Fixnum, Fixnum, Fixnum]
+  end
+
+  it "should handle prefix and postfix syntax also" do
+    parsed = parse(".foo123:")
+    expect(parsed.inspect).to eq "(dot-syntax || (colon-syntax foo123 ||))"
   end
 
   it "should parse a dotted symbol" do

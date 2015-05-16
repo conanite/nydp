@@ -5,9 +5,9 @@ module Nydp
       @string, @rep = string, rep
     end
 
-    def to_s
-      rep
-    end
+    def to_s    ; rep           ; end
+    def inspect ; rep           ; end
+    def to_sym  ; string.to_sym ; end
 
     def == other
       (self.class == other.class) && (self.string == other.string)

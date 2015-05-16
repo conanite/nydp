@@ -25,7 +25,7 @@ module Nydp
       scanner.scan(delim)
     end
 
-    def next_string_fragment open_delimiter, close_delimiter
+    def next_string_fragment open_delimiter, close_delimiter, interpolation_sign
       s = @scanner
       rep = "#{open_delimiter}"
       string = ""
@@ -42,7 +42,7 @@ module Nydp
         elsif closer = close_delimiter?(s, close_delimiter)
           rep << closer
           return StringFragmentCloseToken.new(string, rep)
-        elsif start_interpolation = s.scan(/~/)
+        elsif interpolation_sign && (start_interpolation = s.scan(interpolation_sign))
           rep << start_interpolation
           return StringFragmentToken.new(string, rep)
         else
@@ -66,6 +66,8 @@ module Nydp
           tok = [:comment, comment[1..-1].strip]
         elsif open_str = s.scan(/"/)
           tok = [:string_open_delim, open_str]
+        elsif open_sym = s.scan(/\|/)
+          tok = [:sym_open_delim, open_sym]
         elsif list_prefix = s.scan(/[^\s()]*\(/)
           tok = [:left_paren, list_prefix[0...-1]]
         elsif list_prefix = s.scan(/[^\s()]*\{/)
