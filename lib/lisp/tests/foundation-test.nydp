@@ -48,6 +48,12 @@
         x)
       43))
 
+  (suite "hash"
+    ("hash-lookup"
+     (pre-compile 'a.b.c)
+     (hash-get (hash-get a 'b) 'c)))
+
+
   (suite "parse"
     ("parses a colon-syntax symbol"
      (parse "this:that")
