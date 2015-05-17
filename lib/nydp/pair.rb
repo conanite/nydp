@@ -18,6 +18,11 @@ class Nydp::Pair
   def cdar      ; car.cdr ; end
   def cddr      ; cdr.cdr ; end
 
+  def to_ruby list=[]
+    list << n2r(car)
+    cdr.is_a?(Nydp::Pair) ? cdr.to_ruby(list) : list
+  end
+
   def self.parse_list list
     if sym? list.slice(-2), "."
       from_list(list[0...-2], list.slice(-1))

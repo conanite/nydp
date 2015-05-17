@@ -52,7 +52,7 @@ describe Nydp::Pair do
     expect(p.cdr).to eq :b
   end
 
-  it "should convert a ruby list" do
+  it "should convert from a ruby list" do
     p = pair_list [:a, :b, :c, :d]
     expect(p.car).to eq :a
     p = p.cdr
@@ -67,6 +67,12 @@ describe Nydp::Pair do
     p = p.cdr
     expect(p.car).to eq Nydp.NIL
     expect(p.cdr).to eq Nydp.NIL
+  end
+
+  it "should convert to a ruby list" do
+    pair = pair_list [:a, :b, :c, :d]
+    ruby = pair.to_ruby
+    expect(ruby).to eq [:a, :b, :c, :d]
   end
 
   it "should have size zero when empty" do
