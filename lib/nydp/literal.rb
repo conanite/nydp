@@ -1,5 +1,6 @@
 module Nydp
   class Literal
+    include Nydp::Helper
     attr_reader :expression
 
     def initialize expression
@@ -21,6 +22,7 @@ module Nydp
     def nydp_type ; :literal            ; end
     def inspect   ; @expression.inspect ; end
     def to_s      ; @expression.to_s    ; end
+    def to_ruby   ; n2r @expression ; end
 
     def coerce _
       [_, expression]
