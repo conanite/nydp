@@ -1,6 +1,11 @@
 require 'spec_helper'
 
 describe Nydp::Symbol do
+  it "returns a ruby symbol in #to_ruby" do
+    sym = Nydp::Symbol.mk :foo, ns
+    expect(sym.to_ruby).to eq :foo
+  end
+
   it "should not recognise an unknown symbol" do
     sym = Nydp::Symbol.find :foo, ns
     expect(sym).to eq nil
@@ -15,6 +20,7 @@ describe Nydp::Symbol do
     sym1 = Nydp::Symbol.mk :baz, ns
     sym2 = Nydp::Symbol.mk :baz, ns
 
+    expect(sym1).to eq sym2
     expect(sym1).to equal sym2
   end
 
@@ -26,5 +32,6 @@ describe Nydp::Symbol do
     sym2 = Nydp::Symbol.mk :baz, ns2
 
     expect(sym1).to eq sym2
+    expect(sym1).not_to equal sym2
   end
 end

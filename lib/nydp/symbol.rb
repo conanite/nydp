@@ -21,6 +21,7 @@ class Nydp::Symbol
     @value || Nydp.NIL
   end
 
+
   def self.mk name, ns
     name = name.to_sym
     return Nydp.NIL if name == :nil
@@ -40,6 +41,7 @@ class Nydp::Symbol
   def nydp_type ; :symbol     ; end
   def inspect   ; @inspection ; end
   def to_s      ; name.to_s   ; end
+  def to_ruby   ; name        ; end
 
   def == other
     other.is_a?(Nydp::Symbol) && (self.name == other.name)
