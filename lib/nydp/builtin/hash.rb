@@ -1,30 +1,56 @@
+require "nydp/hash"
+
 class Nydp::Builtin::Hash
-  def invoke vm, args
-    vm.push_arg({ })
+  include Nydp::Helper, Nydp::Builtin::Base
+  def builtin_invoke vm, args
+    vm.push_arg(Nydp::Hash.new)
   end
 end
 
 class Nydp::Builtin::HashGet
-  def invoke vm, args
+  include Nydp::Helper, Nydp::Builtin::Base
+  attr_accessor :ns
+  def initialize ns ; @ns = ns; end
+  def builtin_invoke vm, args
     hash = args.car
     key = args.cdr.car
-    vm.push_arg(hash[key] || Nydp.NIL)
+    case hash
+    when Nydp::Hash
+      vm.push_arg(hash[key] || Nydp.NIL)
+    else
+      key = n2r args.cdr.car
+      vm.push_arg(r2n hash[key], ns)
+    end
   end
 end
 
 class Nydp::Builtin::HashSet
-  def invoke vm, args
+  include Nydp::Helper, Nydp::Builtin::Base
+  def builtin_invoke vm, args
     hash = args.car
     key = args.cdr.car
     value = args.cdr.cdr.car
-    hash[key] = value
+    case hash
+    when Nydp::Hash
+      hash[key] = value
+    else
+      hash[n2r key] = n2r value
+    end
     vm.push_arg value
   end
 end
 
 class Nydp::Builtin::HashKeys
-  def invoke vm, args
+  include Nydp::Helper, Nydp::Builtin::Base
+  attr_accessor :ns
+  def initialize ns ; @ns = ns; end
+  def builtin_invoke vm, args
     hash = args.car
-    vm.push_arg Nydp::Pair.from_list hash.keys
+    case hash
+    when Nydp::Hash
+      vm.push_arg Nydp::Pair.from_list hash.keys
+    else
+      vm.push_arg r2n(hash.keys, ns)
+    end
   end
 end
