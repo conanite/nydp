@@ -7,6 +7,7 @@ module Nydp
 
     def nydp_type ; :string ; end
     def to_s      ;  string ; end
+    def to_ruby   ;  string ; end
 
     def inspect
       string.inspect
