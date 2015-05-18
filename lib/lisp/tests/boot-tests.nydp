@@ -39,6 +39,14 @@
                  (rev '(a b (c d e) f g))
                  (g f (c d e) b a))
 
+                ("joins elements into a string"
+                 (joinstr "" '("foo" "bar" "bax"))
+                 "foobarbax")
+
+                ("joins elements into a string"
+                 (joinstr " - " '(1 2 3))
+                 "1 - 2 - 3")
+
                 ("'flatten returns a flat list of things"
                  (flatten '((poo (x) (* x x)) (1 2 3)))
                  (poo x * x x 1 2 3)))
@@ -48,34 +56,66 @@
                  (map (fn (x) (* x x)) '(1 2 3))
                  (1 4 9)))
 
-         (suite "quasiquote"
-                ("same as quote for standalone item"
-                 `a
-                 a)
-                ("same as quote for standalone list"
-                 `(a b c)
-                 (a b c))
-                ("substitutes single variables"
-                 (let b 10 `(a ,b c))
-                 (a 10 c))
-                ("substitutes a list"
-                 (let b '(1 2 3) `(a ,@b c))
-                 (a 1 2 3 c))
-                ("substitutes a list at the end of a given list"
-                 (let b '(1 2 3) `(a ,b ,@b))
-                 (a (1 2 3) 1 2 3))
-                ("more complicated substitution example"
-                 (with (d '(1 2 3) g '(x y z)) `(a (b c ,d (e f ,@g))))
-                 (a (b c (1 2 3) (e f x y z))))
-                ("peeks inside nested quotes"
-                 `(a b '(c ,(+ 1 2)))
-                 (a b '(c 3)))
-                ("handles nested unquote-splicing"
-                 ``(a ,,@(list '+ 1 2) b)
-                 `((a ,(+ 1 2) b)))
-                ("returns nested quasiquotes"
-                 `(a b `(c d ,(+ 1 2) ,,(+ 3 4)))
-                 (a b `(c d ,(+ 1 2) ,7))))
+         (suite "pre-compile"
+                ("expands 'let"
+                 (do
+                     (def x+3*z (x y)
+                          (let y 3
+                               (fn (z) (* (+ x y) z))))
+                     ((x+3*z 2 99) 5))
+                 25)
+
+                ("expands 'and"
+                 (pre-compile '(and a b c))
+                 (cond a (cond b c)))
+
+                ("expands 'or"
+                 (do (reset-uniq-counter)
+                     (pre-compile '(or a b c)))
+                 ((fn (ora-1)
+                      (cond ora-1
+                            ora-1
+                            ((fn (ora-2)
+                                 (cond ora-2
+                                       ora-2
+                                       ((fn (ora-3)
+                                            (cond ora-3
+                                                  ora-3
+                                                  nil)) c))) b))) a))
+
+                ("w/uniq provides unique variables for macro expansion"
+                 (do (reset-uniq-counter)
+                     (pre-compile '(w/uniq a foo)))
+                 ((fn (a) foo) (uniq 'a)))
+
+                (suite "quasiquote"
+                       ("same as quote for standalone item"
+                        `a
+                        a)
+                       ("same as quote for standalone list"
+                        `(a b c)
+                        (a b c))
+                       ("substitutes single variables"
+                        (let b 10 `(a ,b c))
+                        (a 10 c))
+                       ("substitutes a list"
+                        (let b '(1 2 3) `(a ,@b c))
+                        (a 1 2 3 c))
+                       ("substitutes a list at the end of a given list"
+                        (let b '(1 2 3) `(a ,b ,@b))
+                        (a (1 2 3) 1 2 3))
+                       ("more complicated substitution example"
+                        (with (d '(1 2 3) g '(x y z)) `(a (b c ,d (e f ,@g))))
+                        (a (b c (1 2 3) (e f x y z))))
+                       ("peeks inside nested quotes"
+                        `(a b '(c ,(+ 1 2)))
+                        (a b '(c 3)))
+                       ("handles nested unquote-splicing"
+                        ``(a ,,@(list '+ 1 2) b)
+                        `((a ,(+ 1 2) b)))
+                       ("returns nested quasiquotes"
+                        `(a b `(c d ,(+ 1 2) ,,(+ 3 4)))
+                        (a b `(c d ,(+ 1 2) ,7)))))
 
          (suite "build-keyword-args"
                 ("takes a list of lists and returns the list with the first item of each sublist quoted"
