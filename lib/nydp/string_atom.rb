@@ -20,6 +20,5 @@ module Nydp
     def + other
       StringAtom.new "#{@string}#{other}"
     end
-
   end
 end
