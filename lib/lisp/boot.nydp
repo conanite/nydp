@@ -325,5 +325,13 @@
 (mac = (name value)
   (if (isa 'symbol name)
       `(assign ,name ,value)
-    (caris 'dot-syntax name)
+      (caris 'dot-syntax name)
       (dot-syntax-assignment (cdr name) value)))
+
+(mac brace-list args
+  (p "brace list: args are ~args")
+  (w/uniq hash
+    (let mappings (pairs args)
+      `(let ,hash (hash)
+            ,@(map (fn (m) `(hash-set ,hash ',(car m) ,(cadr m))) mappings)
+            ,hash))))

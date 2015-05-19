@@ -74,6 +74,8 @@ module Nydp
           tok = [:left_brace, list_prefix[0...-1]]
         elsif s.scan(/\)/)
           tok = [:right_paren]
+        elsif s.scan(/\}/)
+          tok = [:right_brace]
         elsif number = s.scan(/[-+]?[0-9]*\.[0-9]+([eE][-+]?[0-9]+)?/)
           tok = [:number, number.to_f]
         elsif integer = s.scan(/[-+]?[0-9]+/)
