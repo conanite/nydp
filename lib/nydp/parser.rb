@@ -39,6 +39,17 @@ module Nydp
       return Pair.from_list [pfx] + syms.map { |s| parse_symbol s }
     end
 
+    SYMBOL_OPERATORS =
+      [
+        [ /\!/,     "bang-syntax"       ],
+        [ /\./,     "dot-syntax"        ],
+        [ /\$/,     "dollar-syntax"     ],
+        [ /::/,     "colon-colon-syntax"],
+        [ /:/,      "colon-syntax"      ],
+        [ /->/,     "arrow-syntax"      ],
+        [ /[=][>]/, "rocket-syntax"     ],
+      ]
+
     def parse_symbol txt
       txt = txt.to_s
       case txt
@@ -46,31 +57,21 @@ module Nydp
         txt.to_f
       when /^[-+]?[0-9]+$/
         txt.to_i
-      when /^'(.+)$/
+      when /^'(.*)$/
         Pair.from_list [sym(:quote), parse_symbol($1)]
-      when /^`(.+)$/
+      when /^`(.*)$/
         Pair.from_list [sym(:quasiquote), parse_symbol($1)]
-      when /^,@(.+)$/
+      when /^,@(.*)$/
         Pair.from_list [sym(:"unquote-splicing"), parse_symbol($1)]
-      when /^,(.+)$/
+      when /^,(.*)$/
         Pair.from_list [sym(:unquote), parse_symbol($1)]
       when /^\.$/
         sym txt
       else
-        syms = txt.split /\./, -1
-        return split_sym syms, sym("dot-syntax") if syms.length > 1
-
-        syms = txt.split /::/, -1
-        return split_sym syms, sym("colon-colon-syntax") if syms.length > 1
-
-        syms = txt.split /:/, -1
-        return split_sym syms, sym("colon-syntax") if syms.length > 1
-
-        syms = txt.split /->/, -1
-        return split_sym syms, sym("arrow-syntax") if syms.length > 1
-
-        syms = txt.split(/=>/, -1)
-        return split_sym syms, sym("rocket-syntax") if syms.length > 1
+        SYMBOL_OPERATORS.each do |rgx, name|
+          syms = txt.split(rgx, -1)
+          return split_sym syms, sym(name) if syms.length > 1
+        end
 
         sym txt
       end

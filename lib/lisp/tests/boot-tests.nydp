@@ -57,6 +57,23 @@
                  (1 4 9)))
 
          (suite "pre-compile"
+                (suite "bang-syntax"
+                       ("expansion"
+                        (pre-compile '(!eq? a b))
+                        ((fn args (no (apply eq? args))) a b))
+
+                       ("bang-syntax for 'eq?"
+                        (!eq? 1 2)
+                        t)
+
+                       ("bang-syntax for 'caris"
+                        (!caris 'foo '(foo bar))
+                        nil)
+
+                       ("bang-syntax for 'caris"
+                        (!caris 'foo '(zozo foo bar))
+                        t))
+
                 ("expands 'let"
                  (do
                      (def x+3*z (x y)

@@ -6,7 +6,7 @@
                             xs)))
 
 
-(assign append-list! (fn (list-1 list-2)
+(assign append-list (fn (list-1 list-2)
                          (cdr-set (last-cons list-1) list-2)
                          list-1))
 
@@ -145,6 +145,14 @@
                        `(cond ,(car args) ,(cadr args)))
                  (car args))))
 
+(mac bang-syntax (pfx . rest)
+  (if (no (eq? pfx '||))
+      (error "Irregular ! syntax: got prefix ~(inspect pfx) in ~(joinstr "!" (cons pfx rest))"))
+  (if (cdr rest)
+      (error "Irregular ! syntax: got suffix ~(inspect (cdr rest)) in ~(joinstr "!" (cons pfx rest))"))
+  `(fn args
+     (no (apply ,(car rest) args))))
+
 (mac and args
   (if args
       (if (cdr args)
@@ -217,7 +225,7 @@
 
 (def joinstr (txt things)
      (if (no (pair? things))
-         (error "joinstr : 'things is a %%(type-of things) expected a list : %%(inspect things)"))
+         (error "joinstr : 'things is a ~(type-of things) expected a list : ~(inspect things)"))
      (apply +
             (to-string (car things))
             (flatten (zip (map (fn (_) txt) (cdr things))
