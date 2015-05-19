@@ -1,0 +1,33 @@
+(register-test '(suite "Parser tests"
+  (suite "parse"
+    ("parses an empty symbol"
+     (parse "||")
+     (||) )
+
+    ("parses a colon-syntax symbol"
+     (parse "this:that")
+     ((colon-syntax this that)) )
+
+    ("parses a dot-syntax symbol"
+     (parse "this.that.zozo")
+     ((dot-syntax this that zozo)) )
+
+    ("parses a mixed-syntax symbol"
+     (parse "this$that.zozo")
+     ((dot-syntax (dollar-syntax this that) zozo)))
+
+    ("parses a mixed-syntax prefix symbol"
+     (parse "$this.that.zozo")
+     ((dot-syntax (dollar-syntax || this) that zozo)))
+
+    ("parses a prefix dollar"
+     (parse "$this")
+     ((dollar-syntax || this)))
+
+    ("parses a prefix dollar-dot"
+     (parse "$.this")
+     ((dot-syntax (dollar-syntax || ||) this)))
+
+    ("parses an expression"
+     (parse "(foo bar \"hello, String\") 1 2 (3 t nil) nil")
+     ((foo bar "hello, String") 1 2 (3 t nil))))))

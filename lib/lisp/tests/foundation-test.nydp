@@ -23,6 +23,15 @@
         (type-of "foobar %%(+ 1 2)")
         string)))
 
+  (suite "eq?"
+         ("true for two empty symbols"
+          (eq? '|| '||)
+          t)
+
+         ("nil for two different symbols"
+          (eq? 'foo 'bar)
+          nil))
+
   (suite "truth and nil"
          ("t is boolean true"
           (if t "hello" "goodbye")
@@ -65,20 +74,6 @@
     ("recursive hash assignment"
      (pre-compile '(= a.b.c.d 42))
      (hash-set (hash-get (hash-get a 'b) 'c) 'd 42)))
-
-
-  (suite "parse"
-    ("parses a colon-syntax symbol"
-     (parse "this:that")
-     ((colon-syntax this that)) )
-
-    ("parses a dot-syntax symbol"
-     (parse "this.that.zozo")
-     ((dot-syntax this that zozo)) )
-
-    ("parses an expression"
-     (parse "(foo bar \"hello, String\") 1 2 (3 t nil) nil")
-     ((foo bar "hello, String") 1 2 (3 t nil))))
 
   (suite "isa"
     ("t for 'pair for list"

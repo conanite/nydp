@@ -56,6 +56,16 @@ describe Nydp::Parser do
     expect(parse "(|foo bar| || |\" hello, there, silly billy!\"|)").to eq pair_list([s0, s1, s2])
   end
 
+  it "should parse untidy symbols with special syntax" do
+    quote_foo_bar = parse "'|foo bar|"
+    expect(quote_foo_bar).to eq pair_list([quote, sym("foo bar")])
+  end
+
+  it "should parse empty symbol with special syntax" do
+    quote_empty = parse "'||"
+    expect(quote_empty).to eq pair_list([quote, sym("")])
+  end
+
   it "should parse numbers expression" do
     expect(parse "(1 2 3)").to eq pair_list([1, 2, 3])
   end
