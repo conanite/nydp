@@ -30,4 +30,13 @@
 
     ("parses an expression"
      (parse "(foo bar \"hello, String\") 1 2 (3 t nil) nil")
-     ((foo bar "hello, String") 1 2 (3 t nil))))))
+     ((foo bar "hello, String") 1 2 (3 t nil))))
+
+  (suite "parse-in-string"
+    ("parses a plain string"
+      (parse-in-string "hello, world, take me to your dealer")
+      "hello, world, take me to your dealer")
+
+    ("parses a plain string with interpolations"
+      (parse-in-string (joinstr "" (list "hello, " '~ "(world), take me to your " '~ "dealer please")))
+      (string-pieces "hello, " (world) ", take me to your " dealer " please")))))
