@@ -223,13 +223,12 @@
                (flattenize things))
           acc))
 
-(def joinstr (txt things)
-     (if (no (pair? things))
-         (error "joinstr : 'things is a ~(type-of things) expected a list : ~(inspect things)"))
-     (apply +
-            (to-string (car things))
-            (flatten (zip (map (fn (_) txt) (cdr things))
-                          (map to-string (cdr things))))))
+(def joinstr (txt . things)
+     (let joinables (flatten things)
+       (apply +
+              (to-string (car joinables))
+              (flatten (zip (map (fn (_) txt) (cdr joinables))
+                            (map to-string (cdr joinables)))))))
 
 (let uniq-counter 0
      (def uniq (prefix)
