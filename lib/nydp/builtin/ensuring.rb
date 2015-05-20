@@ -1,7 +1,10 @@
+require "nydp/vm"
+
 class Nydp::Builtin::Ensuring
   include Nydp::Helper
 
   class InvokeProtection
+    include Nydp::VM::Finally
     attr_reader :protection
 
     def initialize protection

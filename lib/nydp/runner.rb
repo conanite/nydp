@@ -47,9 +47,14 @@ module Nydp
     end
 
     def compile_and_eval expr
-      vm.thread Pair.new(Compiler.compile(expr, Nydp.NIL), Nydp.NIL)
-    rescue Exception => e
-      raise "failed to eval #{expr.inspect},\nerror was #{e.message}\nvm state is #{vm.error}"
+      result = vm.thread Pair.new(Compiler.compile(expr, Nydp.NIL), Nydp.NIL)
+      e = vm.unhandled_error
+      vm.unhandled_error = nil
+      if e
+        new_msg = "failed to eval #{expr.inspect}\nerror was #{Nydp.indent_text e.message}"
+        raise e.class, new_msg, e.backtrace
+      end
+      result
     end
 
     def quote expr

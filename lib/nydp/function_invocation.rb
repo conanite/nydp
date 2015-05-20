@@ -19,7 +19,7 @@ module Nydp
       msg  =  "failed to execute invocation #{args.inspect}"
       msg +=  "\nsource was #{source.inspect}"
       msg +=  "\nfunction name was #{source.car.inspect}"
-      i_f = InvocationFailed.new "#{msg}\n#{vm.error}#{e.message}"
+      i_f = InvocationFailed.new "#{msg}\n#{e.message}"
       i_f.set_backtrace e.backtrace
       raise i_f
     end

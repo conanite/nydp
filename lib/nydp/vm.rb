@@ -1,7 +1,10 @@
 module Nydp
   class VM
     include Helper
-    attr_accessor :instructions, :args, :contexts, :current_context, :locals
+    attr_accessor :instructions, :args, :contexts, :current_context, :locals, :unhandled_error
+
+    module Finally     ; end
+    module HandleError ; end
 
     def initialize
       @instructions = []
@@ -13,13 +16,38 @@ module Nydp
     def thread expr
       instructions.push expr
       while instructions.length > 0
-        self.current_context = contexts.last
-        ii = instructions.pop
-        i = ii.car
-        ii.cdr.repush instructions, contexts
-        i.execute(self)
+        begin
+          self.current_context = contexts.last
+          ii = instructions.pop
+          i = ii.car
+          ii.cdr.repush instructions, contexts
+          i.execute(self)
+        rescue Exception => e
+          handle_error e
+        end
       end
       pop_arg
+    end
+
+    def handle_error ex
+      @unhandled_error = ex
+
+      protecti = []
+      protectc = []
+
+      while (instructions.length > 0) && !(instructions.last.car.is_a? HandleError)
+        if instructions.last.car.is_a? Finally
+          protecti << instructions.last
+          protectc << contexts.last
+        end
+
+        instructions.pop
+        contexts.pop
+      end
+
+      while protecti.length > 0
+        push_instructions protecti.pop, proctectc.pop
+      end
     end
 
     def peek_context;  current_context;      end
@@ -42,7 +70,7 @@ module Nydp
       end
     end
 
-    def error
+    def vm_info
       msg = ""
       msg << "\n"
       msg << "\ninstruction stack"
@@ -59,11 +87,6 @@ module Nydp
       end
       msg << "\n"
       msg << "\n"
-
-      instructions = []
-      contexts     = []
-      args = [Nydp.NIL]
-
       msg
     end
   end

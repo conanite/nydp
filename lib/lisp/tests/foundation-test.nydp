@@ -49,13 +49,22 @@
           (type-of nil)
           nil))
 
-  (suite "Ensuring"
-    ("gets called on the way out"
+  (suite "Error handling"
+    ("'ensuring gets called on the way out"
       (let x 10
         (ensuring (fn () (assign x (+ x 11)))
                   (fn () (assign x (+ x 22))))
         x)
-      43))
+      43)
+
+    ("'on-err handles errors"
+      (let x nil
+        (on-err (fn (ex) (= x "impossible") )
+                (fn ()   (= x (nil nil nil))))
+        x)
+      "impossible")
+
+)
 
   (suite "assignment with '="
     ("assigns a symbol"
