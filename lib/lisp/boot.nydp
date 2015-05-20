@@ -338,3 +338,7 @@
 (mac on-err (handler . body)
   `(handle-error (fn (err) ,handler)
                  (fn ()    ,@body)))
+
+(mac ensure (protection . body)
+  `(ensuring (fn () ,protection)
+             (fn ()    ,@body)))
