@@ -9,6 +9,10 @@ class Nydp::Builtin::Eval
   end
 
   def to_s
-    "Builtin:eval"
+    "eval"
+  end
+
+  def inspect
+    "Nydp::Builtin::Eval"
   end
 end

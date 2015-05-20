@@ -30,8 +30,10 @@ module Nydp
     end
 
     def to_s
-      "#assignment #{@instructions.cdr.car} #{@value_src}"
+      "#assignment #{@instructions.cdr.car} #{@value_src.inspect}"
     end
+
+    def inspect; to_s ; end
 
     def execute vm
       vm.push_instructions @instructions, vm.peek_context
