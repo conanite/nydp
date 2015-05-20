@@ -46,7 +46,7 @@ module Nydp
       end
 
       while protecti.length > 0
-        push_instructions protecti.pop, proctectc.pop
+        push_instructions protecti.pop, protectc.pop
       end
     end
 
