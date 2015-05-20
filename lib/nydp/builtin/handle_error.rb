@@ -1,6 +1,6 @@
 require "nydp/vm"
 
-class Nydp::Builtin::OnErr
+class Nydp::Builtin::HandleError
   include Nydp::Helper
 
   class CatchError

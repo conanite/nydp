@@ -48,7 +48,7 @@ module Nydp
       Symbol.mk(:comment,       ns).assign(Nydp::Builtin::Comment.new)
       Symbol.mk(:millisecs,     ns).assign(Nydp::Builtin::Millisecs.new)
       Symbol.mk("load-tests",   ns).assign(Nydp::Builtin::LoadTests.new(ns))
-      Symbol.mk("on-err",       ns).assign(Nydp::Builtin::OnErr.new)
+      Symbol.mk("handle-error"   , ns).assign(Nydp::Builtin::HandleError.new)
       Symbol.mk("parse-in-string", ns).assign(Nydp::Builtin::ParseInString.new(ns))
       Symbol.mk("random-string"  , ns).assign(Nydp::Builtin::RandomString.new)
       Symbol.mk("to-string"      , ns).assign(Nydp::Builtin::ToString.new)
