@@ -334,3 +334,7 @@
       `(let ,hash (hash)
             ,@(map (fn (m) `(hash-set ,hash ',(car m) ,(cadr m))) mappings)
             ,hash))))
+
+(mac on-err (handler . body)
+  `(handle-error (fn (err) ,handler)
+                 (fn ()    ,@body)))

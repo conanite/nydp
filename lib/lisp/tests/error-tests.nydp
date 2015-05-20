@@ -8,15 +8,17 @@
 
   ("'on-err handles errors"
    (let x nil
-        (handle-error (fn (ex) (= x "impossible") )
-                      (fn ()   (= x (nil nil nil))))
+        (on-err (= x "impossible")
+                (= x (nil nil nil)))
         x)
    "impossible")
 
   ("'on-err handles errors but any ensuring clause gets called first"
    (with (x nil y nil)
-        (handle-error (fn (ex) (= x 'impossible) )
-                      (fn ()   (ensuring (fn () (assign y 'ensure-clause))
-                                         (fn () (nil nil nil)))))
+        (on-err (= x 'impossible)
+                (ensuring (fn () (assign y 'ensure-clause))
+                          (fn () (nil nil nil))))
         (list x y))
-   (impossible ensure-clause))))
+   (impossible ensure-clause))
+
+))
