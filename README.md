@@ -49,12 +49,13 @@ one 'ns is in scope will not affect the values of variables in any other ns (unl
 duplicating namespaces or some such sorcery).
 
 
+## Different from Arc :
 
-## Differences from Arc :
+### 1. Macro-expansion is not built-in to the interpreter
 
-### 1. Macro-expansion is not built-in to the interpreter; however, the compiler will invoke 'pre-compile before compiling, passing
-the expression to be compiled, as an argument. You can override 'pre-compile to transform the expression in any way you wish. By default,
-nydp provides an implementation of 'pre-compile that performs macro-expansion.
+However, the compiler will invoke 'pre-compile before compiling, passing the expression to be compiled, as an argument.
+You can override 'pre-compile to transform the expression in any way you wish. By default, nydp provides an implementation
+of 'pre-compile that performs macro-expansion.
 
 ```lisp
 (def pre-compile (expr)
