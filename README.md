@@ -19,12 +19,17 @@ The goal of NYDP is to allow untrusted users run sandboxed server-side scripts. 
 * no threading functions
 * no ruby calls
 
+[Peruse NYDP's features here](lib/lisp/tests)
+
 ## Running
 
 ### Get a REPL :
 
 ```Shell
 $ bundle exec bin/nydp
+welcome to nydp
+^D to exit
+nydp >
 ```
 
 The REPL uses the readline library so you can use up- and down-arrows to navigate history.
@@ -41,21 +46,26 @@ answer = Nydp.apply_function ns, :question, :life, ("The Universe" and everythin
 ==> 42
 ```
 
-'ns is just a plain old ruby hash, mapping ruby symbols to nydp symbols for quick lookup at nydp compile-time. The nydp symbols
-maintain the values of global variables, including all builtin functions and any other functions defined using 'def.
+`ns` is just a plain old ruby hash, mapping ruby symbols to nydp symbols for quick lookup at nydp compile-time. The nydp symbols
+maintain the values of global variables, including all builtin functions and any other functions defined using `def`.
 
-You can maintain multiple ns instances without mutual interference. In other words, assigning global variables while
-one 'ns is in scope will not affect the values of variables in any other ns (unless you've specifically arranged it to be so by
+You can maintain multiple `ns` instances without mutual interference. In other words, assigning global variables while
+one `ns` is in scope will not affect the values of variables in any other `ns` (unless you've specifically arranged it to be so by
 duplicating namespaces or some such sorcery).
 
 
 ## Different from Arc :
 
-### 1. Macro-expansion is not built-in to the interpreter
+### 1. Macro-expansion runs in lisp
 
-However, the compiler will invoke 'pre-compile before compiling, passing the expression to be compiled, as an argument.
-You can override 'pre-compile to transform the expression in any way you wish. By default, nydp provides an implementation
-of 'pre-compile that performs macro-expansion.
+After parsing its input, NYDP passes the result as an argument to the `pre-compile` function. This is where things get
+a little bit circular: initially, `pre-compile` is a builtin function that just returns its argument. `pre-compile` bootstraps
+itself into existence in [boot.nydp](lib/lisp/boot.nydp).
+
+You can override `pre-compile` to transform the expression in any way you wish. By default, the `boot.nydp` implementation
+of 'pre-compile performs macro-expansion.
+
+
 
 ```lisp
 (def pre-compile (expr)
@@ -135,7 +145,7 @@ nydp > (parse "{ a 1 b 2 }")
 
 ```
 
-'brace-list is a macro that expands to create a hash literal. It assumes every (2n+1)th items are literal symbol keys, and every (2(n+1))th item is the corresponding value which is evaluated at run time.
+`brace-list` is a macro that expands to create a hash literal. It assumes every (2n+1)th items are literal symbol keys, and every (2(n+1))th item is the corresponding value which is evaluated at run time.
 
 ```lisp
 
@@ -149,7 +159,7 @@ nydp > { a 1 b (author-name) }
 
 ### 4. Sensible, nestable string interpolation
 
-The parser detects lisp code inside strings. When this happens, instead of emitting a string literal, the parser emits a form whose car is the symbol 'string-pieces.
+The parser detects lisp code inside strings. When this happens, instead of emitting a string literal, the parser emits a form whose car is the symbol `string-pieces`.
 
 ```lisp
 nydp > (parse "\"foo\"")
@@ -160,27 +170,31 @@ nydp > (let bar "Mister Nice Guy" "hello, ~bar")
 
 ==> hello, Mister Nice Guy
 
-; this is a more tricky example 'cos we need to make a string with an interpolation token in it
+; this is a more tricky example because we need to make a string with an interpolation token in it
 
 nydp > (let s (joinstr "" "\"hello, " '~ "world\"") (parse s))
 
 ==> (string-pieces "hello, " world "") ; "hello, ", followed by the interpolation 'world, followed by the empty string after 'world
 
-nydp > (def also (str) "AND ALSO, ~str")
-nydp > (with (a 1 b 2) "Consider ~a : the first thing, ~(also "Consider ~b : the second thing, ~(also "Consider ~(+ a b), the third (and final) thing")")")
+nydp > (def also (str) "\nAND ALSO, ~str")
+nydp > (with (a 1 b 2)
+         (p "Consider ~a : the first thing,
+              ~(also "Consider ~b : the second thing,
+              ~(also "Consider ~(+ a b), the third (and final) thing")")"))
 
-==> Consider 1 : the first thing, AND ALSO, Consider 2 : the second thing, AND ALSO, Consider 3, the third (and final) thing
-
+==> Consider 1 : the first thing,
+==> AND ALSO, Consider 2 : the second thing,
+==> AND ALSO, Consider 3, the third (and final) thing
 ```
 
-By default, 'string-pieces is a function that just concatenates the string value of its arguments. You can redefine it as a macro to perform more fun stuff, or you can detect it within another macro to do extra-special stuff with it.
+By default, `string-pieces` is a function that just concatenates the string value of its arguments. You can redefine it as a macro to perform more fun stuff, or you can detect it within another macro to do extra-special stuff with it.
 
 
 ### 5. No continuations.
 
 Sorry. While technically possible ... why bother?
 
-### 6. No destructuring
+### 6. No argument destructuring
 
 However, this doesn't need to be built-in, it can be done with macros alone.
 
@@ -246,9 +260,6 @@ Or install it yourself as:
 
     $ gem install nydp
 
-## Usage
-
-TODO: Write usage instructions here
 
 ## Contributing
 
