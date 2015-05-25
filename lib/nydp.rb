@@ -16,6 +16,7 @@ module Nydp
 
   def self.repl
     puts "welcome to nydp"
+    puts "^D to exit"
     ns = { }
     setup(ns)
     vm = VM.new

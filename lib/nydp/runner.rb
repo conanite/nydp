@@ -83,7 +83,7 @@ module Nydp
     end
 
     def print val
-      @printer.puts val if @printer
+      @printer.puts val.inspect if @printer
     end
 
     def run
