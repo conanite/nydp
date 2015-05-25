@@ -74,16 +74,14 @@ of 'pre-compile performs macro-expansion.
         (pre-compile (mac-expand (car expr) (cdr expr)))
         expr)))
 
-(mac comment (txt) nil)
+(mac yoyo (thing) `(do-yoyo ,thing))
 
 ```
 
-nydp > ; blah blah
+nydp > (pre-compile '(yoyo 42))
 
-```
-  ==> (comment "blah blah") ; which expands to nil
+==> (do-yoyo 42)
 
-```
 
 ### 2. Special symbol syntax
 
@@ -244,6 +242,15 @@ nydp> (on-err (p "error")
 make sure this happens
 error
 ```
+
+### 7 Intercept comments
+
+```
+nydp > (parse "; blah blah")
+
+==> (comment "blah blah")
+
+By default, `comment` is a macro that expands to nil. If you have a better idea, go for it. (doc-comments for example)
 
 
 ## Installation
