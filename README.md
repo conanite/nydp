@@ -10,7 +10,45 @@ for those who have no interest in popular US politics or TV).
 
 We do not wish to suggest by "Not Your Daddy's Parentheses" that Common Lisp, Scheme, Racket, Arc, Clojure or your favourite other lisp are somehow old-fashioned, inferior, or in need of improvement in any way.
 
-The goal of NYDP is to allow untrusted users run sandboxed server-side scripts. By default, NYDP
+The goal of NYDP is to allow untrusted users run sandboxed server-side scripts. By default, NYDP provides no system access :
+
+* no file functions
+* no network functions
+* no IO other than $stdin and $stdout
+* no process functions
+* no threading functions
+* no ruby calls
+
+## Running
+
+### Get a REPL :
+
+```Shell
+$ bundle exec bin/nydp
+```
+
+The REPL uses the readline library so you can use up- and down-arrows to navigate history.
+
+### Invoking from Ruby
+
+Do something like this:
+
+```ruby
+ns     = Nydp.build_nydp     # keep this for later re-use, it's expensive to set up
+
+answer = Nydp.apply_function ns, :question, :life, ("The Universe" and everything())
+
+==> 42
+```
+
+'ns is just a plain old ruby hash, mapping ruby symbols to nydp symbols for quick lookup at nydp compile-time. The nydp symbols
+maintain the values of global variables, including all builtin functions and any other functions defined using 'def.
+
+You can maintain multiple ns instances without mutual interference. In other words, assigning global variables while
+one 'ns is in scope will not affect the values of variables in any other ns (unless you've specifically arranged it to be so by
+duplicating namespaces or some such sorcery).
+
+
 
 ## Differences from Arc :
 
@@ -18,7 +56,7 @@ The goal of NYDP is to allow untrusted users run sandboxed server-side scripts. 
 the expression to be compiled, as an argument. You can override 'pre-compile to transform the expression in any way you wish. By default,
 nydp provides an implementation of 'pre-compile that performs macro-expansion.
 
-```
+```lisp
 (def pre-compile (expr)
   (map pre-compile
     (if (mac-names (car expr))
@@ -40,7 +78,7 @@ nydp > ; blah blah
 
 The parser detects syntax embedded in smybol names and emits a form whose first element names the syntax used. Here's an example:
 
-```
+```lisp
 
 nydp > (parse "x.y")
 
@@ -66,8 +104,7 @@ nydp > (parse "!x.$y")
 
 Nydp provides macros for some but not all possible special syntax
 
-```
-
+```lisp
 nydp > (pre-compile 'x.y)
 
 ==> (hash-get x 'y) ; 'dot-syntax is a macro that expands to perform hash lookups
@@ -84,15 +121,13 @@ nydp > (pre-compile '!eq?)
 nydp > (pre-compile '(!eq? a b))
 
 ==> ((fn args (no (apply eq? args))) a b) ; equivalent to (no (eq? a b))
-
-
 ```
 
 ### 3. Special list syntax
 
 The parser detects alternative list delimiters
 
-```
+```lisp
 nydp > (parse "{ a 1 b 2 }")
 
 ==> (brace-list a 1 b 2)
@@ -101,7 +136,7 @@ nydp > (parse "{ a 1 b 2 }")
 
 'brace-list is a macro that expands to create a hash literal. It assumes every (2n+1)th items are literal symbol keys, and every (2(n+1))th item is the corresponding value which is evaluated at run time.
 
-```
+```lisp
 
 nydp > { a 1 b (author-name) }
 
@@ -115,8 +150,7 @@ nydp > { a 1 b (author-name) }
 
 The parser detects lisp code inside strings. When this happens, instead of emitting a string literal, the parser emits a form whose car is the symbol 'string-pieces.
 
-```
-
+```lisp
 nydp > (parse "\"foo\"")
 
 ==> "foo"
@@ -153,22 +187,48 @@ However, this doesn't need to be built-in, it can be done with macros alone.
 ## Besides that, what can Nydp do?
 
 ### 1. Functions and variables exist in the same namespace.
-### 2. Macs are maintained in a hash called 'macs in the main namespace.
+### 2. Macros are maintained in a hash called 'macs in the main namespace.
 ### 3. General [tail call elimination](https://en.wikipedia.org/wiki/Tail_call) allowing recursion without stack overflow in some cases.
 ### 4. 'if like Arc:
 
+```lisp
+(if a b c d e) ; equivalent to ruby :
 ```
 
-(if a b c d e) ; equivalent to ruby :
-
+```ruby
 if    a
       b
 elsif c
       d
 else  e
-
 ```
 
+### 5. Lexically scoped, but with macros to define dynamic variables backed by ruby threadlocals.
+
+```lisp
+nydp> (dynamic foo)
+
+nydp> (def do-something () (+ (foo) 1))
+
+nydp> (w/foo 99 (do-something))
+
+==> 100
+
+nydp> (foo)
+
+==> nil
+```
+
+### 6. Basic error handling
+
+```lisp
+nydp> (on-err (p "error")
+        (ensure (p "make sure this happens")
+          (/ 1 0)))
+
+make sure this happens
+error
+```
 
 
 ## Installation
