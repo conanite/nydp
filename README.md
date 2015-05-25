@@ -19,7 +19,7 @@ The goal of NYDP is to allow untrusted users run sandboxed server-side scripts. 
 * no threading functions
 * no ruby calls
 
-[Peruse NYDP's features here](lib/lisp/tests)
+[Peruse NYDP's features here](lib/lisp/tests) in the `tests` directory.
 
 ## Running
 
@@ -56,7 +56,7 @@ duplicating namespaces or some such sorcery).
 
 ## Different from Arc :
 
-### 1. Macro-expansion runs in lisp
+#### 1. Macro-expansion runs in lisp
 
 After parsing its input, NYDP passes the result as an argument to the `pre-compile` function. This is where things get
 a little bit circular: initially, `pre-compile` is a builtin function that just returns its argument. `pre-compile` bootstraps
@@ -83,7 +83,7 @@ nydp > (pre-compile '(yoyo 42))
 ==> (do-yoyo 42)
 
 
-### 2. Special symbol syntax
+#### 2. Special symbol syntax
 
 The parser detects syntax embedded in smybol names and emits a form whose first element names the syntax used. Here's an example:
 
@@ -132,7 +132,7 @@ nydp > (pre-compile '(!eq? a b))
 ==> ((fn args (no (apply eq? args))) a b) ; equivalent to (no (eq? a b))
 ```
 
-### 3. Special list syntax
+#### 3. Special list syntax
 
 The parser detects alternative list delimiters
 
@@ -155,7 +155,7 @@ nydp > { a 1 b (author-name) }
 
 
 
-### 4. Sensible, nestable string interpolation
+#### 4. Sensible, nestable string interpolation
 
 The parser detects lisp code inside strings. When this happens, instead of emitting a string literal, the parser emits a form whose car is the symbol `string-pieces`.
 
@@ -188,21 +188,21 @@ nydp > (with (a 1 b 2)
 By default, `string-pieces` is a function that just concatenates the string value of its arguments. You can redefine it as a macro to perform more fun stuff, or you can detect it within another macro to do extra-special stuff with it.
 
 
-### 5. No continuations.
+#### 5. No continuations.
 
 Sorry. While technically possible ... why bother?
 
-### 6. No argument destructuring
+#### 6. No argument destructuring
 
 However, this doesn't need to be built-in, it can be done with macros alone.
 
 
 ## Besides that, what can Nydp do?
 
-### 1. Functions and variables exist in the same namespace.
-### 2. Macros are maintained in a hash called 'macs in the main namespace.
-### 3. General [tail call elimination](https://en.wikipedia.org/wiki/Tail_call) allowing recursion without stack overflow in some cases.
-### 4. 'if like Arc:
+#### 1. Functions and variables exist in the same namespace.
+#### 2. Macros are maintained in a hash called 'macs in the main namespace.
+#### 3. General [tail call elimination](https://en.wikipedia.org/wiki/Tail_call) allowing recursion without stack overflow in some cases.
+#### 4. 'if like Arc:
 
 ```lisp
 (if a b c d e) ; equivalent to ruby :
@@ -216,7 +216,7 @@ elsif c
 else  e
 ```
 
-### 5. Lexically scoped, but with macros to define dynamic variables backed by ruby threadlocals.
+#### 5. Lexically scoped, but with macros to define dynamic variables backed by ruby threadlocals.
 
 ```lisp
 nydp> (dynamic foo)
@@ -232,7 +232,7 @@ nydp> (foo)
 ==> nil
 ```
 
-### 6. Basic error handling
+#### 6. Basic error handling
 
 ```lisp
 nydp> (on-err (p "error")
@@ -243,15 +243,15 @@ make sure this happens
 error
 ```
 
-### 7 Intercept comments
+#### 7 Intercept comments
 
-```
+```lisp
 nydp > (parse "; blah blah")
 
 ==> (comment "blah blah")
 
 By default, `comment` is a macro that expands to nil. If you have a better idea, go for it. (doc-comments for example)
-
+```
 
 ## Installation
 
