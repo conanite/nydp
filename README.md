@@ -23,7 +23,7 @@ The goal of NYDP is to allow untrusted users run sandboxed server-side scripts. 
 
 ## Running
 
-### Get a REPL :
+#### Get a REPL :
 
 ```Shell
 $ bundle exec bin/nydp
@@ -34,9 +34,9 @@ nydp >
 
 The REPL uses the readline library so you can use up- and down-arrows to navigate history.
 
-### Invoking from Ruby
+#### Invoking from Ruby
 
-Do something like this:
+Suppose you want to invoke the function named `question` with some arguments. Do this:
 
 ```ruby
 ns     = Nydp.build_nydp     # keep this for later re-use, it's expensive to set up
@@ -46,24 +46,18 @@ answer = Nydp.apply_function ns, :question, :life, ("The Universe" and everythin
 ==> 42
 ```
 
-`ns` is just a plain old ruby hash, mapping ruby symbols to nydp symbols for quick lookup at nydp compile-time. The nydp symbols
-maintain the values of global variables, including all builtin functions and any other functions defined using `def`.
+`ns` is just a plain old ruby hash, mapping ruby symbols to nydp symbols for quick lookup at nydp compile-time. The nydp symbols maintain the values of global variables, including all builtin functions and any other functions defined using `def`.
 
-You can maintain multiple `ns` instances without mutual interference. In other words, assigning global variables while
-one `ns` is in scope will not affect the values of variables in any other `ns` (unless you've specifically arranged it to be so by
-duplicating namespaces or some such sorcery).
+You can maintain multiple `ns` instances without mutual interference. In other words, assigning global variables while one `ns` is in scope will not affect the values of variables in any other `ns` (unless you've specifically arranged it to be so by duplicating namespaces or some such sorcery).
 
 
 ## Different from Arc :
 
 #### 1. Macro-expansion runs in lisp
 
-After parsing its input, NYDP passes the result as an argument to the `pre-compile` function. This is where things get
-a little bit circular: initially, `pre-compile` is a builtin function that just returns its argument. `pre-compile` bootstraps
-itself into existence in [boot.nydp](lib/lisp/boot.nydp).
+After parsing its input, NYDP passes the result as an argument to the `pre-compile` function. This is where things get a little bit circular: initially, `pre-compile` is a builtin function that just returns its argument. `pre-compile` bootstraps itself into existence in [boot.nydp](lib/lisp/boot.nydp).
 
-You can override `pre-compile` to transform the expression in any way you wish. By default, the `boot.nydp` implementation
-of 'pre-compile performs macro-expansion.
+You can override `pre-compile` to transform the expression in any way you wish. By default, the `boot.nydp` implementation of `pre-compile` performs macro-expansion.
 
 
 
@@ -76,11 +70,10 @@ of 'pre-compile performs macro-expansion.
 
 (mac yoyo (thing) `(do-yoyo ,thing))
 
-```
-
 nydp > (pre-compile '(yoyo 42))
 
 ==> (do-yoyo 42)
+```
 
 
 #### 2. Special symbol syntax
@@ -131,6 +124,8 @@ nydp > (pre-compile '(!eq? a b))
 
 ==> ((fn args (no (apply eq? args))) a b) ; equivalent to (no (eq? a b))
 ```
+
+Look for `SYMBOL_OPERATORS` in [parser.rb](lib/nydp/parser.rb) to see which syntax is recognised and in which order. The order of these definitions defines special-syntax-operator precedence.
 
 #### 3. Special list syntax
 
