@@ -5,13 +5,12 @@ module Nydp
       @string, @token = string, token
     end
 
-    def nydp_type ; :string ; end
-    def to_s      ;  string ; end
-    def to_ruby   ;  string ; end
-
-    def inspect
-      string.inspect
-    end
+    def nydp_type  ; :string        ; end
+    def to_s       ;  string        ; end
+    def to_ruby    ;  string        ; end
+    def eql? other ; self == other  ; end
+    def inspect    ; string.inspect ; end
+    def hash       ; string.hash    ; end
 
     def == other
       other.to_s == self.to_s
