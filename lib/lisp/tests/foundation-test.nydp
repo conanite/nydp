@@ -1,4 +1,9 @@
 (register-test '(suite "Foundation Tests"
+  (suite "maths"
+    ("sqrt"
+      (sqrt 6.25)
+      2.5))
+
   (suite "strings"
     (suite "string-split"
       ("splits a string using given expression"
