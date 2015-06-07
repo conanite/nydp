@@ -1,5 +1,10 @@
 ; -*- lisp -*-
 
+;;
+;; Acknowledgements to Paul Graham. Some nydp features defined in this file (including,
+;; but not limited to, 'do, 'rfn, 'loop, 'for) are stolen directly from arc.arc
+;;
+
 (assign last-cons (fn (xs)
                       (cond (pair? (cdr xs))
                             (last-cons (cdr xs))
@@ -15,7 +20,7 @@
 (assign caar  (fn (arg) (car (car arg))))
 (assign cadr  (fn (arg) (car (cdr arg))))
 (assign cddr  (fn (arg) (cdr (cdr arg))))
-(assign   no  (fn (arg) (eq? arg nil)))
+(assign   no  (fn (arg) (cond arg nil t)))
 (assign just  (fn (arg) arg))
 (assign pargs (fn args (apply p args) (last args)))
 
@@ -270,6 +275,7 @@
               (iso (cdr x) (cdr y)))))
 
 (def isa   (type   obj) (eq? (type-of obj) type))
+(def sym? (arg) (isa 'symbol arg))
 (mac just (arg) arg)
 (def quotify (arg) `(quote ,arg))
 
@@ -327,13 +333,22 @@
       (caris 'dot-syntax name)
       (dot-syntax-assignment (cdr name) value)))
 
-(mac brace-list args
-  (p "brace list: args are ~args")
+(def brace-list-hash-key (k)
+  (if (isa 'symbol k)      `(quote ,k)
+      (caris 'unquote k)   (cadr k)
+      k))
+
+(def brace-list-build-hash (args)
   (w/uniq hash
     (let mappings (pairs args)
       `(let ,hash (hash)
-            ,@(map (fn (m) `(hash-set ,hash ',(car m) ,(cadr m))) mappings)
+            ,@(map (fn (m) `(hash-set ,hash ,(brace-list-hash-key (car m)) ,(cadr m))) mappings)
             ,hash))))
+
+(mac brace-list args
+  (if (no (cdr args))
+      (car args)
+      (brace-list-build-hash args)))
 
 (mac on-err (handler . body)
   `(handle-error (fn (err) ,handler)
@@ -342,3 +357,24 @@
 (mac ensure (protection . body)
   `(ensuring (fn () ,protection)
              (fn ()    ,@body)))
+
+(mac rfn (name parms . body)
+  `(let ,name nil
+     (assign ,name (fn ,parms ,@body))))
+
+(mac afn (parms . body)
+  `(rfn self ,parms ,@body))
+
+(mac loop (start test update . body)
+  (w/uniq (gfn gparm)
+    `(do ,start
+         ((rfn ,gfn (,gparm)
+            (if ,gparm
+                (do ,@body ,update (,gfn ,test))))
+          ,test))))
+
+(mac for (v init max . body)
+  (w/uniq (gi gm)
+    `(with (,v nil ,gi ,init ,gm (+ ,max 1))
+       (loop (assign ,v ,gi) (< ,v ,gm) (assign ,v (+ ,v 1))
+         ,@body))))

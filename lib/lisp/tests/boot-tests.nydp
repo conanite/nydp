@@ -31,6 +31,28 @@
 
 (register-test
  '(suite "Boot Tests"
+         (suite "hashtables"
+                ("build a hash table from brace-list syntax"
+                 (let hsh { foo 1 bar 2 }
+                      (list 'foo hsh.foo 'bar hsh.bar))
+                 (foo 1 bar 2))
+
+                ("single-item brace list is just the thing itself"
+                 (let zi 10 "finds the ~{zi}th item")
+                 "finds the 10th item")
+
+                ("unquotes hash keys"
+                 (with (zi 'foo chi 'bar yi 'grr)
+                      (let hsh { ,zi 10 ,chi 11 ,yi 12 }
+                           (list zi hsh.foo chi hsh.bar yi hsh.grr)))
+                 (foo 10 bar 11 grr 12))
+
+                ("allows literal and invocation hash keys"
+                 (with (zi "hello" chi "world")
+                      (let hsh { (joinstr " " zi chi) 10 "yesterday" 11 }
+                           (list "hello world" (hash-get hsh "hello world") "yesterday" (hash-get hsh "yesterday"))))
+                 ("hello world" 10 "yesterday" 11)))
+
          (suite "list management"
                 ("'pair breaks a list into pairs"
                  (pairs '(1 a 2 b 3 c))
