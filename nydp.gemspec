@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = Nydp::VERSION
   spec.authors       = ["Conan Dalton"]
   spec.email         = ["conan@conandalton.net"]
-  spec.description   = %q{Not Your Daddy's Parentheses}
-  spec.summary       = %q{A new lisp for a new age}
+  spec.description   = %q{ NYDP : Not Your Daddy's Parentheses (a kind of Lisp)                 }
+  spec.summary       = %q{ A civilised yet somewhat dangerous kind of Lisp for a new generation }
   spec.homepage      = "http://github.com/conanite/nydp"
   spec.license       = "MIT"
 
