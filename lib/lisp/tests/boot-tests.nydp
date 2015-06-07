@@ -20,6 +20,15 @@
 (make-plus +seven 7)
 (make-plus +eleven 11)
 
+;
+; another contrived example to check deeply nested lexical scoping
+;
+(let test-a0 "a0"
+  (def test-foo (f0 f1)
+    (with (w0 "w0" w1 "w1" w2 "w2" w3 "w3")
+      (let f (fn (x0) (joinstr " " test-a0 x0 f0 x0 f1))
+        (map f (list w0 w1 w2 w3))))))
+
 (register-test
  '(suite "Boot Tests"
          (suite "list management"
@@ -66,7 +75,11 @@
          (suite "map"
                 ("maps a function over a list of numbers"
                  (map (fn (x) (* x x)) '(1 2 3))
-                 (1 4 9)))
+                 (1 4 9))
+
+                ("maps a string join function over a list of strings"
+                 (test-foo "x" "y")
+                 ("a0 w0 x w0 y" "a0 w1 x w1 y" "a0 w2 x w2 y" "a0 w3 x w3 y"))
 
          (suite "pre-compile"
                 (suite "bang-syntax"

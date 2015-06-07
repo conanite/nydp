@@ -23,7 +23,8 @@ module Nydp
       while Nydp.NIL.isnt? bindings
         here = bindings.car
         if here.key? name
-          return new ContextSymbol.new(depth, name)
+          binding_index = here[name]
+          return new ContextSymbol.new(depth, name, binding_index)
         else
           depth += 1
           bindings = bindings.cdr

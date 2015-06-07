@@ -1,9 +1,10 @@
 class Nydp::LexicalContext
-  attr_reader :values, :parent
+  attr_reader :names, :values, :parent
 
   def initialize parent
     @parent = parent
-    @values = { }
+    @names  = []
+    @values = []
   end
 
   def nth n
@@ -21,8 +22,17 @@ class Nydp::LexicalContext
     values[name]
   end
 
+  def at_index index
+    values[index]
+  end
+
   def set name, value
-    values[name] = value
+    names  << name
+    values << value
+  end
+
+  def set_index index, value
+    values[index] = value
   end
 
   def to_s_with_indent str
