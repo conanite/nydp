@@ -113,14 +113,15 @@ module Nydp
     end
 
     INTERPOLATION_SIGN = /~/
+    INTERPOLATION_ESCAPES = { /~\s/ => true, /~~/ => "~" }
 
     def string token_stream, open_delimiter, close_delimiter
       fragments = [sym(:"string-pieces")]
-      string_token = token_stream.next_string_fragment(open_delimiter, close_delimiter, INTERPOLATION_SIGN)
+      string_token = token_stream.next_string_fragment(open_delimiter, close_delimiter, INTERPOLATION_SIGN, INTERPOLATION_ESCAPES)
       fragments << Nydp::StringAtom.new(string_token.string, string_token)
       while !(string_token.is_a? StringFragmentCloseToken)
         fragments << expression(token_stream)
-        string_token = token_stream.next_string_fragment('', close_delimiter, INTERPOLATION_SIGN)
+        string_token = token_stream.next_string_fragment('', close_delimiter, INTERPOLATION_SIGN, INTERPOLATION_ESCAPES)
         fragments << Nydp::StringAtom.new(string_token.string, string_token)
       end
 

@@ -55,7 +55,19 @@
       (string-pieces "hello, " (world) ", take me to your " dealer " please"))
 
     ("ignores standalone interpolation symbol"
-      (parse-in-string (joinstr "" (list "hello, " '~ " take me to your " '~ " nice dealer please")))
-      "hello, ~ take me to your ~ nice dealer please")
+      (parse-in-string (joinstr "" (list "hello " '~ " world")))
+      "hello ~ world")
+
+    ("ignores backslash-escaped interpolation symbol"
+      (len "hello \~world")
+      12)
+
+    ("ignores escaped interpolation symbol"
+      (parse-in-string (joinstr "" (list "hello " '~ '~ "world")))
+      "hello \~world")
+
+    ("really ignores standalone interpolation symbol"
+      (len (parse-in-string (joinstr "" (list "hello " '~ " world"))))
+      13)
 
 )))
