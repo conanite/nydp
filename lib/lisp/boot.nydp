@@ -235,6 +235,9 @@
               (flatten (zip (map (fn (_) txt) (cdr joinables))
                             (map to-string (cdr joinables)))))))
 
+(def string-pieces pieces
+  (joinstr "" pieces))
+
 (let uniq-counter 0
      (def uniq (prefix)
           (sym (joinstr "-"
@@ -274,18 +277,19 @@
               (iso (car x) (car y))
               (iso (cdr x) (cdr y)))))
 
-(def isa   (type   obj) (eq? (type-of obj) type))
-(def sym? (arg) (isa 'symbol arg))
-(mac just (arg) arg)
-(def quotify (arg) `(quote ,arg))
+(def isa     (type obj) (eq? (type-of obj) type))
+(def sym?    (arg)      (isa 'symbol arg))
+(def string? (arg)      (isa 'string arg))
+(mac just    (arg)      arg)
+(def quotify (arg)      `(quote ,arg))
 
 (def caris (obj things)
      (and (isa 'pair things)
           (eq? (car things)  obj)))
 
 (def len (xs)
-  (if (pair? xs)
-      (+ 1 (len (cdr xs)))
+  (if (pair? xs)   (+ 1 (len (cdr xs)))
+      (string? xs) (string-length xs)
       0))
 
 (def build-keyword-args (pairs)
@@ -316,6 +320,9 @@
       (build-hash-getters (cdr names) `(hash-get ,acc ',(car names)))
       acc))
 
+(def build-hash-lookup-from (root names)
+  (build-hash-getters (cons root names) nil))
+
 (mac hash-lookup (names)
   (build-hash-getters names nil))
 
@@ -345,9 +352,11 @@
             ,@(map (fn (m) `(hash-set ,hash ,(brace-list-hash-key (car m)) ,(cadr m))) mappings)
             ,hash))))
 
+(mac brace-list-mono (arg) arg)
+
 (mac brace-list args
   (if (no (cdr args))
-      (car args)
+      `(brace-list-mono ,(car args))
       (brace-list-build-hash args)))
 
 (mac on-err (handler . body)

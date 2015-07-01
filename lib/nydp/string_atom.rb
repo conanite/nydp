@@ -11,6 +11,7 @@ module Nydp
     def eql? other ; self == other  ; end
     def inspect    ; string.inspect ; end
     def hash       ; string.hash    ; end
+    def length     ; string.length  ; end
 
     def == other
       other.to_s == self.to_s

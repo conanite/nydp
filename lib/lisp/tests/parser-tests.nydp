@@ -52,4 +52,10 @@
 
     ("parses a plain string with interpolations"
       (parse-in-string (joinstr "" (list "hello, " '~ "(world), take me to your " '~ "dealer please")))
-      (string-pieces "hello, " (world) ", take me to your " dealer " please")))))
+      (string-pieces "hello, " (world) ", take me to your " dealer " please"))
+
+    ("ignores standalone interpolation symbol"
+      (parse-in-string (joinstr "" (list "hello, " '~ " take me to your " '~ " nice dealer please")))
+      "hello, ~ take me to your ~ nice dealer please")
+
+)))

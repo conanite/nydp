@@ -11,16 +11,15 @@ class Nydp::Builtin::ToString
   end
 end
 
-class Nydp::Builtin::StringPieces
-  def to_string first, rest
-    if Nydp.NIL.is? rest
-      first.to_s
-    else
-      "#{first.to_s}#{to_string rest.car, rest.cdr}"
-    end
-  end
-
+class Nydp::Builtin::StringLength
   def invoke vm, args
-    vm.push_arg Nydp::StringAtom.new to_string(args.car, args.cdr)
+    arg = args.car
+    val = case arg
+          when Nydp::StringAtom
+            arg.length
+          else
+            0
+          end
+    vm.push_arg val
   end
 end

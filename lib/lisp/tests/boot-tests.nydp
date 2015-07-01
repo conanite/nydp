@@ -53,6 +53,11 @@
                            (list "hello world" (hash-get hsh "hello world") "yesterday" (hash-get hsh "yesterday"))))
                  ("hello world" 10 "yesterday" 11)))
 
+         (suite "strings"
+                ("length"
+                 (len "foo-bar")
+                 7))
+
          (suite "list management"
                 ("'pair breaks a list into pairs"
                  (pairs '(1 a 2 b 3 c))
