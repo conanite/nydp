@@ -56,7 +56,7 @@
 
     ("ignores standalone interpolation symbol"
       (parse-in-string (joinstr "" (list "hello " '~ " world")))
-      "hello ~ world")
+      "hello \~ world")
 
     ("ignores backslash-escaped interpolation symbol"
       (len "hello \~world")
