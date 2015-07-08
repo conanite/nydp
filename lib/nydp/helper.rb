@@ -13,6 +13,8 @@ module Nydp
   end
 
   def self.r2n ruby_obj, ns
+    return ruby_obj._nydp_wrapper if ruby_obj.respond_to? :_nydp_wrapper
+
     rklass = ruby_obj.class
     R2NHELPERS.each do |hklass, proc|
       if rklass <= hklass
