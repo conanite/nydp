@@ -19,6 +19,7 @@
 (assign last  (fn (arg) (car (last-cons arg))))
 (assign caar  (fn (arg) (car (car arg))))
 (assign cadr  (fn (arg) (car (cdr arg))))
+(assign cdar  (fn (arg) (cdr (car arg))))
 (assign cddr  (fn (arg) (cdr (cdr arg))))
 (assign   no  (fn (arg) (cond arg nil t)))
 (assign just  (fn (arg) arg))
@@ -150,13 +151,24 @@
                        `(cond ,(car args) ,(cadr args)))
                  (car args))))
 
+(def expand-colon-syntax (first rest)
+     (if (no rest)
+         `(apply ,first args)
+         `(,first ,(expand-colon-syntax (car rest) (cdr rest)))))
+
+(mac colon-syntax args
+  (if (eq? (car args) '||)
+      (error "Irregular ': syntax: got ~(inspect args) : not prefix-syntax : in ~(joinstr ":" (cons pfx rest))")
+      `(fn args ,(expand-colon-syntax (car args) (cdr args)))))
+
 (mac bang-syntax (pfx . rest)
   (if (no (eq? pfx '||))
-      (error "Irregular ! syntax: got prefix ~(inspect pfx) in ~(joinstr "!" (cons pfx rest))"))
+      (error "Irregular '! syntax: got prefix ~(inspect pfx) in ~(joinstr "!" (cons pfx rest))"))
   (if (cdr rest)
-      (error "Irregular ! syntax: got suffix ~(inspect (cdr rest)) in ~(joinstr "!" (cons pfx rest))"))
-  `(fn args
-     (no (apply ,(car rest) args))))
+      (error "Irregular '! syntax: got suffix ~(inspect (cdr rest)) in ~(joinstr "!" (cons pfx rest))")
+      (if (caris 'colon-syntax (car rest))
+          `(colon-syntax no ,@(cdar rest))
+          `(colon-syntax no ,(car rest)))))
 
 (mac and args
   (if args

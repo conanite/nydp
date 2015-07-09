@@ -126,6 +126,20 @@
                         (!caris 'foo '(zozo foo bar))
                         t))
 
+                (suite "colon-syntax"
+                       ("used for composition"
+                        (pre-compile '(no:eq? a b))
+                        ((fn args (no (apply eq? args))) a b))
+
+                       ("used for composition"
+                        (pre-compile '(x:y a b))
+                        ((fn args (x (apply y args))) a b)))
+
+                (suite "bang-colon syntax"
+                       ("special combination with bang"
+                        (pre-compile '(!x:y a b))
+                        ((fn args (no (x (apply y args)))) a b)))
+
                 ("expands 'let"
                  (do
                      (def x+3*z (x y)
