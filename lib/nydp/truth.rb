@@ -4,6 +4,7 @@ module Nydp
     def inspect   ; 't[nydp::Truth]' ; end
     def assign *_ ; self             ; end
     def nydp_type ; :truth           ; end
+    def to_ruby   ; true             ; end
   end
 
   class Nil
@@ -18,6 +19,7 @@ module Nydp
     def assign *_   ; self          ; end
     def inspect     ; "nil"         ; end
     def nydp_type   ; :nil          ; end
+    def to_ruby     ; nil           ; end
 
     def execute vm
       vm.push_arg self
