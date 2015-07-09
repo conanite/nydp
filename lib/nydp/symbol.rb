@@ -41,7 +41,8 @@ class Nydp::Symbol
   def nydp_type ; :symbol     ; end
   def inspect   ; @inspection ; end
   def to_s      ; name.to_s   ; end
-  def to_ruby   ; name        ; end
+  def to_sym    ; name        ; end
+  def to_ruby   ; to_sym      ; end
 
   def == other
     other.is_a?(Nydp::Symbol) && (self.name == other.name)

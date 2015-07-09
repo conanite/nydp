@@ -5,7 +5,14 @@ class Nydp::Builtin::TypeOf
 
   def invoke vm, args
     arg = args.car
-    type = Nydp::Symbol.mk(arg.nydp_type.to_sym, @ns) if arg.respond_to?(:nydp_type)
+    typename = if arg.respond_to?(:nydp_type)
+                 arg.nydp_type.to_sym
+               else
+                 "ruby/#{arg.class.name}".to_sym
+               end
+
+    type = Nydp::Symbol.mk(typename, @ns)
+
     vm.push_arg(type || Nydp.NIL)
   end
 end
