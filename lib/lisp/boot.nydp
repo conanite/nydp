@@ -311,13 +311,20 @@
                              ,result))))
            (def ,name () (hash-get (thread-locals) ',name))))))
 
+(def build-hash-get-key (name)
+  (if (pair? name)
+      (if (caris 'unquote name)
+          (cadr name)
+          name)
+      (list 'quote name)))
+
 ;; (build-hash-getters '(a b c))
 ;; => (hash-get (hash-get a 'b) 'c)
 (def build-hash-getters (names acc)
   (if (no acc)
       (build-hash-getters (cdr names) (car names))
       names
-      (build-hash-getters (cdr names) `(hash-get ,acc ',(car names)))
+      (build-hash-getters (cdr names) `(hash-get ,acc ,(build-hash-get-key (car names))))
       acc))
 
 (def build-hash-lookup-from (root names)
@@ -327,6 +334,7 @@
   (build-hash-getters names nil))
 
 (mac dot-syntax names `(hash-lookup ,names))
+(mac dollar-syntax (_ name) `(,name))
 
 (def dot-syntax-assignment (names value-expr)
   (let rnames (rev names)
