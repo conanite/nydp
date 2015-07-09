@@ -30,7 +30,7 @@
             (passf)
             (do (p desc " - " (car test) " - FAILED:
    expected " (inspect expected) ",
-   got " (inspect result) "
+   got      " (inspect result) "
 ")
                 (failf)))))
 
