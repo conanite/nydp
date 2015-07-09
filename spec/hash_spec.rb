@@ -81,6 +81,25 @@ describe Nydp::Hash do
 
         expect(vm.pop_arg).to eq Nydp::StringAtom.new("avalue")
       end
+
+      it "converts ruby nil to nydp value" do
+        k              = sym("keysym")
+        args           = [ ahash, k ]
+
+        Nydp::Builtin::HashGet.new(ns).invoke vm, pair_list(args)
+
+        expect(vm.pop_arg).to eq Nydp.NIL
+      end
+
+      it "converts ruby true to nydp value" do
+        ahash[:keysym] = true
+        k              = sym("keysym")
+        args           = [ ahash, k ]
+
+        Nydp::Builtin::HashGet.new(ns).invoke vm, pair_list(args)
+
+        expect(vm.pop_arg).to eq Nydp.T
+      end
     end
 
     describe "hash keys" do

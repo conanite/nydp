@@ -3,9 +3,9 @@ module Nydp
     ::Symbol   => ->(obj, ns) { Nydp::Symbol.mk(obj, ns)                            },
     Array      => ->(obj, ns) { Nydp::Pair.from_list obj.map { |o| Nydp.r2n o, ns } },
     String     => ->(obj, ns) { Nydp::StringAtom.new obj.to_s                       },
-    NilClass   => ->(obj, ns) { Nydp::Nil                                           },
-    FalseClass => ->(obj, ns) { Nydp::Nil                                           },
-    TrueClass  => ->(obj, ns) { Nydp::T                                             },
+    NilClass   => ->(obj, ns) { Nydp.NIL                                            },
+    FalseClass => ->(obj, ns) { Nydp.NIL                                            },
+    TrueClass  => ->(obj, ns) { Nydp.T                                              },
   }
 
   def self.n2r nydp

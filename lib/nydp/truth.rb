@@ -34,6 +34,7 @@ module Nydp
   class Nil
     def self.new ; raise "no" ; end
   end
+
   def self.NIL; @@nil; end
   def self.T;   @@t;   end
 end
