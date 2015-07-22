@@ -20,12 +20,20 @@
         (type-of "foobar")
         string)
 
+      ("returns 'number for an integer"
+        (type-of 42)
+        number)
+
+      ("returns 'number for a float"
+        (type-of 4.2)
+        number)
+
       ("interpolates a string"
         "foobar ~(+ 1 2) you know"
         "foobar 3 you know")
 
       ("returns 'string for an interpolated string"
-        (type-of "foobar %%(+ 1 2)")
+        (type-of "foobar ~(+ 1 2)")
         string)))
 
   (suite "eq?"
