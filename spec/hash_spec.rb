@@ -4,6 +4,32 @@ describe Nydp::Hash do
 
   let(:vm) { Nydp::VM.new }
 
+  describe "#to_ruby" do
+    it "converts ruby symbol key to nydp symbol key" do
+      hash = Nydp::Hash.new
+      hash[sym "boo"] = 42
+
+      rhash = hash.to_ruby
+      expect(rhash[:boo]).to eq 42
+    end
+
+    it "converts ruby string key to nydp string key" do
+      hash = Nydp::Hash.new
+      hash[Nydp::StringAtom.new "boo"] = 42
+
+      rhash = hash.to_ruby
+      expect(rhash["boo"]).to eq 42
+    end
+
+    it "uses integer keys unconverted" do
+      hash = Nydp::Hash.new
+      hash[21] = 42
+
+      rhash = hash.to_ruby
+      expect(rhash[21]).to eq 42
+    end
+  end
+
   describe "nydp hashes" do
     describe "new hash" do
       it "returns a new Nydp hash" do
