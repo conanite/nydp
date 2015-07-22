@@ -108,6 +108,11 @@
                  (test-foo "x" "y")
                  ("a0 w0 x w0 y" "a0 w1 x w1 y" "a0 w2 x w2 y" "a0 w3 x w3 y"))
 
+                (suite "mapx"
+                  ("provides a convenient simplification for 'map"
+                    (mapx '(1 2 3 4) n (* n 2))
+                    (2 4 6 8)))
+
          (suite "pre-compile"
                 (suite "bang-syntax"
                        ("expansion"
@@ -207,7 +212,7 @@
                         `((a ,(+ 1 2) b)))
                        ("returns nested quasiquotes"
                         `(a b `(c d ,(+ 1 2) ,,(+ 3 4)))
-                        (a b `(c d ,(+ 1 2) ,7)))))
+                        (a b `(c d ,(+ 1 2) ,7))))
 
          (suite "build-keyword-args"
                 ("takes a list of lists and returns the list with the first item of each sublist quoted"

@@ -419,3 +419,6 @@
     `(with (,v nil ,gi ,init ,gm (+ ,max 1))
        (loop (assign ,v ,gi) (< ,v ,gm) (assign ,v (+ ,v 1))
          ,@body))))
+
+(mac mapx (things x expr)
+  `(map (fn (,x) ,expr) ,things))
