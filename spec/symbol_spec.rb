@@ -31,7 +31,10 @@ describe Nydp::Symbol do
     sym1 = Nydp::Symbol.mk :baz, ns1
     sym2 = Nydp::Symbol.mk :baz, ns2
 
-    expect(sym1).to eq sym2
-    expect(sym1).not_to equal sym2
+    expect(sym1.hash).to eq sym2.hash
+
+    expect(sym1 ==     sym2).to eq true
+    expect(sym1.eql?   sym2).to eq true
+    expect(sym1.equal? sym2).to eq false
   end
 end
