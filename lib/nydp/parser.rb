@@ -42,6 +42,7 @@ module Nydp
     SYMBOL_OPERATORS =
       [
         [ /\!/,     "bang-syntax"       ],
+        [ /&/,      "ampersand-syntax"  ],
         [ /\./,     "dot-syntax"        ],
         [ /\$/,     "dollar-syntax"     ],
         [ /::/,     "colon-colon-syntax"],

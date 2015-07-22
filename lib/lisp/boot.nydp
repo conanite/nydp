@@ -372,6 +372,18 @@
             ,@(map (fn (m) `(hash-set ,hash ,(brace-list-hash-key (car m)) ,(cadr m))) mappings)
             ,hash))))
 
+(def build-ampersand-syntax (arg)
+  (if (caris 'dot-syntax arg)
+      `(fn (obj) ,(build-hash-lookup-from 'obj (cdr arg)))
+      `(fn (obj) ,(build-hash-lookup-from 'obj (list arg)))))
+
+(mac ampersand-syntax (pfx . rest)
+  (if (no (eq? pfx '||))
+      (error "Irregular '& syntax: got prefix ~(inspect pfx) in ~(joinstr "&" (cons pfx rest))"))
+  (if (cdr rest)
+      (error "Irregular '& syntax: got suffix ~(inspect (cdr rest)) in ~(joinstr "&" (cons pfx rest))")
+      (build-ampersand-syntax (car rest))))
+
 (mac brace-list-mono (arg) arg)
 
 (mac brace-list args

@@ -126,6 +126,15 @@
                         (!caris 'foo '(zozo foo bar))
                         t))
 
+                (suite "ampersand-syntax"
+                       ("defines a hash-lookup function"
+                        (pre-compile '&first)
+                        (fn (obj) (hash-get obj (quote first))))
+
+                       ("defines a hash-lookup function with a dot-syntax arg"
+                        (pre-compile '&teacher.address.city)
+                        (fn (obj) (hash-get (hash-get (hash-get obj (quote teacher)) (quote address)) (quote city))) ))
+
                 (suite "colon-syntax"
                        ("used for composition"
                         (pre-compile '(no:eq? a b))
