@@ -8,6 +8,7 @@ module Nydp
     def nydp_type  ; :string        ; end
     def to_s       ;  string        ; end
     def to_ruby    ;  string        ; end
+    def to_sym     ;  string.to_sym ; end
     def eql? other ; self == other  ; end
     def inspect    ; string.inspect ; end
     def hash       ; string.hash    ; end
