@@ -6,6 +6,7 @@ module Nydp
     NilClass   => ->(obj, ns) { Nydp.NIL                                            },
     FalseClass => ->(obj, ns) { Nydp.NIL                                            },
     TrueClass  => ->(obj, ns) { Nydp.T                                              },
+    ::Date     => ->(obj, ns) { Nydp::Date.new obj                                  },
   }
 
   def self.n2r nydp

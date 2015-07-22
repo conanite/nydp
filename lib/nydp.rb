@@ -49,6 +49,7 @@ module Nydp
 end
 
 require "nydp/core"
+require "nydp/date"
 require "nydp/runner"
 require "nydp/error"
 require "nydp/truth"
