@@ -31,6 +31,31 @@
 
 (register-test
  '(suite "Boot Tests"
+         (suite "conditionals"
+               ("single-expr 'if is just the expr"
+                (pre-compile '(if a))
+                a)
+
+               ("two-expr 'if expands to 'cond"
+                (pre-compile '(if a b))
+                (cond a b))
+
+               ("three-expr 'if expands to 'cond"
+                (pre-compile '(if a b c))
+                (cond a b c))
+
+               ("four-expr 'if expands to nested 'cond"
+                (pre-compile '(if a b c d))
+                (cond a b (cond c d)))
+
+               ("five-expr 'if expands to nested 'cond"
+                (pre-compile '(if a b c d e))
+                (cond a b (cond c d e)))
+
+               ("'unless expands to 'if"
+                (pre-compile '(unless x y z))
+                (cond (no x) ((fn () y z)))))
+
          (suite "hashtables"
                 ("build a hash table from brace-list syntax"
                  (let hsh { foo 1 bar 2 }
@@ -111,7 +136,8 @@
                 (suite "mapx"
                   ("provides a convenient simplification for 'map"
                     (mapx '(1 2 3 4) n (* n 2))
-                    (2 4 6 8)))
+                    (2 4 6 8))))
+
 
          (suite "pre-compile"
                 (suite "bang-syntax"

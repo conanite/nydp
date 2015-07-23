@@ -153,6 +153,9 @@
                        `(cond ,(car args) ,(cadr args)))
                  (car args))))
 
+(mac unless (arg . body)
+  `(if (no ,arg) (do ,@body)))
+
 (def expand-colon-syntax (first rest)
      (if (no rest)
          `(apply ,first args)
