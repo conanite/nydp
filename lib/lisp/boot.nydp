@@ -356,7 +356,7 @@
 (def dot-syntax-assignment (names value-expr)
   (let rnames (rev names)
     `(hash-set ,(build-hash-getters (rev (cdr rnames)) nil)
-               ',(car rnames)
+               ,(build-hash-get-key:car rnames)
                ,value-expr)))
 
 (mac = (name value)

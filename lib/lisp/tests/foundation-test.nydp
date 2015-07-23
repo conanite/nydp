@@ -88,6 +88,10 @@
      (pre-compile '(= a.b 42))
      (hash-set a 'b 42))
 
+    ("hash assignment with unquote"
+     (pre-compile '(= a.,b 42))
+     (hash-set a b 42))
+
     ("recursive hash assignment"
      (pre-compile '(= a.b.c.d 42))
      (hash-set (hash-get (hash-get a 'b) 'c) 'd 42))
