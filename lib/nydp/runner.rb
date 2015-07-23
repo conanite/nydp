@@ -47,14 +47,12 @@ module Nydp
     end
 
     def compile_and_eval expr
-      result = vm.thread Pair.new(Compiler.compile(expr, Nydp.NIL), Nydp.NIL)
-      e = vm.unhandled_error
-      vm.unhandled_error = nil
-      if e
+      begin
+        vm.thread Pair.new(Compiler.compile(expr, Nydp.NIL), Nydp.NIL)
+      rescue Exception => e
         new_msg = "failed to eval #{expr.inspect}\nerror was #{Nydp.indent_text e.message}"
         raise e.class, new_msg, e.backtrace
       end
-      result
     end
 
     def quote expr
@@ -86,6 +84,13 @@ module Nydp
       @printer.puts val.inspect if @printer
     end
 
+    def handle_run_error e
+      puts e.message
+      e.backtrace.each do |b|
+        puts b
+      end
+    end
+
     def run
       res = Nydp.NIL
       while !@tokens.finished
@@ -94,14 +99,17 @@ module Nydp
           begin
             print(res = evaluate(expr))
           rescue Exception => e
-            puts e.message
-            e.backtrace.each do |b|
-              puts b
-            end
+            handle_run_error e
           end
         end
       end
       res
+    end
+  end
+
+  class ExplodeRunner < Runner
+    def handle_run_error e
+      raise e
     end
   end
 end

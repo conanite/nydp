@@ -21,7 +21,6 @@ class Nydp::Symbol
     @value || Nydp.NIL
   end
 
-
   def self.mk name, ns
     name = name.to_sym
     return Nydp.NIL if name == :nil

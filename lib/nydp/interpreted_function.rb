@@ -73,7 +73,7 @@ module Nydp
 
     def inspect; to_s; end
     def to_s
-      "(fn #{arg_names.to_s} #{body.map { |b| b.inspect}.join(' ')})"
+      "(fn #{arg_names.inspect} #{body.map { |b| b.inspect}.join(' ')})"
     end
   end
 end

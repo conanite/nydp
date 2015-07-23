@@ -24,12 +24,12 @@ module Nydp
   end
 
   def self.apply_function ns, function_name, *args
-    function = Nydp::Symbol.mk(function_name, ns).value
-    args     = Nydp::Pair.from_list args
+    function = r2n(function_name.to_sym, ns).value
+    args     = r2n args, ns
     vm       = VM.new
 
     function.invoke vm, args
-    return vm.pop_arg
+    vm.thread
   end
 
   def self.repl

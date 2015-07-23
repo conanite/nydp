@@ -10,11 +10,11 @@ module Nydp
       @instructions = []
       @args         = []
       @contexts     = []
-      @locals       = { }
+      @locals       = Nydp::Hash.new
     end
 
-    def thread expr
-      instructions.push expr
+    def thread expr=nil
+      instructions.push expr if expr
       while instructions.length > 0
         begin
           self.current_context = contexts.last
@@ -26,6 +26,7 @@ module Nydp
           handle_error e
         end
       end
+      raise unhandled_error if unhandled_error
       pop_arg
     end
 
@@ -50,11 +51,12 @@ module Nydp
       end
     end
 
-    def peek_context;  current_context;      end
-    def pop_context;   contexts.pop;         end
-    def push_arg a;    args.push a;          end
-    def peek_arg;      args.last;            end
-    def pop_arg;       args.pop;             end
+    def peek_context ; current_context                                           ; end
+    def pop_context  ; contexts.pop                                              ; end
+    def push_arg a   ; args.push a                                               ; end
+    def args!        ; args.empty? ? (raise "illegal operation: no args") : args ; end
+    def peek_arg     ; args!.last                                                ; end
+    def pop_arg      ; args!.pop                                                 ; end
 
     def push_instructions ii, ctx
       instructions.push ii
