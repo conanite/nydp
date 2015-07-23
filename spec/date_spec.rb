@@ -11,6 +11,7 @@ describe Nydp::Date do
     expect(nd).        to be_a Nydp::Date
     expect(nd.to_s).   to eq "2015-06-08"
     expect(nd.inspect).to eq "#<Date: 2015-06-08 ((2457182j,0s,0n),+0s,2299161j)>"
+    expect(nd.to_ruby).to eq Date.parse("2015-06-08")
   end
 
   it "returns date components" do

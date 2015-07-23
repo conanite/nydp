@@ -17,6 +17,7 @@ module Nydp
     end
 
     def to_s      ; ruby_date.to_s    ; end
+    def to_ruby   ; ruby_date         ; end
     def inspect   ; ruby_date.inspect ; end
     def nydp_type ; :date             ; end
 
