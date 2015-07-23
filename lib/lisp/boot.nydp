@@ -23,7 +23,6 @@
 (assign cddr  (fn (arg) (cdr (cdr arg))))
 (assign   no  (fn (arg) (cond arg nil t)))
 (assign just  (fn (arg) arg))
-(assign pargs (fn args (apply p args) (last args)))
 
 (assign mac-expand (fn (macfn name body)
   (cond macfn
@@ -31,12 +30,6 @@
         (cons name body))))
 
 (assign macs (hash))
-
-(assign debug-pre-compile
-        (fn (arg)
-            (assign *debug-pre-compile* arg)))
-
-(assign *debug-pre-compile* nil)
 
 (assign pre-compile-expr
         (fn (name body)
@@ -51,18 +44,27 @@
                         args))))
 
 (assign pre-compile-msg
-        (fn args
-            (cond *debug-pre-compile* (apply p args))
-            (last args)))
+        (fn (src compiled)
+            (pre-compile-msg "pre-compile" src "\n  -> " compiled)
+            compiled))
 
-(assign pre-compile
+(assign pre-compile-raw
         (fn (arg)
-            (pre-compile-msg "pre-compile" arg "\n  -> "
-                             (cond (pair? arg)
-                                   (cond (eq? (car arg) 'quote)
-                                         arg
-                                         (pre-compile-each (pre-compile-expr (car arg) (cdr arg))))
-                                   arg))))
+            (cond (pair? arg)
+                  (cond (eq? (car arg) 'quote)
+                        arg
+                        (pre-compile-each (pre-compile-expr (car arg) (cdr arg))))
+                  arg)))
+
+(assign pre-compile-debug
+        (fn (arg)
+            (pre-compile-msg arg (pre-compile-raw arg))))
+
+(assign debug-pre-compile
+        (fn (arg)
+            (assign pre-compile (cond arg pre-compile-debug pre-compile-raw))))
+
+(debug-pre-compile nil)
 
 (hash-set macs 'def
           (fn (name args . body)
