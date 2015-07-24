@@ -1,0 +1,130 @@
+
+
+(assign mac-expand (fn (macfn name body)
+  (cond macfn
+        (pre-compile (apply macfn body))
+        (cons name body))))
+
+(assign macs (hash))
+
+(assign pre-compile-expr
+        (fn (name body)
+            (mac-expand (hash-get macs name) name body)))
+
+(assign pre-compile-each
+        (fn (args)
+            (cond args
+                  (cond (pair? args)
+                        (cons (pre-compile (car args))
+                              (pre-compile-each (cdr args)))
+                        args))))
+
+(assign pre-compile-msg
+        (fn (src compiled)
+            (pre-compile-msg "pre-compile" src "\n  -> " compiled)
+            compiled))
+
+(assign pre-compile-raw
+        (fn (arg)
+            (cond (pair? arg)
+                  (cond (eq? (car arg) 'quote)
+                        arg
+                        (pre-compile-each (pre-compile-expr (car arg) (cdr arg))))
+                  arg)))
+
+(assign pre-compile-debug
+        (fn (arg)
+            (pre-compile-msg arg (pre-compile-raw arg))))
+
+(assign debug-pre-compile
+        (fn (arg)
+            (assign pre-compile (cond arg pre-compile-debug pre-compile-raw))))
+
+(debug-pre-compile nil)
+
+(hash-set macs 'def
+          (fn (name args . body)
+              (list 'assign
+                    name
+                    (+ (list 'fn args)
+                       body))))
+
+(def qq-handle-unquote-splicing (arg rest level)
+     (cond (eq? level 0)
+           (qq-do-unquote-splicing arg rest level)
+           (qq-skip-unquote-splicing arg rest level)))
+
+(def qq-do-unquote-splicing (arg rest level)
+     (cond (no rest)
+           arg
+           (list '+
+                 (pre-compile arg)
+                 (qq-quasiquote rest level))))
+
+(def qq-skip-unquote-splicing (arg rest level)
+     (list 'cons
+           (list 'list ''unquote-splicing (qq-quasiquote arg (- level 1)))
+           (qq-quasiquote rest level)))
+
+(def qq-handle-quasiquote (arg rest level)
+     (list 'cons
+           (list 'list ''quasiquote (qq-quasiquote arg (+ level 1)))
+           (qq-quasiquote rest level)))
+
+(def qq-handle-unquote (arg rest level)
+     (list 'cons
+           (qq-maybe-unquote arg level)
+           (qq-quasiquote rest level)))
+
+(def qq-unquote-recurse (arg rest level)
+        (list 'cons
+              (qq-quasiquote arg level)
+              (qq-quasiquote rest level)))
+
+(def qq-handle-plain (arg rest level)
+     (list 'cons
+           (list 'quote arg)
+           (qq-quasiquote rest level)))
+
+(def qq-unquote? (arg rest level)
+     (cond (pair? arg)
+           (cond (eq? (car arg) 'unquote)
+                 (qq-handle-unquote (cadr arg) rest level)
+                 (cond (eq? (car arg) 'unquote-splicing)
+                       (qq-handle-unquote-splicing (cadr arg) rest level)
+                       (cond (eq? (car arg) 'quasiquote)
+                             (qq-handle-quasiquote (cadr arg) rest level)
+                             (qq-unquote-recurse arg rest level))))
+           (qq-handle-plain arg rest level)))
+
+(def qq-maybe-unquote (xs level)
+     (cond (eq? level 0)
+           (pre-compile xs)
+           (list 'list ''unquote (qq-quasiquote xs (- level 1)))))
+
+(def qq-quasiquote (xs level)
+            (cond (no xs)
+                  nil
+                  (cond (pair? xs)
+                        (cond (eq? (car xs) 'unquote)
+                              (qq-maybe-unquote (cadr xs) level)
+                              (cond (eq? (car xs) 'unquote-splicing)
+                                    (qq-handle-unquote-splicing (cadr xs) nil level)
+                                    (cond (eq? (car xs) 'quasiquote)
+                                          (list 'list ''quasiquote (qq-quasiquote (cdr xs) (+ level 1)))
+                                          (qq-unquote? (car xs) (cdr xs) level))))
+                        (list 'quote xs))))
+
+(hash-set macs 'quasiquote
+          (fn (arg) (qq-quasiquote arg 0)))
+
+(hash-set macs 'mac (fn (name args . body)
+  `(hash-set macs ',name (fn ,args ,@body))))
+
+(mac if args
+     (cond (no args) nil
+           (cond (cdr args)
+                 (cond (cddr args)
+                       `(cond ,(car args) ,(cadr args) (if ,@(cddr args)))
+                       `(cond ,(car args) ,(cadr args)))
+                 (car args))))

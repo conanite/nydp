@@ -1,0 +1,8 @@
+; -*- lisp -*-
+
+(def map (f things)
+  (if (no things)
+      nil
+    (pair? things)
+    (cons (f (car things)) (map f (cdr things)))
+    (map f (list things))))

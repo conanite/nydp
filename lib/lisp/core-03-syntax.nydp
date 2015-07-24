@@ -1,0 +1,148 @@
+; -*- lisp -*-
+
+(mac unless (arg . body)
+  `(if (no ,arg) (do ,@body)))
+
+(def expand-colon-syntax (first rest)
+     (if (no rest)
+         `(apply ,first args)
+         `(,first ,(expand-colon-syntax (car rest) (cdr rest)))))
+
+(mac colon-syntax args
+  (if (eq? (car args) '||)
+      (error "Irregular ': syntax: got ~(inspect args) : not prefix-syntax : in ~(joinstr ":" (cons pfx rest))")
+      `(fn args ,(expand-colon-syntax (car args) (cdr args)))))
+
+(mac bang-syntax (pfx . rest)
+  (if (no (eq? pfx '||))
+      (error "Irregular '! syntax: got prefix ~(inspect pfx) in ~(joinstr "!" (cons pfx rest))"))
+  (if (cdr rest)
+      (error "Irregular '! syntax: got suffix ~(inspect (cdr rest)) in ~(joinstr "!" (cons pfx rest))")
+      (if (caris 'colon-syntax (car rest))
+          `(colon-syntax no ,@(cdar rest))
+          `(colon-syntax no ,(car rest)))))
+
+(mac and args
+  (if args
+      (if (cdr args)
+          `(if ,(car args) (and ,@(cdr args)))
+          (car args))
+      't))
+
+(mac do args
+  `((fn nil ,@args)))
+
+(mac when (condition . body)
+  `(cond ,condition (do ,@body)))
+
+(def pairs (things)
+     (if (no things)       nil
+       (no (cdr things)) (list (list (car things)))
+       (cons (list (car things) (cadr things))
+             (pairs (cddr things)))))
+
+(mac with (parms . body)
+     `((fn ,(map car (pairs parms))
+           ,@body)
+       ,@(map cadr (pairs parms))))
+
+(mac let (var val . body)
+     `(with (,var ,val) ,@body))
+
+(let uniq-counter 0
+     (def uniq (prefix)
+          (sym (joinstr "-"
+                        (list prefix
+                              (assign uniq-counter
+                                      (+ uniq-counter 1))))))
+     (def reset-uniq-counter ()
+          (assign uniq-counter 0)))
+
+(mac w/uniq (vars . body)
+     (if (pair? vars)
+         `(with ,(apply + (map (fn (n) (list n '(uniq ',n))) vars))
+                ,@body)
+       `(let ,vars (uniq ',vars) ,@body)))
+
+(mac or args
+     (cond args
+           (w/uniq ora
+                   `(let ,ora ,(car args)
+                         (cond ,ora ,ora (or ,@(cdr args)))))))
+
+(mac pop (xs)
+     (w/uniq gp
+             `(let ,gp (car ,xs)
+                   (assign ,xs (cdr ,xs))
+                   ,gp)))
+
+(def build-keyword-args (pairs)
+  (map (fn (ab) `(list (quote ,(car ab)) ,@(cdr ab))) pairs))
+
+(def build-hash-get-key (name)
+  (if (pair? name)
+      (if (caris 'unquote name)
+          (cadr name)
+          name)
+      (list 'quote name)))
+
+;; (build-hash-getters '(a b c))
+;; => (hash-get (hash-get a 'b) 'c)
+(def build-hash-getters (names acc)
+  (if (no acc)
+      (build-hash-getters (cdr names) (car names))
+      names
+      (build-hash-getters (cdr names) `(hash-get ,acc ,(build-hash-get-key (car names))))
+      acc))
+
+(def build-hash-lookup-from (root names)
+  (build-hash-getters (cons root names) nil))
+
+(mac hash-lookup (names)
+  (build-hash-getters names nil))
+
+(mac dot-syntax names `(hash-lookup ,names))
+(mac dollar-syntax (_ name) `(,name))
+
+(def dot-syntax-assignment (names value-expr)
+  (let rnames (rev names)
+    `(hash-set ,(build-hash-getters (rev (cdr rnames)) nil)
+               ,(build-hash-get-key:car rnames)
+               ,value-expr)))
+
+(mac = (name value)
+  (if (isa 'symbol name)
+      `(assign ,name ,value)
+      (caris 'dot-syntax name)
+      (dot-syntax-assignment (cdr name) value)))
+
+(def brace-list-hash-key (k)
+  (if (isa 'symbol k)      `(quote ,k)
+      (caris 'unquote k)   (cadr k)
+      k))
+
+(def brace-list-build-hash (args)
+  (w/uniq hash
+    (let mappings (pairs args)
+      `(let ,hash (hash)
+            ,@(map (fn (m) `(hash-set ,hash ,(brace-list-hash-key (car m)) ,(cadr m))) mappings)
+            ,hash))))
+
+(def build-ampersand-syntax (arg)
+  (if (caris 'dot-syntax arg)
+      `(fn (obj) ,(build-hash-lookup-from 'obj (cdr arg)))
+      `(fn (obj) ,(build-hash-lookup-from 'obj (list arg)))))
+
+(mac ampersand-syntax (pfx . rest)
+  (if (no (eq? pfx '||))
+      (error "Irregular '& syntax: got prefix ~(inspect pfx) in ~(joinstr "&" (cons pfx rest))"))
+  (if (cdr rest)
+      (error "Irregular '& syntax: got suffix ~(inspect (cdr rest)) in ~(joinstr "&" (cons pfx rest))")
+      (build-ampersand-syntax (car rest))))
+
+(mac brace-list-mono (arg) arg)
+
+(mac brace-list args
+  (if (no (cdr args))
+      `(brace-list-mono ,(car args))
+      (brace-list-build-hash args)))

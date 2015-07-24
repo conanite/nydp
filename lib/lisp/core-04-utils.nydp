@@ -1,0 +1,122 @@
+; -*- lisp -*-
+
+(def each (f acc things)
+  (if things
+      (each f (f acc (car things)) (cdr things))
+      acc))
+
+(def eachr (f things)
+     (when things
+       (eachr f (cdr things))
+       (f (car things))))
+
+(def zip (a b)
+  (if a
+      (cons (list (car a) (car b))
+            (zip (cdr a) (cdr b)))))
+
+(def reversify (things acc)
+  (if (no things)
+      acc
+      (reversify (cdr things)
+                 (cons (car things) acc))))
+
+(def rev (things) (reversify things nil))
+
+(mac push (x things)
+  `(assign ,things (cons ,x ,things)))
+
+(def flatten (things)
+     (let acc nil
+          (let flattenize nil
+               (assign flattenize (fn (x)
+                                      (if (pair? x)
+                                          (eachr flattenize x)
+                                        (push x acc))))
+               (flattenize things))
+          acc))
+
+(def joinstr (txt . things)
+     (let joinables (flatten things)
+       (apply +
+              (to-string (car joinables))
+              (flatten (zip (map (fn (_) txt) (cdr joinables))
+                            (map to-string (cdr joinables)))))))
+
+(def string-pieces pieces
+  (joinstr "" pieces))
+
+(def nth (n things)
+     (if (eq? n 0)
+         (car things)
+       (nth (- n 1) (cdr things))))
+
+(def iso (x y)
+     (or (eq? x y)
+         (and (pair? x)
+              (pair? y)
+              (iso (car x) (car y))
+              (iso (cdr x) (cdr y)))))
+
+(def isa     (type obj) (eq? (type-of obj) type))
+(def sym?    (arg)      (isa 'symbol arg))
+(def string? (arg)      (isa 'string arg))
+(mac just    (arg)      arg)
+(def quotify (arg)      `(quote ,arg))
+
+(def caris (obj things)
+     (and (isa 'pair things)
+          (eq? (car things)  obj)))
+
+(def len (xs)
+  (if (pair? xs)   (+ 1 (len (cdr xs)))
+      (string? xs) (string-length xs)
+      0))
+
+(assign dynamics (hash))
+
+(mac dynamic (name)
+  (hash-set dynamics name t)
+  (let with-mac-name (sym "w/~name")
+    (w/uniq prev
+      `(do
+        (mac ,with-mac-name (new-value . body)
+             (w/uniq result
+                     `(let ,',prev (hash-get (thread-locals) ',',name)
+                           (hash-set (thread-locals) ',',name ,new-value)
+                           (let ,result (do ,@body)
+                             (hash-set (thread-locals) ',',name ,',prev)
+                             ,result))))
+           (def ,name () (hash-get (thread-locals) ',name))))))
+
+(mac on-err (handler . body)
+  `(handle-error (fn (err) ,handler)
+                 (fn ()    ,@body)))
+
+(mac ensure (protection . body)
+  `(ensuring (fn () ,protection)
+             (fn ()    ,@body)))
+
+(mac rfn (name parms . body)
+  `(let ,name nil
+     (assign ,name (fn ,parms ,@body))))
+
+(mac afn (parms . body)
+  `(rfn self ,parms ,@body))
+
+(mac loop (start test update . body)
+  (w/uniq (gfn gparm)
+    `(do ,start
+         ((rfn ,gfn (,gparm)
+            (if ,gparm
+                (do ,@body ,update (,gfn ,test))))
+          ,test))))
+
+(mac for (v init max . body)
+  (w/uniq (gi gm)
+    `(with (,v nil ,gi ,init ,gm (+ ,max 1))
+       (loop (assign ,v ,gi) (< ,v ,gm) (assign ,v (+ ,v 1))
+         ,@body))))
+
+(mac mapx (things x expr)
+  `(map (fn (,x) ,expr) ,things))

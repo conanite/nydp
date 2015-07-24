@@ -13,9 +13,7 @@ module Nydp
     end
 
     def loadfiles
-      b = relative_path('../lisp/boot.nydp')
-      t = relative_path('../lisp/test-runner.nydp')
-      [b,t]
+      Dir.glob(relative_path '../lisp/core-*.nydp').sort
     end
 
     def testfiles
