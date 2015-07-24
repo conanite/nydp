@@ -54,3 +54,14 @@ class Nydp::Builtin::HashKeys
     end
   end
 end
+
+class Nydp::Builtin::HashMerge
+  include Nydp::Helper, Nydp::Builtin::Base
+
+  def builtin_invoke vm, args
+    hash_0 = args.car
+    hash_1 = args.cdr.car
+
+    vm.push_arg hash_0.merge hash_1
+  end
+end

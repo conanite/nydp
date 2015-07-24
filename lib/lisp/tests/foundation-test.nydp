@@ -106,7 +106,18 @@
 
     ("recursive hash assignment with embedded dollar-syntax"
      (pre-compile '(= a.$b.,c.d 42))
-     (hash-set (hash-get (hash-get a (b)) c) 'd 42)))
+     (hash-set (hash-get (hash-get a (b)) c) 'd 42))
+
+    (suite "merge"
+      ("merge with symbol keys"
+       (let h (hash-merge { a 1 b 2 c 3 } { a 99 c 98 d 97 })
+            (list h.a h.b h.c h.d (hash-keys h) ))
+       (99 2 98 97 (a b c d )))
+
+      ("merge with mixed symbol and string and int keys"
+       (let h (hash-merge { a 1 "b" 2 3 'c } { a 99 b 98 3 "foo" })
+            (cons (hash-keys h) (mapx (hash-keys h) k h.,k)))
+       ((a "b" 3 b) 99 2 "foo" 98))))
 
   (suite "isa"
     ("t for 'pair for list"

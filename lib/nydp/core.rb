@@ -64,6 +64,7 @@ module Nydp
       Symbol.mk(:"hash-get",    ns).assign(Nydp::Builtin::HashGet.new ns)
       Symbol.mk(:"hash-set",    ns).assign(Nydp::Builtin::HashSet.new)
       Symbol.mk(:"hash-keys",   ns).assign(Nydp::Builtin::HashKeys.new(ns))
+      Symbol.mk(:"hash-merge",  ns).assign(Nydp::Builtin::HashMerge.new)
       Symbol.mk(:"vm-info",     ns).assign Nydp::Builtin::VmInfo.new
       Symbol.mk(:"pre-compile", ns).assign Nydp::Builtin::PreCompile.new
     end

@@ -30,6 +30,19 @@ describe Nydp::Hash do
     end
   end
 
+  describe "hash merge" do
+    it "merges two hashes" do
+      ns = { }
+      Nydp.setup(ns)
+      hash_0 = { foo: 12, bar: 34}
+      hash_1 = { foo: 49, zap: 87}
+
+      merged = Nydp.apply_function ns, "hash-merge", hash_0, hash_1
+
+      expect(merged).to eq({ foo: 49, bar: 34, zap: 87 })
+    end
+  end
+
   describe "nydp hashes" do
     describe "new hash" do
       it "returns a new Nydp hash" do
