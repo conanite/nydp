@@ -32,6 +32,10 @@ module Nydp
     vm.thread
   end
 
+  def self.eval_src ns, src_txt
+    Nydp::Runner.new(VM.new, ns, Nydp::StringReader.new(src_txt)).run
+  end
+
   def self.repl
     puts "welcome to nydp"
     puts "^D to exit"
