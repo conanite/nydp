@@ -26,8 +26,16 @@ module Nydp
           handle_error e
         end
       end
-      raise unhandled_error if unhandled_error
+      raise_unhandled_error
       pop_arg
+    end
+
+    def raise_unhandled_error
+      if unhandled_error
+        e = unhandled_error
+        self.unhandled_error = nil
+        raise e
+      end
     end
 
     def handle_error ex
