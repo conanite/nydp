@@ -1,6 +1,7 @@
 class Nydp::Hash < ::Hash
   include Nydp::Helper
 
+  def nydp_type ; :hash   ; end
   def to_ruby
     @_ruby_hash ||= Hash.new { |h, k|
       self[case k

@@ -20,6 +20,14 @@
         (type-of "foobar")
         string)
 
+      ("returns 'hash for new hash"
+        (type-of (hash))
+        hash)
+
+      ("returns 'hash for hash literal"
+        (type-of { a 1 b 2})
+        hash)
+
       ("returns 'number for an integer"
         (type-of 42)
         number)
