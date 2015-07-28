@@ -102,4 +102,8 @@ describe Nydp::Parser do
     expect(actual).to eq expected
   end
 
+  it "parses a string that looks like html with little bits of embedded code in it" do
+    parsed = parse_string "<div id='item_~{id}'><label>~{data-label-1}</label> ~{data-content-1}</div>", '', :eof
+    expect(parsed.inspect).to eq '(string-pieces "<div id=\'item_" (brace-list id) "\'><label>" (brace-list data-label-1) "</label> " (brace-list data-content-1) "</div>")'
+  end
 end

@@ -84,7 +84,7 @@ module Nydp
           tok = [:sym_open_delim, open_sym]
         elsif list_prefix = s.scan(/[^\s()]*\(/)
           tok = [:left_paren, list_prefix[0...-1]]
-        elsif list_prefix = s.scan(/[^\s()]*\{/)
+        elsif list_prefix = s.scan(/[^\s()\}\{]*\{/)
           tok = [:left_brace, list_prefix[0...-1]]
         elsif s.scan(/\)/)
           tok = [:right_paren]
