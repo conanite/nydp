@@ -125,6 +125,27 @@ nydp > (pre-compile '(!eq? a b))
 ==> ((fn args (no (apply eq? args))) a b) ; equivalent to (no (eq? a b))
 ```
 
+Ampersand-syntax - for example `&foo`, expands to a function which performs a hash-lookup on its argument.
+
+```lisp
+
+nydp > (parse "&foo")
+((ampersand-syntax || foo))
+
+nydp > (pre-compile (parse "&foo"))
+((fn (obj) (hash-get obj (quote foo))))
+
+nydp > (assign hsh { foo 1 bar 2 })
+nydp > (&lastname (car german-composers))
+Bach
+
+nydp > (map &lastname german-composers)   ; ampersand-syntax creates a function you can pass around
+(Bach Beethoven Wagner Mozart)
+
+```
+
+As with all other syntax, you can of course override the `ampersand-syntax` macro to handle your special needs.
+
 Look for `SYMBOL_OPERATORS` in [parser.rb](lib/nydp/parser.rb) to see which syntax is recognised and in which order. The order of these definitions defines special-syntax-operator precedence.
 
 #### 3. Special list syntax
