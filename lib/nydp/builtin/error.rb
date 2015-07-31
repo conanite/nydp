@@ -3,7 +3,7 @@ class Nydp::Builtin::Error
 
   # override #invoke on nydp/builtin/base because
   # we don't want to inherit error handling
-  def invoke vm, args
+  def builtin_invoke vm, args
     raise Nydp::Error.new(args.inspect)
   end
 end

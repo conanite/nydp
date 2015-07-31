@@ -5,8 +5,10 @@ module Nydp::Builtin
   module Base
     def invoke vm, args
       builtin_invoke vm, args
+    rescue Nydp::Error => ne
+      raise ne
     rescue Exception => e
-      new_msg = "Called #{self.inspect}\nwith args #{args}\nraised\n#{Nydp.indent_text e.message}"
+      new_msg = "Called #{self.inspect}\nwith args #{args.inspect}\nraised\n#{Nydp.indent_text e.message}"
       raise $!, new_msg, $!.backtrace
     end
 
