@@ -1,9 +1,11 @@
 class Nydp::Builtin::TypeOf
+  include Nydp::Builtin::Base
+
   def initialize ns
     @ns = ns
   end
 
-  def invoke vm, args
+  def builtin_invoke vm, args
     arg = args.car
     typename = if arg.respond_to?(:nydp_type)
                  arg.nydp_type.to_sym

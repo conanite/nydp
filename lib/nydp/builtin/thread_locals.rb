@@ -1,7 +1,7 @@
 class Nydp::Builtin::ThreadLocals
-  include Nydp::Helper
+  include Nydp::Helper, Nydp::Builtin::Base
 
-  def invoke vm, args
+  def builtin_invoke vm, args
     vm.push_arg vm.locals
   end
 end

@@ -1,18 +1,12 @@
 class Nydp::Builtin::Eval
+  include Nydp::Builtin::Base
+
   def initialize ns
     @ns = ns
   end
 
-  def invoke vm, args
+  def builtin_invoke vm, args
     evaluator = Nydp::Evaluator.new Nydp::VM.new, @ns
     vm.push_arg evaluator.evaluate args.car
-  end
-
-  def to_s
-    "eval"
-  end
-
-  def inspect
-    "Nydp::Builtin::Eval"
   end
 end

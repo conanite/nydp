@@ -1,5 +1,7 @@
 class Nydp::Builtin::Divide
-  def invoke vm, args
+  include Nydp::Builtin::Base
+
+  def builtin_invoke vm, args
     vm.push_arg divide(args.cdr, args.car)
   end
 
@@ -10,4 +12,6 @@ class Nydp::Builtin::Divide
       divide(args.cdr, (accum / args.car))
     end
   end
+
+  def name ; "/" ; end
 end

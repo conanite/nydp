@@ -1,5 +1,7 @@
 class Nydp::Builtin::CdrSet
-  def invoke vm, args
+  include Nydp::Builtin::Base
+
+  def builtin_invoke vm, args
     pair = args.car
     arg = args.cdr.car
     pair.cdr = arg

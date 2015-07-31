@@ -1,5 +1,7 @@
 class Nydp::Builtin::Comment
-  def invoke vm, args
+  include Nydp::Builtin::Base
+
+  def builtin_invoke vm, args
     vm.push_arg Nydp.NIL
   end
 end

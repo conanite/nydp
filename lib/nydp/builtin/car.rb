@@ -1,8 +1,7 @@
 class Nydp::Builtin::Car
-  def invoke vm, args
+  include Nydp::Builtin::Base
+
+  def builtin_invoke vm, args
     vm.push_arg args.car.car
   end
-
-  def to_s; "car"; end
-  def inspect; "builtin:car"; end
 end

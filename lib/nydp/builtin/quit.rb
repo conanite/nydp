@@ -1,5 +1,7 @@
 class Nydp::Builtin::Quit
-  def invoke vm, args
+  include Nydp::Builtin::Base
+
+  def builtin_invoke vm, args
     exit
   end
 end

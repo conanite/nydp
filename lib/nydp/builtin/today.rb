@@ -1,7 +1,7 @@
 class Nydp::Builtin::Today
-  include Nydp::Helper
+  include Nydp::Helper, Nydp::Builtin::Base
 
-  def invoke vm, args
+  def builtin_invoke vm, args
     vm.push_arg(Nydp::Date.new Date.today)
   end
 end

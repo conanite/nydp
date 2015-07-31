@@ -1,7 +1,7 @@
 require "nydp/vm"
 
 class Nydp::Builtin::HandleError
-  include Nydp::Helper
+  include Nydp::Helper, Nydp::Builtin::Base
 
   class CatchError
     include Nydp::Helper, Nydp::VM::HandleError
@@ -27,7 +27,8 @@ class Nydp::Builtin::HandleError
     end
   end
 
-  def invoke vm, args
+
+  def builtin_invoke vm, args
     fn_handle = args.car
     fn_tricky = args.cdr.car
 

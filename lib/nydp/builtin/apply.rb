@@ -1,7 +1,7 @@
 class Nydp::Builtin::Apply
-  include Nydp::Helper
+  include Nydp::Helper, Nydp::Builtin::Base
 
-  def invoke vm, args
+  def builtin_invoke vm, args
     args.car.invoke vm, apply_args(args.cdr)
   end
 

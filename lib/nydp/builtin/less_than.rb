@@ -1,5 +1,7 @@
 class Nydp::Builtin::LessThan
-  def invoke vm, args
+  include Nydp::Builtin::Base
+
+  def builtin_invoke vm, args
     vm.push_arg (less_than(args.car, args.cdr) ? Nydp.T : Nydp.NIL)
   end
 
@@ -7,4 +9,6 @@ class Nydp::Builtin::LessThan
     return true if Nydp.NIL.is? args
     (arg < args.car) && less_than(args.car, args.cdr)
   end
+
+  def name ; "<" ; end
 end

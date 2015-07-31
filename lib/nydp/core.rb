@@ -34,14 +34,13 @@ module Nydp
       Symbol.mk(:hash,  ns).assign(Nydp::Builtin::Hash.new)
       Symbol.mk(:apply, ns).assign(Nydp::Builtin::Apply.new)
       Symbol.mk(:error, ns).assign(Nydp::Builtin::Error.new)
-      Symbol.mk(:quit,  ns).assign(Nydp::Builtin::Quit.new)
       Symbol.mk(:parse, ns).assign(Nydp::Builtin::Parse.new(ns))
       Symbol.mk(:p,     ns).assign(Nydp::Builtin::Puts.new)
       Symbol.mk(:PI,    ns).assign Literal.new(3.1415)
       Symbol.mk(:nil,   ns).assign Nydp.NIL
       Symbol.mk(:sqrt,  ns).assign Nydp::Builtin::Sqrt.new
       Symbol.mk(:t,     ns).assign Nydp.T
-      Symbol.mk(:sym,   ns).assign Nydp::Builtin::ToSym.new(ns)
+      Symbol.mk(:sym,   ns).assign Nydp::Builtin::Sym.new(ns)
       Symbol.mk(:ensuring,      ns).assign(Nydp::Builtin::Ensuring.new)
       Symbol.mk(:inspect,       ns).assign(Nydp::Builtin::Inspect.new)
       Symbol.mk(:comment,       ns).assign(Nydp::Builtin::Comment.new)

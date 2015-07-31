@@ -1,8 +1,11 @@
-class Nydp::Builtin::ToSym
+class Nydp::Builtin::Sym
+  include Nydp::Builtin::Base
+
   def initialize ns
     @ns = ns
   end
-  def invoke vm, args
+
+  def builtin_invoke vm, args
     arg = args.car
     val = case arg.class
           when Nydp::Symbol

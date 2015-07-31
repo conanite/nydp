@@ -1,5 +1,7 @@
 class Nydp::Builtin::Minus
-  def invoke vm, args
+  include Nydp::Builtin::Base
+
+  def builtin_invoke vm, args
     vm.push_arg diff(args.cdr, args.car)
   end
 
@@ -10,4 +12,6 @@ class Nydp::Builtin::Minus
       diff(args.cdr, (accum - args.car))
     end
   end
+
+  def name ; "-" ; end
 end

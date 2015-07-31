@@ -120,3 +120,5 @@
 
 (mac mapx (things x expr)
   `(map (fn (,x) ,expr) ,things))
+
+(def empty? (things) (eq? (len things) 0))

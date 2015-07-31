@@ -1,5 +1,7 @@
 class Nydp::Builtin::GreaterThan
-  def invoke vm, args
+  include Nydp::Builtin::Base
+
+  def builtin_invoke vm, args
     vm.push_arg (greater_than(args.car, args.cdr) ? Nydp.T : Nydp.NIL)
   end
 
@@ -7,4 +9,6 @@ class Nydp::Builtin::GreaterThan
     return true if Nydp.NIL.is? args
     (arg > args.car) && greater_than(args.car, args.cdr)
   end
+
+  def name ; ">" ; end
 end

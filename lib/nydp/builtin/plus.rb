@@ -1,5 +1,7 @@
 class Nydp::Builtin::Plus
-  def invoke vm, args
+  include Nydp::Builtin::Base
+
+  def builtin_invoke vm, args
     vm.push_arg sum(args, origin(args.car))
   end
 
@@ -22,7 +24,5 @@ class Nydp::Builtin::Plus
     end
   end
 
-  def to_s
-    "Builtin:+"
-  end
+  def name ; "+" ; end
 end

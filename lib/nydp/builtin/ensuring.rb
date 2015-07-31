@@ -1,7 +1,7 @@
 require "nydp/vm"
 
 class Nydp::Builtin::Ensuring
-  include Nydp::Helper
+  include Nydp::Helper, Nydp::Builtin::Base
 
   class InvokeProtection
     include Nydp::VM::Finally
@@ -16,7 +16,7 @@ class Nydp::Builtin::Ensuring
     end
   end
 
-  def invoke vm, args
+  def builtin_invoke vm, args
     fn_ensure = args.car
     fn_tricky = args.cdr.car
 

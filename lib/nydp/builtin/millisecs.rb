@@ -1,7 +1,7 @@
 class Nydp::Builtin::Millisecs
-  include Nydp::Helper
+  include Nydp::Helper, Nydp::Builtin::Base
 
-  def invoke vm, args
+  def builtin_invoke vm, args
     vm.push_arg (Time.now.to_f * 1000).to_i
   end
 end

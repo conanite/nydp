@@ -1,5 +1,7 @@
 class Nydp::Builtin::Times
-  def invoke vm, args
+  include Nydp::Builtin::Base
+
+  def builtin_invoke vm, args
     vm.push_arg multiply(args, 1)
   end
 
@@ -10,4 +12,6 @@ class Nydp::Builtin::Times
       multiply(args.cdr, (accum * args.car))
     end
   end
+
+  def name ; "*" ; end
 end
