@@ -18,4 +18,12 @@ describe Nydp::Literal do
       expect(Nydp.NIL.to_ruby).to eq nil
     end
   end
+
+  describe "false" do
+    it "is stored in toplevel namespace" do
+      Nydp::Core.new.setup ns
+      nydp_false = Nydp::Symbol.mk :false, ns
+      expect(nydp_false.value).to eq false
+    end
+  end
 end

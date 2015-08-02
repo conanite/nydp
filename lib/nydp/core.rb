@@ -31,6 +31,7 @@ module Nydp
       Symbol.mk(:>,     ns).assign(Nydp::Builtin::GreaterThan.new)
       Symbol.mk(:<,     ns).assign(Nydp::Builtin::LessThan.new)
       Symbol.mk(:eval,  ns).assign(Nydp::Builtin::Eval.new(ns))
+      Symbol.mk(:false, ns).assign(false)
       Symbol.mk(:hash,  ns).assign(Nydp::Builtin::Hash.new)
       Symbol.mk(:apply, ns).assign(Nydp::Builtin::Apply.new)
       Symbol.mk(:error, ns).assign(Nydp::Builtin::Error.new)
