@@ -15,6 +15,23 @@
         (string-replace "and" "or" "a and b and c and d")
         "a or b or c or d"))
 
+    (suite "regexp"
+      ("replace with regexp"
+       (string-replace "and|or" "x" "a and b or c and d")
+       "a x b x c x d")
+
+      ("match with regexp"
+       (let m (string-match "a and b and c and d" "and")
+         (list m.match m.captures))
+       ("and" nil))
+
+      ("match with regexp and capturing groups"
+       (let m (string-match "  foo\b    bar" "(^\\s+)")
+         (list m.match m.captures))
+       ("  " ("  ")))
+      )
+
+
     (suite "type-of"
       ("returns 'string"
         (type-of "foobar")

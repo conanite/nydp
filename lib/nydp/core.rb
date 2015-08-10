@@ -53,6 +53,7 @@ module Nydp
       Symbol.mk("to-string"      , ns).assign(Nydp::Builtin::ToString.new)
       Symbol.mk("string-length"  , ns).assign(Nydp::Builtin::StringLength.new)
       Symbol.mk("string-replace" , ns).assign(Nydp::Builtin::StringReplace.new)
+      Symbol.mk("string-match"   , ns).assign(Nydp::Builtin::StringMatch.new(ns))
       Symbol.mk("string-split"   , ns).assign(Nydp::Builtin::StringSplit.new  )
       Symbol.mk("thread-locals"  , ns).assign(Nydp::Builtin::ThreadLocals.new)
       Symbol.mk("type-of",      ns).assign(Nydp::Builtin::TypeOf.new(ns))
