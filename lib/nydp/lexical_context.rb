@@ -1,4 +1,5 @@
 class Nydp::LexicalContext
+  include Nydp::Helper
   attr_reader :names, :values, :parent
 
   def initialize parent
@@ -29,6 +30,23 @@ class Nydp::LexicalContext
   def set name, value
     names  << name
     values << value
+  end
+
+  def set_args_1 names, arg
+    if pair? names
+      set names.car, arg
+    elsif Nydp.NIL.isnt? names
+      set names, cons(arg)
+    end
+  end
+
+  def set_args_2 names, arg_0, arg_1
+    if pair? names
+      set names.car, arg_0
+      set_args_1 names.cdr, arg_1
+    elsif Nydp.NIL.isnt? names
+      set names, cons(arg_0, cons(arg_1))
+    end
   end
 
   def set_index index, value

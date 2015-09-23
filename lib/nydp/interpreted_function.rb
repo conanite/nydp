@@ -22,6 +22,22 @@ module Nydp
 
     attr_accessor :arg_names, :body
 
+    def invoke_1 vm, parent_context
+      vm.push_instructions self.body, LexicalContext.new(parent_context)
+    end
+
+    def invoke_2 vm, parent_context, arg
+      lc = LexicalContext.new parent_context
+      lc.set_args_1 arg_names, arg
+      vm.push_instructions self.body, lc
+    end
+
+    def invoke_3 vm, parent_context, arg_0, arg_1
+      lc = LexicalContext.new parent_context
+      lc.set_args_2 arg_names, arg_0, arg_1
+      vm.push_instructions self.body, lc
+    end
+
     def invoke vm, parent_context, arg_values
       lc = LexicalContext.new parent_context
       setup_context lc, arg_names, arg_values

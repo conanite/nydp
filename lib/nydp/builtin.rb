@@ -3,13 +3,34 @@ require 'nydp/error'
 
 module Nydp::Builtin
   module Base
+    include Nydp::Helper
+
+    def invoke_1 vm
+      invoke vm, Nydp.NIL
+    end
+
+    def invoke_2 vm, arg
+      invoke vm, cons(arg)
+    end
+
+    def invoke_3 vm, arg_0, arg_1
+      invoke vm, cons(arg_0, cons(arg_1))
+    end
+
     def invoke vm, args
       builtin_invoke vm, args
-    rescue Nydp::Error => ne
-      raise ne
     rescue Exception => e
-      new_msg = "Called #{self.inspect}\nwith args #{args.inspect}\nraised\n#{Nydp.indent_text e.message}\nat #{e.backtrace.first}"
-      raise $!, new_msg, $!.backtrace
+      handle_error e, args
+    end
+
+    def handle_error e, args
+      case e
+      when Nydp::Error
+        raise e
+      else
+        new_msg = "Called #{self.inspect}\nwith args #{args.inspect}\nraised\n#{Nydp.indent_text e.message}\nat #{e.backtrace.first}"
+        raise $!, new_msg, $!.backtrace
+      end
     end
 
     def name
