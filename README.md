@@ -136,6 +136,9 @@ nydp > (pre-compile (parse "&foo"))
 ((fn (obj) (hash-get obj (quote foo))))
 
 nydp > (assign hsh { foo 1 bar 2 })
+nydp > (&bar hsh)
+2
+
 nydp > (&lastname (car german-composers))
 Bach
 
@@ -159,7 +162,7 @@ nydp > (parse "{ a 1 b 2 }")
 
 ```
 
-`brace-list` is a macro that expands to create a hash literal. It assumes every (2n+1)th items are literal symbol keys, and every (2(n+1))th item is the corresponding value which is evaluated at run time.
+`brace-list` is a macro that expands to create a hash literal. It assumes every item 0 is a literal symbol key, item 1 is the corresponding value which is evaluated at run time, and so on for each following item-pair.
 
 ```lisp
 
@@ -201,7 +204,7 @@ nydp > (with (a 1 b 2)
 ==> AND ALSO, Consider 3, the third (and final) thing
 ```
 
-By default, `string-pieces` is a function that just concatenates the string value of its arguments. You can redefine it as a macro to perform more fun stuff, or you can detect it within another macro to do extra-special stuff with it.
+By default, `string-pieces` is a function that just concatenates the string value of its arguments. You can redefine it as a macro to perform more fun stuff, or you can detect it within another macro to do extra-special stuff with it. The 'nydp-html gem detects 'string-pieces and gives it special treatment in order to render haml and textile efficiently, and also to capture and report errors inside interpolations and report them correctly.
 
 
 #### 5. No continuations.
@@ -210,7 +213,14 @@ Sorry. While technically possible ... why bother?
 
 #### 6. No argument destructuring
 
-However, this doesn't need to be built-in, it can be done with macros alone.
+However, this doesn't need to be built-in, it can be done with macros alone. On the other hand, "rest" arguments are implicitly available using the same syntax as Arc uses:
+
+```lisp
+(def fun (a b . others) ...)
+```
+
+In this example, `'others` is either nil, or a list containing the third and subsequent arguments to the call to `'fun`. For many examples of this kind of invocation, see [invocation-tests](lib/lisp/tests/invocation-tests.nydp) in the `tests` directory.
+
 
 
 ## Besides that, what can Nydp do?
@@ -232,14 +242,14 @@ elsif c
 else  e
 ```
 
-#### 5. Lexically scoped, but with macros to define dynamic variables backed by ruby threadlocals.
+#### 5. Lexically scoped, but dynamic variables possible, using thread-locals
 
 ```lisp
-nydp> (dynamic foo)
+nydp> (dynamic foo) ;; declares 'foo as a dynamic variable
 
 nydp> (def do-something () (+ (foo) 1))
 
-nydp> (w/foo 99 (do-something))
+nydp> (w/foo 99 (do-something)) ;; sets 'foo to 99 for the duration of the call to 'do-something, will set it back to its previous value afterwards.
 
 ==> 100
 
