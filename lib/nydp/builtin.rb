@@ -8,7 +8,7 @@ module Nydp::Builtin
     rescue Nydp::Error => ne
       raise ne
     rescue Exception => e
-      new_msg = "Called #{self.inspect}\nwith args #{args.inspect}\nraised\n#{Nydp.indent_text e.message}"
+      new_msg = "Called #{self.inspect}\nwith args #{args.inspect}\nraised\n#{Nydp.indent_text e.message}\nat #{e.backtrace.first}"
       raise $!, new_msg, $!.backtrace
     end
 

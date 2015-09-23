@@ -17,9 +17,15 @@ class Nydp::Builtin::HashGet
     case hash
     when Nydp::Hash
       vm.push_arg(hash[key] || Nydp.NIL)
+    when NilClass, Nydp.NIL
+      vm.push_arg Nydp.NIL
     else
-      key = n2r args.cdr.car
-      vm.push_arg(r2n hash[key], ns)
+      if hash.respond_to? :[]
+        key = n2r args.cdr.car
+        vm.push_arg(r2n hash[key], ns)
+      else
+        raise "hash-get: Not a hash: #{hash.class.name}"
+      end
     end
   end
 end
@@ -33,8 +39,14 @@ class Nydp::Builtin::HashSet
     case hash
     when Nydp::Hash
       hash[key] = value
+    when NilClass, Nydp.NIL
+      nil
     else
-      hash[n2r key] = n2r value
+      if hash.respond_to?(:[]=)
+        hash[n2r key] = n2r value
+      else
+        raise "hash-set: Not a hash: #{hash.class.name}"
+      end
     end
     vm.push_arg value
   end
