@@ -55,6 +55,10 @@ class Nydp::Pair
     1 + (cdr.is_a?(Nydp::Pair) ? cdr.size : 0)
   end
 
+  def proper?
+    Nydp.NIL.is?(cdr) || (cdr.is_a?(Nydp::Pair) && cdr.proper?)
+  end
+
   def each &block
     yield car
     cdr.each(&block) unless Nydp.NIL.is?(cdr)

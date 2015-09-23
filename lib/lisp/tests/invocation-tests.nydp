@@ -1,0 +1,119 @@
+;; test that basic function invocation works for various combinations
+;; of parameter lists and invocation arguments
+;;
+;; important mostly because these kind of calls are subject to the
+;; most aggressive optimisation so it's useful to have a quick
+;; smoke test to check that nothing obvious is broken
+;;
+
+(def tst-0   ()               "success"                                                  )
+(def tst-0-n n                "success n: ~(inspect n)"                                  )
+(def tst-1   (a)              "success a: ~a"                                            )
+(def tst-1-n (a . n)          "success a: ~a . n: ~(inspect n)"                          )
+(def tst-2   (a b)            "success a: ~a b: ~b"                                      )
+(def tst-2-n (a b . n)        "success a: ~a b: ~b . n: ~(inspect n)"                    )
+(def tst-3   (a b c)          "success a: ~a b: ~b c: ~c"                                )
+(def tst-3-n (a b c . n)      "success a: ~a b: ~b c: ~c . n: ~(inspect n)"              )
+(def tst-4   (a b c d)        "success a: ~a b: ~b c: ~c d: ~d"                          )
+(def tst-4-n (a b c d . n)    "success a: ~a b: ~b c: ~c d: ~d . n: ~(inspect n)"        )
+(def tst-5   (a b c d e)      "success a: ~a b: ~b c: ~c d: ~d e: ~e"                    )
+(def tst-5-n (a b c d e . n)  "success a: ~a b: ~b c: ~c d: ~d e: ~e . n: ~(inspect n)"  )
+
+(register-test
+ '(suite "Invocation Tests"
+         (suite "zero-params"
+                ("no args"     (tst-0)               "success" )
+                ("one arg"     (tst-0 1)             "success" )
+                ("two args"    (tst-0 1 2)           "success" )
+                ("three args"  (tst-0 1 2 3)         "success" )
+                ("four args"   (tst-0 1 2 3 4)       "success" )
+                ("five args"   (tst-0 1 2 3 4 5)     "success" ))
+
+         (suite "single rest-param"
+                ("no args"     (tst-0-n)             "success n: nil"         )
+                ("one arg"     (tst-0-n 1)           "success n: (1)"         )
+                ("two args"    (tst-0-n 1 2)         "success n: (1 2)"       )
+                ("three args"  (tst-0-n 1 2 3)       "success n: (1 2 3)"     )
+                ("four args"   (tst-0-n 1 2 3 4)     "success n: (1 2 3 4)"   )
+                ("five args"   (tst-0-n 1 2 3 4 5)   "success n: (1 2 3 4 5)" ))
+
+         (suite "single param"
+                ("no args"     (tst-1)               "success a: "  )
+                ("one arg"     (tst-1 1)             "success a: 1" )
+                ("two args"    (tst-1 1 2)           "success a: 1" )
+                ("three args"  (tst-1 1 2 3)         "success a: 1" )
+                ("four args"   (tst-1 1 2 3 4)       "success a: 1" )
+                ("five args"   (tst-1 1 2 3 4 5)     "success a: 1" ))
+
+         (suite "single param and rest param"
+                ("no args"     (tst-1-n)             "success a:  . n: nil"        )
+                ("one arg"     (tst-1-n 1)           "success a: 1 . n: nil"       )
+                ("two args"    (tst-1-n 1 2)         "success a: 1 . n: (2)"       )
+                ("three args"  (tst-1-n 1 2 3)       "success a: 1 . n: (2 3)"     )
+                ("four args"   (tst-1-n 1 2 3 4)     "success a: 1 . n: (2 3 4)"   )
+                ("five args"   (tst-1-n 1 2 3 4 5)   "success a: 1 . n: (2 3 4 5)" ))
+
+         (suite "two params"
+                ("no args"     (tst-2)               "success a:  b: "   )
+                ("one arg"     (tst-2 1)             "success a: 1 b: "  )
+                ("two args"    (tst-2 1 2)           "success a: 1 b: 2" )
+                ("three args"  (tst-2 1 2 3)         "success a: 1 b: 2" )
+                ("four args"   (tst-2 1 2 3 4)       "success a: 1 b: 2" )
+                ("five args"   (tst-2 1 2 3 4 5)     "success a: 1 b: 2" ))
+
+         (suite "two params and rest param"
+                ("no args"     (tst-2-n)             "success a:  b:  . n: nil"       )
+                ("one arg"     (tst-2-n 1)           "success a: 1 b:  . n: nil"      )
+                ("two args"    (tst-2-n 1 2)         "success a: 1 b: 2 . n: nil"     )
+                ("three args"  (tst-2-n 1 2 3)       "success a: 1 b: 2 . n: (3)"     )
+                ("four args"   (tst-2-n 1 2 3 4)     "success a: 1 b: 2 . n: (3 4)"   )
+                ("five args"   (tst-2-n 1 2 3 4 5)   "success a: 1 b: 2 . n: (3 4 5)" ))
+
+         (suite "three params"
+                ("no args"     (tst-3)               "success a:  b:  c: "    )
+                ("one arg"     (tst-3 1)             "success a: 1 b:  c: "   )
+                ("two args"    (tst-3 1 2)           "success a: 1 b: 2 c: "  )
+                ("three args"  (tst-3 1 2 3)         "success a: 1 b: 2 c: 3" )
+                ("four args"   (tst-3 1 2 3 4)       "success a: 1 b: 2 c: 3" )
+                ("five args"   (tst-3 1 2 3 4 5)     "success a: 1 b: 2 c: 3" ))
+
+         (suite "three params and rest param"
+                ("no args"     (tst-3-n)             "success a:  b:  c:  . n: nil"      )
+                ("one arg"     (tst-3-n 1)           "success a: 1 b:  c:  . n: nil"     )
+                ("two args"    (tst-3-n 1 2)         "success a: 1 b: 2 c:  . n: nil"    )
+                ("three args"  (tst-3-n 1 2 3)       "success a: 1 b: 2 c: 3 . n: nil"   )
+                ("four args"   (tst-3-n 1 2 3 4)     "success a: 1 b: 2 c: 3 . n: (4)"   )
+                ("five args"   (tst-3-n 1 2 3 4 5)   "success a: 1 b: 2 c: 3 . n: (4 5)" ))
+
+         (suite "four params"
+                ("no args"     (tst-4)               "success a:  b:  c:  d: "     )
+                ("one arg"     (tst-4 1)             "success a: 1 b:  c:  d: "    )
+                ("two args"    (tst-4 1 2)           "success a: 1 b: 2 c:  d: "   )
+                ("three args"  (tst-4 1 2 3)         "success a: 1 b: 2 c: 3 d: "  )
+                ("four args"   (tst-4 1 2 3 4)       "success a: 1 b: 2 c: 3 d: 4" )
+                ("five args"   (tst-4 1 2 3 4 5)     "success a: 1 b: 2 c: 3 d: 4" ))
+
+         (suite "four params and rest param"
+                ("no args"     (tst-4-n)             "success a:  b:  c:  d:  . n: nil"     )
+                ("one arg"     (tst-4-n 1)           "success a: 1 b:  c:  d:  . n: nil"    )
+                ("two args"    (tst-4-n 1 2)         "success a: 1 b: 2 c:  d:  . n: nil"   )
+                ("three args"  (tst-4-n 1 2 3)       "success a: 1 b: 2 c: 3 d:  . n: nil"  )
+                ("four args"   (tst-4-n 1 2 3 4)     "success a: 1 b: 2 c: 3 d: 4 . n: nil" )
+                ("five args"   (tst-4-n 1 2 3 4 5)   "success a: 1 b: 2 c: 3 d: 4 . n: (5)" ))
+
+         (suite "five params"
+                ("no args"     (tst-5)               "success a:  b:  c:  d:  e: "      )
+                ("one arg"     (tst-5 1)             "success a: 1 b:  c:  d:  e: "     )
+                ("two args"    (tst-5 1 2)           "success a: 1 b: 2 c:  d:  e: "    )
+                ("three args"  (tst-5 1 2 3)         "success a: 1 b: 2 c: 3 d:  e: "   )
+                ("four args"   (tst-5 1 2 3 4)       "success a: 1 b: 2 c: 3 d: 4 e: "  )
+                ("five args"   (tst-5 1 2 3 4 5)     "success a: 1 b: 2 c: 3 d: 4 e: 5" ))
+
+         (suite "five params and rest param"
+                ("no args"     (tst-5-n)             "success a:  b:  c:  d:  e:  . n: nil"      )
+                ("one arg"     (tst-5-n 1)           "success a: 1 b:  c:  d:  e:  . n: nil"     )
+                ("two args"    (tst-5-n 1 2)         "success a: 1 b: 2 c:  d:  e:  . n: nil"    )
+                ("three args"  (tst-5-n 1 2 3)       "success a: 1 b: 2 c: 3 d:  e:  . n: nil"   )
+                ("four args"   (tst-5-n 1 2 3 4)     "success a: 1 b: 2 c: 3 d: 4 e:  . n: nil"  )
+                ("five args"   (tst-5-n 1 2 3 4 5)   "success a: 1 b: 2 c: 3 d: 4 e: 5 . n: nil" ))
+         ))

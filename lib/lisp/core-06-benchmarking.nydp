@@ -1,0 +1,42 @@
+(def bm-pythag ()
+  (for i 1 50
+    (for j 1 50
+      (sqrt (+ (* i i) (* j j))))))
+
+(def bm-repeat (f n)
+  (for b 1 n (f)))
+
+(def bm (desc f repeats iterations)
+     (p "\n================================================")
+     (p "Benchmark: ~desc - ~repeats runs of ~iterations iterations each")
+     (let times 0
+          (for reps 1 repeats
+               (let time (millisecs)
+                    (bm-repeat f iterations)
+                    (let elapsed (- (millisecs) time)
+                         (assign times (+ elapsed times))
+                         (p "  took: ~elapsed ms, ~(/ elapsed iterations) ms per iteration"))))
+          (p "total ~(just times), average ~(/ times repeats) per run")
+          (p "================================================\n"))
+     nil)
+
+(let private-x 0
+     (let inc-x (fn () (assign private-x (+ 1 private-x)))
+          (def bm-zero-arg-call ()
+               (for i 0 400 (inc-x)))))
+
+(let private-y 0
+     (let inc-y (fn (n) (assign private-y (+ n private-y)))
+          (def bm-one-arg-call ()
+               (for i 0 400 (inc-y 10)))))
+
+(let private-z 0
+     (let inc-z (fn (n m) (assign private-z (+ (* n m) private-z)))
+          (def bm-two-arg-call ()
+               (for i 0 400 (inc-z 2 5)))))
+
+(def rbs ()
+  (bm "pythag"        bm-pythag        10 100)
+  (bm "zero arg call" bm-zero-arg-call 10 500)
+  (bm "one arg call"  bm-one-arg-call  10 500)
+  (bm "two arg call"  bm-two-arg-call  10 500))

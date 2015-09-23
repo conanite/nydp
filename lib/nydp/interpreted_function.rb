@@ -1,26 +1,19 @@
 require 'nydp/lexical_context'
+require 'nydp/lexical_context_builder'
 require 'nydp/closure'
 
 module Nydp
   class PopArg
-    def self.execute vm
-      vm.pop_arg
-    end
-
-    def self.to_s
-      ""
-    end
-
-    def self.inspect
-      "#pop_arg"
-    end
+    def self.execute vm ; vm.pop_arg ; end
+    def self.to_s       ; ""         ; end
+    def self.inspect    ; "#pop_arg" ; end
   end
 
   class InterpretedFunction
     include Helper
     extend Helper
 
-    attr_accessor :arg_names, :body
+    attr_accessor :arg_names, :body, :context_builder
 
     def invoke_1 vm, parent_context
       vm.push_instructions self.body, LexicalContext.new(parent_context)
@@ -28,19 +21,19 @@ module Nydp
 
     def invoke_2 vm, parent_context, arg
       lc = LexicalContext.new parent_context
-      lc.set_args_1 arg_names, arg
+      set_args_1 lc, arg
       vm.push_instructions self.body, lc
     end
 
     def invoke_3 vm, parent_context, arg_0, arg_1
       lc = LexicalContext.new parent_context
-      lc.set_args_2 arg_names, arg_0, arg_1
+      set_args_2 lc, arg_0, arg_1
       vm.push_instructions self.body, lc
     end
 
     def invoke vm, parent_context, arg_values
       lc = LexicalContext.new parent_context
-      setup_context lc, arg_names, arg_values
+      set_args lc, arg_values
       vm.push_instructions self.body, lc
     end
 
@@ -58,6 +51,8 @@ module Nydp
       index_parameters arg_list, my_params
       ifn = Nydp::InterpretedFunction.new
       ifn.arg_names = arg_list
+      ifn.extend Nydp::LexicalContextBuilder.select arg_list
+      ifn.initialize_names arg_list
       ifn.body = compile_body body, cons(my_params, bindings), []
       ifn
     end
