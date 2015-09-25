@@ -74,4 +74,7 @@
       (len (parse-in-string (joinstr "" (list "hello " '~ " world"))))
       13)
 
+    ("reports parse errors gracefully"
+     (on-err "CAUGHT: ~err" (parse-in-string (joinstr "" "blah ~~(\"stri...")))
+     "CAUGHT: parse error: \"unterminated string\" in\n  blah ~~(\"stri..." )
 )))

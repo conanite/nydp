@@ -6,8 +6,12 @@ class Nydp::Builtin::ParseInString
   end
 
   def builtin_invoke vm, args
-    tokens = Nydp::Tokeniser.new Nydp::StringReader.new args.car.to_s
+    parsable = args.car.to_s
+    tokens = Nydp::Tokeniser.new Nydp::StringReader.new parsable
     expr = @parser.string(tokens, "", :eof)
     vm.push_arg expr
+  rescue Exception => e
+    new_msg = "parse error: #{e.message.inspect} in\n#{Nydp.indent_text parsable}"
+    raise Nydp::Error.new new_msg
   end
 end
