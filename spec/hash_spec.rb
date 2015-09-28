@@ -2,6 +2,19 @@ require "spec_helper"
 
 describe Nydp::Hash do
 
+  class TestThing
+    attr_accessor :a, :b, :c
+    def initialize a, b, c
+      @a, @b, @c = a, b, c
+    end
+
+    def inspect
+      "(TestThing #{a.inspect} #{b.inspect})"
+    end
+
+    def _nydp_safe_methods ; %i{ a b } ; end
+  end
+
   let(:vm) { Nydp::VM.new }
 
   describe "#to_ruby" do
@@ -181,6 +194,36 @@ describe Nydp::Hash do
     end
   end
 
+  describe "friendly non-hashes" do
+    let(:ahash) { TestThing.new 123, "hello there", "private" }
+
+    describe "hash get" do
+      it "returns a plain number" do
+        k      = Nydp::Symbol.mk "a", ns
+        args   = [ ahash, k ]
+
+        Nydp::Builtin::HashGet.new(ns).invoke vm, pair_list(args)
+        expect(vm.pop_arg).to eq 123
+      end
+
+      it "converts ruby value to nydp value" do
+        k      = Nydp::Symbol.mk "b", ns
+        args   = [ ahash, k ]
+
+        Nydp::Builtin::HashGet.new(ns).invoke vm, pair_list(args)
+        expect(vm.pop_arg).to eq Nydp::StringAtom.new("hello there")
+      end
+
+      it "returns nil for unavailable methods" do
+        k      = Nydp::Symbol.mk "c", ns
+        args   = [ ahash, k ]
+
+        Nydp::Builtin::HashGet.new(ns).invoke vm, pair_list(args)
+        expect(vm.pop_arg).to eq Nydp.NIL
+      end
+    end
+  end
+
   describe "non-hash" do
     let(:ahash) { Nydp::StringAtom.new "this here ain't no hash, hombre" }
 
@@ -206,8 +249,8 @@ raised
 
     describe "hash get" do
       it "converts ruby value to nydp value" do
-        k    = Nydp::Symbol.mk "keysym", ns
-        args           = [ ahash, k ]
+        k      = Nydp::Symbol.mk "keysym", ns
+        args   = [ ahash, k ]
 
         begin
           Nydp::Builtin::HashGet.new(ns).invoke vm, pair_list(args)
@@ -215,7 +258,7 @@ raised
           error = e
         end
 
-        expect(error.message.gsub(/at \/.*:in `builtin_invoke'/, '<error info>')).to eq "Called builtin/hash-get
+        expect(error.message.gsub(/at \/.*:in `ruby_call'/, '<error info>')).to eq "Called builtin/hash-get
 with args (\"this here ain't no hash, hombre\" keysym)
 raised
   hash-get: Not a hash: Nydp::StringAtom

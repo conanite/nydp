@@ -12,20 +12,27 @@ class Nydp::Builtin::HashGet
   attr_accessor :ns
   def initialize ns ; @ns = ns; end
   def builtin_invoke vm, args
-    hash = args.car
+    hsh = args.car
     key = args.cdr.car
-    case hash
+    case hsh
     when Nydp::Hash
-      vm.push_arg(hash[key] || Nydp.NIL)
+      vm.push_arg(hsh[key] || Nydp.NIL)
     when NilClass, Nydp.NIL
       vm.push_arg Nydp.NIL
     else
-      if hash.respond_to? :[]
-        key = n2r args.cdr.car
-        vm.push_arg(r2n hash[key], ns)
-      else
-        raise "hash-get: Not a hash: #{hash.class.name}"
-      end
+      v = hsh.respond_to?(:[]) ? hsh[n2r key] : ruby_call(hsh, key)
+      vm.push_arg(r2n v, ns)
+    end
+  end
+
+  def ruby_call obj, method_name
+    if obj.respond_to? :_nydp_safe_methods
+      m       = n2r method_name
+      allowed = obj._nydp_safe_methods
+
+      obj.send n2r(m) if allowed.include?(m)
+    else
+      raise "hash-get: Not a hash: #{obj.class.name}"
     end
   end
 end
