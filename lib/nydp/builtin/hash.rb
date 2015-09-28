@@ -27,7 +27,7 @@ class Nydp::Builtin::HashGet
 
   def ruby_call obj, method_name
     if obj.respond_to? :_nydp_safe_methods
-      m       = n2r method_name
+      m       = n2r(method_name).to_s.to_sym
       allowed = obj._nydp_safe_methods
 
       obj.send n2r(m) if allowed.include?(m)

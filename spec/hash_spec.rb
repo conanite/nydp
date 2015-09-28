@@ -214,6 +214,14 @@ describe Nydp::Hash do
         expect(vm.pop_arg).to eq Nydp::StringAtom.new("hello there")
       end
 
+      it "converts string keys to method names" do
+        k      = Nydp::StringAtom.new "b"
+        args   = [ ahash, k ]
+
+        Nydp::Builtin::HashGet.new(ns).invoke vm, pair_list(args)
+        expect(vm.pop_arg).to eq Nydp::StringAtom.new("hello there")
+      end
+
       it "returns nil for unavailable methods" do
         k      = Nydp::Symbol.mk "c", ns
         args   = [ ahash, k ]
