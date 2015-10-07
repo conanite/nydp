@@ -19,12 +19,8 @@ class Nydp::LexicalContext
     end
   end
 
-  def at name
-    values[name]
-  end
-
   def at_index index
-    values[index]
+    values[index] || Nydp.NIL
   end
 
   def set name, value
