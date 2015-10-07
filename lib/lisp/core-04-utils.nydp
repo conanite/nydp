@@ -1,10 +1,5 @@
 ; -*- lisp -*-
 
-(def each (f acc things)
-  (if things
-      (each f (f acc (car things)) (cdr things))
-      acc))
-
 (def eachr (f things)
      (when things
        (eachr f (cdr things))
@@ -122,3 +117,12 @@
   `(map (fn (,x) ,expr) ,things))
 
 (def empty? (things) (eq? (len things) 0))
+
+(mac each (var things code)
+  (w/uniq (xs c)
+          `((rfn ,c (,xs)
+                (if (pair? ,xs)
+                    (do
+                        (let ,var (car ,xs) ,code)
+                        (,c (cdr ,xs)))))
+           ,things)))
