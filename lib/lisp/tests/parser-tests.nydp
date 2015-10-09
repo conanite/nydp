@@ -27,7 +27,13 @@
 
     ("parse custom prefix-lists"
      (parse "x(1 2 3)")
-     ((prefix-list "x" (1 2 3)))))
+     ((prefix-list x (1 2 3))))
+
+    ("parse custom prefix-lists with a special-syntax prefix"
+     (parse "x.y(1 2 3)")
+     ((prefix-list (dot-syntax x y) (1 2 3))))
+
+)
 
   (suite "parse"
     ("parses an empty symbol"
