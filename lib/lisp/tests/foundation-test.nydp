@@ -25,6 +25,11 @@
          (list m.match m.captures))
        ("and" nil))
 
+      ("no match with regexp"
+       (let m (string-match "a and b and c and d" "not-in-string")
+         (list m.match m.captures))
+       (nil nil))
+
       ("match with regexp and capturing groups"
        (let m (string-match "  foo\b    bar" "(^\\s+)")
          (list m.match m.captures))
