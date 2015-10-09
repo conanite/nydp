@@ -1,0 +1,26 @@
+
+(assign prefix-list-prefixes ())
+
+(def prefix-match-fn (txt)
+  (fn (rule) (string-match txt (car rule))))
+
+(def find-prefix-rule (prefix)
+  (cdr:detect (prefix-match-fn prefix)
+        prefix-list-prefixes))
+
+(mac prefix-list (prefix list)
+  (let handler (find-prefix-rule prefix)
+    (and handler (handler prefix list))))
+
+(mac define-prefix-list-macro (regex prefix-var list-var . body)
+  `(push (cons ,regex (fn (,prefix-var ,list-var) ,@body))
+         prefix-list-prefixes))
+
+;;
+;; so you can write (map λa(upcase a.name) people)
+;;
+;; instead of (map (fn (a) (upcase a.name)) people)
+;;
+(define-prefix-list-macro "^λ.+" vars expr
+  (let var-list (map sym (cdr:string-split vars))
+    `(fn ,var-list ,expr)))
