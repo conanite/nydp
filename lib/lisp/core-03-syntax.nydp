@@ -1,5 +1,3 @@
-; -*- lisp -*-
-
 (mac unless (arg . body)
   `(if (no ,arg) (do ,@body)))
 

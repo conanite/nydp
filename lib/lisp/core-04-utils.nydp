@@ -1,5 +1,3 @@
-; -*- lisp -*-
-
 (def eachr (f things)
      (when things
        (eachr f (cdr things))
