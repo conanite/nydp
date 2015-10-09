@@ -13,6 +13,7 @@ describe Nydp::Parser do
   let(:quote)            { Nydp::Symbol.mk :quote,                ns }
   let(:quasiquote)       { Nydp::Symbol.mk :quasiquote,           ns }
   let(:unquote)          { Nydp::Symbol.mk :unquote,              ns }
+  let(:prefix_list)      { Nydp::Symbol.mk :"prefix-list",        ns }
   let(:unquote_splicing) { Nydp::Symbol.mk :"unquote-splicing",   ns }
   let(:comment)          { Nydp::Symbol.mk :comment,              ns }
   let(:dotsyn)           { Nydp::Symbol.mk :"dot-syntax",         ns }
@@ -212,6 +213,10 @@ describe Nydp::Parser do
 
   it "should unquote lists" do
     expect(parse ",(bar)").to eq pair_list([unquote, pair_list([bar])])
+  end
+
+  it "retains otherwise unidentified list prefixes" do
+    expect(parse "%wong(bar)").to eq pair_list([prefix_list, "%wong", pair_list([bar])])
   end
 
   it "should do some complicated unquote stuff with lists" do

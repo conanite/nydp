@@ -12,6 +12,23 @@
      (parse "{foo bar 1 2 3}")
      ((brace-list foo bar 1 2 3))))
 
+  (suite "prefix-list"
+    ("parse quasiquote"
+     (parse "`(1 2 3)")
+     ((quasiquote (1 2 3))))
+
+    ("parse unquote unquote-splicing"
+     (parse ",,@(1 2 3)")
+     ((unquote (unquote-splicing (1 2 3)))))
+
+    ("parse unquote"
+     (parse ",(1 2 3)")
+     ((unquote (1 2 3))))
+
+    ("parse custom prefix-lists"
+     (parse "x(1 2 3)")
+     ((prefix-list "x" (1 2 3)))))
+
   (suite "parse"
     ("parses an empty symbol"
      (parse "||")
