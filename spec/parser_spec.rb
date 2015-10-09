@@ -216,7 +216,7 @@ describe Nydp::Parser do
   end
 
   it "retains otherwise unidentified list prefixes" do
-    expect(parse "wong(bar)").to eq pair_list([prefix_list, (sym :wong), pair_list([bar])])
+    expect(parse "%wong(bar)").to eq pair_list([prefix_list, "%wong", pair_list([bar])])
   end
 
   it "should do some complicated unquote stuff with lists" do

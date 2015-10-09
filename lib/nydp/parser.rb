@@ -31,7 +31,7 @@ module Nydp
       when /^(.*),@$/
         prefix_list $1, Pair.from_list([sym(:"unquote-splicing"), list])
       else
-        pfx = parse_symbol prefix
+        pfx = Nydp::StringAtom.new prefix
         Pair.from_list([sym(:"prefix-list"), pfx, list])
       end
     end
