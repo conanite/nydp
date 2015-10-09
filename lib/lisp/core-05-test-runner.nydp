@@ -21,6 +21,7 @@
 (def execute-test (desc test passf failf verbose)
   (if (eq? 'suite (car test))
       (execute-tests (+ desc " - " (cadr test)) (cddr test) passf failf verbose)
+      (!eq? 'comment (car test))
       (execute-single-test desc test passf failf verbose)))
 
 (def execute-single-test (desc test passf failf verbose)
