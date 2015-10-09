@@ -133,3 +133,11 @@
                         (let ,var (car ,xs) ,code)
                         (,c (cdr ,xs)))))
            ,things)))
+
+(def reduce (f things)
+  ((rfn rd (acc list)
+        (if (pair? list)
+            (rd (f acc (car list))
+                (cdr list))
+            acc))
+   (car things) (cdr things)))

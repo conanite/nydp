@@ -138,6 +138,11 @@
                     (mapx '(1 2 3 4) n (* n 2))
                     (2 4 6 8))))
 
+         (suite "reduce"
+                ("it applies a function cumulatively over a list"
+                 (reduce + '(1 2 3))
+                 6))
+
          (suite "detect"
                 ("returns first matching item in a list"
                  (detect (fn (x) (eq? (len x) 2))
