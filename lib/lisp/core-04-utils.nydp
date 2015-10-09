@@ -39,6 +39,15 @@
 (def string-pieces pieces
   (joinstr "" pieces))
 
+(def detect (f things)
+  (if (pair? things)
+      (let it (car things)
+        (or
+         (and (f it) it)
+         (detect f (cdr things))))
+      (f things)
+      things))
+
 (def nth (n things)
      (if (eq? n 0)
          (car things)

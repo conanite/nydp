@@ -138,6 +138,30 @@
                     (mapx '(1 2 3 4) n (* n 2))
                     (2 4 6 8))))
 
+         (suite "detect"
+                ("returns first matching item in a list"
+                 (detect (fn (x) (eq? (len x) 2))
+                         (list "foo" "bar" "xx" "pp"))
+                 "xx")
+
+                ("returns nil when nothing matches"
+                 (detect (fn (x) (eq? (len x) 20))
+                         (list "foo" "bar" "xx" "pp"))
+                 nil)
+
+                ;; kind of pointless
+                ("returns nil if nil is the matching item"
+                 (detect no (list "foo" "bar" nil "pp"))
+                 nil)
+
+                ("returns item if it's an atom and matches"
+                 (detect (fn (x) (eq? (len x) 2)) "zz")
+                 "zz")
+
+                ("returns nil if it's an atom and doesn't match"
+                 (detect (fn (x) (eq? (len x) 20))
+                         "zz")
+                 nil))
 
          (suite "pre-compile"
                 (suite "bang-syntax"
