@@ -42,6 +42,7 @@ module Nydp
 
     SYMBOL_OPERATORS =
       [
+        [ /%/,      "percent-syntax"    ],
         [ /\!/,     "bang-syntax"       ],
         [ /&/,      "ampersand-syntax"  ],
         [ /\./,     "dot-syntax"        ],
