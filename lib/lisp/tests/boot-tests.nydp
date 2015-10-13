@@ -78,11 +78,6 @@
                            (list "hello world" (hash-get hsh "hello world") "yesterday" (hash-get hsh "yesterday"))))
                  ("hello world" 10 "yesterday" 11)))
 
-         (suite "strings"
-                ("length"
-                 (len "foo-bar")
-                 7))
-
          (suite "list management"
                 ("'pair breaks a list into pairs"
                  (pairs '(1 a 2 b 3 c))
@@ -99,26 +94,6 @@
                 ("'rev doesn't recurse"
                  (rev '(a b (c d e) f g))
                  (g f (c d e) b a))
-
-                ("joins elements into a string"
-                 (joinstr "" '("foo" "bar" "bax"))
-                 "foobarbax")
-
-                ("joins separate elements into a string"
-                 (joinstr "/" "foo" "bar" "bax")
-                 "foo/bar/bax")
-
-                ("joins a single thing"
-                 (joinstr "/" "foo")
-                 "foo")
-
-                ("joins nested and separate elements into a string"
-                 (joinstr "/" "foo" "bar" '(twiddle diddle) "bax")
-                 "foo/bar/twiddle/diddle/bax")
-
-                ("joins elements into a string"
-                 (joinstr " - " '(1 2 3))
-                 "1 - 2 - 3")
 
                 ("'flatten returns a flat list of things"
                  (flatten '((poo (x) (* x x)) (1 2 3)))

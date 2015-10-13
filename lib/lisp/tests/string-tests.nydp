@@ -1,0 +1,31 @@
+(register-test
+ '(suite "String Tests"
+         (suite "length"
+                ("nonzero"  (len "foo-bar")  7)
+                ("zero"     (len "")         0))
+
+         (suite "joinstr"
+                ("joins elements into a string"
+                 (joinstr "" '("foo" "bar" "bax"))
+                 "foobarbax")
+
+                ("joins separate elements into a string"
+                 (joinstr "/" "foo" "bar" "bax")
+                 "foo/bar/bax")
+
+                ("joins a single thing"
+                 (joinstr "/" "foo")
+                 "foo")
+
+                ("joins nested and separate elements into a string"
+                 (joinstr "/" "foo" "bar" '(twiddle diddle) "bax")
+                 "foo/bar/twiddle/diddle/bax")
+
+                ("joins elements into a string"
+                 (joinstr " - " '(1 2 3))
+                 "1 - 2 - 3"))
+
+         (suite "strip"
+                ("removes leading whitespace"               (string-strip "    hello!")  "hello!" )
+                ("removes trailing whitespace"              (string-strip "(world)   ") "(world)" )
+                ("removes leading and trailing whitespace"  (string-strip "\n\nme\n\n") "me"      ))))
