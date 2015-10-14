@@ -1,4 +1,10 @@
 (mac if args
+  ; with arguments a,         return a
+  ; with arguments a b,       return b if a is true, otherwise nil
+  ; with arguments a b c,     return b if a is true, otherwise return c
+  ; with arguments a b c d,   return b if a is true, otherwise return d if c is true, otherwise nil
+  ; with arguments a b c d e, return b if a is true, otherwise return d if c is true, otherwise e
+  ; and so on for subsequent arguments
   (cond (no args) nil
         (cond (cdr args)
               (cond (cddr args)
