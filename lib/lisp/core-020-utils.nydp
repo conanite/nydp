@@ -13,6 +13,8 @@
               (car args))))
 
 (def map (f things)
+  ; transforms the list 'things by applying 'f to each item
+  ; returns the resulting list
   (if (no things)
       nil
       (pair? things)
