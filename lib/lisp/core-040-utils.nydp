@@ -141,3 +141,26 @@
                 (cdr list))
             acc))
    (car things) (cdr things)))
+
+(def dox-show-info (name what texts args src)
+  ; show the given dox info
+  ; 'info arg is a dox object from the dox system
+  (p)
+  (cond (eq? what 'mac) (p "Macro : ~name"    ))
+  (cond (eq? what 'def) (p "Function : ~name" ))
+  (p "args : ~(inspect args)")
+  (p (joinstr "\n" texts))
+  (p "")
+  (p "source")
+  (p "======")
+  (p src)
+  (p))
+
+(mac dox (name)
+  ; show dox for the given name
+  `(let infos (dox-lookup ',name)
+     (if (or (no infos)
+             (eq? (len infos) 0))
+         (p "No documentation for " ',name)
+         (each info infos
+               (apply dox-show-info info)))))
