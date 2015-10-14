@@ -1,3 +1,11 @@
+(mac if args
+  (cond (no args) nil
+        (cond (cdr args)
+              (cond (cddr args)
+                    `(cond ,(car args) ,(cadr args) (if ,@(cddr args)))
+                    `(cond ,(car args) ,(cadr args)))
+              (car args))))
+
 (def map (f things)
   (if (no things)
       nil
