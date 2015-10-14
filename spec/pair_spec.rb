@@ -8,6 +8,14 @@ describe Nydp::Pair do
   let(:foo)              { Nydp::Symbol.mk :foo,                ns }
   let(:dot)              { Nydp::Symbol.mk ".".to_sym,          ns }
 
+  describe "#map" do
+    it "behaves like ruby #map" do
+      list = pair_list [1,2,3]
+      mapped = list.map { |x| x * 2 }
+      expect(mapped).to eq [2,4,6]
+    end
+  end
+
   describe :== do
     it "should be true for two empty lists" do
       expect(Nydp::Pair.new(NIL, NIL)).to eq Nydp::Pair.new(NIL, NIL)
