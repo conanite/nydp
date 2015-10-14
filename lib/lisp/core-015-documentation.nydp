@@ -9,7 +9,7 @@
 
      (def dox? (sym) (hash-key? dox sym))
 
-     (def dox-syms () (hash-keys dox)))
+     (def dox-names () (hash-keys dox)))
  (hash))
 
 (def isa-comment? (thing)
