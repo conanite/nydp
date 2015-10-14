@@ -27,9 +27,6 @@
           (car args))
       't))
 
-(mac do args
-  `((fn nil ,@args)))
-
 (mac when (condition . body)
   `(cond ,condition (do ,@body)))
 

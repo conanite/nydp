@@ -8,14 +8,6 @@
       (cons (list (car a) (car b))
             (zip (cdr a) (cdr b)))))
 
-(def reversify (things acc)
-  (if (no things)
-      acc
-      (reversify (cdr things)
-                 (cons (car things) acc))))
-
-(def rev (things) (reversify things nil))
-
 (mac push (x things)
   `(assign ,things (cons ,x ,things)))
 

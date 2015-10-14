@@ -118,8 +118,58 @@
 (hash-set macs 'quasiquote
           (fn (arg) (qq-quasiquote arg 0)))
 
-(hash-set macs 'mac (fn (name args . body)
-  `(hash-set macs ',name (fn ,args ,@body))))
+(hash-set macs 'do
+          (fn args
+              `((fn nil ,@args))))
+
+((fn (dox)
+     (def dox-add-doc (name what texts args src)
+       (hash-set dox
+                 name
+                 (cons (list what texts args src)
+                       (hash-get dox sym))))
+
+     (def dox-lookup (sym) (hash-get dox sym))
+
+     (def dox? (sym) (hash-key? dox sym))
+
+     (def dox-syms () (hash-keys dox)))
+ (hash))
+
+(def isa-comment? (thing)
+  (cond (pair? thing)
+        (eq? (car thing) 'comment)))
+
+(def rev-accum (things acc)
+  (cond (no things)
+        acc
+        (rev-accum (cdr things)
+                   (cons (car things)
+                         acc))))
+
+(def rev (things) (rev-accum things nil))
+
+(def dox-gather-comments (body acc)
+  (cond (isa-comment? (car body))
+        (dox-gather-comments (cdr body)
+                             (cons (cadar body)
+                                   acc))
+        (list (rev acc) body)))
+
+(def define-mac-expr (name args documentation body)
+  `(do (hash-set macs ',name (fn ,args ,@body))
+       (dox-add-doc ',name
+                    'mac
+                    ',documentation
+                    ',args
+                    '(mac ,name ,args ,@body))))
+
+(hash-set macs 'mac
+          (fn (name args . body)
+              (apply define-mac-expr
+                     name
+                     args
+                     (dox-gather-comments body))))
 
 (mac if args
      (cond (no args) nil
@@ -128,3 +178,19 @@
                        `(cond ,(car args) ,(cadr args) (if ,@(cddr args)))
                        `(cond ,(car args) ,(cadr args)))
                  (car args))))
+
+(def define-def-expr (name args documentation body)
+  ; used internally by 'def
+  `(do (assign ,name (fn ,args ,@body))
+       (dox-add-doc ',name
+                    'def
+                    ',documentation
+                    ',args
+                    '(def ,name ,args ,@body))))
+
+(mac def (name args . body)
+  ; define a new function in the global namespace
+  (apply define-def-expr
+         name
+         args
+         (dox-gather-comments body)))

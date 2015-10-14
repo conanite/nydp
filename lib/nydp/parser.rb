@@ -105,7 +105,7 @@ module Nydp
       when :symbol
         parse_symbol token.last
       when :comment
-        Pair.from_list [sym(:comment), token.last]
+        Pair.from_list [sym(:comment), Nydp::StringAtom.new(token.last)]
       else
         token.last
       end
