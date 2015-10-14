@@ -2,8 +2,12 @@ class Nydp::Builtin::Puts
   include Nydp::Builtin::Base
 
   def builtin_invoke vm, args
-    s = args.map { |a| a.to_s }
-    puts s.join ' '
+    if Nydp.NIL.is? args
+      puts
+    else
+      s = args.map { |a| a.to_s }
+      puts s.join ' '
+    end
     vm.push_arg args.car
   end
 
