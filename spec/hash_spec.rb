@@ -92,6 +92,28 @@ describe Nydp::Hash do
       end
     end
 
+    describe "key?" do
+      it "returns t when key is present" do
+        h    = Nydp::Hash.new
+        k    = sym "jerry"
+        v    = 42
+        h[k] = v
+
+        Nydp::Builtin::HashKeyPresent.new(ns).invoke vm, pair_list([h, k])
+
+        expect(vm.pop_arg).to eq Nydp.T
+      end
+
+      it "returns nil when key is absent" do
+        h    = Nydp::Hash.new
+        k    = sym "benjamin"
+
+        Nydp::Builtin::HashKeyPresent.new(ns).invoke vm, pair_list([h, k])
+
+        expect(vm.pop_arg).to eq Nydp.NIL
+      end
+    end
+
     describe "hash keys" do
       it "returns a list of keys" do
         h    = Nydp::Hash.new
@@ -151,6 +173,27 @@ describe Nydp::Hash do
         Nydp::Builtin::HashGet.new(ns).invoke vm, pair_list(args)
 
         expect(vm.pop_arg).to eq Nydp.T
+      end
+    end
+
+    describe "key?" do
+      it "returns t when key is present" do
+        ahash[:simon] = 24
+        k             = sym("simon")
+        args          = [ ahash, k ]
+
+        Nydp::Builtin::HashKeyPresent.new(ns).invoke vm, pair_list(args)
+
+        expect(vm.pop_arg).to eq Nydp.T
+      end
+
+      it "returns nil when key is absent" do
+        k             = sym("simon")
+        args          = [ ahash, k ]
+
+        Nydp::Builtin::HashKeyPresent.new(ns).invoke vm, pair_list(args)
+
+        expect(vm.pop_arg).to eq Nydp.NIL
       end
     end
 

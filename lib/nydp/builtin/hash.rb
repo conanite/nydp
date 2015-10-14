@@ -74,6 +74,23 @@ class Nydp::Builtin::HashKeys
   end
 end
 
+class Nydp::Builtin::HashKeyPresent
+  include Nydp::Helper, Nydp::Builtin::Base
+  attr_accessor :ns
+  def initialize ns ; @ns = ns; end
+  def builtin_invoke vm, args
+    hash = args.car
+    key  = args.cdr.car
+    truth = case hash
+            when Nydp::Hash
+              hash.key? key
+            else
+              hash.key? n2r key
+            end
+    vm.push_arg(truth ? Nydp.T : Nydp.NIL)
+  end
+end
+
 class Nydp::Builtin::HashMerge
   include Nydp::Helper, Nydp::Builtin::Base
 

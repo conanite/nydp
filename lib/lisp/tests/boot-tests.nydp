@@ -66,6 +66,14 @@
                  (let zi 10 "finds the ~{zi}th item")
                  "finds the 10th item")
 
+                ("detects key presence"
+                 (hash-key? { foo 1 bar 2 } 'foo)
+                 t)
+
+                ("detects key absence"
+                 (hash-key? { foo 1 bar 2 } 'zed)
+                 nil)
+
                 ("unquotes hash keys"
                  (with (zi 'foo chi 'bar yi 'grr)
                       (let hsh { ,zi 10 ,chi 11 ,yi 12 }
