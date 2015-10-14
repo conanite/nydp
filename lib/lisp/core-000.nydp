@@ -4,11 +4,11 @@
 ;; but not limited to, 'do, 'rfn, 'loop, 'for) are stolen directly from arc.arc
 ;;
 
-(assign list  (fn args args))
-(assign caar  (fn (arg) (car (car arg))))
-(assign cadr  (fn (arg) (car (cdr arg))))
-(assign cdar  (fn (arg) (cdr (car arg))))
-(assign cddr  (fn (arg) (cdr (cdr arg))))
+(assign  list (fn args args))
+(assign  caar (fn (arg) (car (car arg))))
+(assign  cadr (fn (arg) (car (cdr arg))))
+(assign  cdar (fn (arg) (cdr (car arg))))
+(assign  cddr (fn (arg) (cdr (cdr arg))))
 (assign cadar (fn (arg) (car (cdr (car arg)))))
-(assign   no  (fn (arg) (cond arg nil t)))
-(assign just  (fn (arg) arg))
+(assign    no (fn (arg) (cond arg nil t)))
+(assign  just (fn (arg) arg))
