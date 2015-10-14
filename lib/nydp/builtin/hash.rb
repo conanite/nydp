@@ -89,6 +89,7 @@ class Nydp::Builtin::HashKeyPresent
             end
     vm.push_arg(truth ? Nydp.T : Nydp.NIL)
   end
+  def name ; "hash-key?" ; end
 end
 
 class Nydp::Builtin::HashMerge
