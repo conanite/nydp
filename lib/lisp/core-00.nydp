@@ -12,6 +12,3 @@
 (assign cadar (fn (arg) (car (cdr (car arg)))))
 (assign   no  (fn (arg) (cond arg nil t)))
 (assign just  (fn (arg) arg))
-(assign  isa  (fn (type obj)
-                  (eq? (type-of obj)
-                       type)))
