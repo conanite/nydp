@@ -43,33 +43,37 @@
          (suite "mac"
                 ("a documented macro"
                  (dox-lookup 'this-is-a-well-documented-macro)
-                 ((mac
-                    ("documentation for me!")
-                    (a b c)
-                    (mac this-is-a-well-documented-macro (a b c)
-                      `(foo ,a ,b ,c)))))
+                 ((this-is-a-well-documented-macro
+                   mac
+                   ("documentation for me!")
+                   (a b c)
+                   (mac this-is-a-well-documented-macro (a b c)
+                     `(foo ,a ,b ,c)))))
 
                 ("an undocumented macro"
                  (dox-lookup 'this-is-an-undocumented-macro)
-                 ((mac
-                    nil
-                    (a b c)
-                    (mac this-is-an-undocumented-macro (a b c)
-                      `(baz ,a ,b ,c)))))
+                 ((this-is-an-undocumented-macro
+                   mac
+                   nil
+                   (a b c)
+                   (mac this-is-an-undocumented-macro (a b c)
+                     `(baz ,a ,b ,c)))))
 
          (suite "def"
                 ("a documented def"
                  (dox-lookup 'this-is-a-well-documented-def)
-                 ((def
-                    ("documentation for me!")
-                    (a b c)
-                    (def this-is-a-well-documented-def (a b c)
-                      (foo a b c)))))
+                 ((this-is-a-well-documented-def
+                   def
+                   ("documentation for me!")
+                   (a b c)
+                   (def this-is-a-well-documented-def (a b c)
+                     (foo a b c)))))
 
                 ("an undocumented def"
                  (dox-lookup 'this-is-an-undocumented-def)
-                 ((def
-                    nil
-                    (a b c)
-                    (def this-is-an-undocumented-def (a b c)
-                      (baz a b c)))))))))
+                 ((this-is-an-undocumented-def
+                   def
+                   nil
+                   (a b c)
+                   (def this-is-an-undocumented-def (a b c)
+                     (baz a b c)))))))))

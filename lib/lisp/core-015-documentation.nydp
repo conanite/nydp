@@ -2,7 +2,7 @@
      (def dox-add-doc (name what texts args src)
        (hash-set dox
                  name
-                 (cons (list what texts args src)
+                 (cons (list name what texts args src)
                        (hash-get dox sym))))
 
      (def dox-lookup (sym) (hash-get dox sym))
