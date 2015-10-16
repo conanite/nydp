@@ -4,6 +4,7 @@
        (f (car things))))
 
 (def zip (a b)
+  ; takes two lists, (p q r) and (1 2 3), returns ((p 1) (q 2) (r 3))
   (if a
       (cons (list (car a) (car b))
             (zip (cdr a) (cdr b)))))

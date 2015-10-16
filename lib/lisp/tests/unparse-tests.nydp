@@ -1,0 +1,7 @@
+(register-test '(suite "pair to-string"
+  ("unquote"           (to-string '(unquote a))          ",a"           )
+  ("quote"             (to-string '(quote a))            "'a"           )
+  ("quasiquote"        (to-string '(quasiquote a))       "`a"           )
+  ("unquote-splicing"  (to-string '(unquote-splicing a)) ",@a"          )
+  ("brace-list"        (to-string '(brace-list a b c d)) "{ a b c d }"  )
+))
