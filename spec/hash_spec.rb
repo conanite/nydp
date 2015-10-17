@@ -24,6 +24,7 @@ describe Nydp::Hash do
 
       rhash = hash.to_ruby
       expect(rhash[:boo]).to eq 42
+      expect(rhash.keys) .to eq [:boo]
     end
 
     it "converts ruby string key to nydp string key" do
@@ -32,6 +33,7 @@ describe Nydp::Hash do
 
       rhash = hash.to_ruby
       expect(rhash["boo"]).to eq 42
+      expect(rhash.keys) .to eq ["boo"]
     end
 
     it "uses integer keys unconverted" do
@@ -40,6 +42,7 @@ describe Nydp::Hash do
 
       rhash = hash.to_ruby
       expect(rhash[21]).to eq 42
+      expect(rhash.keys) .to eq [21]
     end
   end
 

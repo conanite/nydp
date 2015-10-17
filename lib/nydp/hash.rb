@@ -3,15 +3,8 @@ class Nydp::Hash < ::Hash
 
   def nydp_type ; :hash   ; end
   def to_ruby
-    @_ruby_hash ||= Hash.new { |h, k|
-      self[case k
-           when String
-             Nydp::StringAtom.new(k)
-           when Symbol
-             Nydp::Symbol.new(k)
-           else
-             k
-           end]
-    }
+    h = Hash.new
+    self.each { |k,v| h[n2r k] = n2r v }
+    h
   end
 end
