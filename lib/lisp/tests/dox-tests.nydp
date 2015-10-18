@@ -54,6 +54,10 @@
                  (dox-arg-names 'this-is-a-well-documented-macro)
                  (a b c))
 
+                ("src"
+                 (dox-src 'this-is-a-well-documented-macro)
+                 (mac this-is-a-well-documented-macro (a b c) (quasiquote (foo (unquote a) (unquote b) (unquote c)))))
+
                 ("is a def"
                  (dox-what-is? 'this-is-a-well-documented-macro)
                  mac)
@@ -84,6 +88,10 @@
                 ("is a def"
                  (dox-what-is? 'this-is-a-well-documented-def)
                  def)
+
+                ("src"
+                 (dox-src 'this-is-a-well-documented-def)
+                 (def this-is-a-well-documented-def (a b c) (foo a b c)))
 
                 ("an undocumented def"
                  (dox-lookup 'this-is-an-undocumented-def)

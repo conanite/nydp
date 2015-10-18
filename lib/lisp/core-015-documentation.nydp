@@ -15,6 +15,10 @@
        (cond (dox? name)
              (cadr (car (dox-lookup name)))))
 
+     (def dox-src (name)
+       (cond (dox? name)
+             (car (cddr (cddr (car (dox-lookup name)))))))
+
      (def dox-arg-names (name)
        (cond (dox? name)
              (cadddr (car (dox-lookup name))))))
@@ -41,6 +45,7 @@
         (list (rev acc) body)))
 
 (def define-mac-expr (name args documentation body)
+  ; used internally by 'mac
   `(do (hash-set macs ',name (fn ,args ,@body))
        (dox-add-doc ',name
                     'mac
@@ -54,6 +59,18 @@
                      name
                      args
                      (dox-gather-comments body))))
+
+(dox-add-doc 'mac
+             'mac
+             '("define a new global macro")
+             '(name args . body)
+             (dox-src 'define-mac-expr))
+
+(dox-add-doc 'do
+             'mac
+             '("perform a series of operations")
+             'args
+             '`((fn nil ,@args)))
 
 (def define-def-expr (name args documentation body)
   ; used internally by 'def
