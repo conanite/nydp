@@ -9,6 +9,11 @@
         prefix-list-prefixes))
 
 (mac prefix-list (prefix list)
+  ; looks up a handler in 'prefix-list-prefixes
+  ; whose 'car matches the prefix, and whose 'cdr
+  ; is a function, which behaves like a macro, in that
+  ; it processes the prefix name and the prefixed list,
+  ; returning more code
   (let handler (find-prefix-rule prefix)
     (and handler (handler prefix list))))
 
@@ -16,11 +21,8 @@
   `(push (cons ,regex (fn (,prefix-var ,list-var) ,@body))
          prefix-list-prefixes))
 
-;;
-;; so you can write (map λa(upcase a.name) people)
-;;
-;; instead of (map (fn (a) (upcase a.name)) people)
-;;
 (define-prefix-list-macro "^λ.+" vars expr
+  ;; allows (map λa(upcase a.name) people)
+  ;; as shortcut for (map (fn (a) (upcase a.name)) people)
   (let var-list (map sym (cdr:string-split vars))
     `(fn ,var-list ,expr)))
