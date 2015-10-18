@@ -8,6 +8,10 @@
           (pp '(def pp (form) (pp/main form 0)))
           "(def pp (form)\n    (pp/main form 0))")
 
+         ("something with a plain string literal"
+          (pp '(def yoohoo (it) (wrangle "foobar" it)))
+          "(def yoohoo (it)\n    (wrangle \"foobar\" it))")
+
          ("combined with dox system"
           (pp:dox-src 'pp/find-breaks)
           "(def pp/find-breaks (form)

@@ -21,7 +21,7 @@
   (if (eq? thing '||)
       ""
       (isa 'string thing)
-      (pp/escape-string-literal thing)
+      "\"~(pp/escape-string-literal thing)\""
       (inspect thing)))
 
 (mac pp/def (name args . body)
