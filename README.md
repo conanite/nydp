@@ -275,9 +275,116 @@ error
 nydp > (parse "; blah blah")
 
 ==> (comment "blah blah")
-
-By default, `comment` is a macro that expands to nil. If you have a better idea, go for it. (doc-comments for example)
 ```
+
+Except in 'mac and 'def forms, by default, `comment` is a macro that expands to nil. If you have a better idea, go for it.
+
+#### 8 Prefix lists
+
+The parser emits a special form if it detects a prefix-list, that is, a list with non-delimiter characters immediately preceding
+the opening delimiter. For example:
+
+```lisp
+nydp > (parse "%w(a b c)")
+
+==> (prefix-list "%w" (a b c))
+```
+
+This allows for preprocessing lists in a way not possible for macros. nydp uses this feature to implement shortcut oneline
+functions, as in
+
+```lisp
+nydp > (parse "λx(len x)")
+
+==> ((prefix-list "λx" (len x)))
+
+nydp > (pre-compile '(prefix-list "λx" (len x)))
+
+==> (fn (x) (len x))
+```
+
+Each character after 'λ becomes a function argument:
+
+```lisp
+nydp > (parse "λxy(* x y)")
+
+==> ((prefix-list "λxy" (* x y)))
+
+nydp > (pre-compile '(prefix-list "λxy" (* x y)))
+
+==> (fn (x y) (* x y))
+```
+
+Use 'define-prefix-list-macro to define a new handler for a prefix-list. Here's the code for the 'λ shortcut:
+
+```lisp
+(define-prefix-list-macro "^λ.+" vars expr
+  (let var-list (map sym (cdr:string-split vars))
+    `(fn ,var-list ,expr)))
+```
+
+In this case, the regex matches an initial 'λ ; there is no constraint however on the kind of regex a prefix-list-macro might use.
+
+
+#### 9 Self-documenting
+
+Once the 'dox system is bootstrapped, any further use of 'mac or 'def will create documentation.
+
+Any comments at the start of the form body will be used to generate help text. For example:
+
+```lisp
+nydp > (def foo (x y)
+         ; return the foo of x and y
+         (* x y))
+
+nydp > (dox foo)
+
+Function : foo
+args : (x y)
+return the foo of x and y
+
+source
+======
+(def foo (x y)
+    (* x y))
+```
+
+'dox is a macro that generates code to output documentation to stdout. 'dox-lookup is a function that returns structured documentation.
+
+```lisp
+nydp > (dox-lookup 'foo)
+((foo def ("return the foo of x and y") (x y) (def foo (x y) (* x y))))
+```
+
+Not as friendly, but more amenable to programmatic manipulation. Each subsequent definition of 'foo (if you override it, define
+it as a macro, or define it again in some other context) will generate a new documentation structure, which will simply be preprended to
+the existing list.
+
+#### 10 Pretty-Printing
+
+'dox above uses the pretty printer to display code source. The pretty-printer is hard-coded to handle some special cases,
+so it will unparse special syntax, prefix-lists, quote, quasiquote, unquote, and unquote-splicing.
+
+You can examine its behaviour at the repl:
+
+```lisp
+nydp > (p:pp '(string-pieces "hello " (bang-syntax || (dot-syntax x y (ampersand-syntax foo bar))) " and welcome to " (prefix-list "%%" (a b c d)) " and friends!"))
+
+==> "hello ~!x.y.foo&bar and welcome to ~%%(a b c d) and friends!"
+
+nydp > (p:pp:dox-src 'pp/find-breaks)
+
+(def pp/find-breaks (form)
+    (if (eq? 'if (car form))
+      (let if-args (cdr form)
+        (cons (list 'if (car if-args)) (map list (cdr if-args))))
+      (or
+        (pp/find-breaks/mac form)
+        (list form))))
+```
+
+The pretty-printer is still rather primitive in that it only indents according to some hard-coded rules, and according to argument-count
+for documented macros. It has no means of wrapping forms that get too long, or that extend beyond a certain predefined margin or column number.
 
 ## Installation
 

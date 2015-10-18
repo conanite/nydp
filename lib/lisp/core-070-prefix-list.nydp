@@ -18,6 +18,11 @@
     (and handler (handler prefix list))))
 
 (mac define-prefix-list-macro (regex prefix-var list-var . body)
+  ; define a macro to process a prefix-list where the prefix matches the given regex
+  ; param: 'regex is the regex which should match the list prefix
+  ; param: 'prefix-var is the variable whose value will be the actual matched prefix
+  ; param: 'list-var is the variable whose value will be the corresponding list
+  ; param: 'body the code which will actually transform the list
   `(push (cons ,regex (fn (,prefix-var ,list-var) ,@body))
          prefix-list-prefixes))
 
