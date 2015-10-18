@@ -9,7 +9,15 @@
 
      (def dox? (sym) (hash-key? dox sym))
 
-     (def dox-names () (hash-keys dox)))
+     (def dox-names () (hash-keys dox))
+
+     (def dox-what-is? (name)
+       (cond (dox? name)
+             (cadr (car (dox-lookup name)))))
+
+     (def dox-arg-names (name)
+       (cond (dox? name)
+             (cadddr (car (dox-lookup name))))))
  (hash))
 
 (def isa-comment? (thing)

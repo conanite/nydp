@@ -50,6 +50,14 @@
                    (mac this-is-a-well-documented-macro (a b c)
                      `(foo ,a ,b ,c)))))
 
+                ("arg list"
+                 (dox-arg-names 'this-is-a-well-documented-macro)
+                 (a b c))
+
+                ("is a def"
+                 (dox-what-is? 'this-is-a-well-documented-macro)
+                 mac)
+
                 ("an undocumented macro"
                  (dox-lookup 'this-is-an-undocumented-macro)
                  ((this-is-an-undocumented-macro
@@ -68,6 +76,14 @@
                    (a b c)
                    (def this-is-a-well-documented-def (a b c)
                      (foo a b c)))))
+
+                ("arg list"
+                 (dox-arg-names 'this-is-a-well-documented-def)
+                 (a b c))
+
+                ("is a def"
+                 (dox-what-is? 'this-is-a-well-documented-def)
+                 def)
 
                 ("an undocumented def"
                  (dox-lookup 'this-is-an-undocumented-def)
