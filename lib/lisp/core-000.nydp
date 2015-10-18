@@ -1,7 +1,8 @@
 ; -*- lisp -*-
 ;;
-;; Acknowledgements to Paul Graham. Some nydp features (including,
-;; but not limited to, 'do, 'rfn, 'loop, 'for) are stolen directly from arc.arc
+;; Acknowledgements to Paul Graham, Robert Morris, and their ancestor programmers.
+;; nydp's main inspiration is arc, and many nydp features (including, but not limited
+;; to, 'do, 'rfn, 'loop, 'for) were directly inspired by (aka stolen from) arc.arc
 ;;
 
 (assign   list (fn args args))
@@ -11,6 +12,7 @@
 (assign   cddr (fn (arg) (cdr (cdr arg))))
 (assign  cadar (fn (arg) (car (cdr (car arg)))))
 (assign  caddr (fn (arg) (car (cdr (cdr arg)))))
+(assign  cdddr (fn (arg) (cdr (cdr (cdr arg)))))
 (assign cadddr (fn (arg) (car (cdr (cdr (cdr arg))))))
 (assign     no (fn (arg) (cond arg nil t)))
 (assign   just (fn (arg) arg))

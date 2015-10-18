@@ -26,6 +26,24 @@
                  (nthcdr 33 '(a b c d e))
                  nil))
 
+         (suite "car/cdr combinations"
+                ("caar of list"   (caar '((x y) (1 2)))   x     )
+                ("caar of nil"    (caar nil)              nil   )
+                ("cadr of list"   (cadr '((x y) (1 2)))   (1 2) )
+                ("cadr of nil"    (cadr nil)              nil   )
+                ("cdar of list"   (cdar '((x y) (1 2)))   (y)   )
+                ("cdar of nil"    (cdar nil)              nil   )
+                ("cddr of list"   (cddr '(x y 1 2))       (1 2) )
+                ("cddr of nil"    (cddr nil)              nil   )
+                ("cadar of list"  (cadar '((x y) (1 2)))  y     )
+                ("cadar of nil"   (cadar nil)             nil   )
+                ("caddr of list"  (caddr '(x y 1 2))      1     )
+                ("caddr of nil"   (caddr nil)             nil   )
+                ("cdddr of list"  (cdddr '(x y 1 2))      (2)   )
+                ("cdddr of nil"   (cdddr nil)             nil   )
+                ("cadddr of list" (cadddr '(x y 1 2 3))   2     )
+                ("cadddr of nil"  (cadddr nil)            nil   ))
+
          (suite "proper?"
                 ("t for a proper list"
                  (proper? '(a b c d))
