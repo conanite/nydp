@@ -1,0 +1,48 @@
+(register-test
+ '(suite "List Tests"
+         (suite "firstn"
+                ("returns no items for n = 0"
+                 (firstn 0 '(a b c d))
+                 nil)
+
+                ("returns first n items for n > 0 and n < size of list"
+                 (firstn 3 '(a b c d e))
+                 (a b c))
+
+                ("returns all items for n > size of list"
+                 (firstn 33 '(a b c d e))
+                 (a b c d e)))
+
+         (suite "nthcdr"
+                ("returns all items for n = 0"
+                 (nthcdr 0 '(a b c d))
+                 (a b c d))
+
+                ("returns nth cdr of list for n > 0 and n < size of list"
+                 (nthcdr 3 '(a b c d e))
+                 (d e))
+
+                ("returns nothing for n > size of list"
+                 (nthcdr 33 '(a b c d e))
+                 nil))
+
+         (suite "proper?"
+                ("t for a proper list"
+                 (proper? '(a b c d))
+                 t)
+
+                ("t for a proper list, even if we write it funny"
+                 (proper? '(a b . (c d)))
+                 t)
+
+                ("t for a proper list, even if we write it funny with nil"
+                 (proper? '(a b . nil))
+                 t)
+
+                ("nil for an improper list"
+                 (proper? '(a b . c))
+                 nil)
+
+                ("nil for a very improper list"
+                 (proper? '(a b . (c . d)))
+                 nil))))

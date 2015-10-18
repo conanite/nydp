@@ -165,3 +165,23 @@
          (p "No documentation for " ',name)
          (each info infos
                (apply dox-show-info info)))))
+
+(def proper? (list)
+  ; t if this is a proper list (last cdr is nil)
+  ; nil otherwise (last cdr is neither cons nor nil)
+  (or (no list)
+      (and (pair? list)
+           (proper? (cdr list)))))
+
+(def firstn (n things)
+  ; returns the first 'n items in the list 'things
+  (if (eq? n 0) nil
+      (cons (car things)
+            (firstn (- n 1)
+                    (cdr things)))))
+
+(def nthcdr (n things)
+  ; returns the nth cdr of the list 'things
+  (if (> n 0)
+      (nthcdr (- n 1) (cdr things))
+      things))
