@@ -1,0 +1,101 @@
+(assign pp/special-forms (hash))
+(assign pp/line-break (uniq 'line-break))
+
+(def pp/escape-char (char)
+  (if (eq? char "\"") "\\\""
+      (eq? char "\~") "\\\~"
+      (eq? char "\\") "\\\\"
+      (eq? char "\n") "\\n"
+      char))
+
+(def pp/escape-string-literal (txt)
+  (joinstr "" (map pp/escape-char (string-split txt))))
+
+(def pp/string-piece (thing)
+  (if (isa 'string thing) (pp/escape-string-literal thing)
+      "\~~(pp thing)"))
+
+(def pp/string-pieces (things) "\"~(joinstr "" (map pp/string-piece things))\"")
+
+(def pp/literal (thing)
+  (if (eq? thing '||)
+      ""
+      (isa 'string thing)
+      (pp/escape-string-literal thing)
+      (inspect thing)))
+
+(mac pp/def (name args . body)
+  `(do
+       (hash-set pp/special-forms ',name
+                 (fn ,args ,@body))
+       (dox-add-doc ',name
+                    'pp/def
+                    '("pretty-printer for forms starting with ~(quote ,name)")
+                    ',args
+                    '(pp/def ,name ,args ,@body))))
+
+(mac pp/syntax syntaxes
+  (if syntaxes
+      `(do (pp/def ,(car syntaxes) (form indent)
+                   (joinstr ,(cadr syntaxes) (map pp (cdr form))))
+           (pp/syntax ,@(cddr syntaxes)))))
+
+(pp/def string-pieces    (form indent) (pp/string-pieces (cdr form)))
+(pp/def quasiquote       (form indent) "`~(pp/main (cadr form) indent)" )
+(pp/def quote            (form indent) "'~(pp/main (cadr form) indent)" )
+(pp/def unquote          (form indent) ",~(pp/main (cadr form) indent)" )
+(pp/def unquote-splicing (form indent) ",@~(pp/main (cadr form) indent)")
+(pp/def comment          (form indent) ";~(cadr form)\n")
+(pp/def prefix-list      (form indent) "~(cadr form)~(pp (caddr form))")
+
+(pp/syntax
+ colon-syntax ":"
+ dot-syntax   "."
+ bang-syntax  "!"
+ ampersand-syntax "&"
+ dollar-syntax "$"
+ colon-colon-syntax "::"
+ arrow-syntax "->"
+ rocket-syntax "=>" )
+
+(def pp/spaces (n) (if (> n 0) " ~(pp/spaces (- n 1))" ""))
+
+(def pp/dotify (form)
+  (if (pair? (cdr form))
+      (cons (car form) (pp/dotify (cdr form)))
+      (no:cdr form)
+      form
+      (list (car form) '. (cdr form))))
+
+(def pp/find-breaks/mac (form)
+  (if (eq? (dox-what-is? (car form)) 'mac)
+      (let arg-count (+ 1 (len (dox-arg-names (car form))))
+        (cons (firstn arg-count form)
+              (map list (nthcdr arg-count form))))))
+
+(def pp/find-breaks (form)
+  (if (eq? 'if (car form))
+      (let if-args (cdr form)
+        (cons (list 'if (car if-args)) (map list (cdr if-args))))
+      (or (pp/find-breaks/mac form)
+          (list form))))
+
+(def pp/inline (forms indent)
+  (joinstr " " (map λf(pp/main f (+ indent 1)) forms)))
+
+(def pp/pair (form indent)
+  (let special-form (hash-get pp/special-forms (car form))
+    (if special-form
+        (special-form form indent)
+        (let form-with-breaks (pp/find-breaks form)
+          "(~(joinstr "\n~(pp/spaces (+ 4 indent))" (map λf(pp/inline f (+ indent 1)) (pp/dotify form-with-breaks))))"))))
+
+(def pp/main (form indent)
+  (if (pair? form) (pp/pair form indent)
+      (pp/literal form)))
+
+(def pp (form) (pp/main form 0))
+
+(def dox-show-src (src)
+  ; use the pretty-printer to elegantly display the given source code
+  (pp src))

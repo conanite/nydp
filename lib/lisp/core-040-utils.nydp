@@ -143,6 +143,11 @@
             acc))
    (car things) (cdr things)))
 
+(def dox-show-src (src)
+  ; show 'src as source code.
+  ; expect to override this later when pretty-printing is available
+  (inspect src))
+
 (def dox-show-info (name what texts args src)
   ; show the given dox info
   ; 'info arg is a dox object from the dox system
@@ -154,7 +159,7 @@
   (p "")
   (p "source")
   (p "======")
-  (p src)
+  (p (dox-show-src src))
   (p))
 
 (mac dox (name)
