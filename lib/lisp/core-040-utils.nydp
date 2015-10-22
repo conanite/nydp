@@ -165,9 +165,8 @@
 (mac dox (name)
   ; show dox for the given name
   `(let infos (dox-lookup ',name)
-     (if (or (no infos)
-             (eq? (len infos) 0))
-         (p "No documentation for " ',name)
+     (if (no infos)
+         (p "No documentation for" ',name)
          (each info infos
                (apply dox-show-info info)))))
 
