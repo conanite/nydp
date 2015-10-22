@@ -1,15 +1,35 @@
+(def orf args
+  (cond args
+        (cond (car args)
+              (car args)
+              (apply orf
+                     (cdr args)))))
+
 (mac unless (arg . body)
   `(if (no ,arg) (do ,@body)))
 
-(def expand-colon-syntax (first rest)
-     (if (no rest)
-         `(apply ,first args)
-         `(,first ,(expand-colon-syntax (car rest) (cdr rest)))))
+(def expand-colon-syntax (names)
+  (if (no (cdr names))
+          `(apply ,(car names) args)
+          `(,(car names) ,(expand-colon-syntax (cdr names)))))
 
-(mac colon-syntax args
-  (if (eq? (car args) '||)
-      (error "Irregular ': syntax: got ~(inspect args) : not prefix-syntax : in ~(joinstr ":" (cons pfx rest))")
-      `(fn args ,(expand-colon-syntax (car args) (cdr args)))))
+(def default-colon-syntax (names)
+  `(fn args ,(expand-colon-syntax names)))
+
+(assign colon-syntax-overrides (hash))
+
+(mac def-colon-syntax (name var . body)
+  `(hash-set colon-syntax-overrides
+             ',name
+             (fn (,var) ,@body)))
+
+(def-colon-syntax || names
+  (error "Irregular ': syntax: got ~(inspect names) : not prefix-syntax : in ~(joinstr ":" names)"))
+
+(mac colon-syntax names
+  ((orf (hash-get colon-syntax-overrides (car names))
+        default-colon-syntax)
+   names))
 
 (mac bang-syntax (pfx . rest)
   (if (no (eq? pfx '||))

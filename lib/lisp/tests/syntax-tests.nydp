@@ -1,5 +1,18 @@
 (register-test
  '(suite "syntax tests"
+         (suite "colon-syntax"
+                ("expands to sequential function application"
+                 (pre-compile 'a:b)
+                 (fn args (a (apply b args))))
+
+                ("example with car:cdr"
+                 (car:cdr '(a b c))
+                 b)
+
+                ("dislikes no-prefix"
+                 (on-err err (pre-compile '(:foo 1 2 3)))
+                 "(\"Irregular ': syntax: got (|| foo) : not prefix-syntax : in :foo\")"))
+
          (suite "lambda shortcut"
                 ("one argument"
                  (map λa(len a.name)
