@@ -189,3 +189,24 @@
   (if (> n 0)
       (nthcdr (- n 1) (cdr things))
       things))
+
+(def joinlists (things . more-thingses)
+  ; return a new list which is the concatenation of all the given lists
+  ; 'things is a list
+  ; 'more-thingses is a list of lists
+  ; call like this: (joinlists '(a b c) '(x y z) '(1 2 3))
+  (if things
+      (cons (car things)
+            (apply joinlists
+                   (cdr things)
+                   more-thingses))
+      more-thingses
+      (apply joinlists more-thingses)))
+
+(def curry (func . args1)
+  ; return a new function which is the original function with
+  ; the given args1 already applied
+  ; arguments to the new function are whatever arguments remain
+  ; for the old function
+  (fn args2
+      (apply func (joinlists args1 args2))))

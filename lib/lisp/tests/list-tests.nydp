@@ -1,5 +1,14 @@
 (register-test
  '(suite "List Tests"
+         (suite "joinlists"
+                ("joins one list to another"
+                 (joinlists '(a b c) '(x y z))
+                 (a b c x y z))
+
+                ("joins three lists"
+                 (joinlists '(a b c) '(x y z) '(1 2 3))
+                 (a b c x y z 1 2 3)))
+
          (suite "firstn"
                 ("returns no items for n = 0"
                  (firstn 0 '(a b c d))
