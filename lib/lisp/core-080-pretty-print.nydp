@@ -47,6 +47,7 @@
 (pp/def unquote-splicing (form indent) ",@~(pp/main (cadr form) indent)")
 (pp/def comment          (form indent) ";~(cadr form)\n")
 (pp/def prefix-list      (form indent) "~(cadr form)~(pp (caddr form))")
+(pp/def brace-list       (form indent) "{~(pp/inline (cdr form) indent)}")
 
 (pp/syntax
  colon-syntax ":"
