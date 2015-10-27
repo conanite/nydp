@@ -40,8 +40,9 @@ module Nydp::Builtin
       cname
     end
 
-    def inspect ; "builtin/#{name}" ; end
-    def to_s    ; name              ; end
+    def inspect   ; "builtin/#{name}" ; end
+    def to_s      ; name              ; end
+    def nydp_type ; "fn"              ; end
   end
 end
 

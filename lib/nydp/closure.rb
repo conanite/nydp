@@ -22,6 +22,7 @@ module Nydp
       ifn.invoke vm, context, arg_values
     end
 
+    def nydp_type ; "fn" ; end
     def to_s
       "(closure #{context.inspect} : #{ifn.to_s})"
     end

@@ -38,6 +38,18 @@
 
 
     (suite "type-of"
+      ("returns 'fn for builtin function"
+        (type-of car)
+        fn)
+
+      ("returns 'fn for nydp-defined function"
+        (type-of register-test)
+        fn)
+
+      ("returns 'fn for inline function"
+        (type-of (fn (x) (p x)))
+        fn)
+
       ("returns 'string"
         (type-of "foobar")
         string)

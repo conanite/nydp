@@ -82,7 +82,8 @@ module Nydp
       vm.push_arg Closure.new(self, vm.peek_context)
     end
 
-    def inspect; to_s; end
+    def nydp_type ; "fn" ; end
+    def inspect   ; to_s ; end
     def to_s
       "(fn #{arg_names.inspect} #{body.map { |b| b.inspect}.join(' ')})"
     end
