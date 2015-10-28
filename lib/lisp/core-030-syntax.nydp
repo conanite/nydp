@@ -1,4 +1,7 @@
 (def orf args
+  ; evaluates each arg in 'args, returns the
+  ; first non-nil value, or nil if they are
+  ; all nil
   (cond args
         (cond (car args)
               (car args)
@@ -6,6 +9,7 @@
                      (cdr args)))))
 
 (mac unless (arg . body)
+  ; evaluate 'body if 'arg is nil
   `(if (no ,arg) (do ,@body)))
 
 (def expand-colon-syntax (names)
@@ -27,11 +31,23 @@
   (error "Irregular ': syntax: got ~(inspect names) : not prefix-syntax : in ~(joinstr ":" names)"))
 
 (mac colon-syntax names
+  ; handle syntax of the form a:b, which the parser expands to
+  ; (colon-syntax a b). By default, this complains if colon is used
+  ; as a prefix (ie it disallows ":foo"), otherwise creates a new
+  ; function which is the composition of the functions named in its
+  ; arguments. For example,
+  ; (count:parts spaceship) is the same as (count (parts spaceship))
   ((orf (hash-get colon-syntax-overrides (car names))
         default-colon-syntax)
    names))
 
 (mac bang-syntax (pfx . rest)
+  ; handle syntax of the form !x, which the parser expands to
+  ; (bang-syntax || x). By default, this complains if there is
+  ; a non-empty prefix (ie it disallows x!y), otherwise it creates
+  ; a new function which is the negation of the given named function.
+  ; For example,
+  ; (!eq? a 10) is the same as (no:eq? a 10), which is the same as (no (eq? a 10))
   (if (no (eq? pfx '||))
       (error "Irregular '! syntax: got prefix ~(inspect pfx) in ~(joinstr "!" (cons pfx rest))"))
   (if (cdr rest)
@@ -74,16 +90,20 @@
           (assign uniq-counter 0)))
 
 (mac w/uniq (vars . body)
-     (if (pair? vars)
-         `(with ,(apply + (map (fn (n) (list n '(uniq ',n))) vars))
-                ,@body)
-       `(let ,vars (uniq ',vars) ,@body)))
+  ; creates a lexical scope with a unique symbol assigned to
+  ; each variable in 'vars ; executes the 'body.
+  (if (pair? vars)
+      `(with ,(apply + (map (fn (n) (list n '(uniq ',n))) vars))
+             ,@body)
+      `(let ,vars (uniq ',vars) ,@body)))
 
 (mac or args
-     (cond args
-           (w/uniq ora
-                   `(let ,ora ,(car args)
-                         (cond ,ora ,ora (or ,@(cdr args)))))))
+  ; lazy-evaluates each argument, returns the first
+  ; non-nil result, or nil if all evaluate to nil.
+  (cond args
+        (w/uniq ora
+                `(let ,ora ,(car args)
+                   (cond ,ora ,ora (or ,@(cdr args)))))))
 
 (mac pop (xs)
      (w/uniq gp

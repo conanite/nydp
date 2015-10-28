@@ -40,6 +40,9 @@
   (joinstr "" pieces))
 
 (def detect (f things)
+  ; if 'things is a list, return the first item in the list for which 'f returns non-nil
+  ; otherwise, return 'things if (f things) is non-nil
+  ; otherwise, nil
   (if (pair? things)
       (let it (car things)
         (or
@@ -49,9 +52,10 @@
       things))
 
 (def nth (n things)
-     (if (eq? n 0)
-         (car things)
-       (nth (- n 1) (cdr things))))
+  ; returns the n-th item in the list 'things
+  (if (eq? n 0)
+      (car things)
+      (nth (- n 1) (cdr things))))
 
 (def iso (x y)
      (or (eq? x y)
@@ -68,8 +72,10 @@
 (def quotify (arg)      `(quote ,arg))
 
 (def caris (obj things)
-     (and (isa 'pair things)
-          (eq? (car things)  obj)))
+  ; returns true if 'things is a list and the first item of the
+  ; list is the given object
+  (and (isa 'pair things)
+       (eq? (car things)  obj)))
 
 (def len (xs)
   (if (pair? xs)   (+ 1 (len (cdr xs)))
@@ -79,6 +85,7 @@
 (assign dynamics (hash))
 
 (mac dynamic (name)
+  ; creates a dynamic variable.
   (hash-set dynamics name t)
   (let with-mac-name (sym "w/~name")
     (w/uniq prev
@@ -93,10 +100,14 @@
            (def ,name () (hash-get (thread-locals) ',name))))))
 
 (mac on-err (handler . body)
+  ; executes 'body. If an error is raised, executes 'handler. Inside
+  ; 'handler, the parameter 'err refers to the error that was raised.
   `(handle-error (fn (err) ,handler)
                  (fn ()    ,@body)))
 
 (mac ensure (protection . body)
+  ; executes 'body. Afterwards, executes 'protection.
+  ; 'protection is always executed even if there is an error.
   `(ensuring (fn () ,protection)
              (fn ()    ,@body)))
 
