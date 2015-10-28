@@ -1,0 +1,59 @@
+(def dox-show-src (src)
+  ; show 'src as source code.
+  ; expect to override this later when pretty-printing is available
+  (inspect src))
+
+(def dox-show-info (name what texts args src)
+  ; show the given dox info
+  ; 'info arg is a dox object from the dox system
+  "~(if (eq? what 'mac) "Macro"
+        (eq? what 'def) "Function"
+        what) : ~name
+
+args : ~(inspect args)
+
+~(joinstr "\n" texts)
+
+source
+======
+~(dox-show-src src)
+")
+
+(def dox-all-items ()
+  ; return all documentation items in a single list
+  (apply joinlists (map dox-lookup (dox-names))))
+
+(def dox-with-documentation (dox-item)
+  ; a documentation filter that returns non-nil for items with text documentation
+  ; use with 'dox-all-items to gather dox items that are explicitly documented
+  ; for example (cleverly-show (collect dox-with-documentation (dox-all-items)))
+  (nth 2 dox-item))
+
+(mac dox (name)
+  ; show dox for the given name, or all available dox if name is not given
+  (if name
+      `(let infos (dox-lookup ',name)
+         (if (no infos)
+             (p "No documentation for" ',name)
+             (each info infos
+                   (p:apply dox-show-info info))))
+      `(let infos (collect dox-with-documentation (dox-all-items))
+         (p "documentation available for the following:")
+         (each info infos
+               (p:inspect:firstn 2 info)))))
+
+(def-colon-syntax dox names
+  (let target (cadr names)
+    `(dox ,(if (eq? target '||)
+               nil
+               target))))
+
+(def explain-mac (n expr)
+  (if (eq? n 0)
+      expr
+      (let macfn (hash-get macs (car expr))
+        (if macfn
+            (explain-mac (- n 1)
+                        (apply macfn
+                               (cdr expr)))
+            expr))))
