@@ -30,7 +30,7 @@
                  (fn ,args ,@body))
        (dox-add-doc ',name
                     'pp/def
-                    '("pretty-printer for forms starting with ~(quote ,name)")
+                    (list "pretty-printer for forms starting with ~(quote ,name)")
                     ',args
                     '(pp/def ,name ,args ,@body))))
 
