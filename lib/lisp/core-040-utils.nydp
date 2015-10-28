@@ -229,3 +229,13 @@ source
   ; for the old function
   (fn args2
       (apply func (joinlists args1 args2))))
+
+(def dox-all-items ()
+  ; return all documentation items in a single list
+  (apply joinlists (map dox-lookup (dox-names))))
+
+(def dox-with-documentation (dox-item)
+  ; a documentation filter that returns non-nil for items with text documentation
+  ; use with 'dox-all-items to gather dox items that are explicitly documented
+  ; for example (cleverly-show (collect dox-with-documentation (dox-all-items)))
+  (nth 2 dox-item))
