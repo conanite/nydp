@@ -19,6 +19,7 @@ module Nydp
     ns = { }
     setup(ns)
     loadall ns, loadfiles
+    loadall ns, testfiles
     loadall ns, extra_files if extra_files
     ns
   end
@@ -47,7 +48,7 @@ module Nydp
     verbose = options.include?(:verbose) ? "t" : "nil"
     puts "welcome to nydp : running tests"
     reader = Nydp::StringReader.new "(run-all-tests #{verbose})"
-    Nydp::Runner.new(VM.new, build_nydp(testfiles), reader).run
+    Nydp::Runner.new(VM.new, build_nydp, reader).run
   end
 
 end
