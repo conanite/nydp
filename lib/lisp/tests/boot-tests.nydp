@@ -48,31 +48,6 @@
    (reduce + '(1 2 3))
    6))
 
-(examples-for detect
-  ("returns first matching item in a list"
-   (detect (fn (x) (eq? (len x) 2))
-           (list "foo" "bar" "xx" "pp"))
-   "xx")
-
-  ("returns nil when nothing matches"
-   (detect (fn (x) (eq? (len x) 20))
-           (list "foo" "bar" "xx" "pp"))
-   nil)
-
-  ;; kind of pointless
-  ("returns nil if nil is the matching item"
-   (detect no (list "foo" "bar" nil "pp"))
-   nil)
-
-  ("returns item if it's an atom and matches"
-   (detect (fn (x) (eq? (len x) 2)) "zz")
-   "zz")
-
-  ("returns nil if it's an atom and doesn't match"
-   (detect (fn (x) (eq? (len x) 20))
-           "zz")
-   nil))
-
 (examples-for bang-syntax
   ("expansion"
    (pre-compile '(!eq? a b))
@@ -147,41 +122,10 @@
        (pre-compile '(w/uniq a foo)))
    ((fn (a) foo) (uniq 'a))))
 
-(examples-for quasiquote
-  ("same as quote for standalone item"
-   `a
-   a)
-  ("same as quote for standalone list"
-   `(a b c)
-   (a b c))
-  ("substitutes single variables"
-   (let b 10 `(a ,b c))
-   (a 10 c))
-  ("substitutes a list"
-   (let b '(1 2 3) `(a ,@b c))
-   (a 1 2 3 c))
-  ("substitutes a list at the end of a given list"
-   (let b '(1 2 3) `(a ,b ,@b))
-   (a (1 2 3) 1 2 3))
-  ("more complicated substitution example"
-   (with (d '(1 2 3) g '(x y z)) `(a (b c ,d (e f ,@g))))
-   (a (b c (1 2 3) (e f x y z))))
-  ("peeks inside nested quotes"
-   `(a b '(c ,(+ 1 2)))
-   (a b '(c 3)))
-  ("handles nested unquote-splicing"
-   ``(a ,,@(list '+ 1 2) b)
-   `((a ,(+ 1 2) b)))
-  ("returns nested quasiquotes"
-   `(a b `(c d ,(+ 1 2) ,,(+ 3 4)))
-   (a b `(c d ,(+ 1 2) ,7))))
-
-
 (examples-for build-keyword-args
   ("takes a list of lists and returns the list with the first item of each sublist quoted"
    (build-keyword-args '( (a 1) (b c) (d e "f" 22) ))
    ((list 'a 1) (list 'b c) (list 'd e "f" 22))))
-
 
 (examples-for mac
   ("make-plus example generates a plus-seven expression"
