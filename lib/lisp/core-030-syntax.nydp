@@ -80,6 +80,19 @@
 (mac let (var val . body)
      `(with (,var ,val) ,@body))
 
+(mac rfn (name parms . body)
+  ; creates a named, locally-scoped function
+  ; with the given parameter names. It is possible
+  ; to reference the function by its name from within
+  ; the function (to pass as an argument or for
+  ; recursive invocation)
+  `(let ,name nil
+     (assign ,name (fn ,parms ,@body))))
+
+(mac afn (parms . body)
+  ; same as 'rfn, but using the name 'self
+  `(rfn self ,parms ,@body))
+
 (let uniq-counter 0
      (def uniq (prefix)
           (sym (joinstr "-"
