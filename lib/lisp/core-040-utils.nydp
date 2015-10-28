@@ -151,16 +151,18 @@
 (def dox-show-info (name what texts args src)
   ; show the given dox info
   ; 'info arg is a dox object from the dox system
-  (p)
-  (cond (eq? what 'mac) (p "Macro : ~name"    ))
-  (cond (eq? what 'def) (p "Function : ~name" ))
-  (p "args : ~(inspect args)")
-  (p (joinstr "\n" texts))
-  (p "")
-  (p "source")
-  (p "======")
-  (p (dox-show-src src))
-  (p))
+  "~(if (eq? what 'mac) "Macro"
+        (eq? what 'def) "Function"
+        what) : ~name
+
+args : ~(inspect args)
+
+~(joinstr "\n" texts)
+
+source
+======
+~(dox-show-src src)
+")
 
 (mac dox (name)
   ; show dox for the given name
@@ -168,7 +170,7 @@
      (if (no infos)
          (p "No documentation for" ',name)
          (each info infos
-               (apply dox-show-info info)))))
+               (p:apply dox-show-info info)))))
 
 (def proper? (list)
   ; t if this is a proper list (last cdr is nil)

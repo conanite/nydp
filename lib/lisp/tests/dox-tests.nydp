@@ -40,6 +40,26 @@
                                         (that)))
                  (("hello" "more details" "very rigourous") ((this) (that)))))
 
+         (suite "dox-show-info"
+                ("shows each item"
+                 (dox-show-info "bingo"
+                                'def
+                                '("there was a farmer had a dog" "and Bingo was his name-o")
+                                '(count)
+                                '(def bingo (count) (times count (bark))))
+                 "Function : bingo
+
+args : (count)
+
+there was a farmer had a dog
+and Bingo was his name-o
+
+source
+======
+(def bingo (count)
+    (times count (bark)))
+"))
+
          (suite "mac"
                 ("a documented macro"
                  (dox-lookup 'this-is-a-well-documented-macro)
