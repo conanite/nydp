@@ -122,3 +122,18 @@ source
   ("is a def"
    (dox-what-is? 'this-is-a-well-documented-def)
    def))
+
+(examples-for dox-show-one-example
+  ("produces a string representation of a given example"
+   (dox-show-one-example 'foo '("this is an example of an example"
+                                (foo bar yadda 1 2 3)
+                                720))
+   "foo this is an example of an example
+
+running  :
+(foo bar yadda 1 2 3)
+
+produces : 720
+
+--------------------------------
+"))

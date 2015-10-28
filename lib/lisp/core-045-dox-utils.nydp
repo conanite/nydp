@@ -19,6 +19,27 @@ source
 ~(dox-show-src src)
 ")
 
+(def dox-show-one-example (name example)
+  "~|name| ~(car example)
+
+running  :
+~(dox-show-src:cadr example)
+
+produces : ~(dox-show-src:caddr example)
+
+--------------------------------
+")
+
+(def dox-show-examples (name examples)
+  (if examples
+  "
+Examples for ~name
+==================
+
+~(joinstr "\n\n" (map (curry dox-show-one-example name) examples))
+
+"))
+
 (def dox-all-items ()
   ; return all documentation items in a single list
   (apply joinlists (map dox-lookup (dox-names))))
@@ -36,7 +57,12 @@ source
          (if (no infos)
              (p "No documentation for" ',name)
              (each info infos
-                   (p:apply dox-show-info info))))
+                   (p:apply dox-show-info info)))
+         (let examples (dox-examples ',name)
+           (if (no examples)
+               (p "No examples for" ',name)
+               (p (joinstr "\n" (map (curry dox-show-examples ',name) examples)))))
+         nil)
       `(let infos (collect dox-with-documentation (dox-all-items))
          (p "documentation available for the following:")
          (each info infos
