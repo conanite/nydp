@@ -1,16 +1,18 @@
-# NYDP
+# `'nydp`
 
-NYDP is a new LISP dialect, much inspired by [Arc](http://arclanguage.org/), and implemented in Ruby.
+`'nydp` is a new LISP dialect, much inspired by [Arc](http://arclanguage.org/), and hence indirectly by all of `'arc`'s ancestors,
+and implemented in Ruby.
 
-NYDP is "Not Your Daddy's Parentheses", a reference to [Xkcd 297](http://xkcd.com/297/) (itself a reference
-to Star Wars), as well as to the meme [Not Your Daddy's Q](http://tvtropes.org/pmwiki/pmwiki.php/Main/NotYourDaddysX), where Q is a modern,
-improved Q unlike the Q your daddy used. "NYDP" also shamelessly piggypacks on the
+`'nydp` is "Not Your Daddy's Parentheses", a reference to [Xkcd 297](http://xkcd.com/297/) (itself a reference
+to Star Wars), as well as to the meme [Not Your Daddy's Q](http://tvtropes.org/pmwiki/pmwiki.php/Main/NotYourDaddysX), where Q is a
+modern, improved Q quite unlike the Q your daddy used. `'nydp` also shamelessly piggypacks on the
 catchiness and popularity of the [NYPD](https://en.wikipedia.org/wiki/NYPD_Blue) abbreviation ("New York Police Department",
 for those who have no interest in popular US politics or TV).
 
-We do not wish to suggest by "Not Your Daddy's Parentheses" that Common Lisp, Scheme, Racket, Arc, Clojure or your favourite other lisp are somehow old-fashioned, inferior, or in need of improvement in any way.
+We do not wish to suggest by "Not Your Daddy's Parentheses" that Common Lisp, Scheme, Racket, Arc, Clojure or your favourite
+other lisp are somehow old-fashioned, inferior, or in need of improvement in any way.
 
-The goal of NYDP is to allow untrusted users run sandboxed server-side scripts. By default, NYDP provides no system access :
+The goal of `'nydp` is to allow untrusted users run sandboxed server-side scripts. By default, `'nydp` provides no system access :
 
 * no file functions
 * no network functions
@@ -19,7 +21,10 @@ The goal of NYDP is to allow untrusted users run sandboxed server-side scripts. 
 * no threading functions
 * no ruby calls
 
-[Peruse NYDP's features here](lib/lisp/tests) in the `tests` directory.
+[Peruse `'nydp`'s features here](lib/lisp/tests) in the `tests` directory.
+
+Pronunciation guide: there is no fixed canonical pronunciation of `'nydp`. Just keep in mind that if you find yourself
+wading _knee-deep_ through raw sewage, it's still better than working on a java project in a bank.
 
 ## Running
 
@@ -41,7 +46,7 @@ Suppose you want to invoke the function named `question` with some arguments. Do
 ```ruby
 ns     = Nydp.build_nydp     # keep this for later re-use, it's expensive to set up
 
-answer = Nydp.apply_function ns, :question, :life, ("The Universe" and everything())
+answer = Nydp.apply_function ns, :question, :life, ["The Universe" and(everything)]
 
 ==> 42
 ```
@@ -55,7 +60,7 @@ You can maintain multiple `ns` instances without mutual interference. In other w
 
 #### 1. Macro-expansion runs in lisp
 
-After parsing its input, NYDP passes the result as an argument to the `pre-compile` function. This is where things get a little bit circular: initially, `pre-compile` is a builtin function that just returns its argument. `pre-compile` bootstraps itself into existence in [boot.nydp](lib/lisp/boot.nydp).
+After parsing its input, `'nydp` passes the result as an argument to the `pre-compile` function. This is where things get a little bit circular: initially, `pre-compile` is a builtin function that just returns its argument. `pre-compile` bootstraps itself into existence in [boot.nydp](lib/lisp/boot.nydp).
 
 You can override `pre-compile` to transform the expression in any way you wish. By default, the `boot.nydp` implementation of `pre-compile` performs macro-expansion.
 
@@ -185,13 +190,15 @@ nydp > (parse "\"foo\"")
 
 nydp > (let bar "Mister Nice Guy" "hello, ~bar")
 
-==> hello, Mister Nice Guy
+==> "hello, Mister Nice Guy"
 
 ; this is a more tricky example because we need to make a string with an interpolation token in it
 
 nydp > (let s (joinstr "" "\"hello, " '~ "world\"") (parse s))
 
 ==> (string-pieces "hello, " world "") ; "hello, ", followed by the interpolation 'world, followed by the empty string after 'world
+
+; It is possible to nest interpolations. Note that as with many popular language features, just because you can do something, does not mean you should:
 
 nydp > (def also (str) "\nAND ALSO, ~str")
 nydp > (with (a 1 b 2)
@@ -204,12 +211,16 @@ nydp > (with (a 1 b 2)
 ==> AND ALSO, Consider 3, the third (and final) thing
 ```
 
-By default, `string-pieces` is a function that just concatenates the string value of its arguments. You can redefine it as a macro to perform more fun stuff, or you can detect it within another macro to do extra-special stuff with it. The 'nydp-html gem detects 'string-pieces and gives it special treatment in order to render haml and textile efficiently, and also to capture and report errors inside interpolations and report them correctly.
+By default, `string-pieces` is a function that just concatenates the string value of its arguments. You can redefine it as a macro to
+perform more fun stuff, or you can detect it within another macro to do extra-special stuff with it. The 'nydp-html gem detects
+'string-pieces and gives it special treatment in order to render haml and textile efficiently, and also to capture and report errors
+inside interpolations and report them correctly.
 
 
 #### 5. No continuations.
 
 Sorry. While technically possible ... why bother?
+
 
 #### 6. No argument destructuring
 
@@ -277,7 +288,8 @@ nydp > (parse "; blah blah")
 ==> (comment "blah blah")
 ```
 
-Except in 'mac and 'def forms, by default, `comment` is a macro that expands to nil. If you have a better idea, go for it.
+Except in 'mac and 'def forms, by default, `comment` is a macro that expands to nil. If you have a better idea, go for it. Any comments present at the
+beginning of the `body` argument to `mac` or `def` are considered documentation. (See "self-documenting" below).
 
 #### 8 Prefix lists
 
