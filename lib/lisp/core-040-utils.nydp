@@ -49,6 +49,21 @@
       (f things)
       things))
 
+(def collect (f things)
+  ; if 'things is a list, return all the items in the list for which 'f returns non-nil
+  ; otherwise, return 'things if (f things) is non-nil
+  ; otherwise, nil
+  (rfnwith collector (items things)
+           (if (no items)
+               nil
+               (pair? items)
+               (if (f (car items))
+                   (cons (car items)
+                         (collector (cdr items)))
+                   (collector (cdr items)))
+               (f items)
+               items)))
+
 (def nth (n things)
   ; returns the n-th item in the list 'things
   (if (eq? n 0)

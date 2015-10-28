@@ -1,0 +1,30 @@
+(register-test
+ '(suite "Boot Tests"
+         (suite 'collect
+                ("returns all matching items in a list"
+                 (collect (fn (x) (eq? (len x) 2))
+                         (list "foo" "bar" "xx" "pp"))
+                 ("xx" "pp"))
+
+                ("returns nil when nothing matches"
+                 (collect (fn (x) (eq? (len x) 20))
+                         (list "foo" "bar" "xx" "pp"))
+                 nil)
+
+                ;; kind of pointless
+                ("returns list of nils if nil is the matching item"
+                 (collect no (list "foo" "bar" nil "pp" nil))
+                 (nil nil))
+
+                ("returns item if it's an atom and matches"
+                 (collect (fn (x) (eq? (len x) 2)) "zz")
+                 "zz")
+
+                ("preserves structure of improper list"
+                 (collect (fn (x) (eq? (len x) 2)) '("aa" "bbb" "cc" "ddd" . "ee"))
+                 ("aa" "cc" . "ee"))
+
+                ("returns nil if it's an atom and doesn't match"
+                 (collect (fn (x) (eq? (len x) 20))
+                         "zz")
+                 nil))))
