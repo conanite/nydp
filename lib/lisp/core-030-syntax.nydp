@@ -93,6 +93,17 @@
   ; same as 'rfn, but using the name 'self
   `(rfn self ,parms ,@body))
 
+(mac rfnwith (name params . body)
+  ; a mix of rfn and with; creates a locally-scoped named function with
+  ; the given parameter names, and invokes it with the given parameter
+  ; values. It is possible to reference the function by its name from
+  ; within the function (to pass as an argument or for recursive
+  ; invocation)
+  (let ppairs (pairs params)
+    `(let ,name nil
+       (assign ,name (fn ,(map car ppairs) ,@body))
+       (,name ,@(map cadr ppairs)))))
+
 (let uniq-counter 0
      (def uniq (prefix)
           (sym (joinstr "-"
