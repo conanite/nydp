@@ -1,9 +1,9 @@
-;
-; absurd contrived exaggerated example to test that macros that generate
-; macros that generate macros that generate expressions are likely to work
-;
-; may you never need to do this in real life
-;
+;;
+;; absurd contrived exaggerated example to test that macros that generate
+;; macros that generate macros that generate expressions are likely to work
+;;
+;; may you never need to do this in real life
+;;
 (mac make-make-op (opname op)
   `(mac ,opname (name n . body)
      `(mac ,name (x)
@@ -20,9 +20,9 @@
 (make-plus +seven 7)
 (make-plus +eleven 11)
 
-;
-; another contrived example to check deeply nested lexical scoping
-;
+;;
+;; another contrived example to check deeply nested lexical scoping
+;;
 (let test-a0 "a0"
   (def test-foo (f0 f1)
     (with (w0 "w0" w1 "w1" w2 "w2" w3 "w3")
