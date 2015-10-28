@@ -1,20 +1,19 @@
-(register-test
- '(suite "Pretty Printing Tests"
-         ("a macro invocation"
-          (pp '(mac pp/def (name args . body) `(hash-set pp/special-forms ',name (fn ,args ,@body))))
-          "(mac pp/def (name args body)\n    `(hash-set pp/special-forms ',name (fn ,args ,@body)))")
+(examples-for pp
+  ("a macro invocation"
+   (pp '(mac pp/def (name args . body) `(hash-set pp/special-forms ',name (fn ,args ,@body))))
+   "(mac pp/def (name args body)\n    `(hash-set pp/special-forms ',name (fn ,args ,@body)))")
 
-         ("a 'def invocation"
-          (pp '(def pp (form) (pp/main form 0)))
-          "(def pp (form)\n    (pp/main form 0))")
+  ("a 'def invocation"
+   (pp '(def pp (form) (pp/main form 0)))
+   "(def pp (form)\n    (pp/main form 0))")
 
-         ("something with a plain string literal"
-          (pp '(def yoohoo (it) (wrangle "foobar" it)))
-          "(def yoohoo (it)\n    (wrangle \"foobar\" it))")
+  ("something with a plain string literal"
+   (pp '(def yoohoo (it) (wrangle "foobar" it)))
+   "(def yoohoo (it)\n    (wrangle \"foobar\" it))")
 
-         ("combined with dox system"
-          (pp:dox-src 'pp/find-breaks)
-          "(def pp/find-breaks (form)
+  ("combined with dox system"
+   (pp:dox-src 'pp/find-breaks)
+   "(def pp/find-breaks (form)
     (if (eq? 'if (car form))
       (let if-args (cdr form)
         (cons (list 'if (car if-args)) (map list (cdr if-args))))
@@ -22,10 +21,10 @@
         (pp/find-breaks/mac form)
         (list form))))")
 
-         ("special syntax"
-          (pp '(string-pieces "hello " (bang-syntax || (dot-syntax x y (ampersand-syntax foo bar))) " and welcome to " (prefix-list "%%" (a b c d)) " and friends!"))
-          "\"hello ~~!x.y.foo&bar and welcome to ~~%%(a b c d) and friends!\"")
+  ("special syntax"
+   (pp '(string-pieces "hello " (bang-syntax || (dot-syntax x y (ampersand-syntax foo bar))) " and welcome to " (prefix-list "%%" (a b c d)) " and friends!"))
+   "\"hello ~~!x.y.foo&bar and welcome to ~~%%(a b c d) and friends!\"")
 
-         ("brace list"
-          (pp '(&x {a 1 b "two" c 'three d ,four e (sub invocation) f {sub brace list} }))
-          "(&x {a 1 b \"two\" c 'three d ,four e (sub invocation) f {sub brace list}})")))
+  ("brace list"
+   (pp '(&x {a 1 b "two" c 'three d ,four e (sub invocation) f {sub brace list} }))
+   "(&x {a 1 b \"two\" c 'three d ,four e (sub invocation) f {sub brace list}})"))

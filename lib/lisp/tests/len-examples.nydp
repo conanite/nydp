@@ -1,0 +1,11 @@
+(examples-for len
+  ("nonzero"  (len "foo-bar")  7)
+  ("zero"     (len "")         0)
+
+  ("ignores backslash-escaped interpolation symbol"
+   (len "hello \~world")
+   12)
+
+  ("len returns length of proper list"
+   (len (cons "a" (cons "b" nil)))
+   2))

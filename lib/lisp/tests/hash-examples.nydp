@@ -1,0 +1,41 @@
+(examples-for hash-merge
+  ("merge with symbol keys"
+   (let h (hash-merge { a 1 b 2 c 3 } { a 99 c 98 d 97 })
+     (list h.a h.b h.c h.d (hash-keys h) ))
+   (99 2 98 97 (a b c d )))
+
+  ("merge with mixed symbol and string and int keys"
+   (let h (hash-merge { a 1 "b" 2 3 'c } { a 99 b 98 3 "foo" })
+     (cons (hash-keys h) (mapx (hash-keys h) k h.,k)))
+   ((a "b" 3 b) 99 2 "foo" 98)))
+
+(examples-for hash-key?
+  ("detects key presence"
+   (hash-key? { foo 1 bar 2 } 'foo)
+   t)
+
+  ("detects key absence"
+   (hash-key? { foo 1 bar 2 } 'zed)
+   nil))
+
+(examples-for brace-list
+  ("build a hash table from brace-list syntax"
+   (let hsh { foo 1 bar 2 }
+     (list 'foo hsh.foo 'bar hsh.bar))
+   (foo 1 bar 2))
+
+  ("single-item brace list is just the thing itself"
+   (let zi 10 "finds the ~{zi}th item")
+   "finds the 10th item")
+
+  ("unquotes hash keys"
+   (with (zi 'foo chi 'bar yi 'grr)
+         (let hsh { ,zi 10 ,chi 11 ,yi 12 }
+           (list zi hsh.foo chi hsh.bar yi hsh.grr)))
+   (foo 10 bar 11 grr 12))
+
+  ("allows literal and invocation hash keys"
+   (with (zi "hello" chi "world")
+         (let hsh { (joinstr " " zi chi) 10 "yesterday" 11 }
+           (list "hello world" (hash-get hsh "hello world") "yesterday" (hash-get hsh "yesterday"))))
+   ("hello world" 10 "yesterday" 11)))

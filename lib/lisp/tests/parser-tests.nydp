@@ -1,109 +1,67 @@
-(register-test '(suite "Parser tests"
-  (suite "brace-list"
-    ("parses an empty brace list"
-     (parse "{}")
-     ((brace-list)))
+(examples-for parse
+  ("parses an empty brace list"     (parse "{}")               ((brace-list)))
+  ("parses a single-item list"      (parse "{foo}")            ((brace-list foo)))
+  ("parses a list"                  (parse "{foo bar 1 2 3}")  ((brace-list foo bar 1 2 3)))
+  ("parse quasiquote"               (parse "`(1 2 3)")         ((quasiquote (1 2 3))))
+  ("parse unquote unquote-splicing" (parse ",,@(1 2 3)")       ((unquote (unquote-splicing (1 2 3)))))
+  ("parse unquote"                  (parse ",(1 2 3)")         ((unquote (1 2 3))))
+  ("parse custom prefix-lists"      (parse "x(1 2 3)")         ((prefix-list "x" (1 2 3))))
+  ("parses an empty symbol"         (parse "||")               (||) )
+  ("parses a colon-syntax symbol"   (parse "this:that")        ((colon-syntax this that)) )
+  ("parses a percent-syntax symbol" (parse "this%that")        ((percent-syntax this that)) )
+  ("parses a prefix dollar"         (parse "$this")            ((dollar-syntax || this)))
+  ("parses a prefix dollar-dot"     (parse "$.this")           ((dot-syntax (dollar-syntax || ||) this)))
 
-    ("parses a single-item list"
-     (parse "{foo}")
-     ((brace-list foo)))
+  ("parse custom prefix-lists with a special-syntax prefix"
+   (parse "x.y(1 2 3)")
+   ((prefix-list "x.y" (1 2 3))))
 
-    ("parses a list"
-     (parse "{foo bar 1 2 3}")
-     ((brace-list foo bar 1 2 3))))
+  ("parses a percent-prefix-syntax symbol"
+   (parse "%this-and-that")
+   ((percent-syntax || this-and-that)) )
 
-  (suite "prefix-list"
-    ("parse quasiquote"
-     (parse "`(1 2 3)")
-     ((quasiquote (1 2 3))))
+  ("parses a dot-syntax symbol"
+   (parse "this.that.zozo")
+   ((dot-syntax this that zozo)) )
 
-    ("parse unquote unquote-splicing"
-     (parse ",,@(1 2 3)")
-     ((unquote (unquote-splicing (1 2 3)))))
+  ("parses a mixed-syntax symbol"
+   (parse "this$that.zozo")
+   ((dot-syntax (dollar-syntax this that) zozo)))
 
-    ("parse unquote"
-     (parse ",(1 2 3)")
-     ((unquote (1 2 3))))
+  ("parses a mixed-syntax prefix symbol"
+   (parse "$this.that.zozo")
+   ((dot-syntax (dollar-syntax || this) that zozo)))
 
-    ("parse custom prefix-lists"
-     (parse "x(1 2 3)")
-     ((prefix-list "x" (1 2 3))))
 
-    ("parse custom prefix-lists with a special-syntax prefix"
-     (parse "x.y(1 2 3)")
-     ((prefix-list "x.y" (1 2 3)))))
+  ("parses an expression"
+   (parse "(foo bar \"hello, String\") 1 2 (3 t nil) nil")
+   ((foo bar "hello, String") 1 2 (3 t nil))))
 
-  (suite "parse"
-    ("parses an empty symbol"
-     (parse "||")
-     (||) )
+(examples-for parse-in-string
+  ("parses a plain string"
+   (parse-in-string "hello, world, take me to your dealer")
+   "hello, world, take me to your dealer")
 
-    ("parses a colon-syntax symbol"
-     (parse "this:that")
-     ((colon-syntax this that)) )
+  ("parses a plain string with interpolations"
+   (parse-in-string (joinstr "" (list "hello, " '~ "(world), take me to your " '~ "dealer please")))
+   (string-pieces "hello, " (world) ", take me to your " dealer " please"))
 
-    ("parses a percent-syntax symbol"
-     (parse "this%that")
-     ((percent-syntax this that)) )
+  ("parses a plain string of html text with interpolations"
+   (parse-in-string "<div id='content_item_~~{id}'><label>~~{data-name-1}</label> ~~{data-text-1}</div>")
+   (string-pieces "<div id='content_item_" (brace-list id) "'><label>" (brace-list data-name-1) "</label> " (brace-list data-text-1) "</div>"))
 
-    ("parses a percent-prefix-syntax symbol"
-     (parse "%this-and-that")
-     ((percent-syntax || this-and-that)) )
+  ("ignores standalone interpolation symbol"
+   (parse-in-string (joinstr "" (list "hello " '~ " world")))
+   "hello \~ world")
 
-    ("parses a dot-syntax symbol"
-     (parse "this.that.zozo")
-     ((dot-syntax this that zozo)) )
+  ("ignores escaped interpolation symbol"
+   (parse-in-string (joinstr "" (list "hello " '~ '~ "world")))
+   "hello \~world")
 
-    ("parses a mixed-syntax symbol"
-     (parse "this$that.zozo")
-     ((dot-syntax (dollar-syntax this that) zozo)))
+  ("really ignores standalone interpolation symbol"
+   (len (parse-in-string (joinstr "" (list "hello " '~ " world"))))
+   13)
 
-    ("parses a mixed-syntax prefix symbol"
-     (parse "$this.that.zozo")
-     ((dot-syntax (dollar-syntax || this) that zozo)))
-
-    ("parses a prefix dollar"
-     (parse "$this")
-     ((dollar-syntax || this)))
-
-    ("parses a prefix dollar-dot"
-     (parse "$.this")
-     ((dot-syntax (dollar-syntax || ||) this)))
-
-    ("parses an expression"
-     (parse "(foo bar \"hello, String\") 1 2 (3 t nil) nil")
-     ((foo bar "hello, String") 1 2 (3 t nil))))
-
-  (suite "parse-in-string"
-    ("parses a plain string"
-      (parse-in-string "hello, world, take me to your dealer")
-      "hello, world, take me to your dealer")
-
-    ("parses a plain string with interpolations"
-      (parse-in-string (joinstr "" (list "hello, " '~ "(world), take me to your " '~ "dealer please")))
-      (string-pieces "hello, " (world) ", take me to your " dealer " please"))
-
-    ("parses a plain string of html text with interpolations"
-      (parse-in-string "<div id='content_item_~~{id}'><label>~~{data-name-1}</label> ~~{data-text-1}</div>")
-      (string-pieces "<div id='content_item_" (brace-list id) "'><label>" (brace-list data-name-1) "</label> " (brace-list data-text-1) "</div>"))
-
-    ("ignores standalone interpolation symbol"
-      (parse-in-string (joinstr "" (list "hello " '~ " world")))
-      "hello \~ world")
-
-    ("ignores backslash-escaped interpolation symbol"
-      (len "hello \~world")
-      12)
-
-    ("ignores escaped interpolation symbol"
-      (parse-in-string (joinstr "" (list "hello " '~ '~ "world")))
-      "hello \~world")
-
-    ("really ignores standalone interpolation symbol"
-      (len (parse-in-string (joinstr "" (list "hello " '~ " world"))))
-      13)
-
-    ("reports parse errors gracefully"
-     (on-err "CAUGHT: ~err" (parse-in-string (joinstr "" "blah ~~(\"stri...")))
-     "CAUGHT: parse error: \"unterminated string\" in\n  blah ~~(\"stri..." )
-)))
+  ("reports parse errors gracefully"
+   (on-err "CAUGHT: ~err" (parse-in-string (joinstr "" "blah ~~(\"stri...")))
+   "CAUGHT: parse error: \"unterminated string\" in\n  blah ~~(\"stri..." ))

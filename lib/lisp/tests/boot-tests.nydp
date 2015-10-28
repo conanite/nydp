@@ -6,8 +6,8 @@
 ;
 (mac make-make-op (opname op)
   `(mac ,opname (name n . body)
-        `(mac ,name (x)
-              `(,',',op ,,n ,x))))
+     `(mac ,name (x)
+        `(,',',op ,,n ,x))))
 
 (make-make-op make-mult *)
 (make-make-op make-plus +)
@@ -26,247 +26,173 @@
 (let test-a0 "a0"
   (def test-foo (f0 f1)
     (with (w0 "w0" w1 "w1" w2 "w2" w3 "w3")
-      (let f (fn (x0) (joinstr " " test-a0 x0 f0 x0 f1))
-        (map f (list w0 w1 w2 w3))))))
+          (let f (fn (x0) (joinstr " " test-a0 x0 f0 x0 f1))
+            (map f (list w0 w1 w2 w3))))))
 
-(register-test
- '(suite "Boot Tests"
-         (suite "conditionals"
-               ("single-expr 'if is just the expr"
-                (pre-compile '(if a))
-                a)
+(examples-for map
+  ("maps a function over a list of numbers"
+   (map (fn (x) (* x x)) '(1 2 3))
+   (1 4 9))
 
-               ("two-expr 'if expands to 'cond"
-                (pre-compile '(if a b))
-                (cond a b))
+  ("maps a string join function over a list of strings"
+   (test-foo "x" "y")
+   ("a0 w0 x w0 y" "a0 w1 x w1 y" "a0 w2 x w2 y" "a0 w3 x w3 y"))
 
-               ("three-expr 'if expands to 'cond"
-                (pre-compile '(if a b c))
-                (cond a b c))
+  (suite "mapx"
+         ("provides a convenient simplification for 'map"
+          (mapx '(1 2 3 4) n (* n 2))
+          (2 4 6 8))))
 
-               ("four-expr 'if expands to nested 'cond"
-                (pre-compile '(if a b c d))
-                (cond a b (cond c d)))
+(examples-for reduce
+  ("it applies a function cumulatively over a list"
+   (reduce + '(1 2 3))
+   6))
 
-               ("five-expr 'if expands to nested 'cond"
-                (pre-compile '(if a b c d e))
-                (cond a b (cond c d e)))
+(examples-for detect
+  ("returns first matching item in a list"
+   (detect (fn (x) (eq? (len x) 2))
+           (list "foo" "bar" "xx" "pp"))
+   "xx")
 
-               ("'unless expands to 'if"
-                (pre-compile '(unless x y z))
-                (cond (no x) ((fn () y z)))))
+  ("returns nil when nothing matches"
+   (detect (fn (x) (eq? (len x) 20))
+           (list "foo" "bar" "xx" "pp"))
+   nil)
 
-         (suite "hashtables"
-                ("build a hash table from brace-list syntax"
-                 (let hsh { foo 1 bar 2 }
-                      (list 'foo hsh.foo 'bar hsh.bar))
-                 (foo 1 bar 2))
+  ;; kind of pointless
+  ("returns nil if nil is the matching item"
+   (detect no (list "foo" "bar" nil "pp"))
+   nil)
 
-                ("single-item brace list is just the thing itself"
-                 (let zi 10 "finds the ~{zi}th item")
-                 "finds the 10th item")
+  ("returns item if it's an atom and matches"
+   (detect (fn (x) (eq? (len x) 2)) "zz")
+   "zz")
 
-                ("detects key presence"
-                 (hash-key? { foo 1 bar 2 } 'foo)
-                 t)
+  ("returns nil if it's an atom and doesn't match"
+   (detect (fn (x) (eq? (len x) 20))
+           "zz")
+   nil))
 
-                ("detects key absence"
-                 (hash-key? { foo 1 bar 2 } 'zed)
-                 nil)
+(examples-for bang-syntax
+  ("expansion"
+   (pre-compile '(!eq? a b))
+   ((fn args (no (apply eq? args))) a b))
 
-                ("unquotes hash keys"
-                 (with (zi 'foo chi 'bar yi 'grr)
-                      (let hsh { ,zi 10 ,chi 11 ,yi 12 }
-                           (list zi hsh.foo chi hsh.bar yi hsh.grr)))
-                 (foo 10 bar 11 grr 12))
+  ("bang-syntax for 'eq?"
+   (!eq? 1 2)
+   t)
 
-                ("allows literal and invocation hash keys"
-                 (with (zi "hello" chi "world")
-                      (let hsh { (joinstr " " zi chi) 10 "yesterday" 11 }
-                           (list "hello world" (hash-get hsh "hello world") "yesterday" (hash-get hsh "yesterday"))))
-                 ("hello world" 10 "yesterday" 11)))
+  ("bang-syntax for 'caris"
+   (!caris 'foo '(foo bar))
+   nil)
 
-         (suite "list management"
-                ("'pair breaks a list into pairs"
-                 (pairs '(1 a 2 b 3 c))
-                 ((1 a) (2 b) (3 c)))
+  ("bang-syntax for 'caris"
+   (!caris 'foo '(zozo foo bar))
+   t))
 
-                ("'rev reverses a list"
-                 (rev '(a b c))
-                 (c b a))
+(examples-for ampersand-syntax
+  ("defines a hash-lookup function"
+   (pre-compile '&first)
+   (fn (obj) (hash-get obj (quote first))))
 
-                ("'rev handles nil"
-                 (rev nil)
-                 nil)
+  ("defines a hash-lookup function with a dot-syntax arg"
+   (pre-compile '&teacher.address.city)
+   (fn (obj) (hash-get (hash-get (hash-get obj (quote teacher)) (quote address)) (quote city))) ))
 
-                ("'rev doesn't recurse"
-                 (rev '(a b (c d e) f g))
-                 (g f (c d e) b a))
+(examples-for colon-syntax
+  ("used for composition"
+   (pre-compile '(no:eq? a b))
+   ((fn args (no (apply eq? args))) a b))
 
-                ("'flatten returns a flat list of things"
-                 (flatten '((poo (x) (* x x)) (1 2 3)))
-                 (poo x * x x 1 2 3)))
+  ("used for composition"
+   (pre-compile '(x:y a b))
+   ((fn args (x (apply y args))) a b))
 
-         (suite "map"
-                ("maps a function over a list of numbers"
-                 (map (fn (x) (* x x)) '(1 2 3))
-                 (1 4 9))
+  ("special combination with bang"
+   (pre-compile '(!x:y a b))
+   ((fn args (no (x (apply y args)))) a b)))
 
-                ("maps a string join function over a list of strings"
-                 (test-foo "x" "y")
-                 ("a0 w0 x w0 y" "a0 w1 x w1 y" "a0 w2 x w2 y" "a0 w3 x w3 y"))
+(examples-for let
+  ("expands 'let"
+   (do
+       (def x+3*z (x y)
+         (let y 3
+           (fn (z) (* (+ x y) z))))
+       ((x+3*z 2 99) 5))
+   25))
 
-                (suite "mapx"
-                  ("provides a convenient simplification for 'map"
-                    (mapx '(1 2 3 4) n (* n 2))
-                    (2 4 6 8))))
+(examples-for and
+  ("expands 'and"
+   (pre-compile '(and a b c))
+   (cond a (cond b c))))
 
-         (suite "reduce"
-                ("it applies a function cumulatively over a list"
-                 (reduce + '(1 2 3))
-                 6))
+(examples-for or
+  ("expands 'or"
+   (do (reset-uniq-counter)
+       (pre-compile '(or a b c)))
+   ((fn (ora-1)
+        (cond ora-1
+              ora-1
+              ((fn (ora-2)
+                   (cond ora-2
+                         ora-2
+                         ((fn (ora-3)
+                              (cond ora-3
+                                    ora-3
+                                    nil)) c))) b))) a)))
 
-         (suite "detect"
-                ("returns first matching item in a list"
-                 (detect (fn (x) (eq? (len x) 2))
-                         (list "foo" "bar" "xx" "pp"))
-                 "xx")
+(examples-for w/uniq
+  ("w/uniq provides unique variables for macro expansion"
+   (do (reset-uniq-counter)
+       (pre-compile '(w/uniq a foo)))
+   ((fn (a) foo) (uniq 'a))))
 
-                ("returns nil when nothing matches"
-                 (detect (fn (x) (eq? (len x) 20))
-                         (list "foo" "bar" "xx" "pp"))
-                 nil)
+(examples-for quasiquote
+  ("same as quote for standalone item"
+   `a
+   a)
+  ("same as quote for standalone list"
+   `(a b c)
+   (a b c))
+  ("substitutes single variables"
+   (let b 10 `(a ,b c))
+   (a 10 c))
+  ("substitutes a list"
+   (let b '(1 2 3) `(a ,@b c))
+   (a 1 2 3 c))
+  ("substitutes a list at the end of a given list"
+   (let b '(1 2 3) `(a ,b ,@b))
+   (a (1 2 3) 1 2 3))
+  ("more complicated substitution example"
+   (with (d '(1 2 3) g '(x y z)) `(a (b c ,d (e f ,@g))))
+   (a (b c (1 2 3) (e f x y z))))
+  ("peeks inside nested quotes"
+   `(a b '(c ,(+ 1 2)))
+   (a b '(c 3)))
+  ("handles nested unquote-splicing"
+   ``(a ,,@(list '+ 1 2) b)
+   `((a ,(+ 1 2) b)))
+  ("returns nested quasiquotes"
+   `(a b `(c d ,(+ 1 2) ,,(+ 3 4)))
+   (a b `(c d ,(+ 1 2) ,7))))
 
-                ;; kind of pointless
-                ("returns nil if nil is the matching item"
-                 (detect no (list "foo" "bar" nil "pp"))
-                 nil)
 
-                ("returns item if it's an atom and matches"
-                 (detect (fn (x) (eq? (len x) 2)) "zz")
-                 "zz")
+(examples-for build-keyword-args
+  ("takes a list of lists and returns the list with the first item of each sublist quoted"
+   (build-keyword-args '( (a 1) (b c) (d e "f" 22) ))
+   ((list 'a 1) (list 'b c) (list 'd e "f" 22))))
 
-                ("returns nil if it's an atom and doesn't match"
-                 (detect (fn (x) (eq? (len x) 20))
-                         "zz")
-                 nil))
 
-         (suite "pre-compile"
-                (suite "bang-syntax"
-                       ("expansion"
-                        (pre-compile '(!eq? a b))
-                        ((fn args (no (apply eq? args))) a b))
-
-                       ("bang-syntax for 'eq?"
-                        (!eq? 1 2)
-                        t)
-
-                       ("bang-syntax for 'caris"
-                        (!caris 'foo '(foo bar))
-                        nil)
-
-                       ("bang-syntax for 'caris"
-                        (!caris 'foo '(zozo foo bar))
-                        t))
-
-                (suite "ampersand-syntax"
-                       ("defines a hash-lookup function"
-                        (pre-compile '&first)
-                        (fn (obj) (hash-get obj (quote first))))
-
-                       ("defines a hash-lookup function with a dot-syntax arg"
-                        (pre-compile '&teacher.address.city)
-                        (fn (obj) (hash-get (hash-get (hash-get obj (quote teacher)) (quote address)) (quote city))) ))
-
-                (suite "colon-syntax"
-                       ("used for composition"
-                        (pre-compile '(no:eq? a b))
-                        ((fn args (no (apply eq? args))) a b))
-
-                       ("used for composition"
-                        (pre-compile '(x:y a b))
-                        ((fn args (x (apply y args))) a b)))
-
-                (suite "bang-colon syntax"
-                       ("special combination with bang"
-                        (pre-compile '(!x:y a b))
-                        ((fn args (no (x (apply y args)))) a b)))
-
-                ("expands 'let"
-                 (do
-                     (def x+3*z (x y)
-                          (let y 3
-                               (fn (z) (* (+ x y) z))))
-                     ((x+3*z 2 99) 5))
-                 25)
-
-                ("expands 'and"
-                 (pre-compile '(and a b c))
-                 (cond a (cond b c)))
-
-                ("expands 'or"
-                 (do (reset-uniq-counter)
-                     (pre-compile '(or a b c)))
-                 ((fn (ora-1)
-                      (cond ora-1
-                            ora-1
-                            ((fn (ora-2)
-                                 (cond ora-2
-                                       ora-2
-                                       ((fn (ora-3)
-                                            (cond ora-3
-                                                  ora-3
-                                                  nil)) c))) b))) a))
-
-                ("w/uniq provides unique variables for macro expansion"
-                 (do (reset-uniq-counter)
-                     (pre-compile '(w/uniq a foo)))
-                 ((fn (a) foo) (uniq 'a)))
-
-                (suite "quasiquote"
-                       ("same as quote for standalone item"
-                        `a
-                        a)
-                       ("same as quote for standalone list"
-                        `(a b c)
-                        (a b c))
-                       ("substitutes single variables"
-                        (let b 10 `(a ,b c))
-                        (a 10 c))
-                       ("substitutes a list"
-                        (let b '(1 2 3) `(a ,@b c))
-                        (a 1 2 3 c))
-                       ("substitutes a list at the end of a given list"
-                        (let b '(1 2 3) `(a ,b ,@b))
-                        (a (1 2 3) 1 2 3))
-                       ("more complicated substitution example"
-                        (with (d '(1 2 3) g '(x y z)) `(a (b c ,d (e f ,@g))))
-                        (a (b c (1 2 3) (e f x y z))))
-                       ("peeks inside nested quotes"
-                        `(a b '(c ,(+ 1 2)))
-                        (a b '(c 3)))
-                       ("handles nested unquote-splicing"
-                        ``(a ,,@(list '+ 1 2) b)
-                        `((a ,(+ 1 2) b)))
-                       ("returns nested quasiquotes"
-                        `(a b `(c d ,(+ 1 2) ,,(+ 3 4)))
-                        (a b `(c d ,(+ 1 2) ,7))))
-
-         (suite "build-keyword-args"
-                ("takes a list of lists and returns the list with the first item of each sublist quoted"
-                 (build-keyword-args '( (a 1) (b c) (d e "f" 22) ))
-                 ((list 'a 1) (list 'b c) (list 'd e "f" 22))))
-
-         (suite "make-macros can create macros"
-                ("make-plus example generates a plus-seven expression"
-                 (+seven 6)
-                 13)
-                ("make-mult example generates a multiply-by-seven expression"
-                 (*seven 6)
-                 42)
-                ("make-mult example generates a multiply-by-eleven expression"
-                 (*eleven 20)
-                 220)
-                ("make-make example expressions can be nested"
-                 (*eleven (*five (+seven 2)))
-                 495))))
+(examples-for mac
+  ("make-plus example generates a plus-seven expression"
+   (+seven 6)
+   13)
+  ("make-mult example generates a multiply-by-seven expression"
+   (*seven 6)
+   42)
+  ("make-mult example generates a multiply-by-eleven expression"
+   (*eleven 20)
+   220)
+  ("make-make example expressions can be nested"
+   (*eleven (*five (+seven 2)))
+   495))

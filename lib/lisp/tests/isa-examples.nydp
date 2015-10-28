@@ -1,0 +1,7 @@
+(examples-for isa
+  ("t for 'pair for list"           (isa 'pair '(a b c))   t)
+  ("nil for 'pair for non-list"     (isa 'pair 42)         nil)
+  ("t for 'symbol for symbol"       (isa 'symbol 'foo)     t)
+  ("nil for 'symbol for non-symbol" (isa 'symbol "foo")    nil)
+  ("t for 'string for string"       (isa 'string "foo")    t)
+  ("nil for 'string for string"     (isa 'string '(a b c)) nil))

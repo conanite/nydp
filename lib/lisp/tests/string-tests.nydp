@@ -1,31 +1,60 @@
-(register-test
- '(suite "String Tests"
-         (suite "length"
-                ("nonzero"  (len "foo-bar")  7)
-                ("zero"     (len "")         0))
+(examples-for string-split
+  ("splits a string using given expression"
+   (string-split "a and b and c and d" " and ")
+   ("a" "b" "c" "d")))
 
-         (suite "joinstr"
-                ("joins elements into a string"
-                 (joinstr "" '("foo" "bar" "bax"))
-                 "foobarbax")
+(examples-for string-replace
+  ("replaces parts of a string with the given replacement"
+   (string-replace "and" "or" "a and b and c and d")
+   "a or b or c or d")
 
-                ("joins separate elements into a string"
-                 (joinstr "/" "foo" "bar" "bax")
-                 "foo/bar/bax")
+  ("replace with regexp"
+   (string-replace "and|or" "x" "a and b or c and d")
+   "a x b x c x d"))
 
-                ("joins a single thing"
-                 (joinstr "/" "foo")
-                 "foo")
+(examples-for string-match
+  ("match with regexp"
+   (let m (string-match "a and b and c and d" "and")
+     (list m.match m.captures))
+   ("and" nil))
 
-                ("joins nested and separate elements into a string"
-                 (joinstr "/" "foo" "bar" '(twiddle diddle) "bax")
-                 "foo/bar/twiddle/diddle/bax")
+  ("no match with regexp"
+   (let m (string-match "a and b and c and d" "not-in-string")
+     (list m.match m.captures))
+   (nil nil))
 
-                ("joins elements into a string"
-                 (joinstr " - " '(1 2 3))
-                 "1 - 2 - 3"))
+  ("match with regexp and capturing groups"
+   (let m (string-match "  foo\b    bar" "(^\\s+)")
+     (list m.match m.captures))
+   ("  " ("  "))))
 
-         (suite "strip"
-                ("removes leading whitespace"               (string-strip "    hello!")  "hello!" )
-                ("removes trailing whitespace"              (string-strip "(world)   ") "(world)" )
-                ("removes leading and trailing whitespace"  (string-strip "\n\nme\n\n") "me"      ))))
+(examples-for string-pieces
+  ("interpolates a string"
+   "foobar ~(+ 1 2) you know"
+   "foobar 3 you know"))
+
+(examples-for joinstr
+  ("joins elements into a string"
+   (joinstr "" '("foo" "bar" "bax"))
+   "foobarbax")
+
+  ("joins separate elements into a string"
+   (joinstr "/" "foo" "bar" "bax")
+   "foo/bar/bax")
+
+  ("joins a single thing"
+   (joinstr "/" "foo")
+   "foo")
+
+  ("joins nested and separate elements into a string"
+   (joinstr "/" "foo" "bar" '(twiddle diddle) "bax")
+   "foo/bar/twiddle/diddle/bax")
+
+  ("joins elements into a string"
+   (joinstr " - " '(1 2 3))
+   "1 - 2 - 3"))
+
+(examples-for string-strip
+  ("removes leading whitespace"               (string-strip "    hello!")  "hello!" )
+  ("removes trailing whitespace"              (string-strip "(world)   ") "(world)" )
+  ("removes leading and trailing whitespace"  (string-strip "\n\nme\n\n") "me"      ))

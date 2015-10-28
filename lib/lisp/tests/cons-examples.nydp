@@ -1,0 +1,8 @@
+(examples-for cons
+  ("cons creates a list"
+   (cons 'a '(b c))
+   (a b c))
+
+  ("cons conses two strings"
+   (cons "a" "b")
+   ("a" . "b")))

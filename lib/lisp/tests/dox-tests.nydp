@@ -1,53 +1,51 @@
 (mac this-is-a-well-documented-macro (a b c)
-  ; documentation for me!
+                                        ; documentation for me!
   `(foo ,a ,b ,c))
 
 (mac this-is-an-undocumented-macro (a b c)
   `(baz ,a ,b ,c))
 
 (def this-is-a-well-documented-def (a b c)
-  ; documentation for me!
+                                        ; documentation for me!
   (foo a b c))
 
 (def this-is-an-undocumented-def (a b c)
   (baz a b c))
 
-(register-test
- '(suite "Documentation Tests"
-         (suite "comment detection"
-                ("identify comment"
-                 (isa-comment? '(comment "yes, it is"))
-                 t)
+(examples-for isa-comment?
+  ("identifies a comment"
+   (isa-comment? '(comment "yes, it is"))
+   t)
 
-                ("identify non-comment"
-                 (isa-comment? "not this time")
-                 nil))
+  ("identifies a non-comment"
+   (isa-comment? "not this time")
+   nil))
 
-         (suite "gather comments from 'body argument"
-                ("no comment"
-                 (dox-gather-comments '((this) (that)))
-                 (nil ((this) (that))))
+(examples-for dox-gather-comments
+  ("find no comments"
+   (dox-gather-comments '((this) (that)))
+   (nil ((this) (that))))
 
-                ("one comment"
-                 (dox-gather-comments '((comment "hello") (this) (that)))
-                 (("hello") ((this) (that))))
+  ("finds one comment"
+   (dox-gather-comments '((comment "hello") (this) (that)))
+   (("hello") ((this) (that))))
 
-                ("more comments"
-                 (dox-gather-comments '((comment "hello")
-                                        (comment "more details")
-                                        (comment "very rigourous")
-                                        (this)
-                                        (that)))
-                 (("hello" "more details" "very rigourous") ((this) (that)))))
+  ("finds more comments"
+   (dox-gather-comments '((comment "hello")
+                          (comment "more details")
+                          (comment "very rigourous")
+                          (this)
+                          (that)))
+   (("hello" "more details" "very rigourous") ((this) (that)))))
 
-         (suite "dox-show-info"
-                ("shows each item"
-                 (dox-show-info "bingo"
-                                'def
-                                '("there was a farmer had a dog" "and Bingo was his name-o")
-                                '(count)
-                                '(def bingo (count) (times count (bark))))
-                 "Function : bingo
+(examples-for dox-show-info
+  ("shows each item"
+   (dox-show-info "bingo"
+                  'def
+                  '("there was a farmer had a dog" "and Bingo was his name-o")
+                  '(count)
+                  '(def bingo (count) (times count (bark))))
+   "Function : bingo
 
 args : (count)
 
@@ -56,68 +54,71 @@ and Bingo was his name-o
 
 source
 ======
-(def bingo (count)
+\(def bingo (count)
     (times count (bark)))
 "))
 
-         (suite "mac"
-                ("a documented macro"
-                 (dox-lookup 'this-is-a-well-documented-macro)
-                 ((this-is-a-well-documented-macro
-                   mac
-                   ("documentation for me!")
-                   (a b c)
-                   (mac this-is-a-well-documented-macro (a b c)
-                     `(foo ,a ,b ,c)))))
+(examples-for dox-lookup
+  ("finds info for a documented macro"
+   (dox-lookup 'this-is-a-well-documented-macro)
+   ((this-is-a-well-documented-macro
+     mac
+     ("documentation for me!")
+     (a b c)
+     (mac this-is-a-well-documented-macro (a b c)
+       `(foo ,a ,b ,c)))))
 
-                ("arg list"
-                 (dox-arg-names 'this-is-a-well-documented-macro)
-                 (a b c))
+  ("finds info for an undocumented macro"
+   (dox-lookup 'this-is-an-undocumented-macro)
+   ((this-is-an-undocumented-macro
+     mac
+     nil
+     (a b c)
+     (mac this-is-an-undocumented-macro (a b c)
+       `(baz ,a ,b ,c)))))
 
-                ("src"
-                 (dox-src 'this-is-a-well-documented-macro)
-                 (mac this-is-a-well-documented-macro (a b c) (quasiquote (foo (unquote a) (unquote b) (unquote c)))))
+  ("finds info for a documented def"
+   (dox-lookup 'this-is-a-well-documented-def)
+   ((this-is-a-well-documented-def
+     def
+     ("documentation for me!")
+     (a b c)
+     (def this-is-a-well-documented-def (a b c)
+       (foo a b c)))))
 
-                ("is a def"
-                 (dox-what-is? 'this-is-a-well-documented-macro)
-                 mac)
+  ("finds info for an undocumented def"
+   (dox-lookup 'this-is-an-undocumented-def)
+   ((this-is-an-undocumented-def
+     def
+     nil
+     (a b c)
+     (def this-is-an-undocumented-def (a b c)
+       (baz a b c))))))
 
-                ("an undocumented macro"
-                 (dox-lookup 'this-is-an-undocumented-macro)
-                 ((this-is-an-undocumented-macro
-                   mac
-                   nil
-                   (a b c)
-                   (mac this-is-an-undocumented-macro (a b c)
-                     `(baz ,a ,b ,c)))))
+(examples-for dox-arg-names
+  ("macro"
+   (dox-arg-names 'this-is-a-well-documented-macro)
+   (a b c))
 
-         (suite "def"
-                ("a documented def"
-                 (dox-lookup 'this-is-a-well-documented-def)
-                 ((this-is-a-well-documented-def
-                   def
-                   ("documentation for me!")
-                   (a b c)
-                   (def this-is-a-well-documented-def (a b c)
-                     (foo a b c)))))
+  ("function def"
+   (dox-arg-names 'this-is-a-well-documented-def)
+   (a b c)))
 
-                ("arg list"
-                 (dox-arg-names 'this-is-a-well-documented-def)
-                 (a b c))
+(examples-for dox-src
+  ("mac src"
+   (dox-src 'this-is-a-well-documented-macro)
+   (mac this-is-a-well-documented-macro (a b c) (quasiquote (foo (unquote a) (unquote b) (unquote c)))))
 
-                ("is a def"
-                 (dox-what-is? 'this-is-a-well-documented-def)
-                 def)
+  ("def src"
+   (dox-src 'this-is-a-well-documented-def)
+   (def this-is-a-well-documented-def (a b c) (foo a b c))))
 
-                ("src"
-                 (dox-src 'this-is-a-well-documented-def)
-                 (def this-is-a-well-documented-def (a b c) (foo a b c)))
 
-                ("an undocumented def"
-                 (dox-lookup 'this-is-an-undocumented-def)
-                 ((this-is-an-undocumented-def
-                   def
-                   nil
-                   (a b c)
-                   (def this-is-an-undocumented-def (a b c)
-                     (baz a b c)))))))))
+(examples-for dox-what-is?
+  ("for mac"
+   (dox-what-is? 'this-is-a-well-documented-macro)
+   mac)
+
+  ("is a def"
+   (dox-what-is? 'this-is-a-well-documented-def)
+   def))

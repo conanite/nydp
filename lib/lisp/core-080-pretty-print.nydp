@@ -25,6 +25,10 @@
       (inspect thing)))
 
 (mac pp/def (name args . body)
+  ; define a pretty-printer function for forms beginning with the
+  ; given name. 'args are usually (form indent), form being the
+  ; complete form for pretty-printing, and indent being the current
+  ; indent level.
   `(do
        (hash-set pp/special-forms ',name
                  (fn ,args ,@body))

@@ -30,11 +30,27 @@
         (if (iso result expected)
             (passf)
             (do (p desc " - " (car test) " - FAILED:
+   running  " (pp (nth 1 test)) ",
    expected " (inspect expected) ",
    got      " (inspect result) "
 ")
                 (failf)))))
 
 (def execute-tests (desc tests passf failf verbose)
-  (execute-test desc (car tests) passf failf verbose)
-  (if (cdr tests) (execute-tests desc (cdr tests) passf failf verbose)))
+  (execute-test desc
+                (car tests)
+                passf
+                failf
+                verbose)
+  (if (cdr tests)
+      (execute-tests desc
+                     (cdr tests)
+                     passf
+                     failf
+                     verbose)))
+
+(mac examples-for (name . examples)
+  (let suite-name "examples for ~(pp name)"
+    `(do
+         (register-test '(suite ,suite-name ,@examples))
+         (dox-add-examples ',name ',examples))))

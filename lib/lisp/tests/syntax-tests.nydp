@@ -1,29 +1,27 @@
-(register-test
- '(suite "syntax tests"
-         (suite "colon-syntax"
-                ("expands to sequential function application"
-                 (pre-compile 'a:b)
-                 (fn args (a (apply b args))))
+(examples-for colon-syntax
+  ("expands to sequential function application"
+   (pre-compile 'a:b)
+   (fn args (a (apply b args))))
 
-                ("example with car:cdr"
-                 (car:cdr '(a b c))
-                 b)
+  ("example with car:cdr"
+   (car:cdr '(a b c))
+   b)
 
-                ("dislikes no-prefix"
-                 (on-err err (pre-compile '(:foo 1 2 3)))
-                 "(\"Irregular ': syntax: got (|| foo) : not prefix-syntax : in :foo\")"))
+  ("dislikes no-prefix"
+   (on-err err (pre-compile '(:foo 1 2 3)))
+   "(\"Irregular ': syntax: got (|| foo) : not prefix-syntax : in :foo\")"))
 
-         (suite "lambda shortcut"
-                ("one argument"
-                 (map λa(len a.name)
-                      (list { name "bob" } { name "willy" } { name "pteradactyl" }))
-                 (3 5 11))
+(examples-for prefix-list
+  ("one argument"
+   (map λa(len a.name)
+        (list { name "bob" } { name "willy" } { name "pteradactyl" }))
+   (3 5 11))
 
-                ("with two args"
-                 (reduce λxy(joinstr ":" x y)
-                         '(a b c d e f))
-                 "a:b:c:d:e:f")
+  ("with two args"
+   (reduce λxy(joinstr ":" x y)
+           '(a b c d e f))
+   "a:b:c:d:e:f")
 
-                ("with two args, to be sure"
-                 (λpq(+ p (* p q)) 3 5)
-                 18))))
+  ("with two args, to be sure"
+   (λpq(+ p (* p q)) 3 5)
+   18))

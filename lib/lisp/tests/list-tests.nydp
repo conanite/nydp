@@ -1,75 +1,110 @@
-(register-test
- '(suite "List Tests"
-         (suite "joinlists"
-                ("joins one list to another"
-                 (joinlists '(a b c) '(x y z))
-                 (a b c x y z))
+(examples-for pairs
+  ("'pair breaks a list into pairs"
+   (pairs '(1 a 2 b 3 c))
+   ((1 a) (2 b) (3 c))))
 
-                ("joins three lists"
-                 (joinlists '(a b c) '(x y z) '(1 2 3))
-                 (a b c x y z 1 2 3)))
+(examples-for rev
+  ("'rev reverses a list"
+   (rev '(a b c))
+   (c b a))
 
-         (suite "firstn"
-                ("returns no items for n = 0"
-                 (firstn 0 '(a b c d))
-                 nil)
+  ("'rev handles nil"
+   (rev nil)
+   nil)
 
-                ("returns first n items for n > 0 and n < size of list"
-                 (firstn 3 '(a b c d e))
-                 (a b c))
+  ("'rev doesn't recurse"
+   (rev '(a b (c d e) f g))
+   (g f (c d e) b a)))
 
-                ("returns all items for n > size of list"
-                 (firstn 33 '(a b c d e))
-                 (a b c d e)))
+(examples-for flatten
+  ("'flatten returns a flat list of things"
+   (flatten '((poo (x) (* x x)) (1 2 3)))
+   (poo x * x x 1 2 3)))
 
-         (suite "nthcdr"
-                ("returns all items for n = 0"
-                 (nthcdr 0 '(a b c d))
-                 (a b c d))
+(examples-for joinlists
+  ("joins one list to another"
+   (joinlists '(a b c) '(x y z))
+   (a b c x y z))
 
-                ("returns nth cdr of list for n > 0 and n < size of list"
-                 (nthcdr 3 '(a b c d e))
-                 (d e))
+  ("joins three lists"
+   (joinlists '(a b c) '(x y z) '(1 2 3))
+   (a b c x y z 1 2 3)))
 
-                ("returns nothing for n > size of list"
-                 (nthcdr 33 '(a b c d e))
-                 nil))
+(examples-for firstn
+  ("returns no items for n = 0"
+   (firstn 0 '(a b c d))
+   nil)
 
-         (suite "car/cdr combinations"
-                ("caar of list"   (caar '((x y) (1 2)))   x     )
-                ("caar of nil"    (caar nil)              nil   )
-                ("cadr of list"   (cadr '((x y) (1 2)))   (1 2) )
-                ("cadr of nil"    (cadr nil)              nil   )
-                ("cdar of list"   (cdar '((x y) (1 2)))   (y)   )
-                ("cdar of nil"    (cdar nil)              nil   )
-                ("cddr of list"   (cddr '(x y 1 2))       (1 2) )
-                ("cddr of nil"    (cddr nil)              nil   )
-                ("cadar of list"  (cadar '((x y) (1 2)))  y     )
-                ("cadar of nil"   (cadar nil)             nil   )
-                ("caddr of list"  (caddr '(x y 1 2))      1     )
-                ("caddr of nil"   (caddr nil)             nil   )
-                ("cdddr of list"  (cdddr '(x y 1 2))      (2)   )
-                ("cdddr of nil"   (cdddr nil)             nil   )
-                ("cadddr of list" (cadddr '(x y 1 2 3))   2     )
-                ("cadddr of nil"  (cadddr nil)            nil   ))
+  ("returns first n items for n > 0 and n < size of list"
+   (firstn 3 '(a b c d e))
+   (a b c))
 
-         (suite "proper?"
-                ("t for a proper list"
-                 (proper? '(a b c d))
-                 t)
+  ("returns all items for n > size of list"
+   (firstn 33 '(a b c d e))
+   (a b c d e)))
 
-                ("t for a proper list, even if we write it funny"
-                 (proper? '(a b . (c d)))
-                 t)
+(examples-for nthcdr
+  ("returns all items for n = 0"
+   (nthcdr 0 '(a b c d))
+   (a b c d))
 
-                ("t for a proper list, even if we write it funny with nil"
-                 (proper? '(a b . nil))
-                 t)
+  ("returns nth cdr of list for n > 0 and n < size of list"
+   (nthcdr 3 '(a b c d e))
+   (d e))
 
-                ("nil for an improper list"
-                 (proper? '(a b . c))
-                 nil)
+  ("returns nothing for n > size of list"
+   (nthcdr 33 '(a b c d e))
+   nil))
 
-                ("nil for a very improper list"
-                 (proper? '(a b . (c . d)))
-                 nil))))
+(examples-for caar
+  ("caar of list"   (caar '((x y) (1 2)))   x     )
+  ("caar of nil"    (caar nil)              nil   ))
+
+(examples-for cadr
+  ("cadr of list"   (cadr '((x y) (1 2)))   (1 2) )
+  ("cadr of nil"    (cadr nil)              nil   ))
+
+(examples-for cdar
+  ("cdar of list"   (cdar '((x y) (1 2)))   (y)   )
+  ("cdar of nil"    (cdar nil)              nil   ))
+
+(examples-for cddr
+  ("cddr of list"   (cddr '(x y 1 2))       (1 2) )
+  ("cddr of nil"    (cddr nil)              nil   ))
+
+(examples-for cadar
+  ("cadar of list"  (cadar '((x y) (1 2)))  y     )
+  ("cadar of nil"   (cadar nil)             nil   ))
+
+(examples-for caddr
+  ("caddr of list"  (caddr '(x y 1 2))      1     )
+  ("caddr of nil"   (caddr nil)             nil   ))
+
+(examples-for cdddr
+  ("cdddr of list"  (cdddr '(x y 1 2))      (2)   )
+  ("cdddr of nil"   (cdddr nil)             nil   ))
+
+(examples-for cadddr
+  ("cadddr of list" (cadddr '(x y 1 2 3))   2     )
+  ("cadddr of nil"  (cadddr nil)            nil   ))
+
+(examples-for proper?
+  ("t for a proper list"
+   (proper? '(a b c d))
+   t)
+
+  ("t for a proper list, even if we write it funny"
+   (proper? '(a b . (c d)))
+   t)
+
+  ("t for a proper list, even if we write it funny with nil"
+   (proper? '(a b . nil))
+   t)
+
+  ("nil for an improper list"
+   (proper? '(a b . c))
+   nil)
+
+  ("nil for a very improper list"
+   (proper? '(a b . (c . d)))
+   nil))

@@ -1,0 +1,48 @@
+(examples-for type-of
+  ("returns pair for a cons cell"
+   (type-of (cons "a" "b"))
+   pair)
+
+  ("returns 'fn for builtin function"
+   (type-of car)
+   fn)
+
+  ("returns 'fn for nydp-defined function"
+   (type-of register-test)
+   fn)
+
+  ("returns 'fn for inline function"
+   (type-of (fn (x) (p x)))
+   fn)
+
+  ("returns 'string"
+   (type-of "foobar")
+   string)
+
+  ("returns 'hash for new hash"
+   (type-of (hash))
+   hash)
+
+  ("returns 'hash for hash literal"
+   (type-of { a 1 b 2})
+   hash)
+
+  ("returns 'number for an integer"
+   (type-of 42)
+   number)
+
+  ("returns 'number for a float"
+   (type-of 4.2)
+   number)
+
+  ("returns 'string for an interpolated string"
+   (type-of "foobar ~(+ 1 2)")
+   string)
+
+  ("t is Truth"
+   (type-of t)
+   truth)
+
+  ("nil is nil"
+   (type-of nil)
+   nil))

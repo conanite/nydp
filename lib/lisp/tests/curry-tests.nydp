@@ -1,24 +1,23 @@
 (def chicken-korma (a b c d e)
   (list a b c d e))
 
-(register-test
- '(suite "Curry Tests"
-         ("zero-params"
-          (let ck0 (curry chicken-korma)
-            (ck0 1 2 3 4 5))
-          (1 2 3 4 5))
+(examples-for curry
+  ("zero-params"
+   (let ck0 (curry chicken-korma)
+     (ck0 1 2 3 4 5))
+   (1 2 3 4 5))
 
-         ("one param"
-          (let ck0 (curry chicken-korma 'x)
-            (ck0 1 2 3 4))
-          (x 1 2 3 4))
+  ("one param"
+   (let ck0 (curry chicken-korma 'x)
+     (ck0 1 2 3 4))
+   (x 1 2 3 4))
 
-         ("two params"
-          (let ck0 (curry chicken-korma 'x 'y)
-            (ck0 1 2 3))
-          (x y 1 2 3))
+  ("two params"
+   (let ck0 (curry chicken-korma 'x 'y)
+     (ck0 1 2 3))
+   (x y 1 2 3))
 
-         ("three params"
-          (let ck0 (curry chicken-korma 'x 'y 'z)
-            (ck0 1 2))
-          (x y z 1 2))))
+  ("three params"
+   (let ck0 (curry chicken-korma 'x 'y 'z)
+     (ck0 1 2))
+   (x y z 1 2)))

@@ -1,22 +1,23 @@
-(register-test '(suite "Error Tests"
-  ("'ensuring gets called on the way out"
+(examples-for ensure
+  ("always gets called on the way out"
    (let x 10
-        (ensure (assign x (+ x 11))
-                (assign x (+ x 22)))
-        x)
-   43)
+     (ensure (assign x (+ x 11))
+             (assign x (+ x 22)))
+     x)
+   43))
 
-  ("'on-err handles errors"
+(examples-for on-err
+  ("'handles errors"
    (let x nil
-        (on-err (= x "impossible")
-                (= x (nil nil nil)))
-        x)
+     (on-err (= x "impossible")
+             (= x (nil nil nil)))
+     x)
    "impossible")
 
-  ("'on-err handles errors but any ensuring clause gets called first"
+  ("handles errors but any ensuring clause gets called first"
    (with (x nil y nil)
-        (on-err (= x 'impossible)
-                (ensure (assign y 'ensure-clause)
-                        (nil nil nil)))
-        (list x y))
-   (impossible ensure-clause))))
+         (on-err (= x 'impossible)
+                 (ensure (assign y 'ensure-clause)
+                         (nil nil nil)))
+         (list x y))
+   (impossible ensure-clause)))

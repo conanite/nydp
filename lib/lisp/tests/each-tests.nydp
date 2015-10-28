@@ -1,5 +1,4 @@
-(register-test
- '(suite "'each Tests"
-         ("iterates over each item in list"
-          (let acc 0 (each x '(1 2 3 4) (assign acc (+ x acc))) acc)
-          10)))
+(examples-for each
+  ("iterates over each item in list"
+   (let acc 0 (each x '(1 2 3 4) (assign acc (+ x acc))) acc)
+   10))
