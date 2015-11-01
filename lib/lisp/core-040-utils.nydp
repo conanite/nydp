@@ -200,3 +200,10 @@
   ; for the old function
   (fn args2
       (apply func (joinlists args1 args2))))
+
+(def tuples (n things)
+  ;; split things into a list of lists each n long
+  (rfnwith _ (list things)
+           (if (no list)
+               nil
+               (cons (firstn n list) (_ (nthcdr n list))))))

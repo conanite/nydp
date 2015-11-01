@@ -1,0 +1,16 @@
+(examples-for tuples
+  ("returns nil for nil"
+   (tuples 3 nil)
+   nil)
+
+  ("returns single list for fewer than n items"
+   (tuples 4 '(a b) )
+   ((a b nil nil)))
+
+  ("returns exactly one list for exactly n items"
+   (tuples 5 '(a b c d e) )
+   ((a b c d e)))
+
+  ("returns the given list split into sublist each having n items"
+   (tuples 3 '(a b c d e f g) )
+   ((a b c) (d e f) (g nil nil))))
