@@ -207,3 +207,12 @@
            (if (no list)
                nil
                (cons (firstn n list) (_ (nthcdr n list))))))
+
+(def range (start stop)
+  ; return a list containing the range
+  ; of elements starting with 'start, up
+  ; to but not including 'stop
+  (if (< start stop)
+      (cons start
+            (range (+ start 1)
+                   stop))))
