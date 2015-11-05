@@ -34,6 +34,7 @@ module Nydp
       Symbol.mk(:false, ns).assign(false)
       Symbol.mk(:hash,  ns).assign(Nydp::Builtin::Hash.new)
       Symbol.mk(:apply, ns).assign(Nydp::Builtin::Apply.new)
+      Symbol.mk(:date,  ns).assign(Nydp::Builtin::Date.new)
       Symbol.mk(:error, ns).assign(Nydp::Builtin::Error.new)
       Symbol.mk(:parse, ns).assign(Nydp::Builtin::Parse.new(ns))
       Symbol.mk(:p,     ns).assign(Nydp::Builtin::Puts.new)

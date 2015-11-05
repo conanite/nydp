@@ -2,7 +2,8 @@ require 'spec_helper'
 
 describe Nydp::Date do
 
-  let(:ns) { { } }
+  let(:ns) { { }           }
+  let(:vm) { Nydp::VM.new  }
 
   it "converts ruby Date to Nydp::Date" do
     rd = Date.parse "2015-06-08"
@@ -12,6 +13,14 @@ describe Nydp::Date do
     expect(nd.to_s).   to eq "2015-06-08"
     expect(nd.inspect).to eq "#<Date: 2015-06-08 ((2457182j,0s,0n),+0s,2299161j)>"
     expect(nd.to_ruby).to eq Date.parse("2015-06-08")
+  end
+
+  it "creates a new date" do
+    df = Nydp::Builtin::Date.new
+    df.invoke vm, pair_list([2015, 11, 18])
+    nd = vm.pop_arg
+    expect(nd).to be_a Nydp::Date
+    expect(nd.ruby_date).to eq Date.parse("2015-11-18")
   end
 
   it "returns date components" do
@@ -24,7 +33,6 @@ describe Nydp::Date do
   end
 
   describe "date maths" do
-    let(:vm) { Nydp::VM.new                  }
     let(:d0) { Nydp.r2n Date.today, ns       }
     let(:d1) { Nydp.r2n (Date.today + 6), ns }
 
