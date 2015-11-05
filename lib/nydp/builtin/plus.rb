@@ -2,7 +2,14 @@ class Nydp::Builtin::Plus
   include Nydp::Builtin::Base
 
   def builtin_invoke vm, args
-    vm.push_arg sum(args, origin(args.car))
+    vm.push_arg case args.car
+                when Fixnum, Nydp::Date
+                  sum(args.cdr, args.car)
+                when Nydp::Pair
+                  sum(args, Nydp.NIL)
+                when String, Nydp::StringAtom
+                  sum(args, Nydp::StringAtom.new(""))
+                end
   end
 
   def sum args, accum
@@ -10,17 +17,6 @@ class Nydp::Builtin::Plus
       accum
     else
       sum(args.cdr, (accum + args.car))
-    end
-  end
-
-  def origin obj
-    case obj
-    when Fixnum
-      0
-    when Nydp::Pair
-      Nydp.NIL
-    when String, Nydp::StringAtom
-      Nydp::StringAtom.new ""
     end
   end
 

@@ -23,6 +23,65 @@ describe Nydp::Date do
     expect(nd[:day]).  to eq 8
   end
 
+  describe "date maths" do
+    let(:vm) { Nydp::VM.new                  }
+    let(:d0) { Nydp.r2n Date.today, ns       }
+    let(:d1) { Nydp.r2n (Date.today + 6), ns }
+
+    it "works with builtin minus" do
+      minus = Nydp::Builtin::Minus.new
+
+      minus.invoke vm, pair_list([d1, d0])
+      diff = vm.pop_arg
+
+      expect(d0).to be_a Nydp::Date
+      expect(diff).to eq 6
+    end
+
+    it "works with builtin greater-than when true" do
+      f = Nydp::Builtin::GreaterThan.new
+
+      f.invoke vm, pair_list([d1, d0])
+
+      expect(vm.pop_arg).to eq Nydp.T
+    end
+
+    it "works with builtin greater-than when false" do
+      f = Nydp::Builtin::GreaterThan.new
+
+      f.invoke vm, pair_list([d0, d1])
+
+      expect(vm.pop_arg).to eq Nydp.NIL
+    end
+
+    it "works with builtin less-than when true" do
+      f = Nydp::Builtin::LessThan.new
+
+      f.invoke vm, pair_list([d0, d1])
+
+      expect(vm.pop_arg).to eq Nydp.T
+    end
+
+    it "works with builtin less-than when false" do
+      f = Nydp::Builtin::LessThan.new
+
+      f.invoke vm, pair_list([d1, d0])
+
+      expect(vm.pop_arg).to eq Nydp.NIL
+    end
+
+    it "works with builtin plus" do
+      plus = Nydp::Builtin::Plus.new
+
+      plus.invoke vm, pair_list([d0, 5])
+      sum = vm.pop_arg
+
+      expect(d0) .to be_a Nydp::Date
+      expect(sum).to be_a Nydp::Date
+      expect(sum.ruby_date).to eq(Date.today + 5)
+    end
+  end
+
   it "returns relative dates by year" do
     rd = Date.parse "2015-06-08"
     nd = Nydp.r2n rd, ns
