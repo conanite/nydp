@@ -1,0 +1,16 @@
+(assign foo (hash))
+(def foo.bar (a b) (* a b))
+(def foo.zeb (a b) (* a (foo.bar a b)))
+
+(examples-for def
+  ("can assign a function to a hash key"
+   (foo.bar 3 4)
+   12)
+
+  ("sets hash keys"
+   (hash-keys foo)
+   (bar zeb))
+
+  ("hash defs are accessible wherever the hash is"
+   (foo.zeb 5 7)
+   175))

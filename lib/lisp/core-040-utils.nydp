@@ -1,3 +1,4 @@
+
 (def eachr (f things)
      (when things
        (eachr f (cdr things))
@@ -78,7 +79,6 @@
               (iso (cdr x) (cdr y)))))
 
 (def x1      (thing)    thing)
-(def isa     (type obj) (eq? (type-of obj) type))
 (def sym?    (arg)      (isa 'symbol arg))
 (def string? (arg)      (isa 'string arg))
 (mac just    (arg)      arg)

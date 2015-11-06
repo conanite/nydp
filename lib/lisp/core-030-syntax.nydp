@@ -168,11 +168,15 @@
                ,(build-hash-get-key:car rnames)
                ,value-expr)))
 
+(def isa     (type obj) (eq? (type-of obj) type))
+
 (mac = (name value)
   (if (isa 'symbol name)
       `(assign ,name ,value)
       (caris 'dot-syntax name)
       (dot-syntax-assignment (cdr name) value)))
+
+(mac def-assign args `(= ,@args))
 
 (def brace-list-hash-key (k)
   (if (isa 'symbol k)      `(quote ,k)
