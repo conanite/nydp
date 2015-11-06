@@ -81,9 +81,11 @@
              'args
              '`((fn nil ,@args)))
 
+(mac def-assign args `(assign ,@args))
+
 (def define-def-expr (name args documentation body)
   ; used internally by 'def
-  `(do (assign ,name (fn ,args ,@body))
+  `(do (def-assign ,name (fn ,args ,@body))
        (dox-add-doc ',name
                     'def
                     ',documentation
