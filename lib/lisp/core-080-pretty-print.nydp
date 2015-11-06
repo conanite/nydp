@@ -54,6 +54,7 @@
 (pp/def brace-list       (form indent) "{~(pp/inline (cdr form) indent)}")
 
 (pp/syntax
+ percent-syntax "%"
  colon-syntax ":"
  dot-syntax   "."
  bang-syntax  "!"

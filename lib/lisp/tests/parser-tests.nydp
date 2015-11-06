@@ -20,6 +20,10 @@
    (parse "%this-and-that")
    ((percent-syntax || this-and-that)) )
 
+  ("parses a percent-prefix-mixed-with-dot-syntax symbol"
+   (parse "%this.and.that")
+   ((percent-syntax || (dot-syntax this and that))) )
+
   ("parses a dot-syntax symbol"
    (parse "this.that.zozo")
    ((dot-syntax this that zozo)) )
