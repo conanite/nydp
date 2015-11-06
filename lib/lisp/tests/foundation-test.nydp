@@ -4,6 +4,14 @@
    2.5))
 
 (examples-for eq?
+  ("is nil for two different dates"
+   (eq? (today) (+ (today) 1))
+   nil)
+
+  ("is true for two identical dates"
+   (eq? (date 2015 3 12) (+ (date 2015 3 1) 11))
+   t)
+
   ("true for two empty symbols"
    (eq? '|| '||)
    t)

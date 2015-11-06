@@ -24,6 +24,7 @@ module Nydp
     def + int     ; r2n(ruby_date + int            , nil) ; end
     def > other   ; ruby_date > other.ruby_date           ; end
     def < other   ; ruby_date < other.ruby_date           ; end
+    def == other  ; ruby_date == other.ruby_date          ; end
 
     @@keys = Set.new %i{
       year       month      week_day           day

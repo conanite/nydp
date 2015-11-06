@@ -28,6 +28,8 @@
      (def dox-examples (name)
        (hash-get examples name))
 
+     (def dox-example-names () (hash-keys examples))
+
      (def dox-arg-names (name)
        (cond (dox? name)
              (cadddr (car (dox-lookup name))))))
