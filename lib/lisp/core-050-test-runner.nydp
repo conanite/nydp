@@ -51,8 +51,6 @@
 
 (mac examples-for (name . examples)
   (let suite-name "examples for ~(pp name)"
-    `(do
-         (register-test '(suite ,suite-name ,@examples))
-         (dox-add-examples ',name
-                           ',(collect (curry !caris 'comment)
-                                      examples)))))
+    (let plain-examples (collect (fn (x) (isa 'string (car x))) examples)
+      `(do (register-test '(suite ,suite-name ,@plain-examples))
+           (dox-add-examples ',name ',plain-examples)))))
