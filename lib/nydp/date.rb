@@ -8,8 +8,12 @@ module Nydp
 
     MONTH_SIZES = [nil, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
     def build y, m, d
-      s = MONTH_SIZES[m]
-      ::Date.new(y, m, (d > s ? s : d))
+      if m < 1
+        build( y - 1, m + 12, d )
+      else
+        s = MONTH_SIZES[m]
+        ::Date.new(y, m, (d > s ? s : d))
+      end
     end
 
     def initialize ruby_date
@@ -26,13 +30,14 @@ module Nydp
     def < other   ; ruby_date < other.ruby_date           ; end
     def == other  ; ruby_date == other.ruby_date          ; end
 
+    @@pass_through = %i{ monday? tuesday? wednesday? thursday? friday? saturday? sunday? }
     @@keys = Set.new %i{
       year       month      week_day           day
       last_year  next_year  beginning_of_year  end_of_year
       last_month next_month beginning_of_month end_of_month
       last_week  next_week  beginning_of_week  end_of_week
       yesterday  tomorrow
-    }
+    } + @@pass_through
 
     def year               y, m, d, w ; y ; end
     def month              y, m, d, w ; m ; end
@@ -57,6 +62,12 @@ module Nydp
     def yesterday          y, m, d, w ; ruby_date - 1                ; end
     def tomorrow           y, m, d, w ; ruby_date + 1                ; end
 
+    @@pass_through.each do |n|
+      class_eval "def #{n} * ; ruby_date.#{n} ; end"
+    end
+
+    def dispatch key, y, m, d, w ; self.send(key, y, m, d, w) if @@keys.include?(key) ; end
+
     def [] key
       key = key.to_s.gsub(/-/, '_').to_sym
       y = ruby_date.year
@@ -64,8 +75,7 @@ module Nydp
       d = ruby_date.day
       w = ruby_date.wday
 
-      adjusted = self.send(key, y, m, d, w) if @@keys.include?(key)
-      r2n adjusted, nil
+      r2n(dispatch(key, y, m, d, w), nil)
     end
   end
 end
