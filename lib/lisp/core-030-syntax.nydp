@@ -203,8 +203,11 @@
       (build-ampersand-syntax (car rest))))
 
 (mac brace-list-mono (arg) arg)
+(mac brace-list-empty () '(hash))
 
 (mac brace-list args
-  (if (no (cdr args))
+  (if (no args)
+      `(brace-list-empty)
+      (no (cdr args))
       `(brace-list-mono ,(car args))
       (brace-list-build-hash args)))

@@ -19,6 +19,11 @@
    nil))
 
 (examples-for brace-list
+  ("with no args builds an empty hash"
+   (let thing {}
+     (list (type-of thing) (hash-keys thing)))
+   (hash nil))
+
   ("build a hash table from brace-list syntax"
    (let hsh { foo 1 bar 2 }
      (list 'foo hsh.foo 'bar hsh.bar))
