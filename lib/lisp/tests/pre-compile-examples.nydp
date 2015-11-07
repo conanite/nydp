@@ -1,0 +1,19 @@
+(examples-for pre-compile-with
+  ("does nothing with an empty hash"
+   (pre-compile-with (hash) '(let a 1 (p a)))
+   (let a 1 (p a)))
+
+  ("uses the given macros to expand the given expression"
+   (let lang { p          (fn args `(print-stuff ,@args))
+               def        (fn (name . body) `(define-it ,(to-string name) ,(len body) ,@body))
+               brace-list (fn (first second third) `(brace-things ,first (p ,second))) }
+     (pre-compile-with lang
+                       '(let a 'b
+                          (p { a b c }
+                             (with (m n)
+                                   (def p q r s tt))))))
+   (let a 'b
+     (print-stuff (brace-things a
+                                (print-stuff b))
+                  (with (m n)
+                        (define-it "p" 4 q r s tt))))))

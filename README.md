@@ -65,7 +65,6 @@ After parsing its input, `'nydp` passes the result as an argument to the `pre-co
 You can override `pre-compile` to transform the expression in any way you wish. By default, the `boot.nydp` implementation of `pre-compile` performs macro-expansion.
 
 
-
 ```lisp
 (def pre-compile (expr)
   (map pre-compile
@@ -79,7 +78,6 @@ nydp > (pre-compile '(yoyo 42))
 
 ==> (do-yoyo 42)
 ```
-
 
 #### 2. Special symbol syntax
 
@@ -230,7 +228,7 @@ However, this doesn't need to be built-in, it can be done with macros alone. On 
 (def fun (a b . others) ...)
 ```
 
-In this example, `'others` is either nil, or a list containing the third and subsequent arguments to the call to `'fun`. For many examples of this kind of invocation, see [invocation-tests](lib/lisp/tests/invocation-tests.nydp) in the `tests` directory.
+In this example, `others` is either nil, or a list containing the third and subsequent arguments to the call to `fun`. For many examples of this kind of invocation, see [invocation-tests](lib/lisp/tests/invocation-tests.nydp) in the `tests` directory.
 
 
 
@@ -397,6 +395,37 @@ nydp > (p:pp:dox-src 'pp/find-breaks)
 
 The pretty-printer is still rather primitive in that it only indents according to some hard-coded rules, and according to argument-count
 for documented macros. It has no means of wrapping forms that get too long, or that extend beyond a certain predefined margin or column number.
+
+#### 11 DSLs
+
+The `pre-compile` system (described earlier in "Macro-expansion runs in lisp") is available for implementing local, mini-languages. To do this, use `pre-compile-with`
+in a macro. `pre-compile-with` expects a hash with expansion rules, and an expression to expand using these rules. For example, to build a "describe" dsl :
+
+```lisp
+  (= describe-dsl (hash))
+  (= describe-dsl.def (fn (a b c) `(a-special-kind-of-def ,a ,b ,c)))
+  (= describe-dsl.p   (fn (w)     `(alternative-p ,w)))
+
+  (mac describe (name expr outcome)
+    `(add-description ',name
+       (pre-compile-with describe-dsl ',expr)
+       ',outcome))
+```
+
+In this example, `describe-dsl` establishes rules for expanding `def` and for `p` which will shadow their usual meanings, but only in the context
+of a `describe` form.
+
+This technique is useful to avoid cluttering the global macro-namespace with rules that are used only in a specific context. A word of warning:
+if you shadow a popular name, for example `let`, `map` or `do`, you are likely to run into trouble when some non-shadowed macro inside your
+dsl context expands into something you have shadowed; in this case your shadowy definitions will be used to further expand the result.
+
+For example, if you shadow `with`, but not `let`, and then you use a `let` form within a sample of the dsl you are specifying ; the `let`
+form expands into a `with` form, thinking the `with` will expand in the usual way, but in fact no, your private dsl is going to expand
+this `with` in your private special way, possibly in a way that's incompatible with the form produced by `let`.
+
+If, notwithstanding the aforementioned, the outcome works the way you expected it to, then you have the wrong kind of genius and your
+license to program should be revoked.
+
 
 ## Installation
 

@@ -1,22 +1,27 @@
 
-
-(assign mac-expand (fn (macfn name body)
+(assign mac-expand (fn (names macfn name body)
   (cond macfn
-        (pre-compile (apply macfn body))
+        (pre-compile-with names
+                          (apply macfn body))
         (cons name body))))
 
 (assign macs (hash))
 
 (assign pre-compile-expr
-        (fn (name body)
-            (mac-expand (hash-get macs name) name body)))
+        (fn (names name body)
+            (mac-expand names
+                        (hash-get names name)
+                        name
+                        body)))
 
 (assign pre-compile-each
-        (fn (args)
+        (fn (names args)
             (cond args
                   (cond (pair? args)
-                        (cons (pre-compile (car args))
-                              (pre-compile-each (cdr args)))
+                        (cons (pre-compile-with names
+                                                (car args))
+                              (pre-compile-each names
+                                                (cdr args)))
                         args))))
 
 (assign pre-compile-msg
@@ -25,22 +30,35 @@
             compiled))
 
 (assign pre-compile-raw
-        (fn (arg)
+        (fn (names arg)
             (cond (pair? arg)
                   (cond (eq? (car arg) 'quote)
                         arg
-                        (pre-compile-each (pre-compile-expr (car arg) (cdr arg))))
+                        (pre-compile-each names
+                                          (pre-compile-expr names
+                                                            (car arg)
+                                                            (cdr arg))))
                   arg)))
 
 (assign pre-compile-debug
-        (fn (arg)
-            (pre-compile-msg arg (pre-compile-raw arg))))
+        (fn (names arg)
+            (pre-compile-msg arg
+                             (pre-compile-raw names
+                                              arg))))
 
 (assign debug-pre-compile
         (fn (arg)
-            (assign pre-compile (cond arg pre-compile-debug pre-compile-raw))))
+            (assign pre-compile-with
+                    (cond arg
+                          pre-compile-debug
+                          pre-compile-raw))))
 
 (debug-pre-compile nil)
+
+; builtin pre-compile does nothing; override here to provide macro-expansion
+(assign pre-compile
+        (fn (arg)
+            (pre-compile-with macs arg)))
 
 ; we override this later to provide automatic documentation
 (hash-set macs 'def
