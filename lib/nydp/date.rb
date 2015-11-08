@@ -29,6 +29,8 @@ module Nydp
     def > other   ; ruby_date > other.ruby_date           ; end
     def < other   ; ruby_date < other.ruby_date           ; end
     def == other  ; ruby_date == other.ruby_date          ; end
+    def eql? d    ; self == d                             ; end
+    def hash      ; ruby_date.hash                        ; end
 
     @@pass_through = %i{ monday? tuesday? wednesday? thursday? friday? saturday? sunday? }
     @@keys = Set.new %i{

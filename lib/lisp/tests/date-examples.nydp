@@ -16,6 +16,12 @@
  ("navigates to week start"        (let d (date 2015 11  6) (to-string d.beginning-of-week))   "2015-11-02" )
  ("navigates to week end"          (let d (date 2015 11  6) (to-string d.end-of-week))         "2015-11-08" )
 
+ ("can act as hash key"
+  (with (h {} d (date 2015 11 8))
+    (hash-set h d "on this day")
+    (to-string (hash-get h (date 2015 11 8))))
+  "on this day")
+
  ("returns its year"      (let d (date 1999 12 31) d.year)     1999)
  ("returns its month"     (let d (date 1999 12 31) d.month)    12  )
  ("returns its day"       (let d (date 1999 12 31) d.day)      31  )
