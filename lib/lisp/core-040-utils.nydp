@@ -144,6 +144,8 @@
 (def empty? (things) (eq? (len things) 0))
 
 (mac each (var things code)
+  ; repeatedly assigns an element of 'things to 'var,
+  ; and executes 'code each time
   (w/uniq (xs c)
           `((rfn ,c (,xs)
                 (if (pair? ,xs)
@@ -216,3 +218,15 @@
       (cons start
             (range (+ start 1)
                    stop))))
+
+(def best (f things)
+  (if (no things)
+      nil
+      (let winner (car things)
+        (each thing (cdr things)
+              (if (f thing winner)
+                  (= winner thing)))
+        winner)))
+
+(def min things (best < things))
+(def max things (best > things))

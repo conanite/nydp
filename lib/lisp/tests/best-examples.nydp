@@ -1,0 +1,8 @@
+(examples-for best
+  ("finds minimum of list"
+   (best < '(3 5 4 7 8 2))
+   2)
+
+  ("finds maximum of list"
+   (best > '(3 5 4 7 8 2))
+   8))
