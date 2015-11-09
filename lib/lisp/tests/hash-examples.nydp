@@ -18,6 +18,15 @@
    (hash-key? { foo 1 bar 2 } 'zed)
    nil))
 
+(examples-for hash-cons
+  ("is useful for storing a list in a hash"
+   (let h {}
+     (hash-cons h 'foo 1)
+     (hash-cons h 'foo 2)
+     (hash-cons h 'foo 3)
+     h.foo)
+   (3 2 1)))
+
 (examples-for brace-list
   ("with no args builds an empty hash"
    (let thing {}
