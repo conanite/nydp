@@ -230,3 +230,5 @@
 
 (def min things (best < things))
 (def max things (best > things))
+
+(def hash-cons (h k v)  (= h.,k (cons v h.,k)))

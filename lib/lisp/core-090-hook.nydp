@@ -1,0 +1,18 @@
+(let hooks {}
+  (def hook-names ()
+    (hash-keys hooks))
+
+  (def hooks-for (hook-name)
+    hooks.,hook-name)
+
+  (def add-hook (hook-name f)
+    (hash-cons hooks hook-name f))
+
+  (def remove-hook (hook-name f)
+    (= hooks.,hook-name
+       (select (curry !eq? f)
+               hooks.,hook-name)))
+
+  (def run-hooks (hook-name . args)
+    (each hook (hooks-for hook-name)
+          (apply hook args))))

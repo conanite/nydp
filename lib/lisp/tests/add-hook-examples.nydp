@@ -1,0 +1,17 @@
+(examples-for add-hook
+  ("registers a function to be run in response to a particular event"
+   (with (x nil y nil)
+     (add-hook 'pile-it-up
+               (fn (thing)
+                   (= x (cons thing x))))
+     (add-hook 'why-not
+               (fn (thing)
+                   (= y (cons thing y))))
+     (run-hooks 'pile-it-up 1)
+     (run-hooks 'pile-it-up 2)
+     (run-hooks 'why-not 'a)
+     (run-hooks 'pile-it-up 3)
+     (run-hooks 'why-not 'b)
+     (run-hooks 'why-not 'c)
+     (list x y))
+   ((3 2 1) (c b a))))
