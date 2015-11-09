@@ -6,3 +6,13 @@
   ("finds maximum of list"
    (best > '(3 5 4 7 8 2))
    8))
+
+(examples-for min
+  ("finds minimum of list"
+   (min 3 5 4 7 8 2)
+   2))
+
+(examples-for max
+  ("finds minimum of list"
+   (max 3 5 4 7 8 2)
+   8))
