@@ -58,8 +58,8 @@ module Nydp
 
     def last_week          y, m, d, w ; ruby_date - 7                ; end
     def next_week          y, m, d, w ; ruby_date + 7                ; end
-    def beginning_of_week  y, m, d, w ; ruby_date + 1 - w            ; end
-    def end_of_week        y, m, d, w ; ruby_date + 7 - w            ; end
+    def beginning_of_week  y, m, d, w ; ruby_date - ((w - 1) % 7)    ; end
+    def end_of_week        y, m, d, w ; ruby_date + ((7 - w) % 7)    ; end
 
     def yesterday          y, m, d, w ; ruby_date - 1                ; end
     def tomorrow           y, m, d, w ; ruby_date + 1                ; end
