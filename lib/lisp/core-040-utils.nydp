@@ -42,10 +42,14 @@
   ; if 'things is a list, return the first item in the list for which 'f returns non-nil
   ; otherwise, return 'things if (f things) is non-nil
   ; otherwise, nil
+  ; WARNING: if the detected thing is nil, returns t instead. A return value of nil
+  ; means the thing was not found ; non-nil means the thing was found, including when
+  ; the found thing is itself nil.
   (if (pair? things)
       (let it (car things)
         (or
-         (and (f it) it)
+         (and (f it)
+              (or it t))
          (detect f (cdr things))))
       (f things)
       things))
@@ -200,8 +204,10 @@
   ; the given args1 already applied
   ; arguments to the new function are whatever arguments remain
   ; for the old function
-  (fn args2
-      (apply func (joinlists args1 args2))))
+  (fn args
+      (apply func
+             (joinlists args1
+                        args))))
 
 (def tuples (n things)
   ;; split things into a list of lists each n long

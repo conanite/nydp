@@ -9,10 +9,13 @@
            (list "foo" "bar" "xx" "pp"))
    nil)
 
-  ;; kind of pointless
-  ("returns nil if nil is the matching item"
+  ("returns t if nil is the matching item (warning: anomalous behaviour)"
    (detect no (list "foo" "bar" nil "pp"))
-   nil)
+   t)
+
+  ("finds first non-nil item using x1"
+   (detect x1 (list nil nil "foo" "bar" nil "pp"))
+   "foo")
 
   ("returns item if it's an atom and matches"
    (detect (fn (x) (eq? (len x) 2)) "zz")
