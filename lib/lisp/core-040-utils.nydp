@@ -38,22 +38,6 @@
 (def string-pieces pieces
   (joinstr "" pieces))
 
-(def detect (f things)
-  ; if 'things is a list, return the first item in the list for which 'f returns non-nil
-  ; otherwise, return 'things if (f things) is non-nil
-  ; otherwise, nil
-  ; WARNING: if the detected thing is nil, returns t instead. A return value of nil
-  ; means the thing was not found ; non-nil means the thing was found, including when
-  ; the found thing is itself nil.
-  (if (pair? things)
-      (let it (car things)
-        (or
-         (and (f it)
-              (or it t))
-         (detect f (cdr things))))
-      (f things)
-      things))
-
 (def collect (f things)
   ; if 'things is a list, return all the items in the list for which 'f returns non-nil
   ; otherwise, return 'things if (f things) is non-nil
@@ -208,6 +192,29 @@
       (apply func
              (joinlists args1
                         args))))
+
+(def detect (f things)
+  ; if 'f is a function,
+  ;   if 'things is a list, return the first item in the list for which 'f returns non-nil
+  ;   otherwise, return 'things if (f things) is non-nil
+  ;   otherwise, nil
+  ; if 'f is not a function, self-invoke with a function checking for equality with f
+  ;
+  ; WARNING: if the detected thing is nil, returns t instead. A return value of nil
+  ; means the thing was not found ; non-nil means the thing was found, including when
+  ; the found thing is itself nil.
+  (if (isa 'fn f)
+      (rfnwith d (items things)
+                 (if (pair? items)
+                     (let it (car items)
+                       (or
+                        (and (f it)
+                             (or it t))
+                        (d:cdr items)))
+                     (f items)
+                     items))
+      (detect (curry eq? f)
+              things)))
 
 (def tuples (n things)
   ;; split things into a list of lists each n long

@@ -24,4 +24,24 @@
   ("returns nil if it's an atom and doesn't match"
    (detect (fn (x) (eq? (len x) 20))
            "zz")
+   nil)
+
+  ("nil for nil"
+   (detect nil nil)
+   nil)
+
+  ("true for nil in list containing nil"
+   (detect nil '(1 2 nil 3 4))
+   t)
+
+  ("nil for nil in list not containing nil"
+   (detect nil '(1 2 3 4 5))
+   nil)
+
+  ("true for 42 in list containing 42"
+   (detect 42 '(1 2 nil 3 42 4))
+   42)
+
+  ("nil for 42 in list not containing 42"
+   (detect 42 '(1 2 nil 3 (a b c) 4))
    nil))
