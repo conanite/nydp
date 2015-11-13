@@ -1,0 +1,4 @@
+(def include? (thing things)
+  ; alias for 'detect
+  ; true if thing is in things, nil otherwise
+  (detect thing things))

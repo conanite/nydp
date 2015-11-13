@@ -1,0 +1,20 @@
+(examples-for include?
+  ("nil for nil"
+   (include? nil nil)
+   nil)
+
+  ("true for nil in list containing nil"
+   (include? nil '(1 2 nil 3 4))
+   t)
+
+  ("nil for nil in list not containing nil"
+   (include? nil '(1 2 3 4 5))
+   nil)
+
+  ("true for 42 in list containing 42"
+   (include? 42 '(1 2 nil 3 42 4))
+   42)
+
+  ("nil for 42 in list not containing 42"
+   (include? 42 '(1 2 nil 3 (a b c) 4))
+   nil))
