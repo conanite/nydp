@@ -9,6 +9,44 @@
      (cons (hash-keys h) (mapx (hash-keys h) k h.,k)))
    ((a "b" 3 b) 99 2 "foo" 98)))
 
+(examples-for hash-keys
+  ("returns nil for a number"  (hash-keys 1)          nil)
+  ("returns nil for nil"       (hash-keys nil)        nil)
+  ("returns nil for a string"  (hash-keys "hello")    nil)
+  ("returns nil for a symbol"  (hash-keys 'lipstick)  nil)
+
+  ("returns date operations"
+   (hash-keys (date 2015 11 18))
+   (beginning_of_month
+    beginning_of_week
+    beginning_of_year
+    day
+    end_of_month
+    end_of_week
+    end_of_year
+    friday?
+    last_month
+    last_week
+    last_year
+    monday?
+    month
+    next_month
+    next_week
+    next_year
+    saturday?
+    sunday?
+    thursday?
+    tomorrow
+    tuesday?
+    wednesday?
+    week_day
+    year
+    yesterday))
+
+  ("returns keys of a given hash"
+   (hash-keys {a 1 b 2 c { x 99 y 98 z 97 }})
+   (a b c)))
+
 (examples-for hash-key?
   ("detects key presence"
    (hash-key? { foo 1 bar 2 } 'foo)

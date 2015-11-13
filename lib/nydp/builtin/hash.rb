@@ -65,11 +65,12 @@ class Nydp::Builtin::HashKeys
   def initialize ns ; @ns = ns; end
   def builtin_invoke vm, args
     hash = args.car
-    case hash
-    when Nydp::Hash
+    if hash.is_a? Nydp::Hash
       vm.push_arg Nydp::Pair.from_list hash.keys
+    elsif hash.respond_to?(:keys)
+      vm.push_arg r2n(hash.keys.to_a.sort, ns)
     else
-      vm.push_arg r2n(hash.keys, ns)
+      vm.push_arg Nydp.NIL
     end
   end
 end

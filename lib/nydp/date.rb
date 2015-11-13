@@ -68,7 +68,8 @@ module Nydp
       class_eval "def #{n} * ; ruby_date.#{n} ; end"
     end
 
-    def dispatch key, y, m, d, w ; self.send(key, y, m, d, w) if @@keys.include?(key) ; end
+    def keys                     ; @@keys                                           ; end
+    def dispatch key, y, m, d, w ; self.send(key, y, m, d, w) if keys.include?(key) ; end
 
     def [] key
       key = key.to_s.gsub(/-/, '_').to_sym
