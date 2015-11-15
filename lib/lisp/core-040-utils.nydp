@@ -112,7 +112,18 @@
   `(ensuring (fn () ,protection)
              (fn ()    ,@body)))
 
+(mac while (test . body)
+  ; tests 'test, as long as 'test is non-nil,
+  ; repeatedly executes 'body
+  (w/uniq (rfname pred)
+    `(rfnwith ,rfname (,pred ,test)
+        (when ,pred
+          ,@body
+          (,rfname ,test)))))
+
 (mac loop (start test update . body)
+  ; execute 'start. then for as long as 'test returns non-nil,
+  ; execute 'body and 'update
   (w/uniq (gfn gparm)
     `(do ,start
          ((rfn ,gfn (,gparm)
