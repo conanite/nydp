@@ -28,7 +28,11 @@
 
   ("joins three lists"
    (joinlists '(a b c) '(x y z) '(1 2 3))
-   (a b c x y z 1 2 3)))
+   (a b c x y z 1 2 3))
+
+  ("joins three lists without recusing"
+   (joinlists '(a b c) '(x (y1 y2 y3) z) '(1 2 (3 3 3)))
+   (a b c x (y1 y2 y3) z 1 2 (3 3 3))))
 
 (examples-for firstn
   ("returns no items for n = 0"
