@@ -9,7 +9,7 @@
        (hash-set examples
                  name
                  (cons example-exprs
-                       (hash-get examples sym))))
+                       (hash-get examples name))))
 
      (def dox-lookup (sym) (hash-get dox sym))
 

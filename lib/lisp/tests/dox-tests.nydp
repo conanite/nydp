@@ -1,12 +1,12 @@
 (mac this-is-a-well-documented-macro (a b c)
-                                        ; documentation for me!
+  ; documentation for me!
   `(foo ,a ,b ,c))
 
 (mac this-is-an-undocumented-macro (a b c)
   `(baz ,a ,b ,c))
 
 (def this-is-a-well-documented-def (a b c)
-                                        ; documentation for me!
+  ; documentation for me!
   (foo a b c))
 
 (def this-is-an-undocumented-def (a b c)
@@ -130,10 +130,11 @@ source
                                 720))
    "foo this is an example of an example
 
-running  :
+example  :
+
 (foo bar yadda 1 2 3)
 
-produces : 720
+returns : 720
 
 --------------------------------
 "))

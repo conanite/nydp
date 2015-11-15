@@ -22,10 +22,11 @@ source
 (def dox-show-one-example (name example)
   "~|name| ~(car example)
 
-running  :
+example  :
+
 ~(dox-show-src:cadr example)
 
-produces : ~(dox-show-src:caddr example)
+returns : ~(dox-show-src:caddr example)
 
 --------------------------------
 ")
