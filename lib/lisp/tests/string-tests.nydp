@@ -1,7 +1,15 @@
 (examples-for string-split
   ("splits a string using given expression"
    (string-split "a and b and c and d" " and ")
-   ("a" "b" "c" "d")))
+   ("a" "b" "c" "d"))
+
+  ("returns empty leading, internal, and trailing segments"
+   (string-split "and" "and")
+   ("" ""))
+
+  ("returns empty leading, internal, and trailing segments"
+   (string-split "andandand" "and")
+   ("" "" "" "")))
 
 (examples-for string-replace
   ("replaces parts of a string with the given replacement"
