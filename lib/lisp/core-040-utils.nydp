@@ -153,8 +153,15 @@
        (!hash? thing)))
 
 (def empty? (things)
+  ; t if it's nil or an empty list, string, or hash
+  ; nil otherwise
   (let l (len things)
     (and l (eq? l 0))))
+
+(def present? (thing)
+  ; t if it's a symbol or number, or a non-empty string, list or hash
+  ; nil otherwise
+  (!empty? thing))
 
 (mac each (var things code)
   ; repeatedly assigns an element of 'things to 'var,
