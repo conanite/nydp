@@ -60,7 +60,6 @@ module Nydp
       Symbol.mk("thread-locals"  , ns).assign(Nydp::Builtin::ThreadLocals.new)
       Symbol.mk("type-of",      ns).assign(Nydp::Builtin::TypeOf.new(ns))
       Symbol.mk(:"eq?",         ns).assign(Nydp::Builtin::IsEqual.new)
-      Symbol.mk(:"pair?",       ns).assign(Nydp::Builtin::IsPair.new)
       Symbol.mk(:"cdr-set",     ns).assign(Nydp::Builtin::CdrSet.new)
       Symbol.mk(:"hash-get",    ns).assign(Nydp::Builtin::HashGet.new ns)
       Symbol.mk(:"hash-set",    ns).assign(Nydp::Builtin::HashSet.new)

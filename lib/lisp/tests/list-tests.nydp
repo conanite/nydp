@@ -1,3 +1,10 @@
+(examples-for pair?
+  ("  t for a cons"    (pair? '(1 a 2 b 3 c))  t)
+  ("nil for a number"  (pair? 1)               nil)
+  ("nil for a string"  (pair? "werwe")         nil)
+  ("nil for a hash"    (pair? {a 1 b 2})       nil)
+  ("nil for a symbol"  (pair? 'foo)            nil))
+
 (examples-for pairs
   ("'pair breaks a list into pairs"
    (pairs '(1 a 2 b 3 c))

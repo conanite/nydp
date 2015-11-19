@@ -1,3 +1,10 @@
+(examples-for hash?
+  ("nil for a cons"    (hash? '(1 a 2 b 3 c))  nil)
+  ("nil for a number"  (hash? 1)               nil)
+  ("nil for a string"  (hash? "werwe")         nil)
+  ("  t for a hash"    (hash? {a 1 b 2})       t  )
+  ("nil for a symbol"  (hash? 'foo)            nil))
+
 (examples-for hash-merge
   ("merge with symbol keys"
    (let h (hash-merge { a 1 b 2 c 3 } { a 99 c 98 d 97 })
