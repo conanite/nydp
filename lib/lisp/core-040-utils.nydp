@@ -78,10 +78,17 @@
   (and (isa 'pair things)
        (eq? (car things)  obj)))
 
+(def list-length (things)
+  (if (no things)    0
+      (atom? things) 1
+      (+ 1 (list-length:cdr things))))
+
 (def len (xs)
-  (if (pair? xs)   (+ 1 (len (cdr xs)))
+  (if (no xs)      0
+      (pair? xs)   (list-length xs)
       (string? xs) (string-length xs)
-      0))
+      (hash? xs)   (list-length:hash-keys xs)
+      nil))
 
 (assign dynamics (hash))
 
@@ -140,7 +147,14 @@
 (mac mapx (things x expr)
   `(map (fn (,x) ,expr) ,things))
 
-(def empty? (things) (eq? (len things) 0))
+(def atom? (thing)
+  (and thing
+       (!pair? thing)
+       (!hash? thing)))
+
+(def empty? (things)
+  (let l (len things)
+    (and l (eq? l 0))))
 
 (mac each (var things code)
   ; repeatedly assigns an element of 'things to 'var,

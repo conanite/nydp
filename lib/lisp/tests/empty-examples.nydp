@@ -1,0 +1,15 @@
+(examples-for empty?
+  ("nonzero"       (empty? "foo-bar")  nil)
+  ("zero"          (empty? "")         t)
+  ("blank"         (empty? "  ")       nil)
+  ("nil is t"      (empty? nil)        t)
+  ("sym is nil"    (empty? 'abc)       nil)
+  ("number is nil" (empty? 234)        nil)
+
+  ("nil for proper list"     (empty? '(a b))            nil)
+  ("nil for improper list"   (empty? '(a b c . d))      nil)
+  ("t for empty hash"        (empty? { })               t)
+
+  ("nil for hash with keys"
+   (empty? { a 11 b 22 c 23 d nil e { nested t counted nil } })
+   nil))

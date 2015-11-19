@@ -1,11 +1,15 @@
 (examples-for len
-  ("nonzero"  (len "foo-bar")  7)
-  ("zero"     (len "")         0)
+  ("nonzero"       (len "foo-bar")  7)
+  ("zero"          (len "")         0)
+  ("nil is zero"   (len nil)        0)
+  ("sym is nil"    (len 'abc)       nil)
+  ("number is nil" (len 234)        nil)
 
-  ("ignores backslash-escaped interpolation symbol"
-   (len "hello \~world")
-   12)
+  ("ignores backslash-escaped interpolation symbol"  (len "hello \~world")  12)
+  ("returns length of proper list"                   (len '(a b))            2)
+  ("counts last item of  improper list"              (len '(a b c . d))      4)
+  ("counts keys of empty hash"                       (len { })               0)
 
-  ("len returns length of proper list"
-   (len (cons "a" (cons "b" nil)))
-   2))
+  ("counts keys of hash"
+   (len { a 11 b 22 c 23 d nil e { nested t counted nil } })
+   5))
