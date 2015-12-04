@@ -8,8 +8,9 @@
   ; returned by 'f for each thing in 'things
   (let tmp (hash)
     (each thing things
-          (hash-set tmp
+          (hash-cons tmp
                     (f thing)
                     thing))
-    (map λx(hash-get tmp x)
-         (sort:hash-keys tmp))))
+    (apply joinlists
+           (map λx(hash-get tmp x)
+                (sort:hash-keys tmp)))))

@@ -12,12 +12,17 @@
    ("a" "a" "b" "c" "d" "e" "g" "g" "m" "m" "o" "p" "z")))
 
 (examples-for sort-by
-  ("sort a list of hashes by a specified key"
+  ("sorts a list of hashes by a specified key"
    (let hh (list { a 1 b 2 } { a 7 b 9 } { a 3 b 1 } { a 2 b 8 })
      (pp (sort-by &a hh)))
    "({ a 1 b 2 } { a 2 b 8 } { a 3 b 1 } { a 7 b 9 })")
 
-  ("sort a list of strings according to their length"
+  ("sorts a list of strings according to their length"
    (sort-by len
             '("short" "very very very long" "somewhat long" "more medium" "min" "medium"))
-   ("min" "short" "medium" "more medium" "somewhat long" "very very very long")))
+   ("min" "short" "medium" "more medium" "somewhat long" "very very very long"))
+
+  ("sort a list of strings according to their length even when some strings have the same length"
+   (sort-by len
+            '("short" "very long" "sport" "very song" "min" "max"))
+   ("max" "min" "sport" "short" "very song" "very long")))
