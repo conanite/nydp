@@ -2,3 +2,14 @@
   ; alias for 'detect
   ; true if thing is in things, nil otherwise
   (detect thing things))
+
+(def sort-by (f things)
+  ; sort 'things according to the value
+  ; returned by 'f for each thing in 'things
+  (let tmp (hash)
+    (each thing things
+          (hash-set tmp
+                    (f thing)
+                    thing))
+    (map λx(hash-get tmp x)
+         (sort:hash-keys tmp))))
