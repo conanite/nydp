@@ -276,4 +276,6 @@
 (def min things (best < things))
 (def max things (best > things))
 
-(def hash-cons (h k v)  (= h.,k (cons v h.,k)))
+(def hash-cons (h k v)
+  ; push 'v onto the value for 'k in 'h
+  (= h.,k (cons v h.,k)))
