@@ -21,7 +21,7 @@ module Nydp
     end
 
     def == other
-      other.to_s == self.to_s
+      other.is_a?(Nydp::StringAtom) && (other.to_s == self.to_s)
     end
 
     def + other

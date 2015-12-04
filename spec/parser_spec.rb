@@ -80,7 +80,7 @@ describe Nydp::Parser do
     s2 = Nydp::StringFragmentCloseToken.new "hello there", '"hello there"'
 
     x1 = 1
-    x2 = "hello there"
+    x2 = Nydp::StringAtom.new "hello there"
     x3 = 3
 
     expected = pair_list [x1, x2, x3]
@@ -90,7 +90,7 @@ describe Nydp::Parser do
 
   it "should parse a string" do
     x1 = sym 'join'
-    x2 = " - "
+    x2 = Nydp::StringAtom.new " - "
     x3 = 1
     x4 = 2
     x5 = 3
@@ -105,7 +105,7 @@ describe Nydp::Parser do
     s2 = Nydp::StringFragmentCloseToken.new "hello (1 2 3) there", '"hello (1 2 3) there"'
 
     x1 = 1
-    x2 = "hello (1 2 3) there"
+    x2 = Nydp::StringAtom.new "hello (1 2 3) there"
     x3 = 3
 
     expected = pair_list [x1, x2, x3]
@@ -118,7 +118,7 @@ describe Nydp::Parser do
     s2 = Nydp::StringFragmentCloseToken.new "hello there \"jimmy\"", '"hello there \"jimmy\""'
 
     x1 = 1
-    x2 = "hello there \"jimmy\""
+    x2 = Nydp::StringAtom.new "hello there \"jimmy\""
     x3 = 3
 
     expected = pair_list [x1, x2, x3]
@@ -216,7 +216,7 @@ describe Nydp::Parser do
   end
 
   it "retains otherwise unidentified list prefixes" do
-    expect(parse "%wong(bar)").to eq pair_list([prefix_list, "%wong", pair_list([bar])])
+    expect(parse "%wong(bar)").to eq pair_list([prefix_list, Nydp::StringAtom.new("%wong"), pair_list([bar])])
   end
 
   it "should do some complicated unquote stuff with lists" do
@@ -262,7 +262,7 @@ describe Nydp::Parser do
   ; here's a comment
   (zab))
 "
-    c1 = pair_list([comment, "here's a comment"])
+    c1 = pair_list([comment, Nydp::StringAtom.new("here's a comment")])
     fbar = pair_list([bar])
     fzab = pair_list([Nydp::Symbol.mk(:zab, ns)])
     fdef = Nydp::Symbol.mk(:def, ns)
