@@ -17,11 +17,19 @@
 
 (def pp/string-pieces (things) "\"~(joinstr "" (map pp/string-piece things))\"")
 
+(def pp/kv (hsh)
+  (map λk(joinstr " "
+                  (pp k)
+                  (pp hsh.,k))
+       (hash-keys hsh)))
+
 (def pp/literal (thing)
   (if (eq? thing '||)
       ""
       (isa 'string thing)
       "\"~(pp/escape-string-literal thing)\""
+      (isa 'hash thing)
+      "{ ~(joinstr " " (pp/kv thing)) }"
       (inspect thing)))
 
 (mac pp/def (name args . body)
