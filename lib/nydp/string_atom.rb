@@ -13,6 +13,12 @@ module Nydp
     def inspect    ; string.inspect ; end
     def hash       ; string.hash    ; end
     def length     ; string.length  ; end
+    def > other    ; self.string > other.string ; end
+    def < other    ; self.string < other.string ; end
+
+    def <=> other
+      self < other ? -1 : (self == other ? 0 : 1)
+    end
 
     def == other
       other.to_s == self.to_s

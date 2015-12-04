@@ -1,6 +1,10 @@
 require 'spec_helper'
 
 describe Nydp::Symbol do
+  let(:bar) { Nydp::Symbol.mk :BAR, ns }
+  let(:foo) { Nydp::Symbol.mk :FOO, ns }
+  let(:vm)  { Nydp::VM.new             }
+
   it "returns a ruby symbol in #to_ruby" do
     sym = Nydp::Symbol.mk :foo, ns
     expect(sym.to_ruby).to eq :foo
@@ -37,4 +41,37 @@ describe Nydp::Symbol do
     expect(sym1.eql?   sym2).to eq true
     expect(sym1.equal? sym2).to eq false
   end
+
+  it "works with builtin greater-than when true" do
+    f = Nydp::Builtin::GreaterThan.new
+
+    f.invoke vm, pair_list([foo, bar])
+
+    expect(vm.pop_arg).to eq Nydp.T
+  end
+
+  it "works with builtin greater-than when false" do
+    f = Nydp::Builtin::GreaterThan.new
+
+    f.invoke vm, pair_list([bar, foo])
+
+    expect(vm.pop_arg).to eq Nydp.NIL
+  end
+
+  it "works with builtin less-than when true" do
+    f = Nydp::Builtin::LessThan.new
+
+    f.invoke vm, pair_list([bar, foo])
+
+    expect(vm.pop_arg).to eq Nydp.T
+  end
+
+  it "works with builtin less-than when false" do
+    f = Nydp::Builtin::LessThan.new
+
+    f.invoke vm, pair_list([foo, bar])
+
+    expect(vm.pop_arg).to eq Nydp.NIL
+  end
+
 end

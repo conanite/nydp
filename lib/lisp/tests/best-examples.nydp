@@ -3,7 +3,23 @@
    (best < '(3 5 4 7 8 2))
    2)
 
-  ("finds maximum of list"
+  ("finds minimum of list of syms"
+   (best < '(c g d o p b m e g z m))
+   b)
+
+  ("finds minimum of list of strings"
+   (best < '("c" "g" "d" "o" "p" "b" "z" "m"))
+   "b")
+
+  ("finds maximum of list of strings"
+   (best > '("c" "g" "d" "o" "p" "b" "y" "m"))
+   "y")
+
+  ("finds maximum of list of syms"
+   (best > '(c g d o a p b m e g a z m))
+   z)
+
+  ("finds maximum of list of numbers"
    (best > '(3 5 4 7 8 2))
    8))
 

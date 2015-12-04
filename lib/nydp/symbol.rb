@@ -40,6 +40,8 @@ class Nydp::Symbol
   def hash       ; name.hash      ; end
   def eql? other ; self == other  ; end
   def is? nm     ; self.name == nm.to_sym   ; end
+  def > other    ; self.name > other.name   ; end
+  def < other    ; self.name < other.name   ; end
   def <=> other  ; self.name <=> other.name ; end
 
   def == other

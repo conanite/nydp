@@ -1,0 +1,12 @@
+(examples-for sort
+  ("sorts a list of numbers"
+   (sort '(3 5 4 7 8 2))
+   (2 3 4 5 7 8))
+
+  ("sorts a list of syms"
+   (sort '(c g d o a p b m e g a z m))
+   (a a b c d e g g m m o p z))
+
+  ("sorts a list of strings"
+   (sort '("c" "g" "d" "o" "a" "p" "b" "m" "e" "g" "a" "z" "m"))
+   ("a" "a" "b" "c" "d" "e" "g" "g" "m" "m" "o" "p" "z")))
