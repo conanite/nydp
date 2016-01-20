@@ -40,3 +40,12 @@
   ("hash-merge"      (inspect hash-merge      ) "builtin/hash-merge"      )
   ("vm-info"         (inspect vm-info         ) "builtin/vm-info"         )
 ))
+
+(examples-for +
+  ("adds integers"
+   (+ 11 22 33)
+   66)
+
+  ("adds floats"
+   (+ 14.80 (* 91.31 1.05))
+   110.6755))

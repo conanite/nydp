@@ -3,7 +3,7 @@ class Nydp::Builtin::Plus
 
   def builtin_invoke vm, args
     vm.push_arg case args.car
-                when Fixnum, Nydp::Date
+                when Fixnum, Nydp::Date, Float
                   sum(args.cdr, args.car)
                 when Nydp::Pair
                   sum(args, Nydp.NIL)
