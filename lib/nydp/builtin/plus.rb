@@ -3,12 +3,12 @@ class Nydp::Builtin::Plus
 
   def builtin_invoke vm, args
     vm.push_arg case args.car
-                when Fixnum, Nydp::Date, Float
-                  sum(args.cdr, args.car)
                 when Nydp::Pair
                   sum(args, Nydp.NIL)
                 when String, Nydp::StringAtom
                   sum(args, Nydp::StringAtom.new(""))
+                else
+                  sum(args.cdr, args.car)
                 end
   end
 
