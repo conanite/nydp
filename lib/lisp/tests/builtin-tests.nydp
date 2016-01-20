@@ -49,3 +49,12 @@
   ("adds floats"
    (+ 14.80 (* 91.31 1.05))
    110.6755))
+
+(examples-for -
+  ("subtracts integers"
+   (- 66 25)
+   41)
+
+  ("subtracts floats"
+   (- 6.25 4.125)
+   2.125))
