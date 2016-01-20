@@ -29,6 +29,7 @@ module Nydp
     def > other   ; ruby_date > other.ruby_date           ; end
     def < other   ; ruby_date < other.ruby_date           ; end
     def == other  ; ruby_date == other.ruby_date          ; end
+    def <=> other ; ruby_date <=> other.ruby_date         ; end
     def eql? d    ; self == d                             ; end
     def hash      ; ruby_date.hash                        ; end
 
