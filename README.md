@@ -60,9 +60,9 @@ You can maintain multiple `ns` instances without mutual interference. In other w
 
 #### 1. Macro-expansion runs in lisp
 
-After parsing its input, `'nydp` passes the result as an argument to the `pre-compile` function. This is where things get a little bit circular: initially, `pre-compile` is a builtin function that just returns its argument. `pre-compile` bootstraps itself into existence in [boot.nydp](lib/lisp/boot.nydp).
+After parsing its input, `'nydp` passes the result as an argument to the `pre-compile` function. This is where things get a little bit circular: initially, `pre-compile` is a builtin function that just returns its argument. `pre-compile` bootstraps itself into existence in [core-010-precompile.nydp](lib/lisp/core-010-precompile.nydp).
 
-You can override `pre-compile` to transform the expression in any way you wish. By default, the `boot.nydp` implementation of `pre-compile` performs macro-expansion.
+You can override `pre-compile` to transform the expression in any way you wish. By default, the `core-010-precompile.nydp` implementation of `pre-compile` performs macro-expansion.
 
 
 ```lisp
