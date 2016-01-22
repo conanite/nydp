@@ -1,3 +1,3 @@
 module Nydp
-  VERSION = "0.1.9.1"
+  VERSION = "0.1.10"
 end
