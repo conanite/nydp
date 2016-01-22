@@ -17,6 +17,10 @@ module Nydp::Builtin
       invoke vm, cons(arg_0, cons(arg_1))
     end
 
+    def invoke_4 vm, arg_0, arg_1, arg_2
+      invoke vm, cons(arg_0, cons(arg_1, cons(arg_2)))
+    end
+
     def invoke vm, args
       builtin_invoke vm, args
     rescue Exception => e

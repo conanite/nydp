@@ -17,8 +17,8 @@
                          (assign times (+ elapsed times))
                          (p "  took: ~elapsed ms, ~(/ elapsed iterations) ms per iteration"))))
           (p "total ~(just times), average ~(/ times repeats) per run")
-          (p "================================================\n"))
-     nil)
+          (p "================================================\n")
+          "~desc : total ~(just times), average ~(/ times repeats) per run"))
 
 (let private-x 0
      (let inc-x (fn () (assign private-x (+ 1 private-x)))
@@ -35,8 +35,16 @@
           (def bm-two-arg-call ()
                (for i 0 400 (inc-z 2 5)))))
 
-(def rbs ()
-  (bm "pythag"        bm-pythag        10 100)
-  (bm "zero arg call" bm-zero-arg-call 10 500)
-  (bm "one arg call"  bm-one-arg-call  10 500)
-  (bm "two arg call"  bm-two-arg-call  10 500))
+(let private-z 0
+     (let inc-z (fn (p q r) (assign private-z (+ p q r private-z)))
+          (def bm-three-arg-call ()
+               (for i 0 400 (inc-z 2 3 5)))))
+
+(def rbs (name)
+  (let summary nil
+    (push (bm "pythag"         bm-pythag         10  20) summary)
+    (push (bm "zero arg call"  bm-zero-arg-call  10 200) summary)
+    (push (bm "one arg call"   bm-one-arg-call   10 200) summary)
+    (push (bm "two arg call"   bm-two-arg-call   10 200) summary)
+    (push (bm "three arg call" bm-three-arg-call 10 200) summary)
+    (each s summary (p name " " s))))

@@ -58,6 +58,18 @@ module Nydp
       end
     end
 
+    class Invocation_4 < Invocation::Base
+      def execute vm
+        arg_2 = vm.pop_arg
+        arg_1 = vm.pop_arg
+        arg_0 = vm.pop_arg
+        f   = vm.pop_arg
+        f.invoke_4 vm, arg_0, arg_1, arg_2
+      rescue Exception => e
+        handle e, f, cons(arg_0, cons(arg_1, cons(arg_2)))
+      end
+    end
+
     class Invocation_N < Invocation::Base
       def initialize arg_count, source_expression
         super source_expression
@@ -85,6 +97,8 @@ module Nydp
                           Invocation::Invocation_2.new(expression)
                         when 3
                           Invocation::Invocation_3.new(expression)
+                        when 4
+                          Invocation::Invocation_4.new(expression)
                         else
                           Invocation::Invocation_N.new(expression.size, expression)
                         end

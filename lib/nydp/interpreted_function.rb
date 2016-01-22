@@ -31,6 +31,12 @@ module Nydp
       vm.push_instructions self.body, lc
     end
 
+    def invoke_4 vm, parent_context, arg_0, arg_1, arg_2
+      lc = LexicalContext.new parent_context
+      set_args_3 lc, arg_0, arg_1, arg_2
+      vm.push_instructions self.body, lc
+    end
+
     def invoke vm, parent_context, arg_values
       lc = LexicalContext.new parent_context
       set_args lc, arg_values
