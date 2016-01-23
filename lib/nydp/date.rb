@@ -24,7 +24,6 @@ module Nydp
     def to_ruby   ; ruby_date         ; end
     def inspect   ; ruby_date.inspect ; end
     def nydp_type ; :date             ; end
-    def - other   ; r2n(ruby_date - other.ruby_date, nil) ; end
     def + int     ; r2n(ruby_date + int            , nil) ; end
     def > other   ; ruby_date > other.ruby_date           ; end
     def < other   ; ruby_date < other.ruby_date           ; end
@@ -32,6 +31,14 @@ module Nydp
     def <=> other ; ruby_date <=> other.ruby_date         ; end
     def eql? d    ; self == d                             ; end
     def hash      ; ruby_date.hash                        ; end
+
+    def - other
+      if other.is_a? Nydp::Date
+        r2n(ruby_date - other.ruby_date, nil)
+      else
+        r2n(ruby_date - other, nil)
+      end
+    end
 
     @@pass_through = %i{ monday? tuesday? wednesday? thursday? friday? saturday? sunday? }
     @@keys = Set.new %i{
