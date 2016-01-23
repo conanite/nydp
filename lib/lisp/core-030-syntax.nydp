@@ -1,3 +1,12 @@
+(mac and args
+  ; returns last arg if all 'args evaluate to non-nil
+  ; nil otherwise
+  (if args
+      (if (cdr args)
+          `(if ,(car args) (and ,@(cdr args)))
+          (car args))
+      't))
+
 (def orf args
   ; evaluates each arg in 'args, returns the
   ; first non-nil value, or nil if they are
@@ -7,6 +16,12 @@
               (car args)
               (apply orf
                      (cdr args)))))
+
+(def caris (obj things)
+  ; returns true if 'things is a list and the first item of the
+  ; list is the given object
+  (and (isa 'pair things)
+       (eq? (car things)  obj)))
 
 (mac unless (arg . body)
   ; evaluate 'body if 'arg is nil
@@ -55,13 +70,6 @@
       (if (caris 'colon-syntax (car rest))
           `(colon-syntax no ,@(cdar rest))
           `(colon-syntax no ,(car rest)))))
-
-(mac and args
-  (if args
-      (if (cdr args)
-          `(if ,(car args) (and ,@(cdr args)))
-          (car args))
-      't))
 
 (mac when (condition . body)
   `(cond ,condition (do ,@body)))

@@ -72,12 +72,6 @@
 (mac just    (arg)      arg)
 (def quotify (arg)      `(quote ,arg))
 
-(def caris (obj things)
-  ; returns true if 'things is a list and the first item of the
-  ; list is the given object
-  (and (isa 'pair things)
-       (eq? (car things)  obj)))
-
 (def list-length (things)
   (if (no things)    0
       (atom? things) 1
