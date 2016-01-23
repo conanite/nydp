@@ -32,3 +32,7 @@
   ; its own history independent of previous calls to 'seen?
   (let seen (hash)
     λx(returning seen.,x (= seen.,x t))))
+
+(def uniqify (things)
+  ; return a list containing all the elements of 'things, but with no duplicates
+  (reject (seen?) things))

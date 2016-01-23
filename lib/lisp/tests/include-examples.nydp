@@ -29,3 +29,15 @@
          (list (map s1 syms) (map s2 syms)))
    ((nil nil nil t nil t nil t nil)
     (nil nil nil t nil t nil t nil))))
+
+(examples-for uniqify
+  ("returns a list with duplicates removed"
+   (uniqify '(a b c d a a e f b b g h c c i j d d k l a b c d))
+   (a b c d e f g h i j k l))
+
+  ("removes duplicate dates"
+   (let d (date 2004 3 12)
+     (joinstr " "
+              (uniqify (map λx(+ d x)
+                            '(0 2 3 3 4 3 5 0 5) ))))
+   "2004-03-12 2004-03-14 2004-03-15 2004-03-16 2004-03-17"))
