@@ -14,3 +14,6 @@
     (apply joinlists
            (map λx(hash-get tmp x)
                 (sort:hash-keys tmp)))))
+
+(def mapsum (f things)
+  (apply + 0.0 (map f things)))
