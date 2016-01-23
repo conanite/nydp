@@ -1,0 +1,6 @@
+(examples-for returning
+  ("it stores a value, executes body, returns the stored value"
+   (let x 2
+     (returning x
+       (= x 3)))
+   2))

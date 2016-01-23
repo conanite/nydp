@@ -217,3 +217,8 @@
       (no (cdr args))
       `(brace-list-mono ,(car args))
       (brace-list-build-hash args)))
+
+(mac returning (val . body)
+  ; stores ,val, executes ,@body, and returns ,val.
+  (w/uniq retval
+          `(let ,retval ,val ,@body ,retval)))
