@@ -24,5 +24,11 @@
   (map (fn (k) h.,k) (hash-keys h)))
 
 (def seen? ()
+  ; returns a new function f which takes a parameter x
+  ; for each call to f with any value Z for x
+  ; f returns true if this f has previously seen Z
+  ; f returns nil otherwise.
+  ; Note that each call to 'seen? returns a new function with
+  ; its own history independent of previous calls to 'seen?
   (let seen (hash)
     λx(returning seen.,x (= seen.,x t))))

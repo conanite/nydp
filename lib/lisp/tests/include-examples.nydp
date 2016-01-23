@@ -22,4 +22,10 @@
 (examples-for seen?
   ("returns a function which returns t for every previously-seen argument, nil otherwise"
    (map (seen?) '(a b c d a a e f b b g h c c i j d d k l a b c d))
-   (nil nil nil nil t t nil nil t t nil nil t t nil nil t t nil nil t t t t)))
+   (nil nil nil nil t t nil nil t t nil nil t t nil nil t t nil nil t t t t))
+
+  ("each 'seen? is independent"
+   (with (s1 (seen?) s2 (seen?) syms '(a b c a d b e c f))
+         (list (map s1 syms) (map s2 syms)))
+   ((nil nil nil t nil t nil t nil)
+    (nil nil nil t nil t nil t nil))))
