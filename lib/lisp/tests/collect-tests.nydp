@@ -26,3 +26,36 @@
    (collect (fn (x) (eq? (len x) 20))
             "zz")
    nil))
+
+(examples-for reject
+  ("returns all non-matching items in a list"
+   (reject (fn (x) (eq? (len x) 2))
+            (list "foo" "bar" "xx" "pp"))
+   ("foo" "bar"))
+
+  ("returns everything when nothing matches"
+   (reject (fn (x) (eq? (len x) 20))
+            (list "foo" "bar" "xx" "pp"))
+   ("foo" "bar" "xx" "pp"))
+
+  ;; kind of pointless
+  ("returns non-nils in list if nil is the matching item"
+   (reject no (list "foo" "bar" nil "pp" nil))
+   ("foo" "bar" "pp"))
+
+  ("returns item if it's an atom and doesn't match"
+   (reject (fn (x) (eq? (len x) 3)) "zz")
+   "zz")
+
+  ("preserves structure of improper list"
+   (reject (fn (x) (eq? (len x) 2)) '("aa" "bbb" "cc" "ddd" . "eee"))
+   ("bbb" "ddd" . "eee"))
+
+  ("ignores last-cons if matching"
+   (reject (fn (x) (eq? (len x) 2)) '("aa" "bbb" "cc" "ddd" . "ee"))
+   ("bbb" "ddd"))
+
+  ("returns thing if it's an atom and doesn't match"
+   (reject (fn (x) (eq? (len x) 20))
+            "zz")
+   "zz"))

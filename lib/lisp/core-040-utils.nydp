@@ -53,6 +53,10 @@
                (f items)
                items)))
 
+(def reject (f things)
+  ; return all the items in 'things for which 'f returns nil
+  (collect !f things))
+
 (def nth (n things)
   ; returns the n-th item in the list 'things
   (if (eq? n 0)
