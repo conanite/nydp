@@ -22,3 +22,7 @@
 (def hash-values (h)
   ; return values for each key in hash 'h
   (map (fn (k) h.,k) (hash-keys h)))
+
+(def seen? ()
+  (let seen (hash)
+    λx(returning seen.,x (= seen.,x t))))

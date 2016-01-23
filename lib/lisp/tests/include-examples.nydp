@@ -18,3 +18,8 @@
   ("nil for 42 in list not containing 42"
    (include? 42 '(1 2 nil 3 (a b c) 4))
    nil))
+
+(examples-for seen?
+  ("returns a function which returns t for every previously-seen argument, nil otherwise"
+   (map (seen?) '(a b c d a a e f b b g h c c i j d d k l a b c d))
+   (nil nil nil nil t t nil nil t t nil nil t t nil nil t t nil nil t t t t)))
