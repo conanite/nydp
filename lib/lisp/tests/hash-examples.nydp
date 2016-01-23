@@ -1,3 +1,8 @@
+(examples-for hash-values
+  ("returns the list of values of the given hash"
+   (hash-values { a 1 b 2 c 'c d "hello" })
+   (1 2 c "hello")))
+
 (examples-for hash?
   ("nil for a cons"    (hash? '(1 a 2 b 3 c))  nil)
   ("nil for a number"  (hash? 1)               nil)
