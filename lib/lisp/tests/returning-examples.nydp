@@ -4,3 +4,9 @@
      (returning x
        (= x 3)))
    2))
+
+(examples-for returnlet
+  ("it stores the given value in the given variable, executes body, returns the value assigned to the variable"
+   (let result (returnlet hsh (hash) (= hsh.a 1) (= hsh.b 2))
+     (list (hash-keys result) (hash-values result)))
+   ((a b) (1 2))))

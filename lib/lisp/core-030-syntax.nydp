@@ -218,7 +218,10 @@
       `(brace-list-mono ,(car args))
       (brace-list-build-hash args)))
 
+(mac returnlet (var val . body)
+  ; stores ,val in ,var, executes ,@body, returns ,var
+  `(let ,var ,val ,@body ,var))
+
 (mac returning (val . body)
   ; stores ,val, executes ,@body, and returns ,val.
-  (w/uniq retval
-          `(let ,retval ,val ,@body ,retval)))
+  (w/uniq retval `(returnlet ,retval ,val ,@body)))
