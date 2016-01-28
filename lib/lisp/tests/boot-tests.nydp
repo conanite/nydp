@@ -85,7 +85,11 @@
 
   ("special combination with bang"
    (pre-compile '(!x:y a b))
-   ((fn args (no (x (apply y args)))) a b)))
+   ((fn args (no (x (apply y args)))) a b))
+
+  ("precedence over ampersand-syntax"
+   (pre-compile '(&attr:func a b))
+   ((fn args ((fn (obj) (hash-get obj (quote attr))) (apply func args))) a b)))
 
 (examples-for let
   ("expands 'let"
