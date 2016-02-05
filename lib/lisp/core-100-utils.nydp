@@ -43,3 +43,13 @@
   (returnlet hsh {}
     (each thing things
           (hash-cons hsh (f thing) thing))))
+
+(with (m2i λd(+ (* 12 d.year) (- d.month 1))
+       i2m λi(date (/ i 12) (+ 1 (mod i 12)) 1))
+      (def relative-months (anchor . mm)
+        ; 'anchor is a date
+        ; 'mm is a list of integers
+        ; for each m in 'mm, return the date at the beginning of
+        ; the month given by adding m months to 'anchor
+        (let mi (m2i anchor)
+          (map λm(i2m (+ mi m)) mm))))
