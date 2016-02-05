@@ -24,6 +24,11 @@
     (to-string (hash-get h (date 2015 11 8))))
   "on this day")
 
+ ("equals itself"              (eq? (date 2004 3 12) (date 2004 3 12))  t  )
+ ("does not equal another"     (eq? (date 2004 3 12) (date 2006 6 21))  nil)
+ ("does not equal nil"         (eq? (date 2004 3 12) nil             )  nil)
+ ("nil does not equal a date"  (eq? nil (date 2004 3 12)             )  nil)
+
  ("returns its year"      (let d (date 1999 12 31) d.year)     1999)
  ("returns its month"     (let d (date 1999 12 31) d.month)    12  )
  ("returns its day"       (let d (date 1999 12 31) d.day)      31  )

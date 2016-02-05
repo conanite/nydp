@@ -46,36 +46,56 @@ describe Nydp::Date do
       expect(diff).to eq 6
     end
 
-    it "works with builtin greater-than when true" do
-      f = Nydp::Builtin::GreaterThan.new
+    describe "'>" do
+      it "works with builtin greater-than when true" do
+        f = Nydp::Builtin::GreaterThan.new
 
-      f.invoke vm, pair_list([d1, d0])
+        f.invoke vm, pair_list([d1, d0])
 
-      expect(vm.pop_arg).to eq Nydp.T
+        expect(vm.pop_arg).to eq Nydp.T
+      end
+
+      it "compares with nil" do
+        f = Nydp::Builtin::GreaterThan.new
+
+        f.invoke vm, pair_list([d1, Nydp.NIL])
+
+        expect(vm.pop_arg).to eq Nydp.NIL
+      end
+
+      it "works with builtin greater-than when false" do
+        f = Nydp::Builtin::GreaterThan.new
+
+        f.invoke vm, pair_list([d0, d1])
+
+        expect(vm.pop_arg).to eq Nydp.NIL
+      end
     end
 
-    it "works with builtin greater-than when false" do
-      f = Nydp::Builtin::GreaterThan.new
+    describe "'<" do
+      it "works with builtin less-than when true" do
+        f = Nydp::Builtin::LessThan.new
 
-      f.invoke vm, pair_list([d0, d1])
+        f.invoke vm, pair_list([d0, d1])
 
-      expect(vm.pop_arg).to eq Nydp.NIL
-    end
+        expect(vm.pop_arg).to eq Nydp.T
+      end
 
-    it "works with builtin less-than when true" do
-      f = Nydp::Builtin::LessThan.new
+      it "works with builtin less-than when false" do
+        f = Nydp::Builtin::LessThan.new
 
-      f.invoke vm, pair_list([d0, d1])
+        f.invoke vm, pair_list([d1, d0])
 
-      expect(vm.pop_arg).to eq Nydp.T
-    end
+        expect(vm.pop_arg).to eq Nydp.NIL
+      end
 
-    it "works with builtin less-than when false" do
-      f = Nydp::Builtin::LessThan.new
+      it "compares with nil" do
+        f = Nydp::Builtin::LessThan.new
 
-      f.invoke vm, pair_list([d1, d0])
+        f.invoke vm, pair_list([d1, Nydp.NIL])
 
-      expect(vm.pop_arg).to eq Nydp.NIL
+        expect(vm.pop_arg).to eq Nydp.NIL
+      end
     end
 
     it "works with builtin plus" do
