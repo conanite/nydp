@@ -70,7 +70,6 @@
    (j '(1 2 3))
    "123"))
 
-
 (examples-for string-strip
   ("removes leading whitespace"               (string-strip "    hello!")  "hello!" )
   ("removes trailing whitespace"              (string-strip "(world)   ") "(world)" )
