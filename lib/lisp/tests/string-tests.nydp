@@ -62,6 +62,15 @@
    (joinstr " - " '(1 2 3))
    "1 - 2 - 3"))
 
+(examples-for j
+  ("joins elements with empty string"
+   (j 1 2 3)
+   "123")
+  ("joins elements of a list with empty string"
+   (j '(1 2 3))
+   "123"))
+
+
 (examples-for string-strip
   ("removes leading whitespace"               (string-strip "    hello!")  "hello!" )
   ("removes trailing whitespace"              (string-strip "(world)   ") "(world)" )
