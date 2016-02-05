@@ -146,23 +146,20 @@ describe Nydp::Parser do
 
   it "should spot numbers hiding in special syntax" do
     parsed = parse("foo.2:3:4")
-    expect(parsed.inspect).to eq "(dot-syntax foo (colon-syntax 2 3 4))"
+    expect(parsed.inspect).to eq "(colon-syntax (dot-syntax foo 2) 3 4)"
 
-    numbers = parsed.cdr.cdr.car.cdr
-    two = numbers.car
-    three = numbers.cdr.car
-    four = numbers.cdr.cdr.car
-
-    expect([two, three, four].map &:class).to eq [Fixnum, Fixnum, Fixnum]
+    expect(parsed.map &:class).to eq [Nydp::Symbol, Nydp::Pair, Fixnum, Fixnum]
+    expect(parsed.cdr.car.map &:class).to eq [Nydp::Symbol, Nydp::Symbol, Fixnum]
   end
 
   it "should handle prefix and postfix syntax also" do
     parsed = parse(".foo123:")
-    expect(parsed.inspect).to eq "(dot-syntax || (colon-syntax foo123 ||))"
+    expect(parsed.inspect).to eq "(colon-syntax (dot-syntax || foo123) ||)"
   end
 
   it "should parse a dotted symbol" do
-    expect(parse "(list a b foo.bar c)").to eq  pair_list([sym(:list), a, b, pair_list([dotsyn, foo, bar]), c])
+    expected = parse "(list a b (dot-syntax foo bar) c)"
+    expect(parse "(list a b foo.bar c)").to eq expected
   end
 
   it "should parse a colon-colon symbol" do
@@ -170,7 +167,8 @@ describe Nydp::Parser do
   end
 
   it "should parse a colon-symbol within a colon-colon within a dotted symbol" do
-    expect(parse "aa.foo:foo::bar:bar.zz").to eq pair_list([dotsyn, aa, pair_list([cocosyn, pair_list([colosyn, foo, foo]), pair_list([colosyn, bar, bar])]), zz])
+    expected = parse "(colon-colon-syntax (colon-syntax (dot-syntax aa foo) foo) (colon-syntax bar (dot-syntax bar zz)))"
+    expect(parse "aa.foo:foo::bar:bar.zz").to eq expected
   end
 
   it "should quote symbols" do

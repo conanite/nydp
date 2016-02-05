@@ -44,11 +44,11 @@ module Nydp
       [
         [ /%/,      "percent-syntax"    ],
         [ /\!/,     "bang-syntax"       ],
+        [ /::/,     "colon-colon-syntax"],
         [ /:/,      "colon-syntax"      ],
         [ /&/,      "ampersand-syntax"  ],
         [ /\./,     "dot-syntax"        ],
         [ /\$/,     "dollar-syntax"     ],
-        [ /::/,     "colon-colon-syntax"],
         [ /->/,     "arrow-syntax"      ],
         [ /[=][>]/, "rocket-syntax"     ],
       ]
