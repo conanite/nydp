@@ -1,9 +1,15 @@
-((fn (dox examples)
+((fn (dox examples chapters)
      (def dox-add-doc (name what texts args src)
        (hash-set dox
                  name
                  (cons (list name what texts args src)
                        (hash-get dox sym))))
+
+     (def dox-add-to-chapter (chapter item)
+       (hash-set chapters
+                 item
+                 (cons item
+                       (hash-get chapters item))))
 
      (def dox-add-examples (name example-exprs)
        (hash-set examples
@@ -33,7 +39,7 @@
      (def dox-arg-names (name)
        (cond (dox? name)
              (cadddr (car (dox-lookup name))))))
- (hash) (hash))
+ (hash) (hash) (hash))
 
 (def isa-comment? (thing)
   (cond (pair? thing)
