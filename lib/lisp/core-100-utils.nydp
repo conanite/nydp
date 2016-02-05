@@ -53,3 +53,7 @@
         ; the month given by adding m months to 'anchor
         (let mi (m2i anchor)
           (map λm(i2m (+ mi m)) mm))))
+
+(mac auto-hash names
+  ; (auto-hash a b c) same as { a a b b c c }
+  `(brace-list ,@(flatten:map λn(list n n) names)))
