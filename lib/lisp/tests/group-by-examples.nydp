@@ -1,0 +1,8 @@
+(examples-for group-by
+  ("create a hash keyed by value of given function"
+   (let h (group-by car
+                    (list '(a b c) '(a x y) '(b c d) '(z y x) '(z b a) '(1 2 3)))
+     (joinstr ", "
+              (map λk(j k " -> " (inspect:hash-get h k))
+                   (hash-keys h))))
+   "a -> ((a x y) (a b c)), b -> ((b c d)), z -> ((z b a) (z y x)), 1 -> ((1 2 3))"))

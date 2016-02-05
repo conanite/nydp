@@ -36,3 +36,10 @@
 (def uniqify (things)
   ; return a list containing all the elements of 'things, but with no duplicates
   (reject (seen?) things))
+
+(def group-by (f things)
+  ; return a hash of 'things keyed by (f thing) for
+  ; each thing in 'things
+  (returnlet hsh {}
+    (each thing things
+          (hash-cons hsh (f thing) thing))))
