@@ -1,13 +1,15 @@
 module Nydp
   class Truth
-    def to_s      ; 't'              ; end
-    def inspect   ; 't[nydp::Truth]' ; end
-    def assign *_ ; self             ; end
-    def nydp_type ; :truth           ; end
-    def to_ruby   ; true             ; end
+    def init_with *; Nydp.T           ; end
+    def to_s       ; 't'              ; end
+    def inspect    ; 't[nydp::Truth]' ; end
+    def assign  *_ ; self             ; end
+    def nydp_type  ; :truth           ; end
+    def to_ruby    ; true             ; end
   end
 
   class Nil
+    def init_with * ; Nydp.NIL      ; end
     def car         ; self          ; end
     def cdr         ; self          ; end
     def size        ; 0             ; end
