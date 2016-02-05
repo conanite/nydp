@@ -33,9 +33,10 @@ module Nydp
     vm.thread
   end
 
-  def self.eval_src ns, src_txt
-    Nydp::Runner.new(VM.new, ns, Nydp::StringReader.new(src_txt)).run
-  end
+  def self.reader                    txt ; Nydp::StringReader.new txt                  ; end
+  def self.eval_src          ns, src_txt ; eval_with Nydp::Runner, ns, src_txt         ; end
+  def self.eval_src!         ns, src_txt ; eval_with Nydp::ExplodeRunner, ns, src_txt  ; end
+  def self.eval_with runner, ns, src_txt ; runner.new(VM.new, ns, reader(src_txt)).run ; end
 
   def self.repl
     puts "welcome to nydp"
