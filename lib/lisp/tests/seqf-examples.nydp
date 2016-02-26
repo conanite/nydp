@@ -1,0 +1,5 @@
+(examples-for seqf
+  ("returns a function that returns the next number in a sequence when called"
+   (let s (seqf 10 2)
+     (list (s) (s) (s) (s)))
+   (10 12 14 16)))
