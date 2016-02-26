@@ -64,3 +64,6 @@
        (let ,accfn-name λa(push a ,acc)
          ,@body
          (rev ,acc)))))
+
+(mac ++ (place inc)
+  `(= ,place (+ ,place ,(or inc 1))))

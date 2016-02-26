@@ -1,0 +1,15 @@
+(examples-for ++
+  ("increments a variable"
+   (let a 3
+     (++ a)
+     (++ a)
+     (++ a)
+     a)
+   6)
+  ("increments a variable by the specified amount"
+   (let a 5
+     (++ a 3)
+     (++ a 4)
+     (++ a 5)
+     a)
+   17))
