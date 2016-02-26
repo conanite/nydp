@@ -57,3 +57,10 @@
 (mac auto-hash names
   ; (auto-hash a b c) same as { a a b b c c }
   `(brace-list ,@(flatten:map λn(list n n) names)))
+
+(mac accum (accfn-name . body)
+  (w/uniq acc
+    `(let ,acc nil
+       (let ,accfn-name λa(push a ,acc)
+         ,@body
+         (rev ,acc)))))
