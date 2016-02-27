@@ -2,4 +2,9 @@
   ("returns a function that returns the next number in a sequence when called"
    (let s (seqf 10 2)
      (list (s) (s) (s) (s)))
-   (10 12 14 16)))
+   (10 12 14 16))
+
+  ("returns a function that returns the next number on each call"
+   (let s (seqf 10)
+     (list (s) (s) (s) (s)))
+   (10 11 12 13)))

@@ -69,4 +69,5 @@
   `(= ,place (+ ,place ,(or inc 1))))
 
 (def seqf (start incr)
-  (fn () (returning start (++ start incr))))
+  (let i (or incr 1)
+    (fn () (returning start (++ start i)))))
