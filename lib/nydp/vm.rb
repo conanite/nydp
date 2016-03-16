@@ -17,11 +17,14 @@ module Nydp
       instructions.push expr if expr
       while instructions.length > 0
         begin
-          self.current_context = contexts.last
-          ii = instructions.pop
-          i = ii.car
-          ii.cdr.repush instructions, contexts
-          i.execute(self)
+          thisi = instructions.pop
+          if thisi.cdr.is_a? Nydp::Nil
+            self.current_context = contexts.pop
+          else
+            self.current_context = contexts.last
+            instructions.push thisi.cdr
+          end
+          thisi.car.execute(self)
         rescue Exception => e
           handle_error e
         end

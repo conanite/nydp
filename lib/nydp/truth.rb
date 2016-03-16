@@ -22,14 +22,7 @@ module Nydp
     def inspect     ; "nil"         ; end
     def nydp_type   ; :nil          ; end
     def to_ruby     ; nil           ; end
-
-    def execute vm
-      vm.push_arg self
-    end
-
-    def repush _, contexts
-      contexts.pop
-    end
+    def execute vm  ; vm.push_arg self ; end
   end
 
   @@nil = Nil.new
