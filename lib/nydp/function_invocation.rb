@@ -112,9 +112,9 @@ module Nydp
 
     def execute vm
       vm.instructions.push @function_instruction
-      vm.contexts.push vm.peek_context
+      vm.contexts.push vm.current_context
       vm.instructions.push @argument_instructions
-      vm.contexts.push vm.peek_context
+      vm.contexts.push vm.current_context
     end
 
     def inspect ; @source.inspect ; end

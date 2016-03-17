@@ -11,7 +11,7 @@ module Nydp
     end
 
     def execute vm
-      vm.push_arg expression.value vm.peek_context
+      vm.push_arg expression.value vm.current_context
     end
 
     def assign value, context=nil

@@ -63,8 +63,6 @@ module Nydp
       end
     end
 
-    def peek_context ; current_context                                           ; end
-    def pop_context  ; contexts.pop                                              ; end
     def push_arg a   ; args.push a                                               ; end
     def args!        ; args.empty? ? (raise "illegal operation: no args") : args ; end
     def peek_arg     ; args!.last                                                ; end

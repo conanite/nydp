@@ -5,7 +5,7 @@ module Nydp
     end
 
     def execute vm
-      @name.assign vm.peek_arg, vm.peek_context
+      @name.assign vm.peek_arg, vm.current_context
     end
 
     def to_s
@@ -37,7 +37,7 @@ module Nydp
 
     def execute vm
       vm.instructions.push @instructions
-      vm.contexts.push vm.peek_context
+      vm.contexts.push vm.current_context
     end
   end
 end

@@ -90,7 +90,7 @@ module Nydp
     end
 
     def execute vm
-      vm.push_arg Closure.new(self, vm.peek_context)
+      vm.push_arg Closure.new(self, vm.current_context)
     end
 
     def nydp_type ; "fn" ; end

@@ -34,7 +34,7 @@ class Nydp::Builtin::HandleError
 
     catcher_instructions = Nydp::Pair.from_list [CatchError.new(fn_handle, vm.args.size)]
     vm.instructions.push catcher_instructions
-    vm.contexts.push vm.peek_context
+    vm.contexts.push vm.current_context
 
     fn_tricky.invoke vm, Nydp.NIL
   end

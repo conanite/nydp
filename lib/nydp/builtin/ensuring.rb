@@ -22,7 +22,7 @@ class Nydp::Builtin::Ensuring
 
     protection_instructions = Nydp::Pair.from_list [InvokeProtection.new(fn_ensure), Nydp::PopArg]
     vm.instructions.push protection_instructions
-    vm.contexts.push vm.peek_context
+    vm.contexts.push vm.current_context
 
     fn_tricky.invoke vm, Nydp.NIL
   end
