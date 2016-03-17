@@ -55,7 +55,7 @@ describe Nydp::Pair do
   end
 
   it "should create a new pair" do
-    p = Nydp::Pair.mk :a, :b
+    p = Nydp::Pair.new :a, :b
     expect(p.car).to eq :a
     expect(p.cdr).to eq :b
   end

@@ -8,10 +8,6 @@ class Nydp::Pair
     @car, @cdr = car, cdr
   end
 
-  def self.mk a, b
-    new a, b
-  end
-
   def nydp_type ; :pair   ; end
   def caar      ; car.car ; end
   def cadr      ; cdr.car ; end
@@ -35,7 +31,7 @@ class Nydp::Pair
     if n >= list.size
       last
     else
-      mk list[n], from_list(list, last, n+1)
+      new list[n], from_list(list, last, n+1)
     end
   end
 
