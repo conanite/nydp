@@ -21,7 +21,8 @@ class Nydp::Builtin::Ensuring
     fn_tricky = args.cdr.car
 
     protection_instructions = Nydp::Pair.from_list [InvokeProtection.new(fn_ensure), Nydp::PopArg]
-    vm.push_instructions protection_instructions, vm.peek_context
+    vm.instructions.push protection_instructions
+    vm.contexts.push vm.peek_context
 
     fn_tricky.invoke vm, Nydp.NIL
   end

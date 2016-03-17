@@ -58,7 +58,8 @@ module Nydp
       end
 
       while protecti.length > 0
-        push_instructions protecti.pop, protectc.pop
+        instructions.push protecti.pop
+        contexts.push protectc.pop
       end
     end
 
@@ -67,11 +68,6 @@ module Nydp
     def push_arg a   ; args.push a                                               ; end
     def args!        ; args.empty? ? (raise "illegal operation: no args") : args ; end
     def peek_arg     ; args!.last                                                ; end
-
-    def push_instructions ii, ctx
-      instructions.push ii
-      contexts.push ctx
-    end
 
     def pop_args count, tail=Nydp.NIL
       case count

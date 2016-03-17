@@ -9,7 +9,8 @@ module Nydp
 
     def execute vm
       truth = !Nydp.NIL.is?(vm.args.pop)
-      vm.push_instructions (truth ? when_true : when_false), vm.peek_context
+      vm.instructions.push (truth ? when_true : when_false)
+      vm.contexts.push vm.peek_context
     end
 
     def inspect
@@ -30,8 +31,10 @@ module Nydp
     end
 
     def execute vm
-      vm.push_instructions conditional, vm.peek_context
-      vm.push_instructions condition,   vm.peek_context
+      vm.instructions.push conditional
+      vm.contexts.push vm.peek_context
+      vm.instructions.push condition
+      vm.contexts.push vm.peek_context
     end
 
     def inspect
