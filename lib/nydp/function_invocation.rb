@@ -88,6 +88,7 @@ module Nydp
 
   class FunctionInvocation
     extend Helper
+    attr_accessor :function_instruction, :argument_instructions
 
     def self.build expression, bindings
       compiled   = Compiler.compile_each(expression, bindings)
@@ -111,10 +112,10 @@ module Nydp
     end
 
     def execute vm
-      vm.instructions.push @function_instruction
-      vm.contexts.push vm.current_context
-      vm.instructions.push @argument_instructions
-      vm.contexts.push vm.current_context
+      vm.instructions.push function_instruction
+      vm.contexts    .push vm.current_context
+      vm.instructions.push argument_instructions
+      vm.contexts    .push vm.current_context
     end
 
     def inspect ; @source.inspect ; end
