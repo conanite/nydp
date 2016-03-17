@@ -15,7 +15,7 @@ module Nydp
 
     def thread expr=nil
       instructions.push expr if expr
-      while instructions.length > 0
+      while instructions.first
         begin
           thisi = instructions.pop
           if thisi.cdr.is_a? Nydp::Nil
