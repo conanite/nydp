@@ -4,7 +4,7 @@ require 'nydp/closure'
 
 module Nydp
   class PopArg
-    def self.execute vm ; vm.pop_arg ; end
+    def self.execute vm ; vm.args.pop ; end
     def self.to_s       ; ""         ; end
     def self.inspect    ; "#pop_arg" ; end
   end

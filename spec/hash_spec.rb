@@ -63,7 +63,7 @@ describe Nydp::Hash do
     describe "new hash" do
       it "returns a new Nydp hash" do
         Nydp::Builtin::Hash.new.invoke vm, Nydp.NIL
-        h = vm.pop_arg
+        h = vm.args.pop
         expect(h).to be_a Nydp::Hash
       end
     end
@@ -78,7 +78,7 @@ describe Nydp::Hash do
 
         expect(h.keys).    to eq [k]
         expect(h[k]).      to eq v
-        expect(vm.pop_arg).to eq v
+        expect(vm.args.pop).to eq v
       end
     end
 
@@ -91,7 +91,7 @@ describe Nydp::Hash do
 
         args = Nydp::Pair.from_list([h, k])
         Nydp::Builtin::HashGet.new(ns).invoke vm, args
-        expect(vm.pop_arg).to eq v
+        expect(vm.args.pop).to eq v
       end
     end
 
@@ -104,7 +104,7 @@ describe Nydp::Hash do
 
         Nydp::Builtin::HashKeyPresent.new(ns).invoke vm, pair_list([h, k])
 
-        expect(vm.pop_arg).to eq Nydp.T
+        expect(vm.args.pop).to eq Nydp.T
       end
 
       it "returns nil when key is absent" do
@@ -113,7 +113,7 @@ describe Nydp::Hash do
 
         Nydp::Builtin::HashKeyPresent.new(ns).invoke vm, pair_list([h, k])
 
-        expect(vm.pop_arg).to eq Nydp.NIL
+        expect(vm.args.pop).to eq Nydp.NIL
       end
     end
 
@@ -125,7 +125,7 @@ describe Nydp::Hash do
 
         args = Nydp::Pair.from_list([h])
         Nydp::Builtin::HashKeys.new(ns).invoke vm, args
-        expect(vm.pop_arg).to eq pair_list [sym("k0"), sym("k1")]
+        expect(vm.args.pop).to eq pair_list [sym("k0"), sym("k1")]
       end
     end
   end
@@ -141,7 +141,7 @@ describe Nydp::Hash do
         Nydp::Builtin::HashSet.new.invoke vm, args
 
         expect(ahash).     to eq Nydp.NIL
-        expect(vm.pop_arg).to eq v
+        expect(vm.args.pop).to eq v
       end
     end
 
@@ -152,7 +152,7 @@ describe Nydp::Hash do
 
         Nydp::Builtin::HashGet.new(ns).invoke vm, pair_list(args)
 
-        expect(vm.pop_arg).to eq Nydp.NIL
+        expect(vm.args.pop).to eq Nydp.NIL
       end
     end
   end

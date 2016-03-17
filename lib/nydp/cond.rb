@@ -8,8 +8,7 @@ module Nydp
     end
 
     def execute vm
-      arg = vm.pop_arg
-      truth = !Nydp.NIL.is?(arg)
+      truth = !Nydp.NIL.is?(vm.args.pop)
       vm.push_instructions (truth ? when_true : when_false), vm.peek_context
     end
 

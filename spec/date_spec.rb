@@ -18,7 +18,7 @@ describe Nydp::Date do
   it "creates a new date" do
     df = Nydp::Builtin::Date.new
     df.invoke vm, pair_list([2015, 11, 18])
-    nd = vm.pop_arg
+    nd = vm.args.pop
     expect(nd).to be_a Nydp::Date
     expect(nd.ruby_date).to eq Date.parse("2015-11-18")
   end
@@ -40,7 +40,7 @@ describe Nydp::Date do
       minus = Nydp::Builtin::Minus.new
 
       minus.invoke vm, pair_list([d1, d0])
-      diff = vm.pop_arg
+      diff = vm.args.pop
 
       expect(d0).to be_a Nydp::Date
       expect(diff).to eq 6
@@ -52,7 +52,7 @@ describe Nydp::Date do
 
         f.invoke vm, pair_list([d1, d0])
 
-        expect(vm.pop_arg).to eq Nydp.T
+        expect(vm.args.pop).to eq Nydp.T
       end
 
       it "compares with nil" do
@@ -60,7 +60,7 @@ describe Nydp::Date do
 
         f.invoke vm, pair_list([d1, Nydp.NIL])
 
-        expect(vm.pop_arg).to eq Nydp.NIL
+        expect(vm.args.pop).to eq Nydp.NIL
       end
 
       it "works with builtin greater-than when false" do
@@ -68,7 +68,7 @@ describe Nydp::Date do
 
         f.invoke vm, pair_list([d0, d1])
 
-        expect(vm.pop_arg).to eq Nydp.NIL
+        expect(vm.args.pop).to eq Nydp.NIL
       end
     end
 
@@ -78,7 +78,7 @@ describe Nydp::Date do
 
         f.invoke vm, pair_list([d0, d1])
 
-        expect(vm.pop_arg).to eq Nydp.T
+        expect(vm.args.pop).to eq Nydp.T
       end
 
       it "works with builtin less-than when false" do
@@ -86,7 +86,7 @@ describe Nydp::Date do
 
         f.invoke vm, pair_list([d1, d0])
 
-        expect(vm.pop_arg).to eq Nydp.NIL
+        expect(vm.args.pop).to eq Nydp.NIL
       end
 
       it "compares with nil" do
@@ -94,7 +94,7 @@ describe Nydp::Date do
 
         f.invoke vm, pair_list([d1, Nydp.NIL])
 
-        expect(vm.pop_arg).to eq Nydp.NIL
+        expect(vm.args.pop).to eq Nydp.NIL
       end
     end
 
@@ -102,7 +102,7 @@ describe Nydp::Date do
       plus = Nydp::Builtin::Plus.new
 
       plus.invoke vm, pair_list([d0, 5])
-      sum = vm.pop_arg
+      sum = vm.args.pop
 
       expect(d0) .to be_a Nydp::Date
       expect(sum).to be_a Nydp::Date

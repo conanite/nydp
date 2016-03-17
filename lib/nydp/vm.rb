@@ -30,7 +30,7 @@ module Nydp
         end
       end
       raise_unhandled_error
-      pop_arg
+      args.pop
     end
 
     def raise_unhandled_error
@@ -67,7 +67,6 @@ module Nydp
     def push_arg a   ; args.push a                                               ; end
     def args!        ; args.empty? ? (raise "illegal operation: no args") : args ; end
     def peek_arg     ; args!.last                                                ; end
-    def pop_arg      ; args!.pop                                                 ; end
 
     def push_instructions ii, ctx
       instructions.push ii
@@ -79,7 +78,7 @@ module Nydp
       when 0
         tail
       else
-        pop_args(count - 1, cons(pop_arg, tail))
+        pop_args(count - 1, cons(args.pop, tail))
       end
     end
 

@@ -30,7 +30,7 @@ module Nydp
 
     class Invocation_1 < Invocation::Base
       def execute vm
-        f = vm.pop_arg
+        f = vm.args.pop
         f.invoke_1 vm
       rescue Exception => e
         handle e, f, Nydp.NIL
@@ -39,8 +39,9 @@ module Nydp
 
     class Invocation_2 < Invocation::Base
       def execute vm
-        arg = vm.pop_arg
-        f   = vm.pop_arg
+        arg = vm.args.pop
+        f = vm.args.pop
+
         f.invoke_2 vm, arg
       rescue Exception => e
         handle e, f, cons(arg)
@@ -49,9 +50,9 @@ module Nydp
 
     class Invocation_3 < Invocation::Base
       def execute vm
-        arg_1 = vm.pop_arg
-        arg_0 = vm.pop_arg
-        f   = vm.pop_arg
+        arg_1 = vm.args.pop
+        arg_0 = vm.args.pop
+        f   = vm.args.pop
         f.invoke_3 vm, arg_0, arg_1
       rescue Exception => e
         handle e, f, cons(arg_0, cons(arg_1))
@@ -60,10 +61,10 @@ module Nydp
 
     class Invocation_4 < Invocation::Base
       def execute vm
-        arg_2 = vm.pop_arg
-        arg_1 = vm.pop_arg
-        arg_0 = vm.pop_arg
-        f   = vm.pop_arg
+        arg_2 = vm.args.pop
+        arg_1 = vm.args.pop
+        arg_0 = vm.args.pop
+        f   = vm.args.pop
         f.invoke_4 vm, arg_0, arg_1, arg_2
       rescue Exception => e
         handle e, f, cons(arg_0, cons(arg_1, cons(arg_2)))

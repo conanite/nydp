@@ -12,7 +12,7 @@ describe Nydp::Hash do
         args   = [ ahash, k ]
 
         Nydp::Builtin::HashGet.new(ns).invoke vm, pair_list(args)
-        expect(vm.pop_arg).to eq 123
+        expect(vm.args.pop).to eq 123
       end
 
       it "converts ruby value to nydp value" do
@@ -20,7 +20,7 @@ describe Nydp::Hash do
         args   = [ ahash, k ]
 
         Nydp::Builtin::HashGet.new(ns).invoke vm, pair_list(args)
-        expect(vm.pop_arg).to eq Nydp::StringAtom.new("hello there")
+        expect(vm.args.pop).to eq Nydp::StringAtom.new("hello there")
       end
 
       it "converts string keys to method names" do
@@ -28,7 +28,7 @@ describe Nydp::Hash do
         args   = [ ahash, k ]
 
         Nydp::Builtin::HashGet.new(ns).invoke vm, pair_list(args)
-        expect(vm.pop_arg).to eq Nydp::StringAtom.new("hello there")
+        expect(vm.args.pop).to eq Nydp::StringAtom.new("hello there")
       end
 
       it "returns nil for unavailable methods" do
@@ -36,7 +36,7 @@ describe Nydp::Hash do
         args   = [ ahash, k ]
 
         Nydp::Builtin::HashGet.new(ns).invoke vm, pair_list(args)
-        expect(vm.pop_arg).to eq Nydp.NIL
+        expect(vm.args.pop).to eq Nydp.NIL
       end
     end
   end

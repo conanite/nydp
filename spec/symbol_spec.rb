@@ -47,7 +47,7 @@ describe Nydp::Symbol do
 
     f.invoke vm, pair_list([foo, bar])
 
-    expect(vm.pop_arg).to eq Nydp.T
+    expect(vm.args.pop).to eq Nydp.T
   end
 
   it "works with builtin greater-than when false" do
@@ -55,7 +55,7 @@ describe Nydp::Symbol do
 
     f.invoke vm, pair_list([bar, foo])
 
-    expect(vm.pop_arg).to eq Nydp.NIL
+    expect(vm.args.pop).to eq Nydp.NIL
   end
 
   it "works with builtin less-than when true" do
@@ -63,7 +63,7 @@ describe Nydp::Symbol do
 
     f.invoke vm, pair_list([bar, foo])
 
-    expect(vm.pop_arg).to eq Nydp.T
+    expect(vm.args.pop).to eq Nydp.T
   end
 
   it "works with builtin less-than when false" do
@@ -71,7 +71,7 @@ describe Nydp::Symbol do
 
     f.invoke vm, pair_list([foo, bar])
 
-    expect(vm.pop_arg).to eq Nydp.NIL
+    expect(vm.args.pop).to eq Nydp.NIL
   end
 
 end
