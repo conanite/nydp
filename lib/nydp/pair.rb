@@ -72,7 +72,7 @@ class Nydp::Pair
         "'#{cdr.to_s}"
       end
     elsif car.is_a?(Nydp::Symbol) && car.is?(:"brace-list")
-      if Nydp.NIL.is? cdr.cdr
+      if Nydp.NIL.is? cdr
         "{}"
       else
         "{ #{cdr.to_s_rest} }"
