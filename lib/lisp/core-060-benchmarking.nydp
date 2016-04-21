@@ -38,6 +38,23 @@
   (for i 1 10
        (pre-compile (dox-src rbs))))
 
+(def bm-hash-fill
+  (let h {}
+    (=h.aa 1) (=h.ab 2) (=h.ac 3) (=h.ba 4) (=h.bb 5) (=h.bc 6)
+    (=h.ca 1) (=h.cb 2) (=h.cc 3) (=h.ca 4) (=h.cb 5) (=h.cc 6)
+    (=h.da 1) (=h.db 2) (=h.dc 3) (=h.da 4) (=h.db 5) (=h.dc 6)
+    (=h.aa 1) (=h.ab 2) (=h.ac 3) (=h.ba 4) (=h.bb 5) (=h.bc 6)
+    (=h.ca 1) (=h.cb 2) (=h.cc 3) (=h.ca 4) (=h.cb 5) (=h.cc 6)
+    (=h.da 1) (=h.db 2) (=h.dc 3) (=h.da 4) (=h.db 5) (=h.dc 6)
+    (list (list h.aa h.ab h.ac h.ba h.bb h.bc)
+          (list h.aa h.ab h.ac h.ba h.bb h.bc)
+          (list h.ca h.cb h.cc h.ca h.cb h.cc)
+          (list h.da h.db h.dc h.da h.db h.dc)
+          (list h.aa h.ab h.ac h.ba h.bb h.bc)
+          (list h.ca h.cb h.cc h.ca h.cb h.cc)
+          (list h.da h.db h.dc h.da h.db h.dc)
+          (list h.da h.ab h.ac h.ba h.bb h.bc))))
+
 (def rbs (name)
   (let summary nil
     ;; (push (bm "pythag     "   bm-pythag            5     10) summary)
@@ -47,5 +64,6 @@
     ;; (push (bm "2 arg times"   bm-2-arg-times-call  5   1000) summary)
     ;; (push (bm "3 arg times"   bm-3-arg-times-call  5   1000) summary)
     ;; (push (bm "4 arg times"   bm-4-arg-times-call  5   1000) summary)
-    (push (bm "pre-compile"   bm-pre-compile-test 10  5000) summary)
+    ;; (push (bm "pre-compile"   bm-pre-compile-test 10  10000) summary)
+    (push (bm "hashing"       bm-hash-fill 10  200000) summary)
     (each s summary (p name " " s))))

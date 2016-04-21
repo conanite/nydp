@@ -1,11 +1,13 @@
 class Nydp::Symbol
   EMPTY = :""
   attr_accessor :name
+  attr_reader   :hash
 
   def initialize name
     @name = name.to_sym
     @inspection = name.to_s
     @inspection = "|#{name}|" if untidy(@inspection)
+    @hash       = name.hash
   end
 
   def untidy str
@@ -37,7 +39,6 @@ class Nydp::Symbol
   def to_s       ; name.to_s      ; end
   def to_sym     ; name           ; end
   def to_ruby    ; to_sym         ; end
-  def hash       ; name.hash      ; end
   def eql? other ; self == other  ; end
   def is? nm     ; self.name == nm.to_sym   ; end
   def > other    ; self.name > other.name   ; end
