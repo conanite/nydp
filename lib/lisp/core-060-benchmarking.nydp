@@ -34,13 +34,18 @@
                     (bm-complicated-0 * 3 (bm-complicated-0 + 3 6))
                     (bm-complicated-0 - 10 (bm-complicated-0 - 13 8))))
 
+(def bm-pre-compile-test ()
+  (for i 1 10
+       (pre-compile (dox-src rbs))))
+
 (def rbs (name)
   (let summary nil
-    (push (bm "pythag     "   bm-pythag          10    10) summary)
-    (push (bm "recursive  "   bm-complicated     10 20000) summary)
-    (push (bm "0 arg times"   bm-0-arg-times-call 5 40000) summary)
-    (push (bm "1 arg times"   bm-1-arg-times-call 5 40000) summary)
-    (push (bm "2 arg times"   bm-2-arg-times-call 5 40000) summary)
-    (push (bm "3 arg times"   bm-3-arg-times-call 5 40000) summary)
-    (push (bm "4 arg times"   bm-4-arg-times-call 5 40000) summary)
+    ;; (push (bm "pythag     "   bm-pythag            5     10) summary)
+    ;; (push (bm "recursive  "   bm-complicated       5   1000) summary)
+    ;; (push (bm "0 arg times"   bm-0-arg-times-call  5   1000) summary)
+    ;; (push (bm "1 arg times"   bm-1-arg-times-call  5   1000) summary)
+    ;; (push (bm "2 arg times"   bm-2-arg-times-call  5   1000) summary)
+    ;; (push (bm "3 arg times"   bm-3-arg-times-call  5   1000) summary)
+    ;; (push (bm "4 arg times"   bm-4-arg-times-call  5   1000) summary)
+    (push (bm "pre-compile"   bm-pre-compile-test 10  5000) summary)
     (each s summary (p name " " s))))

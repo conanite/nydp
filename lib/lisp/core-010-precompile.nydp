@@ -1,18 +1,17 @@
 
-(assign mac-expand (fn (names macfn name body)
+(assign mac-expand (fn (names macfn expr)
   (cond macfn
         (pre-compile-with names
-                          (apply macfn body))
-        (cons name body))))
+                          (apply macfn (cdr expr)))
+        expr)))
 
 (assign macs (hash))
 
 (assign pre-compile-expr
-        (fn (names name body)
+        (fn (names expr)
             (mac-expand names
-                        (hash-get names name)
-                        name
-                        body)))
+                        (hash-get names (car expr))
+                        expr)))
 
 (assign pre-compile-each
         (fn (names args)
@@ -35,9 +34,7 @@
                   (cond (eq? (car arg) 'quote)
                         arg
                         (pre-compile-each names
-                                          (pre-compile-expr names
-                                                            (car arg)
-                                                            (cdr arg))))
+                                          (pre-compile-expr names arg)))
                   arg)))
 
 (assign pre-compile-debug
