@@ -1,21 +1,31 @@
-((fn (dox examples chapters)
-     (def dox-add-doc (name what texts args src)
-       (hash-set dox
-                 name
-                 (cons (list name what texts args src)
-                       (hash-get dox sym))))
+((fn (dox examples chapters dox-new dox-build)
+     (def dox-build (hsh name what texts args src chapters)
+       (hash-set hsh 'name     name     )
+       (hash-set hsh 'what     what     )
+       (hash-set hsh 'texts    texts    )
+       (hash-set hsh 'args     args     )
+       (hash-set hsh 'src      src      )
+       (hash-set hsh 'chapters chapters )
+       hsh)
+
+     (def dox-new (item)
+       (hash-cons dox (hash-get item 'name) item)
+       (dox-add-to-chapters (hash-get item 'chapters) item))
+
+     (def dox-add-doc (name what texts args src chapters)
+       (dox-new (dox-build (hash) name what texts args src chapters)))
 
      (def dox-add-to-chapter (chapter item)
-       (hash-set chapters
-                 item
-                 (cons item
-                       (hash-get chapters item))))
+       (hash-cons chapters chapter item))
+
+     (def dox-add-to-chapters (chapters item)
+       (cond chapters
+             (do (dox-add-to-chapter  (car chapters) item)
+                 (dox-add-to-chapters (cdr chapters) item))
+             item))
 
      (def dox-add-examples (name example-exprs)
-       (hash-set examples
-                 name
-                 (cons example-exprs
-                       (hash-get examples name))))
+       (hash-cons examples name example-exprs))
 
      (def dox-lookup (sym) (hash-get dox sym))
 
@@ -23,65 +33,68 @@
 
      (def dox-names () (hash-keys dox))
 
-     (def dox-what-is? (name)
+     (def dox-get-attr (name attr)
        (cond (dox? name)
-             (cadr (car (dox-lookup name)))))
+             (hash-get (car (dox-lookup name)) attr)))
 
-     (def dox-src (name)
-       (cond (dox? name)
-             (car (cddr (cddr (car (dox-lookup name)))))))
+     (def dox-what-is?  (name) (dox-get-attr name 'what ))
+     (def dox-src       (name) (dox-get-attr name 'src  ))
+     (def dox-examples  (name) (hash-get examples name  ))
+     (def dox-args      (name) (dox-get-attr name 'args ))
+     (def dox-example-names () (hash-keys examples      )))
+ (hash) (hash) (hash) nil)
 
-     (def dox-examples (name)
-       (hash-get examples name))
+(def filter-form (hsh form)
+  ; if the car of 'form is a key of 'hsh, add the cdr of 'form to the value of the key in 'hsh
+  ; otherwise add the form to the list whose key is nil
+  (cond (cond (pair? form)
+              (hash-key? hsh (car form)))
+      (hash-cons hsh (car form) (cdr form))
+      (hash-cons hsh        nil form))
+  hsh)
 
-     (def dox-example-names () (hash-keys examples))
+(def rev-value-key (key keys old new)
+  (hash-set new key (rev (hash-get old key)))
+  (rev-value-keys keys old new))
 
-     (def dox-arg-names (name)
-       (cond (dox? name)
-             (cadddr (car (dox-lookup name))))))
- (hash) (hash) (hash))
+(def rev-value-keys (keys old new)
+  (cond keys
+        (rev-value-key (car keys) (cdr keys) old new)
+        new))
 
-(def isa-comment? (thing)
-  (cond (pair? thing)
-        (eq? (car thing) 'comment)))
+(def rev-values (hsh)
+  (rev-value-keys (hash-keys hsh) hsh (hash)))
 
-(def rev-accum (things acc)
-  (cond (no things)
-        acc
-        (rev-accum (cdr things)
-                   (cons (car things)
-                         acc))))
+(def filter-forms (hsh forms)
+  ; group forms by their first element, if the first element
+  ; is already a key in hsh, collect all other elements under key nil
+  (cond forms
+        (filter-forms (filter-form hsh (car forms)) (cdr forms))
+        (rev-values hsh)))
 
-(def rev (things) (rev-accum things nil))
+(def build-def-hash (hsh)
+  (hash-set hsh 'comment nil)
+  (hash-set hsh 'chapter nil)
+  hsh)
 
-(def dox-gather-comments (body acc)
-  (cond (isa-comment? (car body))
-        (dox-gather-comments (cdr body)
-                             (cons (cadar body)
-                                   acc))
-        (list (rev acc) body)))
-
-(def define-mac-expr (name args documentation body)
+(def define-mac-expr (name args body-forms)
   ; used internally by 'mac
-  `(do (hash-set macs ',name (fn ,args ,@body))
+  `(do (hash-set macs ',name (fn ,args ,@(hash-get body-forms nil)))
        (dox-add-doc ',name
                     'mac
-                    ',documentation
+                    ',(map car (hash-get body-forms 'comment))
                     ',args
-                    '(mac ,name ,args ,@body))))
+                    '(mac ,name ,args ,@(hash-get body-forms nil)))))
 
 (hash-set macs 'mac
           (fn (name args . body)
-              (apply define-mac-expr
-                     name
-                     args
-                     (dox-gather-comments body))))
+              (define-mac-expr name args (filter-forms (build-def-hash (hash)) body))))
 
 (dox-add-doc 'mac
              'mac
              '("define a new global macro")
              '(name args . body)
-             (dox-src 'define-mac-expr))
+             '`(hash-set macs ',name (fn ,ooargs ,@body)))
 
 (dox-add-doc 'do
              'mac
@@ -91,18 +104,15 @@
 
 (mac def-assign args `(assign ,@args))
 
-(def define-def-expr (name args documentation body)
+(def define-def-expr (name args body-forms)
   ; used internally by 'def
-  `(do (def-assign ,name (fn ,args ,@body))
+  `(do (def-assign ,name (fn ,args ,@(hash-get body-forms nil)))
        (dox-add-doc ',name
                     'def
-                    ',documentation
+                    ',(map car (hash-get body-forms 'comment))
                     ',args
-                    '(def ,name ,args ,@body))))
+                    '(def ,name ,args ,@(hash-get body-forms nil)))))
 
 (mac def (name args . body)
   ; define a new function in the global namespace
-  (apply define-def-expr
-         name
-         args
-         (dox-gather-comments body)))
+  (define-def-expr name args (filter-forms (build-def-hash (hash)) body)))

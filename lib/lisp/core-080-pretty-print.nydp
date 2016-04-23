@@ -83,7 +83,7 @@
 
 (def pp/find-breaks/mac (form)
   (if (eq? (dox-what-is? (car form)) 'mac)
-      (let arg-count (list-length:dox-arg-names:car form)
+      (let arg-count (list-length:dox-args:car form)
         (cons (firstn arg-count form)
               (map list (nthcdr arg-count form))))))
 

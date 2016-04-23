@@ -12,96 +12,100 @@
 (def this-is-an-undocumented-def (a b c)
   (baz a b c))
 
-(examples-for isa-comment?
-  ("identifies a comment"
-   (isa-comment? '(comment "yes, it is"))
-   t)
+(examples-for dox-lookup
+  ("finds name for a documented macro"
+   (hash-get (car:dox-lookup 'this-is-a-well-documented-macro) 'name)
+   this-is-a-well-documented-macro)
 
-  ("identifies a non-comment"
-   (isa-comment? "not this time")
-   nil))
+  ("finds type for a documented macro"
+   (hash-get (car:dox-lookup 'this-is-a-well-documented-macro) 'what)
+   mac)
 
-(examples-for dox-gather-comments
-  ("find no comments"
-   (dox-gather-comments '((this) (that)))
-   (nil ((this) (that))))
+  ("finds documentation for a documented macro"
+   (hash-get (car:dox-lookup 'this-is-a-well-documented-macro) 'texts)
+   ("documentation for me!"))
 
-  ("finds one comment"
-   (dox-gather-comments '((comment "hello") (this) (that)))
-   (("hello") ((this) (that))))
+  ("finds arg names for a documented macro"
+   (hash-get (car:dox-lookup 'this-is-a-well-documented-macro) 'args)
+   (a b c))
 
-  ("finds more comments"
-   (dox-gather-comments '((comment "hello")
-                          (comment "more details")
-                          (comment "very rigourous")
-                          (this)
-                          (that)))
-   (("hello" "more details" "very rigourous") ((this) (that)))))
+  ("finds source code for a documented macro"
+   (hash-get (car:dox-lookup 'this-is-a-well-documented-macro) 'src)
+   (mac this-is-a-well-documented-macro (a b c)
+     `(foo ,a ,b ,c)))
 
-(examples-for dox-show-info
-  ("shows each item"
-   (dox-show-info "bingo"
-                  'def
-                  '("there was a farmer had a dog" "and Bingo was his name-o")
-                  '(count)
-                  '(def bingo (count) (times count (bark))))
-   "Function : bingo
+  ("finds name for an undocumented macro"
+   (hash-get (car:dox-lookup 'this-is-an-undocumented-macro) 'name)
+   this-is-an-undocumented-macro)
 
-args : (count)
+  ("finds type for an undocumented macro"
+   (hash-get (car:dox-lookup 'this-is-an-undocumented-macro) 'what)
+   mac)
 
-there was a farmer had a dog
-and Bingo was his name-o
+  ("finds no documentation for an undocumented macro"
+   (hash-get (car:dox-lookup 'this-is-an-undocumented-macro) 'texts)
+   nil)
 
-source
-======
-\(def bingo (count)
-    (times count (bark)))
-"))
+  ("finds arg names for an undocumented macro"
+   (hash-get (car:dox-lookup 'this-is-an-undocumented-macro) 'args)
+   (a b c))
+
+  ("finds source code for an undocumented macro"
+   (hash-get (car:dox-lookup 'this-is-an-undocumented-macro) 'src)
+   (mac this-is-an-undocumented-macro (a b c)
+     `(baz ,a ,b ,c))))
 
 (examples-for dox-lookup
-  ("finds info for a documented macro"
-   (dox-lookup 'this-is-a-well-documented-macro)
-   ((this-is-a-well-documented-macro
-     mac
-     ("documentation for me!")
-     (a b c)
-     (mac this-is-a-well-documented-macro (a b c)
-       `(foo ,a ,b ,c)))))
+  ("finds name for a documented def"
+   (hash-get (car:dox-lookup 'this-is-a-well-documented-def) 'name)
+   this-is-a-well-documented-def)
 
-  ("finds info for an undocumented macro"
-   (dox-lookup 'this-is-an-undocumented-macro)
-   ((this-is-an-undocumented-macro
-     mac
-     nil
-     (a b c)
-     (mac this-is-an-undocumented-macro (a b c)
-       `(baz ,a ,b ,c)))))
+  ("finds type for a documented def"
+   (hash-get (car:dox-lookup 'this-is-a-well-documented-def) 'what)
+   def)
 
-  ("finds info for a documented def"
-   (dox-lookup 'this-is-a-well-documented-def)
-   ((this-is-a-well-documented-def
-     def
-     ("documentation for me!")
-     (a b c)
-     (def this-is-a-well-documented-def (a b c)
-       (foo a b c)))))
+  ("finds documentation for a documented def"
+   (hash-get (car:dox-lookup 'this-is-a-well-documented-def) 'texts)
+   ("documentation for me!"))
 
-  ("finds info for an undocumented def"
-   (dox-lookup 'this-is-an-undocumented-def)
-   ((this-is-an-undocumented-def
-     def
-     nil
-     (a b c)
-     (def this-is-an-undocumented-def (a b c)
-       (baz a b c))))))
+  ("finds arg names for a documented def"
+   (hash-get (car:dox-lookup 'this-is-a-well-documented-def) 'args)
+   (a b c))
 
-(examples-for dox-arg-names
+  ("finds source code for a documented def"
+   (hash-get (car:dox-lookup 'this-is-a-well-documented-def) 'src)
+   (def this-is-a-well-documented-def (a b c)
+     (foo a b c)))
+
+  ("finds name for an undocumented def"
+   (hash-get (car:dox-lookup 'this-is-an-undocumented-def) 'name)
+   this-is-an-undocumented-def)
+
+  ("finds type for an undocumented def"
+   (hash-get (car:dox-lookup 'this-is-an-undocumented-def) 'what)
+   def)
+
+  ("finds no documentation for an undocumented def"
+   (hash-get (car:dox-lookup 'this-is-an-undocumented-def) 'texts)
+   nil)
+
+  ("finds arg names for an undocumented def"
+   (hash-get (car:dox-lookup 'this-is-an-undocumented-def) 'args)
+   (a b c))
+
+  ("finds source code for an undocumented def"
+   (hash-get (car:dox-lookup 'this-is-an-undocumented-def) 'src)
+   (def this-is-an-undocumented-def (a b c)
+     (baz a b c))))
+
+
+(examples-for dox-args
   ("macro"
-   (dox-arg-names 'this-is-a-well-documented-macro)
+   (dox-args 'this-is-a-well-documented-macro)
    (a b c))
 
   ("function def"
-   (dox-arg-names 'this-is-a-well-documented-def)
+   (dox-args 'this-is-a-well-documented-def)
    (a b c)))
 
 (examples-for dox-src

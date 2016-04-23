@@ -1,0 +1,30 @@
+
+(hash-set macs 'if (fn args
+                       (cond (no args) nil
+                             (cond (cdr args)
+                                   (cond (cddr args)
+                                         `(cond ,(car args) ,(cadr args) (if ,@(cddr args)))
+                                         `(cond ,(car args) ,(cadr args)))
+                                   (car args)))))
+
+(def map (f things)
+  ; transforms the list 'things by applying 'f to each item
+  ; returns the resulting list
+  (if (no things)
+      nil
+      (pair? things)
+      (cons (f (car things)) (map f (cdr things)))
+      (map f (list things))))
+
+(def hash-cons (h k v)
+  ; push 'v onto the value for 'k in 'h
+  (hash-set h k (cons v (hash-get h k))))
+
+(def rev-accum (things acc)
+  (cond (no things)
+        acc
+        (rev-accum (cdr things)
+                   (cons (car things)
+                         acc))))
+
+(def rev (things) (rev-accum things nil))

@@ -1,22 +1,28 @@
-(mac if args
-  ; with arguments a,         return a
-  ; with arguments a b,       return b if a is true, otherwise nil
-  ; with arguments a b c,     return b if a is true, otherwise return c
-  ; with arguments a b c d,   return b if a is true, otherwise return d if c is true, otherwise nil
-  ; with arguments a b c d e, return b if a is true, otherwise return d if c is true, otherwise e
-  ; and so on for subsequent arguments
-  (cond (no args) nil
-        (cond (cdr args)
-              (cond (cddr args)
-                    `(cond ,(car args) ,(cadr args) (if ,@(cddr args)))
-                    `(cond ,(car args) ,(cadr args)))
-              (car args))))
+(dox-add-doc 'if
+             'mac
+             '("with arguments a,         return a"
+               "with arguments a b,       return b if a is true, otherwise nil"
+               "with arguments a b c,     return b if a is true, otherwise return c"
+               "with arguments a b c d,   return b if a is true, otherwise return d if c is true, otherwise nil"
+               "with arguments a b c d e, return b if a is true, otherwise return d if c is true, otherwise e"
+               "and so on for subsequent arguments")
+             'args
+             '(cond (no args) nil
+                    (cond (cdr args)
+                          (cond (cddr args)
+                                `(cond ,(car twargs) ,(cadr twargs) (if ,@(cddr twargs)))
+                                `(cond ,(car twargs) ,(cadr twargs)))
+                          (car args)))
+             '(flow-control))
 
-(def map (f things)
-  ; transforms the list 'things by applying 'f to each item
-  ; returns the resulting list
-  (if (no things)
-      nil
-      (pair? things)
-      (cons (f (car things)) (map f (cdr things)))
-      (map f (list things))))
+(dox-add-doc 'map
+             'def
+             '("transforms the list 'things by applying 'f to each item"
+               "returns the resulting list")
+             '(f things)
+             '(if (no things)
+                  nil
+                  (pair? things)
+                  (cons (f (car things)) (map f (cdr things)))
+                  (map f (list things)))
+             '(list-manipulation))

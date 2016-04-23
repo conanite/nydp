@@ -1,0 +1,46 @@
+(examples-for filter-forms
+  ("groups forms by their 'car if the 'car is a key in the given hash"
+   (let ff (filter-forms { car nil comment nil mac nil }
+                         '(let x 1
+                            ; first comment
+                            (mac push foo bar)
+                            (car that)
+                            ; another comment
+                            (car engine)
+                            (drive faster)
+                            (mac more macaroni)
+                            (car wheels)
+                            (mac and cheese)
+                            ; ok enough cheese
+                            (finish cheese)
+                            (car go)))
+     (list (hash-keys ff)
+           ff.car
+           ff.comment
+           ff.mac
+           (hash-get ff nil)))
+   ((car comment mac nil)
+    ((that) (engine) (wheels) (go))
+    (("first comment") ("another comment") ("ok enough cheese"))
+    ((push foo bar) (more macaroni) (and cheese))
+    (let x 1 (drive faster) (finish cheese))))
+
+
+
+  ("find no comments"
+   (hash-values (filter-forms { comment nil } '((this) (that))))
+   (nil ((this) (that))))
+
+  ("finds one comment"
+   (hash-values (filter-forms { comment nil }
+                              '((comment "hello") (this) (that))))
+   ((("hello")) ((this) (that))))
+
+  ("finds more comments"
+   (hash-values (filter-forms { comment nil }
+                               '((comment "hello")
+                                 (comment "more details")
+                                 (comment "very rigourous")
+                                 (this)
+                                 (that))))
+   ((("hello") ("more details") ("very rigourous")) ((this) (that)))))
