@@ -11,7 +11,7 @@
             (zip (cdr a) (cdr b)))))
 
 (mac push (x things)
-  `(assign ,things (cons ,x ,things)))
+  `(= ,things (cons ,x ,things)))
 
 (def flatten (things)
      (let acc nil

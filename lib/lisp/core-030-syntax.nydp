@@ -176,11 +176,16 @@
                ,(build-hash-get-key:car rnames)
                ,value-expr)))
 
+(def hash-get-assignment (lookup value)
+  `(hash-set ,@lookup ,value))
+
 (mac = (name value)
   (if (isa 'symbol name)
       `(assign ,name ,value)
       (caris 'dot-syntax name)
-      (dot-syntax-assignment (cdr name) value)))
+      (dot-syntax-assignment (cdr name) value)
+      (caris 'hash-get name)
+      (hash-get-assignment (cdr name) value)))
 
 (mac def-assign args `(= ,@args))
 

@@ -1,0 +1,25 @@
+(examples-for push
+  ("push a value onto the beginning of a list"
+   (let x nil
+     (push 'c x)
+     (push 'b x)
+     (push 'a x)
+     x)
+   (a b c))
+
+  ("push a value onto the beginning of a list stored in a hash"
+   (let x {}
+     (push 'c x.stuff)
+     (push 'b x.stuff)
+     (push 'a x.stuff)
+     (list (hash-keys x) x.stuff))
+   ((stuff) (a b c)))
+
+  ("push a value onto the beginning of a list using a hash-get expression"
+   (let x {}
+     (push 1 (hash-get x 'foo))
+     (push 2 (hash-get x 'foo))
+     (push 3 (hash-get x nil))
+     (push 4 (hash-get x nil))
+     (list (hash-keys x) x.foo (hash-get x nil)))
+   ((foo nil) (2 1) (4 3))))
