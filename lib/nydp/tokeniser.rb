@@ -27,7 +27,7 @@ module Nydp
 
     def next_string_fragment open_delimiter, close_delimiter, interpolation_sign, interpolation_escapes={ }
       s = @scanner
-      rep = "#{open_delimiter}"
+      rep = open_delimiter.to_s
       string = ""
       while (!no_more?)
         if esc = s.scan(/\\/)
