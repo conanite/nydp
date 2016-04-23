@@ -71,3 +71,9 @@
 (def seqf (start incr)
   (let i (or incr 1)
     (fn () (returning start (++ start i)))))
+
+(def mapply (f args)
+  ; like 'map, but assumes each item in 'args is a list
+  ; of parameters for 'f. Effectively, calls (apply f item)
+  ; for each item in 'args
+  (map λa(apply f a) args))
