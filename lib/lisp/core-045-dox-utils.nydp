@@ -58,7 +58,7 @@ Examples for ~name
          (if (no infos)
              (p "No documentation for" ',name)
              (each info infos
-                   (p:apply dox-show-info info)))
+                   (p (dox-show-info info.name info.what info.texts info.args))))
          (let examples (dox-examples ',name)
            (if (no examples)
                (p "No examples for" ',name)
