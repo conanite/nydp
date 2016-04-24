@@ -1,8 +1,6 @@
 require 'spec_helper'
 
 describe Nydp do
-  let(:parser)                { Nydp::Parser.new(ns) }
-
   def run vm, txt
     Nydp::Runner.new(vm, ns, Nydp::StringReader.new(txt)).run
   end
@@ -23,5 +21,4 @@ describe Nydp do
     expect(val0).to eq 6
     expect(val1).to eq 21
   end
-
 end
