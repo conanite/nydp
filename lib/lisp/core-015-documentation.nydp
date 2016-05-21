@@ -37,6 +37,8 @@
        (cond (dox? name)
              (hash-get (car (dox-lookup name)) attr)))
 
+     (def dox-chapter-names () (hash-keys chapters      ))
+     (def dox-chapter   (name) (hash-get chapters name  ))
      (def dox-what-is?  (name) (dox-get-attr name 'what ))
      (def dox-src       (name) (dox-get-attr name 'src  ))
      (def dox-examples  (name) (hash-get examples name  ))
@@ -84,7 +86,8 @@
                     'mac
                     ',(map car (hash-get body-forms 'comment))
                     ',args
-                    '(mac ,name ,args ,@(hash-get body-forms nil)))))
+                    '(mac ,name ,args ,@(hash-get body-forms nil))
+                    ',(map car (hash-get body-forms 'chapter)))))
 
 (hash-set macs 'mac
           (fn (name args . body)
@@ -94,13 +97,15 @@
              'mac
              '("define a new global macro")
              '(name args . body)
-             '`(hash-set macs ',name (fn ,ooargs ,@body)))
+             '`(hash-set macs ',name (fn ,ooargs ,@body))
+             '(nydp-core))
 
 (dox-add-doc 'do
              'mac
              '("perform a series of operations")
              'args
-             '`((fn nil ,@args)))
+             '`((fn nil ,@args))
+             '(nydp-core))
 
 (mac def-assign args `(assign ,@args))
 
@@ -111,8 +116,10 @@
                     'def
                     ',(map car (hash-get body-forms 'comment))
                     ',args
-                    '(def ,name ,args ,@(hash-get body-forms nil)))))
+                    '(def ,name ,args ,@(hash-get body-forms nil))
+                    ',(map car (hash-get body-forms 'chapter)))))
 
 (mac def (name args . body)
   ; define a new function in the global namespace
+  (chapter nydp-core)
   (define-def-expr name args (filter-forms (build-def-hash (hash)) body)))
