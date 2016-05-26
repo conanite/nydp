@@ -1,6 +1,6 @@
 module Nydp
   class Builtin::Sort
-    include Builtin::Base
+    include Builtin::Base, Singleton
 
     def builtin_invoke vm, args
       vm.push_arg Pair.from_list to_array(args.car, []).sort

@@ -1,7 +1,7 @@
 require "nydp/vm"
 
 class Nydp::Builtin::Ensuring
-  include Nydp::Helper, Nydp::Builtin::Base
+  include Nydp::Helper, Nydp::Builtin::Base, Singleton
 
   class InvokeProtection
     include Nydp::VM::Finally

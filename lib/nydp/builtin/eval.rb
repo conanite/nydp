@@ -1,5 +1,5 @@
 class Nydp::Builtin::Eval
-  include Nydp::Builtin::Base
+  include Nydp::Builtin::Base, Singleton
 
   def builtin_invoke vm, args
     evaluator = Nydp::Evaluator.new Nydp::VM.new(vm.ns), vm.ns

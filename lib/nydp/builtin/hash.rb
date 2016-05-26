@@ -1,14 +1,14 @@
 require "nydp/hash"
 
 class Nydp::Builtin::Hash
-  include Nydp::Helper, Nydp::Builtin::Base
+  include Nydp::Helper, Nydp::Builtin::Base, Singleton
   def builtin_invoke vm, args
     vm.push_arg(Nydp::Hash.new)
   end
 end
 
 class Nydp::Builtin::HashGet
-  include Nydp::Helper, Nydp::Builtin::Base
+  include Nydp::Helper, Nydp::Builtin::Base, Singleton
   def builtin_invoke vm, args
     hsh = args.car
     key = args.cdr.car
@@ -36,7 +36,7 @@ class Nydp::Builtin::HashGet
 end
 
 class Nydp::Builtin::HashSet
-  include Nydp::Helper, Nydp::Builtin::Base
+  include Nydp::Helper, Nydp::Builtin::Base, Singleton
   def builtin_invoke vm, args
     hash = args.car
     key = args.cdr.car
@@ -58,7 +58,7 @@ class Nydp::Builtin::HashSet
 end
 
 class Nydp::Builtin::HashKeys
-  include Nydp::Helper, Nydp::Builtin::Base
+  include Nydp::Helper, Nydp::Builtin::Base, Singleton
   def builtin_invoke vm, args
     hash = args.car
     if hash.is_a? Nydp::Hash
@@ -72,7 +72,7 @@ class Nydp::Builtin::HashKeys
 end
 
 class Nydp::Builtin::HashKeyPresent
-  include Nydp::Helper, Nydp::Builtin::Base
+  include Nydp::Helper, Nydp::Builtin::Base, Singleton
   def builtin_invoke vm, args
     hash = args.car
     key  = args.cdr.car
@@ -88,7 +88,7 @@ class Nydp::Builtin::HashKeyPresent
 end
 
 class Nydp::Builtin::HashMerge
-  include Nydp::Helper, Nydp::Builtin::Base
+  include Nydp::Helper, Nydp::Builtin::Base, Singleton
 
   def builtin_invoke vm, args
     hash_0 = args.car

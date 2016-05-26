@@ -1,5 +1,5 @@
 class Nydp::Builtin::VmInfo
-  include Nydp::Builtin::Base
+  include Nydp::Builtin::Base, Singleton
 
   VMINFO_NS    = { }
   CONTEXTS     = Nydp::Symbol.mk :contexts,     VMINFO_NS

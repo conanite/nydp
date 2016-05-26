@@ -21,55 +21,55 @@ module Nydp
     end
 
     def setup ns
-      Symbol.mk(:cons,  ns).assign(Nydp::Builtin::Cons.new)
-      Symbol.mk(:car,   ns).assign(Nydp::Builtin::Car.new)
-      Symbol.mk(:cdr,   ns).assign(Nydp::Builtin::Cdr.new)
-      Symbol.mk(:+,     ns).assign(Nydp::Builtin::Plus.new)
-      Symbol.mk(:-,     ns).assign(Nydp::Builtin::Minus.new)
-      Symbol.mk(:*,     ns).assign(Nydp::Builtin::Times.new)
-      Symbol.mk(:/,     ns).assign(Nydp::Builtin::Divide.new)
-      Symbol.mk(:>,     ns).assign(Nydp::Builtin::GreaterThan.new)
-      Symbol.mk(:<,     ns).assign(Nydp::Builtin::LessThan.new)
-      Symbol.mk(:mod,   ns).assign(Nydp::Builtin::Modulo.new)
-      Symbol.mk(:eval,  ns).assign(Nydp::Builtin::Eval.new)
+      Symbol.mk(:cons,  ns).assign(Nydp::Builtin::Cons.instance)
+      Symbol.mk(:car,   ns).assign(Nydp::Builtin::Car.instance)
+      Symbol.mk(:cdr,   ns).assign(Nydp::Builtin::Cdr.instance)
+      Symbol.mk(:+,     ns).assign(Nydp::Builtin::Plus.instance)
+      Symbol.mk(:-,     ns).assign(Nydp::Builtin::Minus.instance)
+      Symbol.mk(:*,     ns).assign(Nydp::Builtin::Times.instance)
+      Symbol.mk(:/,     ns).assign(Nydp::Builtin::Divide.instance)
+      Symbol.mk(:>,     ns).assign(Nydp::Builtin::GreaterThan.instance)
+      Symbol.mk(:<,     ns).assign(Nydp::Builtin::LessThan.instance)
+      Symbol.mk(:mod,   ns).assign(Nydp::Builtin::Modulo.instance)
+      Symbol.mk(:eval,  ns).assign(Nydp::Builtin::Eval.instance)
       Symbol.mk(:false, ns).assign(false)
-      Symbol.mk(:hash,  ns).assign(Nydp::Builtin::Hash.new)
-      Symbol.mk(:apply, ns).assign(Nydp::Builtin::Apply.new)
-      Symbol.mk(:date,  ns).assign(Nydp::Builtin::Date.new)
-      Symbol.mk(:error, ns).assign(Nydp::Builtin::Error.new)
-      Symbol.mk(:parse, ns).assign(Nydp::Builtin::Parse.new)
-      Symbol.mk(:p,     ns).assign(Nydp::Builtin::Puts.new)
+      Symbol.mk(:hash,  ns).assign(Nydp::Builtin::Hash.instance)
+      Symbol.mk(:apply, ns).assign(Nydp::Builtin::Apply.instance)
+      Symbol.mk(:date,  ns).assign(Nydp::Builtin::Date.instance)
+      Symbol.mk(:error, ns).assign(Nydp::Builtin::Error.instance)
+      Symbol.mk(:parse, ns).assign(Nydp::Builtin::Parse.instance)
+      Symbol.mk(:p,     ns).assign(Nydp::Builtin::Puts.instance)
       Symbol.mk(:PI,    ns).assign 3.1415
       Symbol.mk(:nil,   ns).assign Nydp::NIL
-      Symbol.mk(:sort,  ns).assign Nydp::Builtin::Sort.new
-      Symbol.mk(:sqrt,  ns).assign Nydp::Builtin::Sqrt.new
+      Symbol.mk(:sort,  ns).assign Nydp::Builtin::Sort.instance
+      Symbol.mk(:sqrt,  ns).assign Nydp::Builtin::Sqrt.instance
       Symbol.mk(:t,     ns).assign Nydp::T
-      Symbol.mk(:sym,   ns).assign Nydp::Builtin::Sym.new
-      Symbol.mk(:ensuring,      ns).assign(Nydp::Builtin::Ensuring.new)
-      Symbol.mk(:inspect,       ns).assign(Nydp::Builtin::Inspect.new)
-      Symbol.mk(:comment,       ns).assign(Nydp::Builtin::Comment.new)
-      Symbol.mk(:millisecs,     ns).assign(Nydp::Builtin::Millisecs.new)
-      Symbol.mk("load-tests",   ns).assign(Nydp::Builtin::LoadTests.new)
-      Symbol.mk("handle-error"   , ns).assign(Nydp::Builtin::HandleError.new)
-      Symbol.mk("parse-in-string", ns).assign(Nydp::Builtin::ParseInString.new)
-      Symbol.mk("random-string"  , ns).assign(Nydp::Builtin::RandomString.new)
-      Symbol.mk("to-string"      , ns).assign(Nydp::Builtin::ToString.new)
-      Symbol.mk("string-length"  , ns).assign(Nydp::Builtin::StringLength.new)
-      Symbol.mk("string-replace" , ns).assign(Nydp::Builtin::StringReplace.new)
-      Symbol.mk("string-match"   , ns).assign(Nydp::Builtin::StringMatch.new)
-      Symbol.mk("string-split"   , ns).assign(Nydp::Builtin::StringSplit.new)
-      Symbol.mk("time"           , ns).assign(Nydp::Builtin::Time.new)
-      Symbol.mk("thread-locals"  , ns).assign(Nydp::Builtin::ThreadLocals.new)
-      Symbol.mk("type-of",      ns).assign(Nydp::Builtin::TypeOf.new)
-      Symbol.mk(:"eq?",         ns).assign(Nydp::Builtin::IsEqual.new)
-      Symbol.mk(:"cdr-set",     ns).assign(Nydp::Builtin::CdrSet.new)
-      Symbol.mk(:"hash-get",    ns).assign(Nydp::Builtin::HashGet.new)
-      Symbol.mk(:"hash-set",    ns).assign(Nydp::Builtin::HashSet.new)
-      Symbol.mk(:"hash-keys",   ns).assign(Nydp::Builtin::HashKeys.new)
-      Symbol.mk(:"hash-key?",   ns).assign(Nydp::Builtin::HashKeyPresent.new)
-      Symbol.mk(:"hash-merge",  ns).assign(Nydp::Builtin::HashMerge.new)
-      Symbol.mk(:"vm-info",     ns).assign Nydp::Builtin::VmInfo.new
-      Symbol.mk(:"pre-compile", ns).assign Nydp::Builtin::PreCompile.new
+      Symbol.mk(:sym,   ns).assign Nydp::Builtin::Sym.instance
+      Symbol.mk(:ensuring,      ns).assign(Nydp::Builtin::Ensuring.instance)
+      Symbol.mk(:inspect,       ns).assign(Nydp::Builtin::Inspect.instance)
+      Symbol.mk(:comment,       ns).assign(Nydp::Builtin::Comment.instance)
+      Symbol.mk(:millisecs,     ns).assign(Nydp::Builtin::Millisecs.instance)
+      Symbol.mk("load-tests",   ns).assign(Nydp::Builtin::LoadTests.instance)
+      Symbol.mk("handle-error"   , ns).assign(Nydp::Builtin::HandleError.instance)
+      Symbol.mk("parse-in-string", ns).assign(Nydp::Builtin::ParseInString.instance)
+      Symbol.mk("random-string"  , ns).assign(Nydp::Builtin::RandomString.instance)
+      Symbol.mk("to-string"      , ns).assign(Nydp::Builtin::ToString.instance)
+      Symbol.mk("string-length"  , ns).assign(Nydp::Builtin::StringLength.instance)
+      Symbol.mk("string-replace" , ns).assign(Nydp::Builtin::StringReplace.instance)
+      Symbol.mk("string-match"   , ns).assign(Nydp::Builtin::StringMatch.instance)
+      Symbol.mk("string-split"   , ns).assign(Nydp::Builtin::StringSplit.instance)
+      Symbol.mk("time"           , ns).assign(Nydp::Builtin::Time.instance)
+      Symbol.mk("thread-locals"  , ns).assign(Nydp::Builtin::ThreadLocals.instance)
+      Symbol.mk("type-of",      ns).assign(Nydp::Builtin::TypeOf.instance)
+      Symbol.mk(:"eq?",         ns).assign(Nydp::Builtin::IsEqual.instance)
+      Symbol.mk(:"cdr-set",     ns).assign(Nydp::Builtin::CdrSet.instance)
+      Symbol.mk(:"hash-get",    ns).assign(Nydp::Builtin::HashGet.instance)
+      Symbol.mk(:"hash-set",    ns).assign(Nydp::Builtin::HashSet.instance)
+      Symbol.mk(:"hash-keys",   ns).assign(Nydp::Builtin::HashKeys.instance)
+      Symbol.mk(:"hash-key?",   ns).assign(Nydp::Builtin::HashKeyPresent.instance)
+      Symbol.mk(:"hash-merge",  ns).assign(Nydp::Builtin::HashMerge.instance)
+      Symbol.mk(:"vm-info",     ns).assign Nydp::Builtin::VmInfo.instance
+      Symbol.mk(:"pre-compile", ns).assign Nydp::Builtin::PreCompile.instance
     end
   end
 end

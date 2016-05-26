@@ -2,9 +2,9 @@ require 'spec_helper'
 
 describe Nydp::Date do
 
-  let(:ns)    { { }                     }
-  let(:vm)    { Nydp::VM.new(ns)        }
-  let(:timef) { Nydp::Builtin::Time.new }
+  let(:ns)    { { }                          }
+  let(:vm)    { Nydp::VM.new(ns)             }
+  let(:timef) { Nydp::Builtin::Time.instance }
 
   it "r2n does not convert ruby Time" do
     rd = Time.now

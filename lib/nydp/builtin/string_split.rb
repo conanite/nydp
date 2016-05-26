@@ -1,5 +1,5 @@
 class Nydp::Builtin::StringSplit
-  include Nydp::Builtin::Base
+  include Nydp::Builtin::Base, Singleton
 
   def builtin_invoke vm, args
     target    = args.car.to_s

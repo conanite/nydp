@@ -1,5 +1,5 @@
 class Nydp::Builtin::Plus
-  include Nydp::Builtin::Base
+  include Nydp::Builtin::Base, Singleton
 
   def builtin_invoke_1 vm             ; vm.push_arg 0             ; end
   def builtin_invoke_2 vm, a          ; vm.push_arg a             ; end

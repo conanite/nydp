@@ -1,5 +1,5 @@
 class Nydp::Builtin::Date
-  include Nydp::Helper, Nydp::Builtin::Base
+  include Nydp::Helper, Nydp::Builtin::Base, Singleton
 
   def builtin_invoke_1 vm
     vm.push_arg(Nydp::Date.new Date.today)

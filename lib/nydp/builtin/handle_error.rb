@@ -1,7 +1,7 @@
 require "nydp/vm"
 
 class Nydp::Builtin::HandleError
-  include Nydp::Helper, Nydp::Builtin::Base
+  include Nydp::Helper, Nydp::Builtin::Base, Singleton
 
   class CatchError
     include Nydp::Helper, Nydp::VM::HandleError

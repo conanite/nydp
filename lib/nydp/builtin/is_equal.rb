@@ -1,5 +1,5 @@
 class Nydp::Builtin::IsEqual
-  include Nydp::Builtin::Base
+  include Nydp::Builtin::Base, Singleton
 
   def builtin_invoke_1 vm      ; raise "#{name} : requires at least two args"                    ; end
   def builtin_invoke_2 vm, arg ; raise "#{name} : requires at least two args, got one: (#{arg})" ; end

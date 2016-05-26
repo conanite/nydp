@@ -1,6 +1,6 @@
 module Nydp::Builtin
   class ToString
-    include Nydp::Builtin::Base
+    include Nydp::Builtin::Base, Singleton
 
     def builtin_invoke vm, args
       arg = args.car
@@ -15,7 +15,7 @@ module Nydp::Builtin
   end
 
   class StringLength
-    include Nydp::Builtin::Base
+    include Nydp::Builtin::Base, Singleton
 
     def builtin_invoke vm, args
       arg = args.car

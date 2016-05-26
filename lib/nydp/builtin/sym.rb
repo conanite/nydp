@@ -1,5 +1,5 @@
 class Nydp::Builtin::Sym
-  include Nydp::Builtin::Base
+  include Nydp::Builtin::Base, Singleton
 
   def builtin_invoke vm, args
     arg = args.car

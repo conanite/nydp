@@ -1,5 +1,5 @@
 class Nydp::Builtin::Parse
-  include Nydp::Builtin::Base
+  include Nydp::Builtin::Base, Singleton
 
   def builtin_invoke vm, args
     parser = Nydp::Parser.new(vm.ns)

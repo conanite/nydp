@@ -1,5 +1,5 @@
 class Nydp::Builtin::Times
-  include Nydp::Builtin::Base
+  include Nydp::Builtin::Base, Singleton
 
   def invoke_1 vm             ; vm.push_arg 1             ; end
   def invoke_2 vm, a          ; vm.push_arg a             ; end

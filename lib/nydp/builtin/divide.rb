@@ -1,5 +1,5 @@
 class Nydp::Builtin::Divide
-  include Nydp::Builtin::Base
+  include Nydp::Builtin::Base, Singleton
 
   def builtin_invoke vm, args
     vm.push_arg divide(args.cdr, args.car)

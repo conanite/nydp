@@ -1,5 +1,5 @@
 class Nydp::Builtin::Modulo
-  include Nydp::Builtin::Base
+  include Nydp::Builtin::Base, Singleton
 
   def invoke_3 vm, a0, a1     ; vm.push_arg(a0 % a1)      ; end
 

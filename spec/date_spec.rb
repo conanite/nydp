@@ -16,7 +16,7 @@ describe Nydp::Date do
   end
 
   it "creates a new date" do
-    df = Nydp::Builtin::Date.new
+    df = Nydp::Builtin::Date.instance
     df.invoke_4 vm, 2015, 11, 18
     nd = vm.args.pop
     expect(nd).to be_a Nydp::Date
@@ -24,7 +24,7 @@ describe Nydp::Date do
   end
 
   it "returns today" do
-    df = Nydp::Builtin::Date.new
+    df = Nydp::Builtin::Date.instance
     df.invoke_1 vm
     nd = vm.args.pop
     expect(nd).to be_a Nydp::Date
@@ -45,7 +45,7 @@ describe Nydp::Date do
     let(:d1) { Nydp.r2n (Date.today + 6), ns }
 
     it "works with builtin minus" do
-      minus = Nydp::Builtin::Minus.new
+      minus = Nydp::Builtin::Minus.instance
 
       minus.invoke vm, pair_list([d1, d0])
       diff = vm.args.pop
@@ -56,7 +56,7 @@ describe Nydp::Date do
 
     describe "'>" do
       it "works with builtin greater-than when true" do
-        f = Nydp::Builtin::GreaterThan.new
+        f = Nydp::Builtin::GreaterThan.instance
 
         f.invoke vm, pair_list([d1, d0])
 
@@ -64,7 +64,7 @@ describe Nydp::Date do
       end
 
       it "compares with nil" do
-        f = Nydp::Builtin::GreaterThan.new
+        f = Nydp::Builtin::GreaterThan.instance
 
         f.invoke vm, pair_list([d1, Nydp::NIL])
 
@@ -72,7 +72,7 @@ describe Nydp::Date do
       end
 
       it "works with builtin greater-than when false" do
-        f = Nydp::Builtin::GreaterThan.new
+        f = Nydp::Builtin::GreaterThan.instance
 
         f.invoke vm, pair_list([d0, d1])
 
@@ -82,7 +82,7 @@ describe Nydp::Date do
 
     describe "'<" do
       it "works with builtin less-than when true" do
-        f = Nydp::Builtin::LessThan.new
+        f = Nydp::Builtin::LessThan.instance
 
         f.invoke vm, pair_list([d0, d1])
 
@@ -90,7 +90,7 @@ describe Nydp::Date do
       end
 
       it "works with builtin less-than when false" do
-        f = Nydp::Builtin::LessThan.new
+        f = Nydp::Builtin::LessThan.instance
 
         f.invoke vm, pair_list([d1, d0])
 
@@ -98,7 +98,7 @@ describe Nydp::Date do
       end
 
       it "compares with nil" do
-        f = Nydp::Builtin::LessThan.new
+        f = Nydp::Builtin::LessThan.instance
 
         f.invoke vm, pair_list([d1, Nydp::NIL])
 
@@ -107,7 +107,7 @@ describe Nydp::Date do
     end
 
     it "works with builtin plus" do
-      plus = Nydp::Builtin::Plus.new
+      plus = Nydp::Builtin::Plus.instance
 
       plus.invoke vm, pair_list([d0, 5])
       sum = vm.args.pop

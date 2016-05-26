@@ -1,5 +1,5 @@
 class Nydp::Builtin::StringReplace
-  include Nydp::Builtin::Base
+  include Nydp::Builtin::Base, Singleton
 
   def builtin_invoke vm, args
     to_remove = Regexp.new args.car.to_s

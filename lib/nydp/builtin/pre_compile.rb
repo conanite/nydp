@@ -1,5 +1,5 @@
 class Nydp::Builtin::PreCompile
-  include Nydp::Builtin::Base
+  include Nydp::Builtin::Base, Singleton
 
   def builtin_invoke vm, args
     raise Nydp:Error.new("pre-compile: expects one arg, got #{args.inspect}") unless Nydp::NIL == args.cdr

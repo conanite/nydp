@@ -43,7 +43,7 @@ describe Nydp::Symbol do
   end
 
   it "works with builtin greater-than when true" do
-    f = Nydp::Builtin::GreaterThan.new
+    f = Nydp::Builtin::GreaterThan.instance
 
     f.invoke vm, pair_list([foo, bar])
 
@@ -51,7 +51,7 @@ describe Nydp::Symbol do
   end
 
   it "works with builtin greater-than when false" do
-    f = Nydp::Builtin::GreaterThan.new
+    f = Nydp::Builtin::GreaterThan.instance
 
     f.invoke vm, pair_list([bar, foo])
 
@@ -59,7 +59,7 @@ describe Nydp::Symbol do
   end
 
   it "works with builtin less-than when true" do
-    f = Nydp::Builtin::LessThan.new
+    f = Nydp::Builtin::LessThan.instance
 
     f.invoke vm, pair_list([bar, foo])
 
@@ -67,7 +67,7 @@ describe Nydp::Symbol do
   end
 
   it "works with builtin less-than when false" do
-    f = Nydp::Builtin::LessThan.new
+    f = Nydp::Builtin::LessThan.instance
 
     f.invoke vm, pair_list([foo, bar])
 

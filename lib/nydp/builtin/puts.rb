@@ -1,5 +1,5 @@
 class Nydp::Builtin::Puts
-  include Nydp::Builtin::Base
+  include Nydp::Builtin::Base, Singleton
 
   def builtin_invoke vm, args
     if Nydp::NIL.is? args
