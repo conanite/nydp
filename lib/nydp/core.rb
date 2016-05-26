@@ -58,7 +58,6 @@ module Nydp
       Symbol.mk("string-replace" , ns).assign(Nydp::Builtin::StringReplace.new)
       Symbol.mk("string-match"   , ns).assign(Nydp::Builtin::StringMatch.new(ns))
       Symbol.mk("string-split"   , ns).assign(Nydp::Builtin::StringSplit.new  )
-      Symbol.mk("today"          , ns).assign(Nydp::Builtin::Today.new)
       Symbol.mk("thread-locals"  , ns).assign(Nydp::Builtin::ThreadLocals.new)
       Symbol.mk("type-of",      ns).assign(Nydp::Builtin::TypeOf.new(ns))
       Symbol.mk(:"eq?",         ns).assign(Nydp::Builtin::IsEqual.new)

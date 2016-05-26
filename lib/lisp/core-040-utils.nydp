@@ -1,3 +1,6 @@
+(def today ()
+  ; return a date for the current day
+  (date))
 
 (def eachr (f things)
      (when things

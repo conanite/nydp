@@ -12,7 +12,6 @@
   ("eval"            (inspect eval            ) "builtin/eval"            )
   ("hash"            (inspect hash            ) "builtin/hash"            )
   ("date"            (inspect date            ) "builtin/date"            )
-  ("today"           (inspect today           ) "builtin/today"           )
   ("error"           (inspect error           ) "builtin/error"           )
   ("apply"           (inspect apply           ) "builtin/apply"           )
   ("error"           (inspect error           ) "builtin/error"           )
