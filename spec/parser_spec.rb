@@ -43,7 +43,7 @@ describe Nydp::Parser do
   end
 
   it "should parse an empty expression" do
-    expect(parse "()").to eq Nydp.NIL
+    expect(parse "()").to eq Nydp::NIL
   end
 
   it "should parse a lisp expression" do

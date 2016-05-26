@@ -20,7 +20,7 @@ module Nydp
 
     def self.build name, bindings
       depth = 0
-      while Nydp.NIL.isnt? bindings
+      while Nydp::NIL.isnt? bindings
         here = bindings.car
         if here.key? name
           binding_index = here[name]

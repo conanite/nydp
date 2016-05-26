@@ -6,7 +6,7 @@ class Nydp::Builtin::Divide
   end
 
   def divide args, accum
-    if Nydp.NIL.is? args
+    if Nydp::NIL.is? args
       accum
     else
       divide(args.cdr, (accum / args.car))

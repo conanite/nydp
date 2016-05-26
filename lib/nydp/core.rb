@@ -40,10 +40,10 @@ module Nydp
       Symbol.mk(:parse, ns).assign(Nydp::Builtin::Parse.new(ns))
       Symbol.mk(:p,     ns).assign(Nydp::Builtin::Puts.new)
       Symbol.mk(:PI,    ns).assign Literal.new(3.1415)
-      Symbol.mk(:nil,   ns).assign Nydp.NIL
+      Symbol.mk(:nil,   ns).assign Nydp::NIL
       Symbol.mk(:sort,  ns).assign Nydp::Builtin::Sort.new
       Symbol.mk(:sqrt,  ns).assign Nydp::Builtin::Sqrt.new
-      Symbol.mk(:t,     ns).assign Nydp.T
+      Symbol.mk(:t,     ns).assign Nydp::T
       Symbol.mk(:sym,   ns).assign Nydp::Builtin::Sym.new(ns)
       Symbol.mk(:ensuring,      ns).assign(Nydp::Builtin::Ensuring.new)
       Symbol.mk(:inspect,       ns).assign(Nydp::Builtin::Inspect.new)

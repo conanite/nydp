@@ -11,7 +11,7 @@ class Nydp::Builtin::Times
   end
 
   def multiply args, accum
-    if Nydp.NIL.is? args
+    if Nydp::NIL.is? args
       accum
     else
       multiply(args.cdr, (accum * args.car))

@@ -11,7 +11,7 @@ module SpecHelper
     Nydp::Parser.new(ns).expression(Nydp::Tokeniser.new reader)
   end
 
-  def pair_list xs, last=Nydp.NIL
+  def pair_list xs, last=Nydp::NIL
     Nydp::Pair.from_list xs, last
   end
 

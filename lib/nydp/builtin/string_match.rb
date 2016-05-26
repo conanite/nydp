@@ -16,7 +16,7 @@ class Nydp::Builtin::StringMatch
       result[@match]    = Nydp::StringAtom.new match.to_s
       result[@captures] = Nydp::Pair.from_list match.captures.map { |cap| Nydp::StringAtom.new cap.to_s }
     else
-      result            = Nydp.NIL
+      result            = Nydp::NIL
     end
 
     vm.push_arg result

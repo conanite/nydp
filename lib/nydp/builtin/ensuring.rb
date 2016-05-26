@@ -12,7 +12,7 @@ class Nydp::Builtin::Ensuring
     end
 
     def execute vm
-      protection.invoke vm, Nydp.NIL
+      protection.invoke vm, Nydp::NIL
     end
   end
 
@@ -24,6 +24,6 @@ class Nydp::Builtin::Ensuring
     vm.instructions.push protection_instructions
     vm.contexts.push vm.current_context
 
-    fn_tricky.invoke vm, Nydp.NIL
+    fn_tricky.invoke vm, Nydp::NIL
   end
 end

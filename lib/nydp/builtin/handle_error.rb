@@ -36,6 +36,6 @@ class Nydp::Builtin::HandleError
     vm.instructions.push catcher_instructions
     vm.contexts.push vm.current_context
 
-    fn_tricky.invoke vm, Nydp.NIL
+    fn_tricky.invoke vm, Nydp::NIL
   end
 end

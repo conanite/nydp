@@ -17,6 +17,6 @@ class Nydp::Builtin::TypeOf
 
     type = Nydp::Symbol.mk(typename, @ns)
 
-    vm.push_arg(type || Nydp.NIL)
+    vm.push_arg(type || Nydp::NIL)
   end
 end

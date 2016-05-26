@@ -167,7 +167,7 @@ module Nydp::LexicalContextBuilder
       _set_args lc, @param_names, args
     end
     def _set_args lc, names, args
-      unless Nydp.NIL.is? names
+      unless Nydp::NIL.is? names
         lc.set names.car, args.car
         _set_args lc, names.cdr, args.cdr
       end
@@ -185,7 +185,7 @@ module Nydp::LexicalContextBuilder
       if pair? names
         lc.set names.car, args.car
         _set_args lc, names.cdr, args.cdr
-      elsif Nydp.NIL.isnt? names
+      elsif Nydp::NIL.isnt? names
         lc.set names, args
       end
     end

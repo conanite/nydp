@@ -52,7 +52,7 @@ module Nydp
       if pair? names
         context.set names.car, values.car
         setup_context context, names.cdr, values.cdr
-      elsif Nydp.NIL.isnt? names
+      elsif Nydp::NIL.isnt? names
         context.set names, values
       end
     end
@@ -72,7 +72,7 @@ module Nydp
       instructions << Nydp::Compiler.compile(body_forms.car, bindings)
 
       rest = body_forms.cdr
-      if Nydp.NIL.is? rest
+      if Nydp::NIL.is? rest
         return Pair.from_list(instructions)
       else
         instructions << PopArg
@@ -84,7 +84,7 @@ module Nydp
       if pair? arg_list
         index_parameters arg_list.car, hsh
         index_parameters arg_list.cdr, hsh
-      elsif Nydp.NIL.isnt? arg_list
+      elsif Nydp::NIL.isnt? arg_list
         hsh[arg_list] = hsh.size
       end
     end

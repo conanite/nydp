@@ -16,9 +16,9 @@ class Nydp::Builtin::HashGet
     key = args.cdr.car
     case hsh
     when Nydp::Hash
-      vm.push_arg(hsh[key] || Nydp.NIL)
-    when NilClass, Nydp.NIL
-      vm.push_arg Nydp.NIL
+      vm.push_arg(hsh[key] || Nydp::NIL)
+    when NilClass, Nydp::NIL
+      vm.push_arg Nydp::NIL
     else
       v = hsh.respond_to?(:[]) ? hsh[n2r key] : ruby_call(hsh, key)
       vm.push_arg(r2n v, ns)
@@ -46,7 +46,7 @@ class Nydp::Builtin::HashSet
     case hash
     when Nydp::Hash
       hash[key] = value
-    when NilClass, Nydp.NIL
+    when NilClass, Nydp::NIL
       nil
     else
       if hash.respond_to?(:[]=)
@@ -70,7 +70,7 @@ class Nydp::Builtin::HashKeys
     elsif hash.respond_to?(:keys)
       vm.push_arg r2n(hash.keys.to_a.sort, ns)
     else
-      vm.push_arg Nydp.NIL
+      vm.push_arg Nydp::NIL
     end
   end
 end
@@ -88,7 +88,7 @@ class Nydp::Builtin::HashKeyPresent
             else
               hash.key? n2r key
             end
-    vm.push_arg(truth ? Nydp.T : Nydp.NIL)
+    vm.push_arg(truth ? Nydp::T : Nydp::NIL)
   end
   def name ; "hash-key?" ; end
 end

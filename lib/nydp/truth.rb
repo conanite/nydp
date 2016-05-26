@@ -1,6 +1,9 @@
+require 'singleton'
+
 module Nydp
   class Truth
-    def init_with *; Nydp.T           ; end
+    include Singleton
+    def init_with *; Nydp::T          ; end
     def to_s       ; 't'              ; end
     def inspect    ; 't[nydp::Truth]' ; end
     def assign  *_ ; self             ; end
@@ -9,7 +12,8 @@ module Nydp
   end
 
   class Nil
-    def init_with * ; Nydp.NIL      ; end
+    include Singleton
+    def init_with * ; Nydp::NIL     ; end
     def car         ; self          ; end
     def cdr         ; self          ; end
     def size        ; 0             ; end
@@ -25,13 +29,6 @@ module Nydp
     def execute vm  ; vm.push_arg self ; end
   end
 
-  @@nil = Nil.new
-  @@t   = Truth.new
-
-  class Nil
-    def self.new ; raise "no" ; end
-  end
-
-  def self.NIL; @@nil; end
-  def self.T;   @@t;   end
+  NIL = Nil.instance
+  T   = Truth.instance
 end

@@ -14,6 +14,6 @@ describe Nydp::StringFragmentToken do
 
   it "is not equal to nil" do
     t1 = Nydp::StringFragmentToken.new "foo", "bar"
-    expect(t1).not_to eq Nydp.NIL
+    expect(t1).not_to eq Nydp::NIL
   end
 end

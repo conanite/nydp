@@ -21,8 +21,8 @@ class Nydp::Symbol
 
   def self.mk name, ns
     name = name.to_sym
-    return Nydp.NIL if name == :nil
-    return Nydp.T   if name == :t
+    return Nydp::NIL if name == :nil
+    return Nydp::T   if name == :t
     sym = ns[name]
     unless sym
       sym = new(name)

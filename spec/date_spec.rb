@@ -17,10 +17,18 @@ describe Nydp::Date do
 
   it "creates a new date" do
     df = Nydp::Builtin::Date.new
-    df.invoke vm, pair_list([2015, 11, 18])
+    df.invoke_4 vm, 2015, 11, 18
     nd = vm.args.pop
     expect(nd).to be_a Nydp::Date
     expect(nd.ruby_date).to eq Date.parse("2015-11-18")
+  end
+
+  it "returns today" do
+    df = Nydp::Builtin::Date.new
+    df.invoke_1 vm
+    nd = vm.args.pop
+    expect(nd).to be_a Nydp::Date
+    expect(nd.ruby_date).to eq Date.today
   end
 
   it "returns date components" do
@@ -52,15 +60,15 @@ describe Nydp::Date do
 
         f.invoke vm, pair_list([d1, d0])
 
-        expect(vm.args.pop).to eq Nydp.T
+        expect(vm.args.pop).to eq Nydp::T
       end
 
       it "compares with nil" do
         f = Nydp::Builtin::GreaterThan.new
 
-        f.invoke vm, pair_list([d1, Nydp.NIL])
+        f.invoke vm, pair_list([d1, Nydp::NIL])
 
-        expect(vm.args.pop).to eq Nydp.NIL
+        expect(vm.args.pop).to eq Nydp::NIL
       end
 
       it "works with builtin greater-than when false" do
@@ -68,7 +76,7 @@ describe Nydp::Date do
 
         f.invoke vm, pair_list([d0, d1])
 
-        expect(vm.args.pop).to eq Nydp.NIL
+        expect(vm.args.pop).to eq Nydp::NIL
       end
     end
 
@@ -78,7 +86,7 @@ describe Nydp::Date do
 
         f.invoke vm, pair_list([d0, d1])
 
-        expect(vm.args.pop).to eq Nydp.T
+        expect(vm.args.pop).to eq Nydp::T
       end
 
       it "works with builtin less-than when false" do
@@ -86,15 +94,15 @@ describe Nydp::Date do
 
         f.invoke vm, pair_list([d1, d0])
 
-        expect(vm.args.pop).to eq Nydp.NIL
+        expect(vm.args.pop).to eq Nydp::NIL
       end
 
       it "compares with nil" do
         f = Nydp::Builtin::LessThan.new
 
-        f.invoke vm, pair_list([d1, Nydp.NIL])
+        f.invoke vm, pair_list([d1, Nydp::NIL])
 
-        expect(vm.args.pop).to eq Nydp.NIL
+        expect(vm.args.pop).to eq Nydp::NIL
       end
     end
 

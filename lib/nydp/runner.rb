@@ -48,7 +48,7 @@ module Nydp
 
     def compile_and_eval expr
       begin
-        vm.thread Pair.new(Compiler.compile(expr, Nydp.NIL), Nydp.NIL)
+        vm.thread Pair.new(Compiler.compile(expr, Nydp::NIL), Nydp::NIL)
       rescue Exception => e
         new_msg = "failed to eval #{expr.inspect}\nerror was #{Nydp.indent_text e.message}"
         raise e.class, new_msg, e.backtrace
@@ -92,7 +92,7 @@ module Nydp
     end
 
     def run
-      res = Nydp.NIL
+      res = Nydp::NIL
       while !@tokens.finished
         expr = @parser.expression(@tokens)
         unless expr.nil?

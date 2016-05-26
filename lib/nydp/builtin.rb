@@ -5,7 +5,8 @@ module Nydp::Builtin
   module Base
     include Nydp::Helper
 
-    def builtin_invoke_1 vm             ; builtin_invoke vm, Nydp.NIL                     ; end
+    def builtin_invoke   vm, args       ; raise "#{self.class.name} : please implement #builtin_invoke" ; end
+    def builtin_invoke_1 vm             ; builtin_invoke vm, Nydp::NIL                    ; end
     def builtin_invoke_2 vm, a          ; builtin_invoke vm, cons(a)                      ; end
     def builtin_invoke_3 vm, a0, a1     ; builtin_invoke vm, cons(a0, cons(a1))           ; end
     def builtin_invoke_4 vm, a0, a1, a2 ; builtin_invoke vm, cons(a0, cons(a1, cons(a2))) ; end
@@ -13,7 +14,7 @@ module Nydp::Builtin
     def invoke_1 vm
       builtin_invoke_1 vm
     rescue Exception => e
-      handle_error e, Nydp.NIL
+      handle_error e, Nydp::NIL
     end
 
     def invoke_2 vm, arg

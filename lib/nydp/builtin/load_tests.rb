@@ -7,6 +7,6 @@ class Nydp::Builtin::LoadTests
 
   def builtin_invoke vm, args
     Nydp.loadall vm, @ns, Nydp.testfiles
-    vm.push_arg Nydp.NIL
+    vm.push_arg Nydp::NIL
   end
 end

@@ -27,7 +27,7 @@ class Nydp::Pair
     end
   end
 
-  def self.from_list list, last=Nydp.NIL, n=0
+  def self.from_list list, last=Nydp::NIL, n=0
     if n >= list.size
       last
     else
@@ -52,12 +52,12 @@ class Nydp::Pair
   end
 
   def proper?
-    Nydp.NIL.is?(cdr) || (cdr.is_a?(Nydp::Pair) && cdr.proper?)
+    Nydp::NIL.is?(cdr) || (cdr.is_a?(Nydp::Pair) && cdr.proper?)
   end
 
   def each &block
     yield car
-    cdr.each(&block) unless Nydp.NIL.is?(cdr)
+    cdr.each(&block) unless Nydp::NIL.is?(cdr)
   end
 
   def inspect
@@ -66,31 +66,31 @@ class Nydp::Pair
 
   def to_s
     if car.is_a?(Nydp::Symbol) && car.is?(:quote)
-      if Nydp.NIL.is? cdr.cdr
+      if Nydp::NIL.is? cdr.cdr
         "'#{cdr.car.to_s}"
       else
         "'#{cdr.to_s}"
       end
     elsif car.is_a?(Nydp::Symbol) && car.is?(:"brace-list")
-      if Nydp.NIL.is? cdr
+      if Nydp::NIL.is? cdr
         "{}"
       else
         "{ #{cdr.to_s_rest} }"
       end
     elsif car.is_a?(Nydp::Symbol) && car.is?(:quasiquote)
-      if Nydp.NIL.is? cdr.cdr
+      if Nydp::NIL.is? cdr.cdr
         "`#{cdr.car.to_s}"
       else
         "`#{cdr.to_s}"
       end
     elsif car.is_a?(Nydp::Symbol) && car.is?(:unquote)
-      if Nydp.NIL.is? cdr.cdr
+      if Nydp::NIL.is? cdr.cdr
         ",#{cdr.car.to_s}"
       else
         ",#{cdr.to_s}"
       end
     elsif car.is_a?(Nydp::Symbol) && car.is?(:"unquote-splicing")
-      if Nydp.NIL.is? cdr.cdr
+      if Nydp::NIL.is? cdr.cdr
         ",@#{cdr.car.to_s}"
       else
         ",@#{cdr.to_s}"
@@ -103,7 +103,7 @@ class Nydp::Pair
   def to_s_rest
     cdr_s = if cdr.is_a?(self.class)
               cdr.to_s_rest
-            elsif Nydp.NIL.is? cdr
+            elsif Nydp::NIL.is? cdr
               nil
             else
               ". #{cdr.to_s}"
@@ -115,7 +115,7 @@ class Nydp::Pair
   def inspect_rest
     cdr_s = if cdr.is_a?(self.class)
               cdr.inspect_rest
-            elsif cdr == Nydp.NIL
+            elsif cdr == Nydp::NIL
               nil
             else
               ". #{cdr.inspect}"
@@ -125,7 +125,7 @@ class Nydp::Pair
   end
 
   def append thing
-    if Nydp.NIL.is? self.cdr
+    if Nydp::NIL.is? self.cdr
       self.cdr = thing
     elsif pair? self.cdr
       self.cdr.append thing

@@ -9,13 +9,13 @@ describe Nydp::Literal do
 
   describe "t" do
     it "is #true in ruby" do
-      expect(Nydp.T.to_ruby).to eq true
+      expect(Nydp::T.to_ruby).to eq true
     end
   end
 
   describe "nil" do
     it "is #nil in ruby" do
-      expect(Nydp.NIL.to_ruby).to eq nil
+      expect(Nydp::NIL.to_ruby).to eq nil
     end
   end
 

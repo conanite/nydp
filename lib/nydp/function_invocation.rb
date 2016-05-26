@@ -33,7 +33,7 @@ module Nydp
         f = vm.args.pop
         f.invoke_1 vm
       rescue Exception => e
-        handle e, f, Nydp.NIL
+        handle e, f, Nydp::NIL
       end
     end
 

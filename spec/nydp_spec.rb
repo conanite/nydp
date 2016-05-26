@@ -46,10 +46,10 @@ describe Nydp do
   end
 
   it "should compare integers" do
-    expect(run "(> 13 17)").to eq Nydp.NIL
-    expect(run "(> 29 23)").to eq Nydp.T
-    expect(run "(< 13 17)").to eq Nydp.T
-    expect(run "(< 29 23)").to eq Nydp.NIL
+    expect(run "(> 13 17)").to eq Nydp::NIL
+    expect(run "(> 29 23)").to eq Nydp::T
+    expect(run "(< 13 17)").to eq Nydp::T
+    expect(run "(< 29 23)").to eq Nydp::NIL
   end
 
   it "should execute an inline list function" do

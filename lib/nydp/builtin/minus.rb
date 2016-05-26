@@ -11,7 +11,7 @@ class Nydp::Builtin::Minus
   end
 
   def diff args, accum
-    if Nydp.NIL.is? args
+    if Nydp::NIL.is? args
       accum
     else
       diff(args.cdr, (accum - args.car))

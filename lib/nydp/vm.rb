@@ -67,7 +67,7 @@ module Nydp
     def args!        ; args.empty? ? (raise "illegal operation: no args") : args ; end
     def peek_arg     ; args!.last                                                ; end
 
-    def pop_args count, tail=Nydp.NIL
+    def pop_args count, tail=Nydp::NIL
       case count
       when 0
         tail

@@ -3,9 +3,9 @@ module Nydp
     ::Symbol   => ->(obj, ns) { Nydp::Symbol.mk(obj, ns)                            },
     Array      => ->(obj, ns) { Nydp::Pair.from_list obj.map { |o| Nydp.r2n o, ns } },
     String     => ->(obj, ns) { Nydp::StringAtom.new obj.to_s                       },
-    NilClass   => ->(obj, ns) { Nydp.NIL                                            },
-    FalseClass => ->(obj, ns) { Nydp.NIL                                            },
-    TrueClass  => ->(obj, ns) { Nydp.T                                              },
+    NilClass   => ->(obj, ns) { Nydp::NIL                                           },
+    FalseClass => ->(obj, ns) { Nydp::NIL                                           },
+    TrueClass  => ->(obj, ns) { Nydp::T                                             },
     ::Date     => ->(obj, ns) { Nydp::Date.new obj                                  },
   }
 
@@ -38,7 +38,7 @@ module Nydp
       expr.is_a?(Nydp::Pair)
     end
 
-    def cons a, b=Nydp.NIL
+    def cons a, b=Nydp::NIL
       Nydp::Pair.new a, b
     end
 
@@ -52,7 +52,7 @@ module Nydp
 
     def literal? expr
       case expr
-      when String, Float, Integer, Fixnum, Nydp.NIL, Nydp::Symbol, Nydp::StringAtom, Nydp::Truth, Nydp::Nil
+      when String, Float, Integer, Fixnum, Nydp::Symbol, Nydp::StringAtom, Nydp::Truth, Nydp::Nil
         true
       else
         false

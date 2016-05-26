@@ -36,7 +36,7 @@ describe Nydp::Hash do
         args   = [ ahash, k ]
 
         Nydp::Builtin::HashGet.new(ns).invoke vm, pair_list(args)
-        expect(vm.args.pop).to eq Nydp.NIL
+        expect(vm.args.pop).to eq Nydp::NIL
       end
     end
   end

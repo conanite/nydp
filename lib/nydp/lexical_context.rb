@@ -20,7 +20,7 @@ class Nydp::LexicalContext
   end
 
   def at_index index
-    values[index] || Nydp.NIL
+    values[index] || Nydp::NIL
   end
 
   def set name, value
@@ -31,7 +31,7 @@ class Nydp::LexicalContext
   def set_args_1 names, arg
     if pair? names
       set names.car, arg
-    elsif Nydp.NIL.isnt? names
+    elsif Nydp::NIL.isnt? names
       set names, cons(arg)
     end
   end
@@ -40,7 +40,7 @@ class Nydp::LexicalContext
     if pair? names
       set names.car, arg_0
       set_args_1 names.cdr, arg_1
-    elsif Nydp.NIL.isnt? names
+    elsif Nydp::NIL.isnt? names
       set names, cons(arg_0, cons(arg_1))
     end
   end
@@ -49,7 +49,7 @@ class Nydp::LexicalContext
     if pair? names
       set names.car, arg_0
       set_args_2 names.cdr, arg_1, arg_2
-    elsif Nydp.NIL.isnt? names
+    elsif Nydp::NIL.isnt? names
       set names, cons(arg_0, cons(arg_1, cons(arg_2)))
     end
   end

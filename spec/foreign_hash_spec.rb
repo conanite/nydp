@@ -38,7 +38,7 @@ describe Nydp::Hash do
 
         Nydp::Builtin::HashGet.new(ns).invoke vm, pair_list(args)
 
-        expect(vm.args.pop).to eq Nydp.NIL
+        expect(vm.args.pop).to eq Nydp::NIL
       end
 
       it "converts ruby true to nydp value" do
@@ -48,7 +48,7 @@ describe Nydp::Hash do
 
         Nydp::Builtin::HashGet.new(ns).invoke vm, pair_list(args)
 
-        expect(vm.args.pop).to eq Nydp.T
+        expect(vm.args.pop).to eq Nydp::T
       end
     end
 
@@ -60,7 +60,7 @@ describe Nydp::Hash do
 
         Nydp::Builtin::HashKeyPresent.new(ns).invoke vm, pair_list(args)
 
-        expect(vm.args.pop).to eq Nydp.T
+        expect(vm.args.pop).to eq Nydp::T
       end
 
       it "returns nil when key is absent" do
@@ -69,7 +69,7 @@ describe Nydp::Hash do
 
         Nydp::Builtin::HashKeyPresent.new(ns).invoke vm, pair_list(args)
 
-        expect(vm.args.pop).to eq Nydp.NIL
+        expect(vm.args.pop).to eq Nydp::NIL
       end
     end
 

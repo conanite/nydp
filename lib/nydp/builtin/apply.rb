@@ -10,7 +10,7 @@ class Nydp::Builtin::Apply
   def apply_args args
     raise "Apply: expected a list : got #{args.inspect}" unless pair? args
     raise "Apply: improper list : cdr is ruby nil" if args.cdr.nil?
-    return args.car if Nydp.NIL.is? args.cdr
+    return args.car if Nydp::NIL.is? args.cdr
     cons args.car, apply_args(args.cdr)
   end
 end

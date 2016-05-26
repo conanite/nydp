@@ -62,7 +62,7 @@ describe Nydp::Hash do
   describe "nydp hashes" do
     describe "new hash" do
       it "returns a new Nydp hash" do
-        Nydp::Builtin::Hash.new.invoke vm, Nydp.NIL
+        Nydp::Builtin::Hash.new.invoke vm, Nydp::NIL
         h = vm.args.pop
         expect(h).to be_a Nydp::Hash
       end
@@ -104,7 +104,7 @@ describe Nydp::Hash do
 
         Nydp::Builtin::HashKeyPresent.new(ns).invoke vm, pair_list([h, k])
 
-        expect(vm.args.pop).to eq Nydp.T
+        expect(vm.args.pop).to eq Nydp::T
       end
 
       it "returns nil when key is absent" do
@@ -113,7 +113,7 @@ describe Nydp::Hash do
 
         Nydp::Builtin::HashKeyPresent.new(ns).invoke vm, pair_list([h, k])
 
-        expect(vm.args.pop).to eq Nydp.NIL
+        expect(vm.args.pop).to eq Nydp::NIL
       end
     end
 
@@ -131,7 +131,7 @@ describe Nydp::Hash do
   end
 
   describe "get/set nil" do
-    let(:ahash) { Nydp.NIL }
+    let(:ahash) { Nydp::NIL }
 
     describe "hash set" do
       it "does nothing, returns its value" do
@@ -140,7 +140,7 @@ describe Nydp::Hash do
         args = pair_list [ahash, k, v]
         Nydp::Builtin::HashSet.new.invoke vm, args
 
-        expect(ahash).     to eq Nydp.NIL
+        expect(ahash).     to eq Nydp::NIL
         expect(vm.args.pop).to eq v
       end
     end
@@ -152,7 +152,7 @@ describe Nydp::Hash do
 
         Nydp::Builtin::HashGet.new(ns).invoke vm, pair_list(args)
 
-        expect(vm.args.pop).to eq Nydp.NIL
+        expect(vm.args.pop).to eq Nydp::NIL
       end
     end
   end
