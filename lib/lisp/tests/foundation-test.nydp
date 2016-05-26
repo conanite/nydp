@@ -16,6 +16,46 @@
    (eq? '|| '||)
    t)
 
+  ("true for two identical numbers"
+   (eq? 42 42)
+   t)
+
+  ("true for three identical numbers"
+   (eq? 42 42 42)
+   t)
+
+  ("true for four identical numbers"
+   (eq? 42 42 42 42)
+   t)
+
+  ("true for five identical numbers"
+   (eq? 42 42 42 42 42)
+   t)
+
+  ("true for six identical numbers"
+   (eq? 42 42 42 42 42 42)
+   t)
+
+  ("false for one different number in six"
+   (eq? 42 42 42 42 42 -3)
+   nil)
+
+  ("false for one different number in five"
+   (eq? 42 42 42 -3 42)
+   nil)
+
+  ("false for one different number in four"
+   (eq? 42 -3 42 42)
+   nil)
+
+  ("false for one different number in three"
+   (eq? -3 42 42)
+   nil)
+
+  ("false for two different numbers"
+   (eq? -3 42)
+   nil)
+
   ("nil for two different symbols"
    (eq? 'foo 'bar)
    nil))
