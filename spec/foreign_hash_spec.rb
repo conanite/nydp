@@ -27,7 +27,7 @@ describe Nydp::Hash do
         k              = sym("keysym")
         args           = [ ahash, k ]
 
-        Nydp::Builtin::HashGet.new(ns).invoke vm, pair_list(args)
+        Nydp::Builtin::HashGet.new.invoke vm, pair_list(args)
 
         expect(vm.args.pop).to eq Nydp::StringAtom.new("avalue")
       end
@@ -36,7 +36,7 @@ describe Nydp::Hash do
         k              = sym("keysym")
         args           = [ ahash, k ]
 
-        Nydp::Builtin::HashGet.new(ns).invoke vm, pair_list(args)
+        Nydp::Builtin::HashGet.new.invoke vm, pair_list(args)
 
         expect(vm.args.pop).to eq Nydp::NIL
       end
@@ -46,7 +46,7 @@ describe Nydp::Hash do
         k              = sym("keysym")
         args           = [ ahash, k ]
 
-        Nydp::Builtin::HashGet.new(ns).invoke vm, pair_list(args)
+        Nydp::Builtin::HashGet.new.invoke vm, pair_list(args)
 
         expect(vm.args.pop).to eq Nydp::T
       end
@@ -58,7 +58,7 @@ describe Nydp::Hash do
         k             = sym("simon")
         args          = [ ahash, k ]
 
-        Nydp::Builtin::HashKeyPresent.new(ns).invoke vm, pair_list(args)
+        Nydp::Builtin::HashKeyPresent.new.invoke vm, pair_list(args)
 
         expect(vm.args.pop).to eq Nydp::T
       end
@@ -67,7 +67,7 @@ describe Nydp::Hash do
         k             = sym("simon")
         args          = [ ahash, k ]
 
-        Nydp::Builtin::HashKeyPresent.new(ns).invoke vm, pair_list(args)
+        Nydp::Builtin::HashKeyPresent.new.invoke vm, pair_list(args)
 
         expect(vm.args.pop).to eq Nydp::NIL
       end
@@ -79,7 +79,7 @@ describe Nydp::Hash do
         ahash[:k1] = 84
         args       = [ahash]
 
-        Nydp::Builtin::HashKeys.new(ns).invoke vm, pair_list(args)
+        Nydp::Builtin::HashKeys.new.invoke vm, pair_list(args)
 
         expect(vm.args.pop).to eq pair_list [sym("k0"), sym("k1")]
       end

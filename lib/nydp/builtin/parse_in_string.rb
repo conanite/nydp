@@ -1,14 +1,11 @@
 class Nydp::Builtin::ParseInString
   include Nydp::Builtin::Base
 
-  def initialize ns
-    @parser = Nydp::Parser.new(ns)
-  end
-
   def builtin_invoke vm, args
+    parser = Nydp::Parser.new(vm.ns)
     parsable = args.car.to_s
     tokens = Nydp::Tokeniser.new Nydp::StringReader.new parsable
-    expr = @parser.string(tokens, "", :eof)
+    expr = parser.string(tokens, "", :eof)
     vm.push_arg expr
   rescue Exception => e
     new_msg = "parse error: #{e.message.inspect} in\n#{Nydp.indent_text parsable}"

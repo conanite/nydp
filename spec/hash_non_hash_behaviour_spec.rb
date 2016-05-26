@@ -11,7 +11,7 @@ describe Nydp::Hash do
         k      = Nydp::Symbol.mk "a", ns
         args   = [ ahash, k ]
 
-        Nydp::Builtin::HashGet.new(ns).invoke vm, pair_list(args)
+        Nydp::Builtin::HashGet.new.invoke vm, pair_list(args)
         expect(vm.args.pop).to eq 123
       end
 
@@ -19,7 +19,7 @@ describe Nydp::Hash do
         k      = Nydp::Symbol.mk "b", ns
         args   = [ ahash, k ]
 
-        Nydp::Builtin::HashGet.new(ns).invoke vm, pair_list(args)
+        Nydp::Builtin::HashGet.new.invoke vm, pair_list(args)
         expect(vm.args.pop).to eq Nydp::StringAtom.new("hello there")
       end
 
@@ -27,7 +27,7 @@ describe Nydp::Hash do
         k      = Nydp::StringAtom.new "b"
         args   = [ ahash, k ]
 
-        Nydp::Builtin::HashGet.new(ns).invoke vm, pair_list(args)
+        Nydp::Builtin::HashGet.new.invoke vm, pair_list(args)
         expect(vm.args.pop).to eq Nydp::StringAtom.new("hello there")
       end
 
@@ -35,7 +35,7 @@ describe Nydp::Hash do
         k      = Nydp::Symbol.mk "c", ns
         args   = [ ahash, k ]
 
-        Nydp::Builtin::HashGet.new(ns).invoke vm, pair_list(args)
+        Nydp::Builtin::HashGet.new.invoke vm, pair_list(args)
         expect(vm.args.pop).to eq Nydp::NIL
       end
     end
@@ -70,7 +70,7 @@ raised
         args   = [ ahash, k ]
 
         begin
-          Nydp::Builtin::HashGet.new(ns).invoke vm, pair_list(args)
+          Nydp::Builtin::HashGet.new.invoke vm, pair_list(args)
         rescue Exception => e
           error = e
         end

@@ -9,8 +9,6 @@ end
 
 class Nydp::Builtin::HashGet
   include Nydp::Helper, Nydp::Builtin::Base
-  attr_accessor :ns
-  def initialize ns ; @ns = ns; end
   def builtin_invoke vm, args
     hsh = args.car
     key = args.cdr.car
@@ -21,7 +19,7 @@ class Nydp::Builtin::HashGet
       vm.push_arg Nydp::NIL
     else
       v = hsh.respond_to?(:[]) ? hsh[n2r key] : ruby_call(hsh, key)
-      vm.push_arg(r2n v, ns)
+      vm.push_arg(r2n v, vm.ns)
     end
   end
 
@@ -61,14 +59,12 @@ end
 
 class Nydp::Builtin::HashKeys
   include Nydp::Helper, Nydp::Builtin::Base
-  attr_accessor :ns
-  def initialize ns ; @ns = ns; end
   def builtin_invoke vm, args
     hash = args.car
     if hash.is_a? Nydp::Hash
       vm.push_arg Nydp::Pair.from_list hash.keys
     elsif hash.respond_to?(:keys)
-      vm.push_arg r2n(hash.keys.to_a.sort, ns)
+      vm.push_arg r2n(hash.keys.to_a.sort, vm.ns)
     else
       vm.push_arg Nydp::NIL
     end
@@ -77,8 +73,6 @@ end
 
 class Nydp::Builtin::HashKeyPresent
   include Nydp::Helper, Nydp::Builtin::Base
-  attr_accessor :ns
-  def initialize ns ; @ns = ns; end
   def builtin_invoke vm, args
     hash = args.car
     key  = args.cdr.car
