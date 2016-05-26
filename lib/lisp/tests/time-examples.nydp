@@ -1,0 +1,21 @@
+(examples-for time
+ ("creates a single date"            (to-string (time 1965 6 8))                            "1965-06-08 00:00:00 +0100" )
+ ("adds ten seconds"                 (to-string (time (time 2004  3 12 14 30) 10))          "2004-03-12 14:30:10 +0100" )
+ ("'+ adds seconds"                  (to-string (+ (time 2004  3 12 14 30) 29))             "2004-03-12 14:30:29 +0100" )
+ ("subtracts times"                  (time (time 2004  3 12 14 32) (time 2004  3 12 14 30)) 120.0 )
+ ("'- subtracts times"               (- (time 2004  3 12 14 36) (time 2004  3 12 14 26))    600.0 )
+
+ ("can act as hash key"
+  (with (h {} d (time 1971 11 18 14 57))
+    (hash-set h d "on this day")
+    (to-string (hash-get h (time 1971 11 18 14 57))))
+  "on this day")
+
+ ("equals itself"              (eq? (time 2004 3 12) (time 2004 3 12))  t  )
+ ("does not equal another"     (eq? (time 2004 3 12) (time 2006 6 21))  nil)
+ ("does not equal nil"         (eq? (time 2004 3 12) nil             )  nil)
+ ("nil does not equal a time"  (eq? nil (time 2004 3 12)             )  nil)
+
+ ("returns its year"      (&year  (date (time 1999 12 31 13 29 52)))     1999)
+ ("returns its month"     (&month (date (time 1999 12 31 13 29 52)))       12)
+ ("returns its day"       (&day   (date (time 1999 12 31 13 29 52)))       31))

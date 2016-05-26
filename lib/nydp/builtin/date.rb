@@ -7,7 +7,7 @@ class Nydp::Builtin::Date
 
   # it's a Time object (or any object that responds to #to_date)
   def builtin_invoke_2 vm, arg
-    vm.push_arg(Nydp::Date.new args.car.to_date)
+    vm.push_arg(Nydp::Date.new arg.to_date)
   end
 
   def builtin_invoke_3 vm, a0, a1

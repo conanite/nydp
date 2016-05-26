@@ -31,6 +31,7 @@
   ("string-length"   (inspect string-length   ) "builtin/string-length"   )
   ("string-replace"  (inspect string-replace  ) "builtin/string-replace"  )
   ("string-split"    (inspect string-split    ) "builtin/string-split"    )
+  ("time"            (inspect time            ) "builtin/time"            )
   ("thread-locals"   (inspect thread-locals   ) "builtin/thread-locals"   )
   ("eq?"             (inspect eq?             ) "builtin/eq?"             )
   ("hash-get"        (inspect hash-get        ) "builtin/hash-get"        )
