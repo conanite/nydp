@@ -8,9 +8,8 @@ describe Nydp do
   it "should isolate threadlocal values" do
     Nydp.setup ns
 
-    vm0 = Nydp::VM.new
-    vm1 = Nydp::VM.new
-
+    vm0 = Nydp::VM.new ns
+    vm1 = Nydp::VM.new ns
 
     run vm0, "(hash-set (thread-locals) 'testing (+ 1 2 3))"
     run vm1, "(hash-set (thread-locals) 'testing (+ 6 7 8))"

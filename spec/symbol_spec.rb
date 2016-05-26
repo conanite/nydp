@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Nydp::Symbol do
   let(:bar) { Nydp::Symbol.mk :BAR, ns }
   let(:foo) { Nydp::Symbol.mk :FOO, ns }
-  let(:vm)  { Nydp::VM.new             }
+  let(:vm)  { Nydp::VM.new(ns)         }
 
   it "returns a ruby symbol in #to_ruby" do
     sym = Nydp::Symbol.mk :foo, ns

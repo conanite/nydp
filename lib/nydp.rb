@@ -8,7 +8,7 @@ module Nydp
   def self.testfiles;       PLUGINS.map(&:testfiles).flatten    ; end
   def self.plugin_names   ; PLUGINS.map(&:name)                 ; end
   def self.loadall ns, files
-    vm = VM.new
+    vm = VM.new(ns)
     files.each { |f|
       reader = Nydp::StreamReader.new(File.new(f))
       Nydp::Runner.new(vm, ns, reader).run
@@ -27,29 +27,31 @@ module Nydp
   def self.apply_function ns, function_name, *args
     function = r2n(function_name.to_sym, ns).value
     args     = r2n args, ns
-    vm       = VM.new
+    vm       = VM.new(ns)
 
     function.invoke vm, args
     vm.thread
   end
 
-  def self.reader                    txt ; Nydp::StringReader.new txt                  ; end
-  def self.eval_src          ns, src_txt ; eval_with Nydp::Runner, ns, src_txt         ; end
-  def self.eval_src!         ns, src_txt ; eval_with Nydp::ExplodeRunner, ns, src_txt  ; end
-  def self.eval_with runner, ns, src_txt ; runner.new(VM.new, ns, reader(src_txt)).run ; end
+  def self.reader                    txt ; Nydp::StringReader.new txt                      ; end
+  def self.eval_src          ns, src_txt ; eval_with Nydp::Runner, ns, src_txt             ; end
+  def self.eval_src!         ns, src_txt ; eval_with Nydp::ExplodeRunner, ns, src_txt      ; end
+  def self.eval_with runner, ns, src_txt ; runner.new(VM.new(ns), ns, reader(src_txt)).run ; end
 
   def self.repl
     puts "welcome to nydp"
     puts "^D to exit"
     reader = Nydp::ReadlineReader.new $stdin, "nydp > "
-    Nydp::Runner.new(VM.new, build_nydp, reader, $stdout).run
+    ns     = build_nydp
+    Nydp::Runner.new(VM.new(ns), ns, reader, $stdout).run
   end
 
   def self.tests *options
     verbose = options.include?(:verbose) ? "t" : "nil"
     puts "welcome to nydp : running tests"
     reader = Nydp::StringReader.new "(run-all-tests #{verbose})"
-    Nydp::Runner.new(VM.new, build_nydp, reader).run
+    ns     = build_nydp
+    Nydp::Runner.new(VM.new(ns), ns, reader).run
   end
 
 end

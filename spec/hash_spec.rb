@@ -15,7 +15,7 @@ describe Nydp::Hash do
     def _nydp_safe_methods ; %i{ a b } ; end
   end
 
-  let(:vm) { Nydp::VM.new }
+  let(:vm) { Nydp::VM.new(ns) }
 
   describe "#to_ruby" do
     it "converts ruby symbol key to nydp symbol key" do

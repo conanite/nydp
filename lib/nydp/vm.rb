@@ -1,16 +1,17 @@
 module Nydp
   class VM
     include Helper
-    attr_accessor :instructions, :args, :contexts, :current_context, :locals, :unhandled_error
+    attr_accessor :instructions, :args, :contexts, :current_context, :locals, :unhandled_error, :ns
 
     module Finally     ; end
     module HandleError ; end
 
-    def initialize
+    def initialize ns
       @instructions = []
       @args         = []
       @contexts     = []
       @locals       = Nydp::Hash.new
+      @ns           = ns
     end
 
     def thread expr=nil

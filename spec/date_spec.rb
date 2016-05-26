@@ -2,8 +2,8 @@ require 'spec_helper'
 
 describe Nydp::Date do
 
-  let(:ns) { { }           }
-  let(:vm) { Nydp::VM.new  }
+  let(:ns) { { }               }
+  let(:vm) { Nydp::VM.new(ns)  }
 
   it "converts ruby Date to Nydp::Date" do
     rd = Date.parse "2015-06-08"
