@@ -23,7 +23,6 @@
   ("inspect"         (inspect inspect         ) "builtin/inspect"         )
   ("comment"         (inspect comment         ) "builtin/comment"         )
   ("millisecs"       (inspect millisecs       ) "builtin/millisecs"       )
-  ("load-tests"      (inspect load-tests      ) "builtin/load-tests"      )
   ("handle-error"    (inspect handle-error    ) "builtin/handle-error"    )
   ("parse-in-string" (inspect parse-in-string ) "builtin/parse-in-string" )
   ("random-string"   (inspect random-string   ) "builtin/random-string"   )

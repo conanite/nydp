@@ -53,7 +53,6 @@ module Nydp
       Symbol.mk(:inspect,       ns).assign(Nydp::Builtin::Inspect.instance)
       Symbol.mk(:comment,       ns).assign(Nydp::Builtin::Comment.instance)
       Symbol.mk(:millisecs,     ns).assign(Nydp::Builtin::Millisecs.instance)
-      Symbol.mk("load-tests",   ns).assign(Nydp::Builtin::LoadTests.instance)
       Symbol.mk("handle-error"   , ns).assign(Nydp::Builtin::HandleError.instance)
       Symbol.mk("parse-in-string", ns).assign(Nydp::Builtin::ParseInString.instance)
       Symbol.mk("random-string"  , ns).assign(Nydp::Builtin::RandomString.instance)
