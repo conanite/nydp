@@ -1,16 +1,55 @@
-(dox-add-doc 'cons  'def '("with args a and b, returns a new cons cell, (a . b)")                                                                            '(a b) nil)
-(dox-add-doc 'car   'def '("with args a, where a is a cons cell (x . y), return x." "Commonly used to get the first element of a list")                      '(a) nil)
-(dox-add-doc 'cdr   'def '("with args a, where a is a cons cell (x . y), return y." "Commonly used to get contents of a list, excluding the first element")  '(a) nil)
-(dox-add-doc '+     'def '("with rest-args things, return the sum of the elements of things." "Will also increment dates and concatenate strings and lists") 'things nil)
-(dox-add-doc '-     'def '("return the result of subtracting all other args from the first arg." "(- a b c d) is equivalent to (- a (+ b c d))")             'things nil)
-(dox-add-doc '*     'def '("with rest-args things, return the product of the elements of things.")                                                           'things nil)
-(dox-add-doc '/     'def '("return the result of dividing all other args into the first arg." "(/ a b c d) is equivalent to (/ a (* b c d))")                'things nil)
-(dox-add-doc '>     'def '("true if each arg is greater than the next arg")                                                                                  'things nil)
-(dox-add-doc '<     'def '("true if each arg is less than the next arg")                                                                                     'things nil)
-(dox-add-doc 'mod   'def '("return the remainder after diving a by b")                                                                                       '(a b) nil)
-(dox-add-doc 'eval  'def '("evaluate the given lisp expression")                                                                                             '(expr) nil)
-(dox-add-doc 'hash  'def '("create a new Hash instance")                                                                                                     nil nil)
-(dox-add-doc 'apply 'def '("invoke f with args 'args")                                                                                                       '(f . args) nil)
-(dox-add-doc 'date  'def '("create a new date instance")                                                                                                     '(year month day) nil)
-(dox-add-doc 'error 'def '("raise an exception")                                                                                                             'args nil)
-(dox-add-doc 'parse 'def '("parse the given string and return the corresponding lisp objects")                                                               '(str) nil)
+(dox-add-doc 'cons      'def '("with args a and b, returns a new cons cell, (a . b)")                                                                            '(a b)                nil '(list-manipulation))
+(dox-add-doc 'car       'def '("with args a, where a is a cons cell (x . y), return x." "Commonly used to get the first element of a list")                      '(a)                  nil '(list-manipulation))
+(dox-add-doc 'cdr       'def '("with args a, where a is a cons cell (x . y), return y." "Commonly used to get contents of a list, excluding the first element")  '(a)                  nil '(list-manipulation))
+(dox-add-doc '+         'def '("with rest-args things, return the sum of the elements of things." "Will also increment dates and concatenate strings and lists") 'things               nil '(math))
+(dox-add-doc '-         'def '("return the result of subtracting all other args from the first arg." "(- a b c d) is equivalent to (- a (+ b c d))")             'things               nil '(math))
+(dox-add-doc '*         'def '("with rest-args things, return the product of the elements of things.")                                                           'things               nil '(math))
+(dox-add-doc '/         'def '("return the result of dividing all other args into the first arg." "(/ a b c d) is equivalent to (/ a (* b c d))")                'things               nil '(math))
+(dox-add-doc '>         'def '("true if each arg is greater than the next arg")                                                                                  'things               nil '(math))
+(dox-add-doc '<         'def '("true if each arg is less than the next arg")                                                                                     'things               nil '(math))
+(dox-add-doc 'mod       'def '("return the remainder after diving a by b")                                                                                       '(a b)                nil '(math))
+(dox-add-doc 'eval      'def '("evaluate the given lisp expression")                                                                                             '(expr)               nil '(nydp-core))
+(dox-add-doc 'hash      'def '("create a new Hash instance")                                                                                                     nil                   nil '(hash-manipulation))
+(dox-add-doc 'apply     'def '("invoke f with args 'args")                                                                                                       '(f . args)           nil '(nydp-core))
+(dox-add-doc 'date      'def '("create a new date instance")                                                                                                     '(year month day)     nil '(time-date))
+(dox-add-doc 'error     'def '("raise an exception")                                                                                                             'args                 nil '(flow-control))
+(dox-add-doc 'parse     'def '("parse the given string and return the corresponding lisp objects")                                                               '(str)                nil '(nydp-core))
+(dox-add-doc 'p         'def '("print a message on $stdout")                                                                                                     'args                 nil '(nydp-core))
+(dox-add-doc 'sort      'def '("return 'things, sorted according to their natural sort order")                                                                   'things               nil '(list-manipulation))
+(dox-add-doc 'sqrt      'def '("return the square root of 'arg")                                                                                                 '(arg)                nil '(math))
+(dox-add-doc 'sym       'def '("return the symbol for the given string 'arg")                                                                                    '(arg)                nil '(nydp-core))
+(dox-add-doc 'ensuring  'def '("execute 'tricky-f, then 'ensure-f afterwards"
+                               "'ensure-f will always be executed, even if there is an error in 'tricky-f"
+                               "returns the return value of 'tricky-f")                                                                                          '(ensure-f tricky-f)  nil '(flow-control))
+(dox-add-doc 'inspect   'def '("return a string representing 'arg, potentially (but not always) in a way that can be parsed back in to get the original object") '(arg)                nil '(nydp-core))
+(dox-add-doc 'comment   'def '("does nothing at all." "Intercepted inside 'def and 'mac and used for documentation")                                             '(arg)                nil '(nydp-core))
+(dox-add-doc 'parse-in-string 'def '("parse the given string assuming a string-open delimiter has already been encountered")                                     '(str)                nil '(nydp-core))
+(dox-add-doc 'random-string   'def '("return a random string of length 'len (default 10)")                                                                       '(len)                nil '(string-manipulation))
+(dox-add-doc 'to-string       'def '("return a human-readable string representation of 'arg")                                                                    '(arg)                nil '(string-manipulation))
+(dox-add-doc 'string-length   'def '("return the length of 'arg")                                                                                                '(arg)                nil '(string-manipulation))
+(dox-add-doc 'string-replace  'def '("replace 'pattern with 'insert in 'str")                                                                                    '(pattern insert str) nil '(string-manipulation))
+(dox-add-doc 'string-split    'def '("split 'str delimited by 'delim")                                                                                           '(str delim)          nil '(string-manipulation))
+(dox-add-doc 'time            'def '("with no args, return the current time."
+                                     "With one arg, if 'arg-0 is a number, return the current time plus 'arg-0 seconds."
+                                     "With one arg, if 'arg-0 is a date, return the time at the beginning of the given date."
+                                     "With one arg, if 'arg-0 is a time, return the number of seconds between 'arg-0 and now."
+                                     "With two args, 'arg-0 must be a time."
+                                     "If 'arg-1 is a number, return 'arg-0 plus 'arg-1 seconds as a time object."
+                                     "If 'arg-1 is a time, return the number of seconds between the two (- 'arg-0 arg-1)."
+                                     "Otherwise, expect 3, 4, 5, or 6 args, to construct a time from"
+                                     "year, month, date, hours, minutes, seconds, milliseconds, reading arguments in that order,"
+                                     "where hours, minutes, seconds, and milliseconds are optional")                                                             'args                 nil '(date-time))
+(dox-add-doc 'thread-locals   'def '("return a hash bound to the current thread")                                                                                nil                   nil '(nydp-core))
+(dox-add-doc 'type-of         'def '("return a symbol for the type of 'arg")                                                                                     '(arg)                nil '(nydp-core))
+(dox-add-doc 'eq?             'def '("return 't if 'arg-0 and 'arg-1 are equal, nil otherwise")                                                                  '(arg-0 arg-1)        nil '(nydp-core))
+(dox-add-doc 'cdr-set         'def '("set the cdr of the given 'cell to 'arg, returns 'cell")                                                                    '(cell arg)           nil '(list-manipulation))
+(dox-add-doc 'hash-get        'def '("return the value stored by 'key in 'hsh")                                                                                  '(hsh key)            nil '(hash-manipulation))
+(dox-add-doc 'hash-set        'def '("store 'val under 'key in 'hsh, return 'val")                                                                               '(hsh key val)        nil '(hash-manipulation))
+(dox-add-doc 'hash-keys       'def '("return the list of keys in 'hsh")                                                                                          '(hsh)                nil '(hash-manipulation))
+(dox-add-doc 'hash-key?       'def '("return 't if 'key is a key of 'hsh")                                                                                       '(hsh key)            nil '(hash-manipulation))
+(dox-add-doc 'hash-merge      'def '("return a new hash containing keys and values from 'h0 and 'h1, where values of 'h1 override values of 'h0")                '(h0 h1)              nil '(hash-manipulation))
+(dox-add-doc 'vm-info         'def '("return some information about the state of the current thread")                                                            nil                   nil '(nydp-core))
+(dox-add-doc 'pre-compile     'def '("transform parsed forms before the compile and eval stages")                                                                '(arg)                nil '(nydp-compilation))
+(dox-add-doc 'script-run      'def '("announces the start of a plugin load or a script load."
+                                     "'event may be one of '(script-start script-end plugin-start plugin-end)"
+                                     "'name is the name of the script or plugin concerned")                                                                      '(event name)         nil '(nydp-core))

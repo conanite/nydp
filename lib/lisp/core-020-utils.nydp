@@ -1,3 +1,5 @@
+(assign script-name "core-012-utils.nydp")
+
 (dox-add-doc 'if
              'mac
              '("with arguments a,         return a"
@@ -26,3 +28,17 @@
                   (cons (f (car things)) (map f (cdr things)))
                   (map f (list things)))
              '(list-manipulation))
+
+(dox-add-doc 'rev
+             'def
+             '("returns 'things in reverse order")
+             '(things)
+             '(rev-accum things nil)
+             '(list-manipulation))
+
+(dox-add-doc 'hash-cons
+             'def
+             '("push 'v onto the value for 'k in 'h")
+             '(h k v)
+             '(hash-set h k (cons v (hash-get h k)))
+             '(hash-manipulation))
