@@ -1,4 +1,4 @@
-((fn (this-chapter-name chapters chapter-new chapter-build chapter-add-to-chapter)
+((fn (this-chapter-name chapters chapter-new chapter-build chapter-find-by-name chapter-add-to-chapter)
      (assign chapters (hash))
 
      (def chapter-end ()
@@ -20,15 +20,13 @@
              (cond name
                    (hash-set chapters
                              name
-                             (chapter-new (hash)
-                                          name)))))
+                             (chapter-new (hash) name)))))
+
+     (def chapter-find-by-name (name)
+       (chapter-build name (hash-get chapters name)))
 
      (def chapter-find (name)
-       (chapter-build (cond name
-                            name
-                            this-chapter-name)
-                      (hash-get chapters
-                                name)))
+       (chapter-find-by-name (cond name name this-chapter-name)))
 
      (def chapter-add-to-chapter (chapter attribute thing)
        (cond chapter
