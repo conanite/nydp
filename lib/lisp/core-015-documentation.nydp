@@ -46,6 +46,21 @@
      (def dox-example-names () (hash-keys examples      )))
  (hash) (hash) (hash) nil)
 
+(def plugin-start (name) (assign this-plugin name) (chapter-end))
+(def plugin-end   (name) (assign this-plugin nil ) (chapter-end))
+(def script-start (name) (assign this-script name) (chapter-end))
+(def script-end   (name) (assign this-script nil ) (chapter-end))
+
+(def script-run (event name)
+  (cond (eq? event 'plugin-start)
+        (plugin-start name)
+        (cond (eq? event 'plugin-end)
+              (plugin-end name)
+              (cond (eq? event 'script-start)
+                    (script-start name)
+                    (cond (eq? event 'script-end)
+                          (script-end name))))))
+
 (def filter-form (hsh form)
   ; if the car of 'form is a key of 'hsh, add the cdr of 'form to the value of the key in 'hsh
   ; otherwise add the form to the list whose key is nil
