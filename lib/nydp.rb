@@ -39,10 +39,10 @@ module Nydp
     vm.thread
   end
 
-  def self.reader                          txt ; Nydp::StringReader.new txt                            ; end
-  def self.eval_src      ns, src_txt, name=nil ; eval_with Nydp::Runner, ns, src_txt, name             ; end
-  def self.eval_src!     ns, src_txt, name=nil ; eval_with Nydp::ExplodeRunner, ns, src_txt, name      ; end
-  def self.eval_with runner, ns, src_txt, name ; runner.new(VM.new(ns), ns, reader(src_txt), name).run ; end
+  def self.reader                          txt ; Nydp::StringReader.new txt                                 ; end
+  def self.eval_src      ns, src_txt, name=nil ; eval_with Nydp::Runner, ns, src_txt, name                  ; end
+  def self.eval_src!     ns, src_txt, name=nil ; eval_with Nydp::ExplodeRunner, ns, src_txt, name           ; end
+  def self.eval_with runner, ns, src_txt, name ; runner.new(VM.new(ns), ns, reader(src_txt), nil, name).run ; end
 
   def self.repl
     puts "welcome to nydp"
