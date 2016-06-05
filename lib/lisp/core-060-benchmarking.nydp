@@ -11,9 +11,9 @@
      (p "Benchmark: ~desc - ~repeats runs of ~iterations iterations each")
      (let times 0
           (for reps 1 repeats
-               (let time (millisecs)
+               (let started (time)
                     (bm-repeat f iterations)
-                    (let elapsed (- (millisecs) time)
+                    (let elapsed (- (time) started)
                          (assign times (+ elapsed times))
                          (p "  took: ~elapsed ms, ~(/ elapsed iterations) ms per iteration"))))
           (p "total ~(just times), average ~(/ times repeats) per run")
