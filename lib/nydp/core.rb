@@ -8,6 +8,10 @@ module Nydp
       File.join File.expand_path(File.dirname(__FILE__)), name
     end
 
+    def base_path
+      relative_path "../lisp/"
+    end
+
     def load_rake_tasks
       load relative_path '../tasks/tests.rake'
     end
@@ -70,6 +74,7 @@ module Nydp
       Symbol.mk(:"hash-merge",  ns).assign(Nydp::Builtin::HashMerge.instance)
       Symbol.mk(:"vm-info",     ns).assign Nydp::Builtin::VmInfo.instance
       Symbol.mk(:"pre-compile", ns).assign Nydp::Builtin::PreCompile.instance
+      Symbol.mk(:"script-run" , ns).assign Nydp::Builtin::ScriptRun.instance
     end
   end
 end

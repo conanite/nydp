@@ -37,11 +37,12 @@ module Nydp
   end
 
   class Evaluator
-    attr_accessor :vm, :ns
+    attr_accessor :vm, :ns, :name
 
-    def initialize vm, ns
-      @vm = vm
-      @ns = ns
+    def initialize vm, ns, name
+      @name       = name
+      @vm         = vm
+      @ns         = ns
       @precompile = Symbol.mk(:"pre-compile", ns)
       @quote      = Symbol.mk(:quote, ns)
     end
@@ -73,8 +74,8 @@ module Nydp
   end
 
   class Runner < Evaluator
-    def initialize vm, ns, stream, printer=nil
-      super vm, ns
+    def initialize vm, ns, stream, printer=nil, name=nil
+      super vm, ns, name
       @printer    = printer
       @parser     = Nydp::Parser.new(ns)
       @tokens     = Nydp::Tokeniser.new stream
@@ -92,16 +93,21 @@ module Nydp
     end
 
     def run
+      Nydp.apply_function ns, :"script-run", :"script-start", name
       res = Nydp::NIL
-      while !@tokens.finished
-        expr = @parser.expression(@tokens)
-        unless expr.nil?
-          begin
-            print(res = evaluate(expr))
-          rescue Exception => e
-            handle_run_error e
+      begin
+        while !@tokens.finished
+          expr = @parser.expression(@tokens)
+          unless expr.nil?
+            begin
+              print(res = evaluate(expr))
+            rescue Exception => e
+              handle_run_error e
+            end
           end
         end
+      ensure
+        Nydp.apply_function ns, :"script-run", :"script-end", name
       end
       res
     end

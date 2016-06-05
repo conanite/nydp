@@ -2,17 +2,21 @@ class Nydp::Pair
   include Nydp::Helper, Enumerable
   extend Nydp::Helper
 
-  attr_accessor :car, :cdr
+  attr_reader :car, :cdr
 
   def initialize car, cdr
     @car, @cdr = car, cdr
   end
 
-  def nydp_type ; :pair   ; end
-  def caar      ; car.car ; end
-  def cadr      ; cdr.car ; end
-  def cdar      ; car.cdr ; end
-  def cddr      ; cdr.cdr ; end
+  def nydp_type  ; :pair                            ; end
+  def caar       ; car.car                          ; end
+  def cadr       ; cdr.car                          ; end
+  def cdar       ; car.cdr                          ; end
+  def cddr       ; cdr.cdr                          ; end
+  def car= thing ; @car = thing ; @_hash = nil      ; end
+  def cdr= thing ; @cdr = thing ; @_hash = nil      ; end
+  def hash       ; @_hash ||= (car.hash + cdr.hash) ; end
+  def eql? other ; self == other                    ; end
 
   def to_ruby list=[]
     list << n2r(car)
