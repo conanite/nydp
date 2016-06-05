@@ -1,27 +1,77 @@
+((fn (this-chapter-name chapters chapter-new chapter-build chapter-add-to-chapter)
+     (assign chapters (hash))
+
+     (def chapter-end ()
+       (assign this-chapter-name nil))
+
+     (def chapter-start (name description)
+       (assign this-chapter-name name)
+       (chapter-describe description))
+
+     (def chapter-new (hsh name)
+       (hash-set hsh 'name name)
+       hsh)
+
+     (def chapter-names () (hash-keys chapters))
+
+     (def chapter-build (name chapter)
+       (cond chapter
+             chapter
+             (cond name
+                   (hash-set chapters
+                             name
+                             (chapter-new (hash)
+                                          name)))))
+
+     (def chapter-find (name)
+       (chapter-build (cond name
+                            name
+                            this-chapter-name)
+                      (hash-get chapters
+                                name)))
+
+     (def chapter-add-to-chapter (chapter attribute thing)
+       (cond chapter
+             (hash-cons chapter attribute thing)))
+
+     (def chapter-add-item (item chapter-name)
+       (chapter-add-to-chapter (chapter-find chapter-name)
+                               'contents
+                               item))
+
+     (def chapter-describe (description chapter-name)
+       (cond description
+             (chapter-add-to-chapter (chapter-find chapter-name)
+                                     'description
+                                     description)))))
+
+(assign this-script nil)
+(assign this-plugin nil)
+
 ((fn (dox examples chapters dox-new dox-build)
      (def dox-build (hsh name what texts args src chapters)
-       (hash-set hsh 'name     name     )
-       (hash-set hsh 'what     what     )
-       (hash-set hsh 'texts    texts    )
-       (hash-set hsh 'args     args     )
-       (hash-set hsh 'src      src      )
-       (hash-set hsh 'chapters chapters )
+       (hash-set hsh 'name     name        )
+       (hash-set hsh 'what     what        )
+       (hash-set hsh 'texts    texts       )
+       (hash-set hsh 'args     args        )
+       (hash-set hsh 'src      src         )
+       (hash-set hsh 'chapters chapters    )
+       (hash-set hsh 'file     this-script )
+       (hash-set hsh 'plugin   this-plugin )
        hsh)
 
      (def dox-new (item)
        (hash-cons dox (hash-get item 'name) item)
-       (dox-add-to-chapters (hash-get item 'chapters) item))
+       (dox-add-to-chapters item (hash-get item 'chapters)))
 
      (def dox-add-doc (name what texts args src chapters)
        (dox-new (dox-build (hash) name what texts args src chapters)))
 
-     (def dox-add-to-chapter (chapter item)
-       (hash-cons chapters chapter item))
-
-     (def dox-add-to-chapters (chapters item)
+     (def dox-add-to-chapters (item chapters)
+       (chapter-add-item item)
        (cond chapters
-             (do (dox-add-to-chapter  (car chapters) item)
-                 (dox-add-to-chapters (cdr chapters) item))
+             (do (chapter-add-item    item (car chapters))
+                 (dox-add-to-chapters item (cdr chapters)))
              item))
 
      (def dox-add-examples (name example-exprs)
