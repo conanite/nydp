@@ -24,6 +24,20 @@
                        (push x acc)))
           acc))
 
+(def intersperse (inbetween things)
+  ; return a new list with 'inbetween in between every element of 'things
+  (if (and (pair? things) (cdr things))
+      (apply list (car things) inbetween
+             (intersperse inbetween (cdr things)))
+      things))
+
+(def intersperse-splicing (inbetween things)
+  ; expects 'things a list of lists, joins the lists
+  ; placing 'inbetween in between each list.
+  ; For example (intersperse-splicing 'X '((a b) (c d) (e f)))
+  ; returns (a b X c d X e f)
+  (apply joinlists (intersperse (list inbetween) things)))
+
 (def string-strip (txt)
   (string-replace "\\s+$"
                   ""

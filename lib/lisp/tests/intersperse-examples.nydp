@@ -1,0 +1,57 @@
+(examples-for intersperse
+  ("returns nil for nothing"
+   (intersperse 42)
+   nil)
+
+  ("returns nil for nil"
+   (intersperse 42 nil)
+   nil)
+
+  ("returns a singleton thing"
+   (intersperse 42 'a)
+   a)
+
+  ("returns a singleton list"
+   (intersperse 42 '(a))
+   (a))
+
+  ("returns list with argument between each element"
+   (intersperse 42 '(a b))
+   (a 42 b))
+
+  ("returns longer list with argument between each element"
+   (intersperse 42 '(a b c d e))
+   (a 42 b 42 c 42 d 42 e))
+
+  ("returns list with non-atomic argument between each element"
+   (intersperse '(+ +) '(a b c))
+   (a (+ +) b (+ +) c))
+
+  ("returns improper list with argument between each element"
+   (intersperse 'oo '(a b c . d))
+   (a oo b oo c oo . d)))
+
+(examples-for intersperse-splicing
+  ("returns nil for nothing"
+   (intersperse-splicing 42)
+   nil)
+
+  ("returns nil for nil"
+   (intersperse-splicing 42 nil)
+   nil)
+
+  ("returns a singleton list"
+   (intersperse-splicing 42 '((a)))
+   (a))
+
+  ("returns list with argument between each element"
+   (intersperse-splicing 42 '((a) (b)))
+   (a 42 b))
+
+  ("returns longer list with argument between each element"
+   (intersperse-splicing 42 '((a b) (c d) (e)))
+   (a b 42 c d 42 e))
+
+  ("returns list with non-atomic argument between each element"
+   (intersperse-splicing '(+ +) '((a b) (c d) (e f g)))
+   (a b (+ +) c d (+ +) e f g)))
