@@ -37,7 +37,7 @@
    (joinlists '(a b c) '(x y z) '(1 2 3))
    (a b c x y z 1 2 3))
 
-  ("joins three lists without recusing"
+  ("joins three lists without recursing"
    (joinlists '(a b c) '(x (y1 y2 y3) z) '(1 2 (3 3 3)))
    (a b c x (y1 y2 y3) z 1 2 (3 3 3))))
 
