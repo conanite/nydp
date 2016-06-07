@@ -59,7 +59,8 @@
 
 (def j items
   ; delegate to 'joinstr with an empty join string
-  (joinstr ""  items))
+  ; shortcut for (joinstr ""  items)
+  (joinstr "" items))
 
 (def string-pieces pieces
   ; string-interpolation syntax emits this form. Default implementation
@@ -157,7 +158,7 @@
           (,rfname ,test)))))
 
 (mac loop (start test update . body)
-  ; execute 'start. then for as long as 'test returns non-nil,
+  ; execute 'start, then for as long as 'test returns non-nil,
   ; execute 'body and 'update
   (w/uniq (gfn gparm)
     `(do ,start
@@ -167,15 +168,21 @@
           ,test))))
 
 (mac for (v init max . body)
+  ; assign 'init to 'v, then execute 'body 'max times,
+  ; incrementing 'v at each iteration
   (w/uniq (gi gm)
     `(with (,v nil ,gi ,init ,gm (+ ,max 1))
        (loop (assign ,v ,gi) (< ,v ,gm) (assign ,v (+ ,v 1))
          ,@body))))
 
 (mac mapx (things x expr)
+  ; a macro wrapper for 'map
+  ; 'things is a list, 'x is the name of a variable, and 'expr
+  ; is evaluated and collected for each 'x in 'things
   `(map (fn (,x) ,expr) ,things))
 
 (def atom? (thing)
+  ; 't if 'thing is not a list or a hash
   (and thing
        (!pair? thing)
        (!hash? thing)))
