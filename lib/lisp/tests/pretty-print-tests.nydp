@@ -254,20 +254,14 @@ toto")
 
 
 
+  ("special syntax"
+   (pp '(string-pieces "hello " (bang-syntax || (dot-syntax x y (ampersand-syntax foo bar))) " and welcome to " (prefix-list "%%" (a b c d)) " and friends!"))
+   "\"hello ~~!x.y.foo&bar and welcome to ~~%%(a b c d) and friends!\"")
 
+  ("percent-syntax"
+   (pp '(percent-syntax || (dot-syntax x y)))
+   "%x.y")
 
-)
-
-
-
-;;   ("special syntax"
-;;    (pp '(string-pieces "hello " (bang-syntax || (dot-syntax x y (ampersand-syntax foo bar))) " and welcome to " (prefix-list "%%" (a b c d)) " and friends!"))
-;;    "\"hello ~~!x.y.foo&bar and welcome to ~~%%(a b c d) and friends!\"")
-
-;;   ("percent-syntax"
-;;    (pp '(percent-syntax || (dot-syntax x y)))
-;;    "%x.y")
-
-;;   ("brace list"
-;;    (pp '(&x {a 1 b "two" c 'three d ,four e (sub invocation) f {sub brace list} }))
-;;    "(&x {a 1 b \"two\" c 'three d ,four e (sub invocation) f {sub brace list}})"))
+  ("brace list"
+   (pp '(&x {a 1 b "two" c 'three d ,four e (sub invocation) f {sub brace list} }))
+   "(&x { a 1 b \"two\" c 'three d ,four e (sub invocation) f { sub brace list } })"))

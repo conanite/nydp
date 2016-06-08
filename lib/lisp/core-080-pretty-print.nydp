@@ -55,7 +55,7 @@
 (pp/def unquote-splicing (pp form indent) ",@~(pp (cadr form) (cons "  " indent))")
 (pp/def comment          (pp form indent) "; ~(cadr form)\n")
 (pp/def prefix-list      (pp form indent) "~(cadr form)~(pp (caddr form))")
-(pp/def brace-list       (pp form indent) "{ ~(map λe(pprint e (cons "  " indent)) (cdr form)) }")
+(pp/def brace-list       (pp form indent) "{ ~(joinstr " " (map λe(pprint e (cons "  " indent)) (cdr form))) }")
 
 (def pp/unsyntax (form)
   (if (pair? form)
