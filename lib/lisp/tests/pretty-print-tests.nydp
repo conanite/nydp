@@ -1,3 +1,16 @@
+(examples-for pp/split-form
+  ("first item"
+   (pp/split-form '(a b c d) 3)
+   ((a) (b) (c) (d)))
+
+  ("first two items"
+   (pp/split-form '(a b c d e) 2)
+   ((a b) (c) (d) (e)))
+
+  ("first three items"
+   (pp/split-form '(a b c d e f) 3)
+   ((a b c) (d) (e) (f))))
+
 (examples-for pp/flatly
   ("nil"
    (pp/flatly nil)
