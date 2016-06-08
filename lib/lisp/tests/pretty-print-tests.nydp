@@ -7,9 +7,9 @@
    (pp/breaker '(let a b c d))
    ((let a b) (c) (d)))
 
-  ("breaks 'with forms"
-   (pp/breaker '(with (x y) a b))
-   ((with (x y)) (a) (b))))
+  ("breaks 'def forms"
+   (pp/breaker '(def yoyo (x y) a b))
+   ((def yoyo (x y)) (a) (b))))
 
 (examples-for pp/dotify
   ("nothing"
@@ -245,7 +245,8 @@ toto")
    "(def run-all-tests (verbose)
      ; runs all tests that have been registered with 'register-test
      (with (passed 0 failed 0)
-           (with (f-pass (fn nil (assign passed (+ 1 passed))) f-fail (fn nil (assign failed (+ 1 failed))))
+           (with (f-pass (fn nil (assign passed (+ 1 passed)))
+                  f-fail (fn nil (assign failed (+ 1 failed))))
                  (run-tests `(suite \"all tests\" ,@all-tests) f-pass f-fail verbose)
                  (p \"passed: \" passed)
                  (p \"failed: \" failed)
@@ -256,6 +257,8 @@ toto")
 
 
 )
+
+
 
 ;;   ("special syntax"
 ;;    (pp '(string-pieces "hello " (bang-syntax || (dot-syntax x y (ampersand-syntax foo bar))) " and welcome to " (prefix-list "%%" (a b c d)) " and friends!"))

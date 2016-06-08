@@ -28,10 +28,11 @@
        (hash-keys hsh)))
 
 (def pp/literal (thing indent)
-  (if (eq? thing '||)        "||"
-      (eq? thing pp/newline) "\n~(joinstr " " indent)"
-      (isa 'string thing)    "\"~(pp/esc-str-literal thing)\""
-      (isa 'hash thing)      "{ ~(joinstr " " (pp/kv thing)) }"
+  (if (eq? thing '||)            "||"
+      (eq? thing pp/newline)     "\n~(joinstr " " (rev indent))"
+      (eq? thing pp/newline/noi) "\n~(joinstr " " (rev:cdr indent)) "
+      (isa 'string thing)        "\"~(pp/esc-str-literal thing)\""
+      (isa 'hash thing)          "{ ~(joinstr " " (pp/kv thing)) }"
       (inspect thing)))
 
 (mac pp/def (name args . body)
@@ -39,8 +40,7 @@
   ; given name. 'args are usually (form indent), form being the
   ; complete form for pretty-printing, and indent being the current
   ; indent level.
-  `(do
-       (hash-set pp/special-forms ',name
+  `(do (hash-set pp/special-forms ',name
                  (fn ,args ,@body))
        (dox-add-doc ',name
                     'pp/def
@@ -140,6 +140,20 @@
               (let contents (joinstr " " (map λe(pprint e new-indent) form))
                 "(~contents)"))))
       (pp/literal form indent)))
+
+(def pp/with-args (wargs)
+  (if (> (len (pp/flatly wargs)) 40)
+      (intersperse-splicing pp/newline/noi
+                            (pairs wargs))
+      wargs))
+
+(pp/def with (pp form indent)
+        (let wargs (pp/with-args (cadr form))
+          (let broken (intersperse pp/newline
+                                   (map pp/break-pair
+                                        (cddr form)))
+            (let wbody `(,wargs ,pp/newline ,@broken)
+              "(with ~(joinstr " " (map λe(pprint e (cons "     " indent)) wbody)))"))))
 
 (def pp/printer (form indent)
   (if (pair? form)
