@@ -107,10 +107,10 @@
             (and (hash-get macs key)
                  (!proper? (dox-args key)))
             (pp/split-form form (list-length:dox-args key))
-            (pp/split-form form 2)))
+            (list form)))
       form))
 
-(def pp/break-pair (form indent)
+(def pp/break-pair (form)
   (let special-form (hash-get pp/special-forms (car form))
     (if special-form
         form
@@ -120,6 +120,13 @@
 
 (def pp/cleanup (str)
   (string-strip:string-replace "\\s+\\n" "\n" str))
+
+(def pp/indent (sym indent)
+  (if (or (no sym)
+          (pair? sym))
+      indent
+      (cons (string-replace "." " " (to-string sym))
+            indent)))
 
 (def pp/elt (indent)
   (fn (form)
@@ -131,17 +138,17 @@
           (pp/literal form indent))))
 
 (def pprint (form indent)
-  (let contents (joinstr " " (map (pp/elt indent) form))
-    "(~contents)"))
+  (let new-indent (pp/indent (car form) indent)
+    (let contents (joinstr " " (map (pp/elt new-indent) form))
+      "(~contents)")))
 
 (def pp/printer (form indent)
   (if (pair? form)
-      (pp/cleanup:pprint (intersperse-splicing pp/newline (pp/breaker (pp/unsyntax form)))
-              indent)
+      (pprint (pp/break-pair form) indent)
       (pp/literal form indent)))
 
 
-(def pp (form) (pp/printer (pp/unsyntax form) nil))
+(def pp (form) (pp/cleanup:pp/printer (pp/unsyntax form) nil))
 ;; (def pp (form) (inspect form))
 
 (def dox-show-src (src)

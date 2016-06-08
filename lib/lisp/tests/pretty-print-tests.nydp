@@ -1,3 +1,24 @@
+(examples-for pp/indent
+  ("nothing"
+   (pp/indent nil (list " "))
+   (" "))
+
+  ("number"
+   (pp/indent 22 (list " "))
+   ("  " " "))
+
+  ("string"
+   (pp/indent "forty-two" (list " "))
+   ("         " " "))
+
+  ("symbol"
+   (pp/indent 'forty-two (list " "))
+   ("         " " "))
+
+  ("list"
+   (pp/indent '(fn (x) (blow x)) (list " "))
+   (" ")))
+
 (examples-for pp/cleanup
   ("empty"
    (pp/cleanup "")
@@ -96,11 +117,18 @@ toto")
    (pp '(mac pp/def (name args . body) `(hash-set pp/special-forms ',name (fn ,args ,@body))))
    "(mac pp/def (name args body)\n    `(hash-set pp/special-forms ',name (fn ,args ,@body)))")
 
-)
+  ("a 'def invocation"
+   (pp '(def pp (form) (pp/main form 0)))
+   "(def pp (form) (pp/main form 0))")
 
-;;   ("a 'def invocation"
-;;    (pp '(def pp (form) (pp/main form 0)))
-;;    "(def pp (form)\n    (pp/main form 0))")
+  ("a longer 'def invocation"
+   (pp '(def pp (form)
+          (pp/main form 0)
+          (pp/again form 1)
+          (pp/more (jump:skip form) 2)))
+   "(def pp (form) (pp/main form 0))")
+
+)
 
 ;;   ("something with a plain string literal"
 ;;    (pp '(def yoohoo (it) (wrangle "foobar" it)))
