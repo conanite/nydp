@@ -13,11 +13,13 @@
 (def pp/esc-str-literal (txt)
   (joinstr "" (map pp/esc-ch (string-split txt))))
 
-(def pp/string-piece (thing)
-  (if (isa 'string thing) (pp/esc-str-literal thing)
-      "\~~(pp thing)"))
+(def pp/string-piece (pp)
+  (fn (thing)
+      (if (isa 'string thing)
+          (pp/esc-str-literal thing)
+          "\~~(pp thing)")))
 
-(def pp/string-pieces (things) "\"~(joinstr "" (map pp/string-piece things))\"")
+(def pp/string-pieces (pp things) "\"~(joinstr "" (map (pp/string-piece pp) things))\"")
 
 (def pp/kv (hsh)
   (map λk(joinstr " "
@@ -25,13 +27,11 @@
                   (pp hsh.,k))
        (hash-keys hsh)))
 
-(def pp/literal (thing)
-  (if (eq? thing '||)
-      "||"
-      (isa 'string thing)
-      "\"~(pp/esc-str-literal thing)\""
-      (isa 'hash thing)
-      "{ ~(joinstr " " (pp/kv thing)) }"
+(def pp/literal (thing indent)
+  (if (eq? thing '||)        "||"
+      (eq? thing pp/newline) "\n~(j indent)"
+      (isa 'string thing)    "\"~(pp/esc-str-literal thing)\""
+      (isa 'hash thing)      "{ ~(joinstr " " (pp/kv thing)) }"
       (inspect thing)))
 
 (mac pp/def (name args . body)
@@ -48,30 +48,22 @@
                     ',args
                     '(pp/def ,name ,args ,@body))))
 
-(def pp/unsyntax (form)
-  (if (pair? form)
-      (let unsyntax (hash-get pp/syntaxes (car form))
-        (if unsyntax
-            (sym:joinstr unsyntax (map pp/unsyntax (cdr form)))
-            (map pp/unsyntax (cdr form))))
-      form))
-
-(mac pp/syntax syntaxes
-  (if syntaxes
-      `(do (hash-set pp/syntaxes ',(car syntaxes)
-                     (fn (form)
-                         (joinstr ,(cadr syntaxes) (map pp (cdr form)))))
-           (pp/syntax ,@(cddr syntaxes)))))
-
-(pp/def string-pieces    (pp form indent) (pp/string-pieces (cdr form)))
+(pp/def string-pieces    (pp form indent) (pp/string-pieces pp (cdr form)))
 (pp/def quasiquote       (pp form indent) "`~(pp (cadr form) (list " " indent))" )
 (pp/def quote            (pp form indent) "'~(pp (cadr form) (list " " indent))" )
 (pp/def unquote          (pp form indent) ",~(pp (cadr form) (list " " indent))" )
 (pp/def unquote-splicing (pp form indent) ",@~(pp (cadr form) (list "  " indent))")
 (pp/def comment          (pp form indent) ";~(cadr form)\n")
 (pp/def prefix-list      (pp form indent) "~(cadr form)~(pp (caddr form))")
-(pp/def brace-list       (pp form indent) "{ ~(pp/inline (cdr form) (list "  " indent)) }")
+(pp/def brace-list       (pp form indent) "{ ~(map (pp/elt (list "  " indent)) (cdr form)) }")
 
+(def pp/unsyntax (form)
+  (if (pair? form)
+      (let syntax (hash-get pp/syntaxes (car form))
+        (if syntax
+            (sym:joinstr syntax (map pp/unsyntax (cdr form)))
+            (map pp/unsyntax form)))
+      form))
 
 (hash-set pp/syntaxes 'percent-syntax "%")
 (hash-set pp/syntaxes 'colon-syntax ":")
@@ -90,10 +82,6 @@
       form
       (list (car form) '. (cdr form))))
 
-(def pp/find-breaks/mac (form)
-  (if (eq? (dox-what-is? (car form)) 'mac)
-      (pp/split-form form (list-length:dox-args:car form))))
-
 (def pp/split-form (form n)
   (cons (firstn n form)
         (map list (nthcdr n form))))
@@ -104,12 +92,11 @@
         (if special
             (special pp/flatly form nil)
             "(~(joinstr " " (map pp/flatly form)))"))
-      (pp/literal form)))
+      (pp/literal form nil)))
 
 (def pp/breaks? (form)
   (and (pair? form)
-       (> (len:pp/flatly form) 40)
-       )
+       (> (len:pp/flatly form) 40)))
 
 (def pp/breaker (form)
   (if (pair? form)
@@ -123,35 +110,36 @@
             (pp/split-form form 2)))
       form))
 
-(def pp/inline (forms indent)
-  (joinstr " " (map λf(pp f (+ indent 1)) forms)))
-
 (def pp/break-pair (form indent)
   (let special-form (hash-get pp/special-forms (car form))
     (if special-form
-        (special-form form indent)
-        (let form-with-breaks (pp/find-breaks form)
-          "(~(joinstr "\n~(pp/spaces (+ 4 indent))" (map λf(pp/inline f (+ indent 1)) (pp/dotify form-with-breaks))))"))))
+        form
+        (pp/breaks? form)
+        (intersperse-splicing pp/newline (pp/breaker form))
+        form)))
 
-(def pp/main (form indent)
-  (if (pair? form) (pp/pair form indent)
-      (pp/literal form)))
+(def pp/cleanup (str)
+  (string-strip:string-replace "\\s+\\n" "\n" str))
 
-(def pp/elt (pp indent)
+(def pp/elt (indent)
   (fn (form)
       (if (pair? form)
           (let special-form (hash-get pp/special-forms (car form))
             (if special-form
                 (special-form pp/printer form indent)
                 (pprint form indent)))
-          (pp/literal form))))
+          (pp/literal form indent))))
 
 (def pprint (form indent)
   (let contents (joinstr " " (map (pp/elt indent) form))
     "(~contents)"))
 
 (def pp/printer (form indent)
-  (pprint (intersperse-splicing pp/newline (pp/breaker form)) indent))
+  (if (pair? form)
+      (pp/cleanup:pprint (intersperse-splicing pp/newline (pp/breaker (pp/unsyntax form)))
+              indent)
+      (pp/literal form indent)))
+
 
 (def pp (form) (pp/printer (pp/unsyntax form) nil))
 ;; (def pp (form) (inspect form))
