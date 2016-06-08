@@ -61,7 +61,11 @@ bar")
 bar
 toto")
 
-)
+  ("removes trailing whitespace on each line but preserves leading whitespace"
+   (pp/cleanup "foo  \n  bar   \n   toto    ")
+   "foo
+  bar
+   toto"))
 
 (examples-for pp/unsyntax
   ("nil"

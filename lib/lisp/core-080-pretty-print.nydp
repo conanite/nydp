@@ -122,7 +122,7 @@
         form)))
 
 (def pp/cleanup (str)
-  (string-strip:string-replace "\\s+\\n" "\n" str))
+  (string-replace "\\s+\\n" "\n" (string-replace "\\s+\\Z" "" str)))
 
 (def pp/indent (sym indent)
   (if (or (no sym) (pair? sym))
