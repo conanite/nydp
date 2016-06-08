@@ -2,11 +2,11 @@
 (assign all-tests nil)
 
 (def register-test (test)
-  "register a test to be run later by 'run-all-tests"
+  ; register a test to be run later by 'run-all-tests
   (push test all-tests))
 
 (def run-all-tests (verbose)
-  "runs all tests that have been registered with 'register-test"
+  ; runs all tests that have been registered with 'register-test
   (with (passed 0 failed 0)
     (with (f-pass (fn nil (assign passed (+ 1 passed)))
            f-fail (fn nil (assign failed (+ 1 failed))))
