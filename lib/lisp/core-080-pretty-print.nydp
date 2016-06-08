@@ -114,12 +114,11 @@
       form))
 
 (def pp/break-pair (form)
-  (let special-form (hash-get pp/special-forms (car form))
-    (if special-form
-        form
-        (pp/breaks? form)
-        (intersperse-splicing pp/newline (pp/breaker form))
-        form)))
+  (if (hash-get pp/special-forms (car form))
+      form
+      (pp/breaks? form)
+      (intersperse-splicing pp/newline (pp/breaker form))
+      form))
 
 (def pp/cleanup (str)
   (string-replace "\\s+\\n" "\n" (string-replace "\\s+\\Z" "" str)))
