@@ -1,6 +1,44 @@
+(examples-for pp/unsyntax
+  ("nil"
+   (to-string:pp/unsyntax nil)
+   nil)
+
+  ("atom"
+   (to-string:pp/unsyntax 42)
+   "42")
+
+  ("list"
+   (to-string:pp/unsyntax '(for a 1 10 (p 'hello 'world)))
+   "(for a 1 10 (p 'hello 'world))")
+
+  ("list with embedded syntax"
+   (to-string:pp/unsyntax '(for (colon-syntax a b) 1 10 ((dot-syntax p q) 'hello 'world)))
+   "(for a:b 1 10 (p.q 'hello 'world))")
+
+  ("percent-syntax"
+   (to-string:pp/unsyntax '(percent-syntax this that))
+   "this%that")
+
+  ("prefix percent-syntax"
+   (to-string:pp/unsyntax '(percent-syntax || that))
+   "%that")
+
+  ("postfix percent-syntax"
+   (to-string:pp/unsyntax '(percent-syntax this ||))
+   "this%")
+
+  ("postfix multiple percent-syntax"
+   (to-string:pp/unsyntax '(percent-syntax this that || another))
+   "this%that%%another")
+
+  ("nested syntax"
+   (to-string:pp/unsyntax '(percent-syntax this (ampersand-syntax x y) that))
+   "this%x&y%that"))
+
+
 (examples-for pp/split-form
   ("first item"
-   (pp/split-form '(a b c d) 3)
+   (pp/split-form '(a b c d) 1)
    ((a) (b) (c) (d)))
 
   ("first two items"
@@ -59,7 +97,7 @@
    (pp '(string-pieces "hello " (bang-syntax || (dot-syntax x y (ampersand-syntax foo bar))) " and welcome to " (prefix-list "%%" (a b c d)) " and friends!"))
    "\"hello ~~!x.y.foo&bar and welcome to ~~%%(a b c d) and friends!\"")
 
-  ("perent-syntax"
+  ("percent-syntax"
    (pp '(percent-syntax || (dot-syntax x y)))
    "%x.y")
 

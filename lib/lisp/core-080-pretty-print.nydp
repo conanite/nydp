@@ -27,7 +27,7 @@
 
 (def pp/literal (thing)
   (if (eq? thing '||)
-      ""
+      "||"
       (isa 'string thing)
       "\"~(pp/esc-str-literal thing)\""
       (isa 'hash thing)
@@ -48,10 +48,19 @@
                     ',args
                     '(pp/def ,name ,args ,@body))))
 
+(def pp/unsyntax (form)
+  (if (pair? form)
+      (let unsyntax (hash-get pp/syntaxes (car form))
+        (if unsyntax
+            (sym:joinstr unsyntax (map pp/unsyntax (cdr form)))
+            (map pp/unsyntax (cdr form))))
+      form))
+
 (mac pp/syntax syntaxes
   (if syntaxes
-      `(do (pp/def ,(car syntaxes) (form indent)
-                   (joinstr ,(cadr syntaxes) (map pp (cdr form))))
+      `(do (hash-set pp/syntaxes ',(car syntaxes)
+                     (fn (form)
+                         (joinstr ,(cadr syntaxes) (map pp (cdr form)))))
            (pp/syntax ,@(cddr syntaxes)))))
 
 (pp/def string-pieces    (pp form indent) (pp/string-pieces (cdr form)))
@@ -63,18 +72,16 @@
 (pp/def prefix-list      (pp form indent) "~(cadr form)~(pp (caddr form))")
 (pp/def brace-list       (pp form indent) "{ ~(pp/inline (cdr form) (list "  " indent)) }")
 
-(pp/syntax
- percent-syntax "%"
- colon-syntax ":"
- dot-syntax   "."
- bang-syntax  "!"
- ampersand-syntax "&"
- dollar-syntax "$"
- colon-colon-syntax "::"
- arrow-syntax "->"
- rocket-syntax "=>" )
 
-(def pp/spaces (n) (if (> n 0) " ~(pp/spaces (- n 1))" ""))
+(hash-set pp/syntaxes 'percent-syntax "%")
+(hash-set pp/syntaxes 'colon-syntax ":")
+(hash-set pp/syntaxes 'dot-syntax   ".")
+(hash-set pp/syntaxes 'bang-syntax  "!")
+(hash-set pp/syntaxes 'ampersand-syntax "&")
+(hash-set pp/syntaxes 'dollar-syntax "$")
+(hash-set pp/syntaxes 'colon-colon-syntax "::")
+(hash-set pp/syntaxes 'arrow-syntax "->")
+(hash-set pp/syntaxes 'rocket-syntax "=>" )
 
 (def pp/dotify (form)
   (if (pair? (cdr form))
@@ -99,20 +106,27 @@
             "(~(joinstr " " (map pp/flatly form)))"))
       (pp/literal form)))
 
-(def pp/breaks? (form))
+(def pp/breaks? (form)
+  (and (pair? form)
+       (> (len:pp/flatly form) 40)
+       )
 
 (def pp/breaker (form)
-  (let key (car form)
-    (if (eq? 'if (car form))
-        (let if-args (cdr form)
-          (cons (list 'if (car if-args)) (map list (cdr if-args))))
-        (or (pp/find-breaks/mac form)
-            (list form)))))
+  (if (pair? form)
+      (let key (car form)
+        (if (or (eq? 'if key)
+                (eq? 'cond key))
+            (pp/split-form form 2)
+            (and (hash-get macs key)
+                 (!proper? (dox-args key)))
+            (pp/split-form form (list-length:dox-args key))
+            (pp/split-form form 2)))
+      form))
 
 (def pp/inline (forms indent)
   (joinstr " " (map λf(pp f (+ indent 1)) forms)))
 
-(def pp/pair (form indent)
+(def pp/break-pair (form indent)
   (let special-form (hash-get pp/special-forms (car form))
     (if special-form
         (special-form form indent)
@@ -123,13 +137,24 @@
   (if (pair? form) (pp/pair form indent)
       (pp/literal form)))
 
-(def pp/elt (form))
+(def pp/elt (pp indent)
+  (fn (form)
+      (if (pair? form)
+          (let special-form (hash-get pp/special-forms (car form))
+            (if special-form
+                (special-form pp/printer form indent)
+                (pprint form indent)))
+          (pp/literal form))))
+
+(def pprint (form indent)
+  (let contents (joinstr " " (map (pp/elt indent) form))
+    "(~contents)"))
 
 (def pp/printer (form indent)
-  (pprint (intersperse-splicing (pp/breaker form)) indent))
+  (pprint (intersperse-splicing pp/newline (pp/breaker form)) indent))
 
-(def pp (form) (pp/printer form nil))
-(def pp (form) (inspect form))
+(def pp (form) (pp/printer (pp/unsyntax form) nil))
+;; (def pp (form) (inspect form))
 
 (def dox-show-src (src)
   ; use the pretty-printer to elegantly display the given source code
