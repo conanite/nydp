@@ -1,3 +1,5 @@
+(def privately () nil)
+
 ((fn (this-chapter-name chapters chapter-new chapter-build chapter-find-by-name chapter-add-to-chapter)
      (assign chapters (hash))
 
@@ -44,7 +46,7 @@
                                      description)))))
 
 (assign this-script nil)
-(assign this-plugin nil)
+(assign this-plugin "Nydp Core")
 
 ((fn (dox examples chapters dox-new dox-build)
      (def dox-build (hsh name what texts args src chapters)
@@ -63,7 +65,8 @@
        (dox-add-to-chapters item (hash-get item 'chapters)))
 
      (def dox-add-doc (name what texts args src chapters)
-       (dox-new (dox-build (hash) name what texts args src chapters)))
+       (cond (no (privately))
+             (dox-new (dox-build (hash) name what texts args src chapters))))
 
      (def dox-add-to-chapters (item chapters)
        (chapter-add-item item)
