@@ -1,3 +1,16 @@
+(examples-for pp/breaker
+  ("breaks 'if forms"
+   (pp/breaker '(if a b c d e))
+   ((if a) (b) (c) (d) (e)))
+
+  ("breaks 'let forms"
+   (pp/breaker '(let a b c d))
+   ((let a b) (c) (d)))
+
+  ("breaks 'with forms"
+   (pp/breaker '(with (x y) a b))
+   ((with (x y)) (a) (b))))
+
 (examples-for pp/dotify
   ("nothing"
    (pp/dotify nil)
@@ -27,15 +40,15 @@
 
   ("number"
    (pp/indent 22 (list " "))
-   ("  " " "))
+   ("   " " "))
 
   ("string"
    (pp/indent "forty-two" (list " "))
-   ("         " " "))
+   ("          " " "))
 
   ("symbol"
    (pp/indent 'forty-two (list " "))
-   ("         " " "))
+   ("          " " "))
 
   ("list"
    (pp/indent '(fn (x) (blow x)) (list " "))
@@ -139,9 +152,30 @@ toto")
    "(mac johnny (foo bar) `(this ,foo ,@(map twisty bar)))"))
 
 (examples-for pp
+  ("a quote"
+   (pp '(quote a))
+   "'a")
+
+  ("unquote"
+   (pp '(unquote a))
+   ",a")
+
+  ("unquote-splicing"
+   (pp '(unquote-splicing a))
+   ",@a")
+
+  ("quasiquote"
+   (pp '(quasiquote a))
+   "`a")
+
+  ("quote unquote"
+   (pp '(quote (unquote a)))
+   "',a")
+
   ("a macro invocation"
    (pp '(mac pp/def (name args . body) `(hash-set pp/special-forms ',name (fn ,args ,@body))))
-   "(mac pp/def (name args body)\n    `(hash-set pp/special-forms ',name (fn ,args ,@body)))")
+   "(mac pp/def (name args . body)
+     `(hash-set pp/special-forms ',name (fn ,args ,@body)))")
 
   ("a 'def invocation"
    (pp '(def pp (form) (pp/main form 0)))
@@ -153,30 +187,75 @@ toto")
           (pp/again form 1)
           (pp/more (jump:skip form) 2)))
    "(def pp (form)
-    (pp/main form 0)
-    (pp/again form 1)
-    (pp/more (jump:skip form) 2))")
+     (pp/main form 0)
+     (pp/again form 1)
+     (pp/more (jump:skip form) 2))")
 
   ("a 'def with a dotted argument list"
    (pp '(def afun (a b c . others)
           (afun a b c (a (car others) (b (cdr others))))))
    "(def afun (a b c . others)
-    (afun a b c (a (car others) (b (cdr others)))))")
+     (afun a b c (a (car others) (b (cdr others)))))")
+
+  ("something with a plain string literal"
+   (pp '(def yoohoo (it) (wrangle "foobar" it)))
+   "(def yoohoo (it) (wrangle \"foobar\" it))")
+
+  ("a 'let form"
+   (pp '(let acc nil
+            (rfnwith flattenize (x things)
+                     (if (pair? x)
+                         (eachr flattenize x)
+                         (push x acc)))
+            acc))
+   "(let acc nil
+     (rfnwith flattenize (x things)
+              (if (pair? x)
+                  (eachr flattenize x)
+                  (push x acc)))
+     acc)")
+
+
+  ("a real-life example from utils"
+   (pp '(def flatten (things)
+          (let acc nil
+            (rfnwith flattenize (x things)
+                     (if (pair? x)
+                         (eachr flattenize x)
+                         (push x acc)))
+            acc)))
+   "(def flatten (things)
+     (let acc nil
+          (rfnwith flattenize (x things)
+                   (if (pair? x)
+                       (eachr flattenize x)
+                       (push x acc)))
+          acc))")
+
+  ("a real-life example from test-runner"
+   (pp '(def run-all-tests (verbose)
+          ; runs all tests that have been registered with 'register-test
+          (with (passed 0 failed 0)
+                (with (f-pass (fn nil (assign passed (+ 1 passed)))
+                              f-fail (fn nil (assign failed (+ 1 failed))))
+                      (run-tests `(suite "all tests" ,@all-tests) f-pass f-fail verbose)
+                      (p "passed: " passed)
+                      (p "failed: " failed)
+                      (/ passed (+ passed failed))))))
+   "(def run-all-tests (verbose)
+     ; runs all tests that have been registered with 'register-test
+     (with (passed 0 failed 0)
+           (with (f-pass (fn nil (assign passed (+ 1 passed))) f-fail (fn nil (assign failed (+ 1 failed))))
+                 (run-tests `(suite \"all tests\" ,@all-tests) f-pass f-fail verbose)
+                 (p \"passed: \" passed)
+                 (p \"failed: \" failed)
+                 (/ passed (+ passed failed)))))")
+
+
+
+
+
 )
-
-;;   ("something with a plain string literal"
-;;    (pp '(def yoohoo (it) (wrangle "foobar" it)))
-;;    "(def yoohoo (it)\n    (wrangle \"foobar\" it))")
-
-;;   ("combined with dox system"
-;;    (pp:dox-src 'pp/find-breaks)
-;;    "(def pp/find-breaks (form)
-;;     (if (eq? 'if (car form))
-;;       (let if-args (cdr form)
-;;         (cons (list 'if (car if-args)) (map list (cdr if-args))))
-;;       (or
-;;         (pp/find-breaks/mac form)
-;;         (list form))))")
 
 ;;   ("special syntax"
 ;;    (pp '(string-pieces "hello " (bang-syntax || (dot-syntax x y (ampersand-syntax foo bar))) " and welcome to " (prefix-list "%%" (a b c d)) " and friends!"))
