@@ -34,6 +34,14 @@
    (map (fn (x) (* x x)) '(1 2 3))
    (1 4 9))
 
+  ("applies the function to a singleton argument"
+   (map (fn (x) (* x x)) 19)
+   361)
+
+  ("preserves dotted lists"
+   (map (fn (x) (* x x)) '(1 2 3 4 . 5))
+   (1 4 9 16 . 25))
+
   ("maps a string join function over a list of strings"
    (test-foo "x" "y")
    ("a0 w0 x w0 y" "a0 w1 x w1 y" "a0 w2 x w2 y" "a0 w3 x w3 y"))

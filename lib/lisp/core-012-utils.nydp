@@ -10,11 +10,10 @@
 (def map (f things)
   ; transforms the list 'things by applying 'f to each item
   ; returns the resulting list
-  (if (no things)
-      nil
-      (pair? things)
+  (if (pair? things)
       (cons (f (car things)) (map f (cdr things)))
-      (map f (list things))))
+      things
+      (f things)))
 
 (def hash-cons (h k v)
   ; push 'v onto the value for 'k in 'h
