@@ -1,3 +1,25 @@
+(examples-for pp/dotify
+  ("nothing"
+   (pp/dotify nil)
+   nil)
+
+  ("atom"
+   (inspect:pp/dotify 'a)
+   "a")
+
+  ("plain list"
+   (inspect:pp/dotify '(a b c))
+   "(a b c)")
+
+  ("dotted list"
+   (map inspect (pp/dotify '(a b c . d)))
+   ("a" "b" "c" "." "d"))
+
+  ("nested dotted list"
+   (inspect:pp/dotify '(def foo (a b c . d)
+                         (a (fn (x y . z) (d z) ))))
+   "(def foo (a b c . d) (a (fn (x y . z) (d z))))"))
+
 (examples-for pp/indent
   ("nothing"
    (pp/indent nil (list " "))
@@ -126,8 +148,16 @@ toto")
           (pp/main form 0)
           (pp/again form 1)
           (pp/more (jump:skip form) 2)))
-   "(def pp (form) (pp/main form 0))")
+   "(def pp (form)
+    (pp/main form 0)
+    (pp/again form 1)
+    (pp/more (jump:skip form) 2))")
 
+  ("a 'def with a dotted argument list"
+   (pp '(def afun (a b c . others)
+          (afun a b c (a (car others) (b (cdr others))))))
+   "(def afun (a b c . others)
+    (afun a b c (a (car others) (b (cdr others)))))")
 )
 
 ;;   ("something with a plain string literal"

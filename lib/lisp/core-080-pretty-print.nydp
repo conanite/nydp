@@ -76,11 +76,14 @@
 (hash-set pp/syntaxes 'rocket-syntax "=>" )
 
 (def pp/dotify (form)
-  (if (pair? (cdr form))
-      (cons (car form) (pp/dotify (cdr form)))
-      (no:cdr form)
-      form
-      (list (car form) '. (cdr form))))
+  (if (pair? form)
+      (cons (pp/dotify:car form)
+            (if (pair? (cdr form))
+                (pp/dotify (cdr form))
+                (no:cdr form)
+                nil
+                (list '. (cdr form))))
+      form))
 
 (def pp/split-form (form n)
   (cons (firstn n form)
@@ -146,7 +149,7 @@
       (pp/literal form indent)))
 
 
-(def pp (form) (pp/cleanup:pp/printer (pp/unsyntax form) nil))
+(def pp (form) (pp/cleanup:pp/printer (pp/dotify:pp/unsyntax form) nil))
 ;; (def pp (form) (inspect form))
 
 (def dox-show-src (src)
