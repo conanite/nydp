@@ -1,18 +1,20 @@
 (assign pp/special-forms (hash))
-(assign pp/line-break (uniq 'line-break))
+(assign pp/syntaxes      (hash))
+(assign pp/newline       (uniq 'newline))
+(assign pp/newline/noi   (uniq 'newline/noi))
 
-(def pp/escape-char (char)
+(def pp/esc-ch (char)
   (if (eq? char "\"") "\\\""
       (eq? char "\~") "\\\~"
       (eq? char "\\") "\\\\"
       (eq? char "\n") "\\n"
       char))
 
-(def pp/escape-string-literal (txt)
-  (joinstr "" (map pp/escape-char (string-split txt))))
+(def pp/esc-str-literal (txt)
+  (joinstr "" (map pp/esc-ch (string-split txt))))
 
 (def pp/string-piece (thing)
-  (if (isa 'string thing) (pp/escape-string-literal thing)
+  (if (isa 'string thing) (pp/esc-str-literal thing)
       "\~~(pp thing)"))
 
 (def pp/string-pieces (things) "\"~(joinstr "" (map pp/string-piece things))\"")
@@ -27,7 +29,7 @@
   (if (eq? thing '||)
       ""
       (isa 'string thing)
-      "\"~(pp/escape-string-literal thing)\""
+      "\"~(pp/esc-str-literal thing)\""
       (isa 'hash thing)
       "{ ~(joinstr " " (pp/kv thing)) }"
       (inspect thing)))
@@ -52,14 +54,14 @@
                    (joinstr ,(cadr syntaxes) (map pp (cdr form))))
            (pp/syntax ,@(cddr syntaxes)))))
 
-(pp/def string-pieces    (form indent) (pp/string-pieces (cdr form)))
-(pp/def quasiquote       (form indent) "`~(pp/main (cadr form) indent)" )
-(pp/def quote            (form indent) "'~(pp/main (cadr form) indent)" )
-(pp/def unquote          (form indent) ",~(pp/main (cadr form) indent)" )
-(pp/def unquote-splicing (form indent) ",@~(pp/main (cadr form) indent)")
-(pp/def comment          (form indent) ";~(cadr form)\n")
-(pp/def prefix-list      (form indent) "~(cadr form)~(pp (caddr form))")
-(pp/def brace-list       (form indent) "{~(pp/inline (cdr form) indent)}")
+(pp/def string-pieces    (pp form indent) (pp/string-pieces (cdr form)))
+(pp/def quasiquote       (pp form indent) "`~(pp (cadr form) (list " " indent))" )
+(pp/def quote            (pp form indent) "'~(pp (cadr form) (list " " indent))" )
+(pp/def unquote          (pp form indent) ",~(pp (cadr form) (list " " indent))" )
+(pp/def unquote-splicing (pp form indent) ",@~(pp (cadr form) (list "  " indent))")
+(pp/def comment          (pp form indent) ";~(cadr form)\n")
+(pp/def prefix-list      (pp form indent) "~(cadr form)~(pp (caddr form))")
+(pp/def brace-list       (pp form indent) "{ ~(pp/inline (cdr form) (list "  " indent)) }")
 
 (pp/syntax
  percent-syntax "%"
@@ -83,19 +85,32 @@
 
 (def pp/find-breaks/mac (form)
   (if (eq? (dox-what-is? (car form)) 'mac)
-      (let arg-count (list-length:dox-args:car form)
-        (cons (firstn arg-count form)
-              (map list (nthcdr arg-count form))))))
+      (pp/split-form form (list-length:dox-args:car form))))
 
-(def pp/find-breaks (form)
-  (if (eq? 'if (car form))
-      (let if-args (cdr form)
-        (cons (list 'if (car if-args)) (map list (cdr if-args))))
-      (or (pp/find-breaks/mac form)
-          (list form))))
+(def pp/split-form (form n)
+  (cons (firstn n form)
+        (map list (nthcdr n form))))
+
+(def pp/flatly (form)
+  (if (pair? form)
+      (let special (hash-get pp/special-forms (car form))
+        (if special
+            (special pp/flatly form nil)
+            "(~(joinstr " " (map pp/flatly form)))"))
+      (pp/literal form)))
+
+(def pp/breaks? (form))
+
+(def pp/breaker (form)
+  (let key (car form)
+    (if (eq? 'if (car form))
+        (let if-args (cdr form)
+          (cons (list 'if (car if-args)) (map list (cdr if-args))))
+        (or (pp/find-breaks/mac form)
+            (list form)))))
 
 (def pp/inline (forms indent)
-  (joinstr " " (map λf(pp/main f (+ indent 1)) forms)))
+  (joinstr " " (map λf(pp f (+ indent 1)) forms)))
 
 (def pp/pair (form indent)
   (let special-form (hash-get pp/special-forms (car form))
@@ -108,7 +123,13 @@
   (if (pair? form) (pp/pair form indent)
       (pp/literal form)))
 
-(def pp (form) (pp/main form 0))
+(def pp/elt (form))
+
+(def pp/printer (form indent)
+  (pprint (intersperse-splicing (pp/breaker form)) indent))
+
+(def pp (form) (pp/printer form nil))
+(def pp (form) (inspect form))
 
 (def dox-show-src (src)
   ; use the pretty-printer to elegantly display the given source code

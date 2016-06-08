@@ -1,3 +1,24 @@
+(examples-for pp/flatly
+  ("nil"
+   (pp/flatly nil)
+   "nil")
+
+  ("number"
+   (pp/flatly 22)
+   "22")
+
+  ("symbol"
+   (pp/flatly 'qwerty)
+   "qwerty")
+
+  ("list"
+   (pp/flatly '(a b c d 21 22 23 'quoting) )
+   "(a b c d 21 22 23 'quoting)")
+
+  ("macro example"
+   (pp/flatly '(mac johnny (foo bar) `(this ,foo ,@(map twisty bar))))
+   "(mac johnny (foo bar) `(this ,foo ,@(map twisty bar)))"))
+
 (examples-for pp
   ("a macro invocation"
    (pp '(mac pp/def (name args . body) `(hash-set pp/special-forms ',name (fn ,args ,@body))))
