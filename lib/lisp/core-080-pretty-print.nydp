@@ -29,8 +29,8 @@
 
 (def pp/literal (thing indent)
   (if (eq? thing '||)            "||"
-      (eq? thing pp/newline)     "\n~(joinstr " " (rev indent))"
-      (eq? thing pp/newline/noi) "\n~(joinstr " " (rev:cdr indent)) "
+      (eq? thing pp/newline)     "\n~(joinstr " " indent)"
+      (eq? thing pp/newline/noi) "\n~(joinstr " " (cdr indent)) "
       (isa 'string thing)        "\"~(pp/esc-str-literal thing)\""
       (isa 'hash thing)          "{ ~(joinstr " " (pp/kv thing)) }"
       (inspect thing)))
@@ -49,10 +49,10 @@
                     '(pp/def ,name ,args ,@body))))
 
 (pp/def string-pieces    (pp form indent) (pp/string-pieces pp (cdr form)))
-(pp/def quasiquote       (pp form indent) "`~(pp (cadr form) (cons " " indent))" )
-(pp/def quote            (pp form indent) "'~(pp (cadr form) (cons " " indent))" )
-(pp/def unquote          (pp form indent) ",~(pp (cadr form) (cons " " indent))" )
-(pp/def unquote-splicing (pp form indent) ",@~(pp (cadr form) (cons "  " indent))")
+(pp/def quasiquote       (pp form indent) "`~(pp (cadr form) (cons "" indent))" )
+(pp/def quote            (pp form indent) "'~(pp (cadr form) (cons "" indent))" )
+(pp/def unquote          (pp form indent) ",~(pp (cadr form) (cons "" indent))" )
+(pp/def unquote-splicing (pp form indent) ",@~(pp (cadr form) (cons " " indent))")
 (pp/def comment          (pp form indent) "; ~(cadr form)\n")
 (pp/def prefix-list      (pp form indent) "~(cadr form)~(pp (caddr form))")
 (pp/def brace-list       (pp form indent) "{ ~(joinstr " " (map λe(pprint e (cons "  " indent)) (cdr form))) }")
@@ -110,7 +110,7 @@
             (and (hash-get macs key)
                  (!proper? (dox-args key)))
             (pp/split-form form (list-length:dox-args key))
-            (list form)))
+            (pp/split-form form 2)))
       form))
 
 (def pp/break-pair (form)

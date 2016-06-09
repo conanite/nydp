@@ -175,7 +175,9 @@ toto")
   ("a macro invocation"
    (pp '(mac pp/def (name args . body) `(hash-set pp/special-forms ',name (fn ,args ,@body))))
    "(mac pp/def (name args . body)
-     `(hash-set pp/special-forms ',name (fn ,args ,@body)))")
+     `(hash-set pp/special-forms
+                ',name
+                (fn ,args ,@body)))")
 
   ("a 'def invocation"
    (pp '(def pp (form) (pp/main form 0)))
@@ -195,7 +197,10 @@ toto")
    (pp '(def afun (a b c . others)
           (afun a b c (a (car others) (b (cdr others))))))
    "(def afun (a b c . others)
-     (afun a b c (a (car others) (b (cdr others)))))")
+     (afun a
+           b
+           c
+           (a (car others) (b (cdr others)))))")
 
   ("something with a plain string literal"
    (pp '(def yoohoo (it) (wrangle "foobar" it)))
@@ -232,6 +237,24 @@ toto")
                        (push x acc)))
           acc))")
 
+  ("a real-life example from utils"
+   (pp '(def list-slices (things slice-size)
+          ; slice 'things into a list of lists each with maximum 'slice-size items
+          (chapter pagination list-management)
+          (if (< (len things) slice-size)
+              (cons things nil)
+              (cons (firstn slice-size things)
+                    (list-slices (nthcdr slice-size things)
+                                 slice-size)))))
+   "(def list-slices (things slice-size)
+     ; slice 'things into a list of lists each with maximum 'slice-size items
+     (chapter pagination list-management)
+     (if (< (len things) slice-size)
+         (cons things nil)
+         (cons (firstn slice-size things)
+               (list-slices (nthcdr slice-size things)
+                            slice-size))))")
+
   ("a real-life example from test-runner"
    (pp '(def run-all-tests (verbose)
           ; runs all tests that have been registered with 'register-test
@@ -247,7 +270,10 @@ toto")
      (with (passed 0 failed 0)
            (with (f-pass (fn nil (assign passed (+ 1 passed)))
                   f-fail (fn nil (assign failed (+ 1 failed))))
-                 (run-tests `(suite \"all tests\" ,@all-tests) f-pass f-fail verbose)
+                 (run-tests `(suite \"all tests\" ,@all-tests)
+                            f-pass
+                            f-fail
+                            verbose)
                  (p \"passed: \" passed)
                  (p \"failed: \" failed)
                  (/ passed (+ passed failed)))))")
