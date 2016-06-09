@@ -49,11 +49,7 @@
   (apply joinlists (intersperse (list inbetween) things)))
 
 (def string-strip (txt)
-  (string-replace "\\s+$"
-                  ""
-                  (string-replace "^\\s+"
-                                  ""
-                                  txt)))
+  (string-replace "(^\\s+|\\s+$)" "" txt))
 
 (def joinstr (txt . things)
   ; flatten 'things into a single list (ie unnest lists)
