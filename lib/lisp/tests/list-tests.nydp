@@ -119,3 +119,16 @@
   ("nil for a very improper list"
    (proper? '(a b . (c . d)))
    nil))
+
+(examples-for list-slices
+  ("just the list if small"
+   (list-slices '(a b c d e) 12)
+   ((a b c d e)))
+
+  ("exactly three lists"
+   (list-slices '(a b c d e f g h i) 3)
+   ((a b c) (d e f) (g h i)))
+
+  ("three lists and an extra big"
+   (list-slices '(a b c d e f g h i j k) 3)
+   ((a b c) (d e f) (g h i) (j k))))

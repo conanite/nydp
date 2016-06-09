@@ -24,6 +24,15 @@
                        (push x acc)))
           acc))
 
+(def list-slices (things slice-size)
+     ; slice 'things into a list of lists each with maximum 'slice-size items
+     (chapter pagination list-management)
+     (if (< (len things) slice-size)
+         (cons things nil)
+         (cons (firstn slice-size things)
+               (list-slices (nthcdr slice-size things)
+                            slice-size))))
+
 (def intersperse (inbetween things)
   ; return a new list with 'inbetween in between every element of 'things
   (if (and (pair? things) (cdr things))
