@@ -26,7 +26,8 @@
 
 (def list-slices (things slice-size)
      ; slice 'things into a list of lists each with maximum 'slice-size items
-     (chapter pagination list-management)
+     (chapter pagination)
+     (chapter list-manipulation)
      (if (< (len things) slice-size)
          (cons things nil)
          (cons (firstn slice-size things)
