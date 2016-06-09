@@ -11,7 +11,7 @@
 (dox-add-doc 'eval      'def '("evaluate the given lisp expression")                                                                                             '(expr)               nil '(nydp-core))
 (dox-add-doc 'hash      'def '("create a new Hash instance")                                                                                                     nil                   nil '(hash-manipulation))
 (dox-add-doc 'apply     'def '("invoke f with args 'args")                                                                                                       '(f . args)           nil '(nydp-core))
-(dox-add-doc 'date      'def '("create a new date instance")                                                                                                     '(year month day)     nil '(time-date))
+(dox-add-doc 'date      'def '("create a new date instance")                                                                                                     '(year month day)     nil '(date-time))
 (dox-add-doc 'error     'def '("raise an exception")                                                                                                             'args                 nil '(flow-control))
 (dox-add-doc 'parse     'def '("parse the given string and return the corresponding lisp objects")                                                               '(str)                nil '(nydp-core))
 (dox-add-doc 'p         'def '("print a message on $stdout")                                                                                                     'args                 nil '(nydp-core))
