@@ -10,7 +10,8 @@ module Nydp
     def self.compile expression, bindings
       compile_expr expression, bindings
     rescue Exception => e
-      raise "failed to compile expression #{expression.inspect},\nerror was #{e.message}"
+      new_msg = "failed to compile expression #{expression.inspect},\nerror was #{e.message}"
+      raise $!, new_msg, $!.backtrace
     end
 
     def self.compile_expr expression, bindings
