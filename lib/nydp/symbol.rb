@@ -49,7 +49,11 @@ class Nydp::Symbol
     other.is_a?(Nydp::Symbol) && (self.name == other.name)
   end
 
-  def assign value, context=nil
+  def execute vm
+    vm.push_arg self.value
+  end
+
+  def assign value, _=nil
     @value = value
   end
 end

@@ -4,20 +4,6 @@ module Nydp
   class SymbolLookup
     extend Helper
 
-    attr_reader :expression
-
-    def initialize expression
-      @expression = expression
-    end
-
-    def execute vm
-      vm.push_arg expression.value vm.current_context
-    end
-
-    def assign value, context=nil
-      @expression.assign value, context
-    end
-
     def self.build name, bindings
       depth = 0
       while Nydp::NIL.isnt? bindings
@@ -30,15 +16,7 @@ module Nydp
           bindings = bindings.cdr
         end
       end
-      new name
-    end
-
-    def to_s
-      "#lookup:#{expression}:"
-    end
-
-    def inspect
-      "#lookup_symbol:#{@expression.inspect}"
+      name
     end
   end
 end
