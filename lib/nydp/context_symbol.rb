@@ -15,7 +15,7 @@ class #{cname}
   end
 
   def value ctx
-    ctx#{getctx}.at_index(#{binding_index})
+    ctx#{getctx}.at_index(#{binding_index}) || Nydp::NIL
   end
 
   def assign value, ctx

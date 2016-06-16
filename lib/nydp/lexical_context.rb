@@ -20,7 +20,7 @@ module Nydp
     end
 
     def at_index index
-      values[index] || Nydp::NIL
+      values[index]
     end
 
     def set value
