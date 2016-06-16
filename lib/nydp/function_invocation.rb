@@ -85,6 +85,7 @@ module Nydp
       end
     end
 
+    # TODO generate various Invocation_XXX classes on-demand instead of hand_coding them all up front
     class Invocation_SYM < Invocation::Base
       def initialize expr, src
         super src
