@@ -24,7 +24,7 @@ module Nydp
         here = bindings.car
         if here.key? name
           binding_index = here[name]
-          return ContextSymbol.new(depth, name, binding_index)
+          return ContextSymbol.build(depth, name, binding_index)
         else
           depth += 1
           bindings = bindings.cdr
