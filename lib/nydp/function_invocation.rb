@@ -84,14 +84,78 @@ module Nydp
         handle e, args.car, args.cdr
       end
     end
+
+    class Invocation_SYM < Invocation::Base
+      def initialize expr, src
+        super src
+        @sym = expr.car
+      end
+
+      def execute vm
+        @sym.value.invoke_1 vm
+      rescue Exception => e
+        handle e, @sym.value, Nydp::NIL
+      end
+    end
+
+    class Invocation_SYM_LEX < Invocation::Base
+      def initialize expr, src
+        super src
+        @sym = expr.car
+        @lex = expr.cdr.car
+      end
+
+      def execute vm
+        @sym.value.invoke_2 vm, @lex.value(vm.current_context)
+      rescue Exception => e
+        handle e, @sym.value, Nydp::NIL
+      end
+    end
+
+    class Invocation_SYM_LEX_LEX < Invocation::Base
+      def initialize expr, src
+        super src
+        @sym = expr.car
+        @lex_0 = expr.cdr.car
+        @lex_1 = expr.cdr.cdr.car
+      end
+
+      def execute vm
+        @sym.value.invoke_3 vm, @lex_0.value(vm.current_context), @lex_1.value(vm.current_context)
+      rescue Exception => e
+        handle e, @sym.value, Nydp::NIL
+      end
+    end
   end
 
   class FunctionInvocation
     extend Helper
     attr_accessor :function_instruction, :argument_instructions
 
+    def self.sig klass
+      case klass
+      when Nydp::Symbol              ; "SYM"
+      when Nydp::ContextSymbol       ; "LEX"
+      when Nydp::Literal             ; "LIT"
+      when Nydp::FunctionInvocation  ; "NVK"
+      when Nydp::Invocation::Base    ; "NVB"
+      when Nydp::InterpretedFunction ; "IFN"
+      when Nydp::Cond                ; "CND"
+      when Nydp::Assignment          ; "ASN"
+      else ; raise "no sig for #{klass.class.name}"
+      end
+    end
     def self.build expression, bindings
       compiled   = Compiler.compile_each(expression, bindings)
+      invocation_sig = compiled.map { |x| sig x }.join("_")
+
+      cname  = "Invocation_#{invocation_sig}"
+      iclass = Nydp::Invocation.const_get(cname) rescue nil
+      if iclass
+        # puts "found #{cname}"
+        return iclass.new(compiled, expression)
+      end
+
       invocation = cons case expression.size
                         when 1
                           Invocation::Invocation_1.new(expression)

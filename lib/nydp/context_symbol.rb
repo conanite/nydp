@@ -20,7 +20,7 @@ module Nydp
                   end
 
       klass = <<KLASS
-class #{cname}
+class #{cname} < Nydp::ContextSymbol
   def initialize name
     @name = name
   end
