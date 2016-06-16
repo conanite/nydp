@@ -106,9 +106,11 @@ module Nydp
       end
 
       def execute vm
-        @sym.value.invoke_2 vm, @lex.value(vm.current_context)
+        fn = @sym.value
+        a0 = @lex.value(vm.current_context)
+        fn.invoke_2 vm, a0
       rescue Exception => e
-        handle e, @sym.value, Nydp::NIL
+        handle e, fn, cons(a0)
       end
     end
 
@@ -121,9 +123,12 @@ module Nydp
       end
 
       def execute vm
-        @sym.value.invoke_3 vm, @lex_0.value(vm.current_context), @lex_1.value(vm.current_context)
+        fn = @sym.value
+        a0 = @lex_0.value(vm.current_context)
+        a1 = @lex_1.value(vm.current_context)
+        fn.invoke_3 vm, a0, a1
       rescue Exception => e
-        handle e, @sym.value, Nydp::NIL
+        handle e, fn, cons(a0, cons(a1))
       end
     end
   end
