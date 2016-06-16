@@ -31,6 +31,10 @@ module Nydp
       @depth, @name, @binding_index = depth, name, binding_index
     end
 
+    def execute vm
+      vm.push_arg value vm.current_context
+    end
+
     def get_context(context); @ctx_lookup.get_context context; end
 
     def value context
