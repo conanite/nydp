@@ -1,87 +1,14 @@
-;; pre-index lexical vars
-   ;; global vars        : total 15.594791409, average 1.5594791409000002 per run
-   ;; 4 arg lexical-vars : total 19.021997671999998, average 1.9021997671999997 per run
-   ;; 3 arg lexical-vars : total 15.35611635, average 1.535611635 per run
-   ;; 2 arg lexical-vars : total 15.58889642, average 1.558889642 per run
-   ;; 1 arg lexical-vars : total 14.922190298, average 1.4922190298 per run
-   ;; 0 arg lexical-vars : total 14.435330772, average 1.4435330772000001 per run
+;; array LC
 
 
-;; no names at all
-   ;; 0 arg lexical-vars : total 14.166833827000001, average 1.4166833827 per run
-   ;; 0 arg lexical-vars : total 14.230294222000001, average 1.4230294222000002 per run
-   ;; 0 arg lexical-vars : total 14.636394197, average 1.4636394197 per run
+;; pre-indexed LC
 
-   ;; 1 arg lexical-vars : total 14.678947323999997, average 1.4678947323999998 per run
-   ;; 1 arg lexical-vars : total 14.80576328, average 1.4805763280000002 per run
-   ;; 1 arg lexical-vars : total 15.124132223, average 1.5124132223 per run
-
-   ;; 2 arg lexical-vars : total 14.989334451, average 1.4989334451 per run
-   ;; 2 arg lexical-vars : total 15.027287126, average 1.5027287126 per run
-   ;; 2 arg lexical-vars : total 15.517652146, average 1.5517652146 per run
-
-   ;; 3 arg lexical-vars : total 15.350850687999998, average 1.5350850687999997 per run
-   ;; 3 arg lexical-vars : total 15.39313532, average 1.539313532 per run
-   ;; 3 arg lexical-vars : total 15.815443924, average 1.5815443924 per run
-
-   ;; 4 arg lexical-vars : total 18.361938747, average 1.8361938747 per run
-   ;; 4 arg lexical-vars : total 18.383966376, average 1.8383966376 per run
-   ;; 4 arg lexical-vars : total 19.062842215, average 1.9062842215 per run
-
-   ;; global vars        : total 15.229827004, average 1.5229827004 per run
-   ;; global vars        : total 15.236524077999999, average 1.5236524077999998 per run
-   ;; global vars        : total 15.276085836000002, average 1.5276085836000002 per run
-
-
-;; no names
-   ;; 0 arg lexical-vars : total 14.177909134, average 1.4177909134 per run
-   ;; 0 arg lexical-vars : total 14.643769030000001, average 1.4643769030000002 per run
-   ;; 0 arg lexical-vars : total 14.92887734, average 1.492887734 per run
-
-   ;; 1 arg lexical-vars : total 14.716803913, average 1.4716803913 per run
-   ;; 1 arg lexical-vars : total 14.899106428999998, average 1.4899106428999997 per run
-   ;; 1 arg lexical-vars : total 15.451144396, average 1.5451144396 per run
-
-   ;; 2 arg lexical-vars : total 15.082469991999998, average 1.5082469991999998 per run
-   ;; 2 arg lexical-vars : total 15.423199042, average 1.5423199042 per run
-   ;; 2 arg lexical-vars : total 15.692239725999999, average 1.5692239726 per run
-
-   ;; 3 arg lexical-vars : total 15.506477043, average 1.5506477043 per run
-   ;; 3 arg lexical-vars : total 15.719716444, average 1.5719716444 per run
-   ;; 3 arg lexical-vars : total 16.007658844, average 1.6007658844000001 per run
-
-   ;; 4 arg lexical-vars : total 18.376193707000002, average 1.8376193707000001 per run
-   ;; 4 arg lexical-vars : total 19.411068005, average 1.9411068005 per run
-   ;; 4 arg lexical-vars : total 19.487794516, average 1.9487794516 per run
-
-   ;; global vars        : total 15.158940071000002, average 1.5158940071000002 per run
-   ;; global vars        : total 15.760384039000002, average 1.5760384039000002 per run
-   ;; global vars        : total 15.761575749999997, average 1.5761575749999996 per run
-
-;; eval class definition
-   ;; 0 arg lexical-vars : total 14.430055518999998, average 1.4430055518999998 per run
-   ;; 0 arg lexical-vars : total 14.907006572, average 1.4907006572000001 per run
-   ;; 0 arg lexical-vars : total 15.078384187, average 1.5078384187 per run
-
-   ;; 1 arg lexical-vars : total 14.923117832, average 1.4923117832000001 per run
-   ;; 1 arg lexical-vars : total 15.117758362, average 1.5117758362 per run
-   ;; 1 arg lexical-vars : total 15.629265427, average 1.5629265427 per run
-
-   ;; 2 arg lexical-vars : total 15.314028988999999, average 1.5314028989 per run
-   ;; 2 arg lexical-vars : total 15.511905973, average 1.5511905973 per run
-   ;; 2 arg lexical-vars : total 15.827827872999999, average 1.5827827872999998 per run
-
-   ;; 3 arg lexical-vars : total 15.713571851, average 1.5713571850999999 per run
-   ;; 3 arg lexical-vars : total 15.960504042, average 1.5960504042 per run
-   ;; 3 arg lexical-vars : total 16.384261581, average 1.6384261581000001 per run
-
-   ;; 4 arg lexical-vars : total 18.759059818, average 1.8759059818000001 per run
-   ;; 4 arg lexical-vars : total 19.267638573, average 1.9267638572999999 per run
-   ;; 4 arg lexical-vars : total 19.531235197, average 1.9531235197 per run
-
-   ;; global vars        : total 15.343294468, average 1.5343294468 per run
-   ;; global vars        : total 15.752342646000002, average 1.5752342646000002 per run
-   ;; global vars        : total 16.05519642, average 1.6055196420000002 per run
+   ;; global vars        : total 15.042666099, average 1.5042666099 per run
+   ;; 4 arg lexical-vars : total 29.764007933000006, average 2.9764007933000007 per run
+   ;; 3 arg lexical-vars : total 24.577151929, average 2.4577151929 per run
+   ;; 2 arg lexical-vars : total 20.755599806, average 2.0755599806 per run
+   ;; 1 arg lexical-vars : total 19.477142663000002, average 1.9477142663000002 per run
+   ;; 0 arg lexical-vars : total 15.734029744999999, average 1.5734029745 per run
 
 
 (def bm-pythag ()
@@ -117,6 +44,12 @@
 (def bm-lc-3 (a b c) (a b c))
 (def bm-lc-4 (a b c d) (a b c d))
 
+(def bm-lc-0R a a)
+(def bm-lc-1R (a . b) (apply a b))
+(def bm-lc-2R (a b . c) (apply a b c))
+(def bm-lc-3R (a b c . d) (apply a b c d))
+(def bm-lc-4R (a b c d . e) (apply a b c d e))
+
 
 (def bm-0-arg-times-call () (*))
 (def bm-1-arg-times-call () (* 23))
@@ -129,6 +62,12 @@
 (def bm-2-lc-call () (bm-lc-2 + 1))
 (def bm-3-lc-call () (bm-lc-3 + 1 2))
 (def bm-4-lc-call () (bm-lc-4 + 1 2 3))
+
+(def bm-0R-lc-call () (bm-lc-0R +))
+(def bm-1R-lc-call () (bm-lc-1R + 1))
+(def bm-2R-lc-call () (bm-lc-2R + 1 2))
+(def bm-3R-lc-call () (bm-lc-3R + 1 2 3))
+(def bm-4R-lc-call () (bm-lc-4R + 1 2 3 4))
 
 (def bm-complicated-0 (a b c) (a (+ 1 b) (+ 1 c)))
 
@@ -167,11 +106,11 @@
     ;; (push (bm "2 arg times"   bm-2-arg-times-call 10   100000) summary)
     ;; (push (bm "3 arg times"   bm-3-arg-times-call 10   100000) summary)
     ;; (push (bm "4 arg times"   bm-4-arg-times-call 10   100000) summary)
-    (push (bm "0 arg lexical-vars"   bm-0-lc-call 10  100000) summary)
-    (push (bm "1 arg lexical-vars"   bm-1-lc-call 10  100000) summary)
-    (push (bm "2 arg lexical-vars"   bm-2-lc-call 10  100000) summary)
-    (push (bm "3 arg lexical-vars"   bm-3-lc-call 10  100000) summary)
-    (push (bm "4 arg lexical-vars"   bm-4-lc-call 10  100000) summary)
+    (push (bm "0 arg lexical-vars"   bm-0R-lc-call 10  100000) summary)
+    (push (bm "1 arg lexical-vars"   bm-1R-lc-call 10  100000) summary)
+    (push (bm "2 arg lexical-vars"   bm-2R-lc-call 10  100000) summary)
+    (push (bm "3 arg lexical-vars"   bm-3R-lc-call 10  100000) summary)
+    (push (bm "4 arg lexical-vars"   bm-4R-lc-call 10  100000) summary)
     (push (bm "global vars       "   bm-add-globals      10  100000) summary)
     ;; (push (bm "hashing"       bm-hash-fill        10 200000) summary)
     ;; (push (bm "pre-compile"   bm-pre-compile-test 10  10000) summary)
