@@ -1,14 +1,16 @@
-;; array LC
+;; LC builders
 
-
-;; pre-indexed LC
-
-   ;; global vars        : total 15.042666099, average 1.5042666099 per run
-   ;; 4 arg lexical-vars : total 29.764007933000006, average 2.9764007933000007 per run
-   ;; 3 arg lexical-vars : total 24.577151929, average 2.4577151929 per run
-   ;; 2 arg lexical-vars : total 20.755599806, average 2.0755599806 per run
-   ;; 1 arg lexical-vars : total 19.477142663000002, average 1.9477142663000002 per run
-   ;; 0 arg lexical-vars : total 15.734029744999999, average 1.5734029745 per run
+   ;; global vars         : total 7.30963577, average 0.730963577 per run
+   ;; 4 arg lexical-vars  : total 9.867672123, average 0.9867672123 per run
+   ;; 3 arg lexical-vars  : total 8.538000934, average 0.8538000934 per run
+   ;; 2 arg lexical-vars  : total 8.216915795, average 0.8216915795 per run
+   ;; 1 arg lexical-vars  : total 7.479566374000001, average 0.7479566374000001 per run
+   ;; 0 arg lexical-vars  : total 7.03063278, average 0.703063278 per run
+   ;; 4R arg lexical-vars : total 13.210348808000003, average 1.3210348808000003 per run
+   ;; 3R arg lexical-vars : total 12.452596113, average 1.2452596113 per run
+   ;; 2R arg lexical-vars : total 10.601153253, average 1.0601153253 per run
+   ;; 1R arg lexical-vars : total 9.539014257, average 0.9539014257 per run
+   ;; 0R arg lexical-vars : total 7.586476528, average 0.7586476528 per run
 
 
 (def bm-pythag ()
@@ -106,12 +108,17 @@
     ;; (push (bm "2 arg times"   bm-2-arg-times-call 10   100000) summary)
     ;; (push (bm "3 arg times"   bm-3-arg-times-call 10   100000) summary)
     ;; (push (bm "4 arg times"   bm-4-arg-times-call 10   100000) summary)
-    (push (bm "0 arg lexical-vars"   bm-0R-lc-call 10  100000) summary)
-    (push (bm "1 arg lexical-vars"   bm-1R-lc-call 10  100000) summary)
-    (push (bm "2 arg lexical-vars"   bm-2R-lc-call 10  100000) summary)
-    (push (bm "3 arg lexical-vars"   bm-3R-lc-call 10  100000) summary)
-    (push (bm "4 arg lexical-vars"   bm-4R-lc-call 10  100000) summary)
-    (push (bm "global vars       "   bm-add-globals      10  100000) summary)
+    (push (bm "0R arg lexical-vars"   bm-0R-lc-call  10   50000) summary)
+    (push (bm "1R arg lexical-vars"   bm-1R-lc-call  10   50000) summary)
+    (push (bm "2R arg lexical-vars"   bm-2R-lc-call  10   50000) summary)
+    (push (bm "3R arg lexical-vars"   bm-3R-lc-call  10   50000) summary)
+    (push (bm "4R arg lexical-vars"   bm-4R-lc-call  10   50000) summary)
+    (push (bm "0 arg lexical-vars "   bm-0-lc-call   10   50000) summary)
+    (push (bm "1 arg lexical-vars "   bm-1-lc-call   10   50000) summary)
+    (push (bm "2 arg lexical-vars "   bm-2-lc-call   10   50000) summary)
+    (push (bm "3 arg lexical-vars "   bm-3-lc-call   10   50000) summary)
+    (push (bm "4 arg lexical-vars "   bm-4-lc-call   10   50000) summary)
+    (push (bm "global vars        "   bm-add-globals 10   50000) summary)
     ;; (push (bm "hashing"       bm-hash-fill        10 200000) summary)
     ;; (push (bm "pre-compile"   bm-pre-compile-test 10  10000) summary)
     (each s summary (p name " " s))))
