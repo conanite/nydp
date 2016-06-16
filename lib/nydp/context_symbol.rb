@@ -7,6 +7,17 @@ module Nydp
       return existing.new(name) if existing
 
       getctx = ([".parent"] * depth).join
+      at_index = if binding_index < 5
+                   "at_#{binding_index}"
+                 else
+                   "at_index(#{binding_index})"
+                 end
+
+      set_index = if binding_index < 5
+                    "at_#{binding_index}= value"
+                  else
+                    "set_index(#{binding_index}, value)"
+                  end
 
       klass = <<KLASS
 class #{cname}
@@ -15,11 +26,11 @@ class #{cname}
   end
 
   def value ctx
-    ctx#{getctx}.at_index(#{binding_index}) || Nydp::NIL
+    ctx#{getctx}.#{at_index} || Nydp::NIL
   end
 
   def assign value, ctx
-    ctx#{getctx}.set_index(#{binding_index}, value)
+    ctx#{getctx}.#{set_index}
   end
 
   def execute vm

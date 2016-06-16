@@ -11,10 +11,10 @@ module Nydp::LexicalContextBuilder
 
   module B_1
     def initialize_names names             ; @param_name = names.car      ; end
-    def set_args_1 lc, arg                 ; lc.set arg      ; end
-    def set_args_2 lc, arg_0, arg_1        ; lc.set arg_0    ; end
-    def set_args_3 lc, arg_0, arg_1, arg_2 ; lc.set arg_0    ; end
-    def set_args   lc, args                ; lc.set args.car ; end
+    def set_args_1 lc, arg                 ; lc.at_0= arg      ; end
+    def set_args_2 lc, arg_0, arg_1        ; lc.at_0= arg_0    ; end
+    def set_args_3 lc, arg_0, arg_1, arg_2 ; lc.at_0= arg_0    ; end
+    def set_args   lc, args                ; lc.at_0= args.car ; end
   end
 
   module B_2
@@ -23,19 +23,19 @@ module Nydp::LexicalContextBuilder
       @param_name_1 = names.cdr.car
     end
     def set_args_1 lc, arg
-      lc.set arg
+      lc.at_0= arg
     end
     def set_args_2 lc, arg_0, arg_1
-      lc.set arg_0
-      lc.set arg_1
+      lc.at_0= arg_0
+      lc.at_1= arg_1
     end
     def set_args_3 lc, arg_0, arg_1, arg_2
-      lc.set arg_0
-      lc.set arg_1
+      lc.at_0= arg_0
+      lc.at_1= arg_1
     end
     def set_args lc, args
-      lc.set args.car
-      lc.set args.cdr.car
+      lc.at_0= args.car
+      lc.at_1= args.cdr.car
     end
   end
 
@@ -46,31 +46,31 @@ module Nydp::LexicalContextBuilder
       @param_name_2 = names.cdr.cdr.car
     end
     def set_args_1 lc, arg
-      lc.set arg
+      lc.at_0= arg
     end
     def set_args_2 lc, arg_0, arg_1
-      lc.set arg_0
-      lc.set arg_1
+      lc.at_0= arg_0
+      lc.at_1= arg_1
     end
     def set_args_3 lc, arg_0, arg_1, arg_2
-      lc.set arg_0
-      lc.set arg_1
-      lc.set arg_2
+      lc.at_0= arg_0
+      lc.at_1= arg_1
+      lc.at_2= arg_2
     end
     def set_args lc, args
-      lc.set args.car
-      lc.set args.cdr.car
-      lc.set args.cdr.cdr.car
+      lc.at_0= args.car
+      lc.at_1= args.cdr.car
+      lc.at_2= args.cdr.cdr.car
     end
   end
 
   module B_0_Rest
     include Nydp::Helper
     def initialize_names names             ; @param_name = names                                       ; end
-    def set_args_1 lc, arg                 ; lc.set cons(arg)                             ; end
-    def set_args_2 lc, arg_0, arg_1        ; lc.set cons(arg_0, cons(arg_1))              ; end
-    def set_args_3 lc, arg_0, arg_1, arg_2 ; lc.set cons(arg_0, cons(arg_1, cons(arg_2))) ; end
-    def set_args   lc, args                ; lc.set args                                  ; end
+    def set_args_1 lc, arg                 ; lc.at_0= cons(arg)                             ; end
+    def set_args_2 lc, arg_0, arg_1        ; lc.at_0= cons(arg_0, cons(arg_1))              ; end
+    def set_args_3 lc, arg_0, arg_1, arg_2 ; lc.at_0= cons(arg_0, cons(arg_1, cons(arg_2))) ; end
+    def set_args   lc, args                ; lc.at_0= args                                  ; end
   end
 
   module B_1_Rest
@@ -80,19 +80,19 @@ module Nydp::LexicalContextBuilder
       @param_name_1 = names.cdr
     end
     def set_args_1 lc, arg
-      lc.set arg
+      lc.at_0= arg
     end
     def set_args_2 lc, arg_0, arg_1
-      lc.set arg_0
-      lc.set cons(arg_1)
+      lc.at_0= arg_0
+      lc.at_1= cons(arg_1)
     end
     def set_args_3 lc, arg_0, arg_1, arg_2
-      lc.set arg_0
-      lc.set cons(arg_1, cons(arg_2))
+      lc.at_0= arg_0
+      lc.at_1= cons(arg_1, cons(arg_2))
     end
     def set_args lc, args
-      lc.set args.car
-      lc.set args.cdr
+      lc.at_0= args.car
+      lc.at_1= args.cdr
     end
   end
 
@@ -103,21 +103,21 @@ module Nydp::LexicalContextBuilder
       @param_name_2 = names.cdr.cdr
     end
     def set_args_1 lc, arg
-      lc.set arg
+      lc.at_0= arg
     end
     def set_args_2 lc, arg_0, arg_1
-      lc.set arg_0
-      lc.set arg_1
+      lc.at_0= arg_0
+      lc.at_1= arg_1
     end
     def set_args_3 lc, arg_0, arg_1, arg_2
-      lc.set arg_0
-      lc.set arg_1
-      lc.set cons(arg_2)
+      lc.at_0= arg_0
+      lc.at_1= arg_1
+      lc.at_2= cons(arg_2)
     end
     def set_args lc, args
-      lc.set args.car
-      lc.set args.cdr.car
-      lc.set args.cdr.cdr
+      lc.at_0= args.car
+      lc.at_1= args.cdr.car
+      lc.at_2= args.cdr.cdr
     end
   end
 
@@ -128,22 +128,22 @@ module Nydp::LexicalContextBuilder
       @param_name_2 = names.cdr.cdr
     end
     def set_args_1 lc, arg
-      lc.set arg
+      lc.at_0= arg
     end
     def set_args_2 lc, arg_0, arg_1
-      lc.set arg_0
-      lc.set arg_1
+      lc.at_0= arg_0
+      lc.at_1= arg_1
     end
     def set_args_3 lc, arg_0, arg_1, arg_2
-      lc.set arg_0
-      lc.set arg_1
-      lc.set arg_2
+      lc.at_0= arg_0
+      lc.at_1= arg_1
+      lc.at_2= arg_2
     end
     def set_args lc, args
-      lc.set args.car
-      lc.set args.cdr.car
-      lc.set args.cdr.cdr.car
-      lc.set args.cdr.cdr.cdr
+      lc.at_0= args.car
+      lc.at_1= args.cdr.car
+      lc.at_2= args.cdr.cdr.car
+      lc.at_3= args.cdr.cdr.cdr
     end
   end
 
@@ -152,24 +152,24 @@ module Nydp::LexicalContextBuilder
       @param_names = names
     end
     def set_args_1 lc, arg
-      lc.set arg
+      lc.at_0= arg
     end
     def set_args_2 lc, arg_0, arg_1
-      lc.set arg_0
-      lc.set arg_1
+      lc.at_0= arg_0
+      lc.at_1= arg_1
     end
     def set_args_3 lc, arg_0, arg_1, arg_2
-      lc.set arg_0
-      lc.set arg_1
-      lc.set arg_2
+      lc.at_0= arg_0
+      lc.at_1= arg_1
+      lc.at_2= arg_2
     end
     def set_args lc, args
-      _set_args lc, @param_names, args
+      _set_args lc, @param_names, args, 0
     end
-    def _set_args lc, names, args
+    def _set_args lc, names, args, index
       unless Nydp::NIL.is? names
-        lc.set args.car
-        _set_args lc, names.cdr, args.cdr
+        lc.set_index index, args.car
+        _set_args lc, names.cdr, args.cdr, (index + 1)
       end
     end
   end
@@ -180,13 +180,13 @@ module Nydp::LexicalContextBuilder
     def set_args_1 lc, arg                 ; set_args lc, cons(arg)                             ; end
     def set_args_2 lc, arg_0, arg_1        ; set_args lc, cons(arg_0, cons(arg_1))              ; end
     def set_args_3 lc, arg_0, arg_1, arg_2 ; set_args lc, cons(arg_0, cons(arg_1, cons(arg_2))) ; end
-    def set_args lc, args                  ; _set_args lc, @param_names, args                   ; end
-    def _set_args lc, names, args
+    def set_args lc, args                  ; _set_args lc, @param_names, args, 0                ; end
+    def _set_args lc, names, args, index
       if pair? names
-        lc.set args.car
-        _set_args lc, names.cdr, args.cdr
+        lc.set_index index, args.car
+        _set_args lc, names.cdr, args.cdr, (index + 1)
       elsif Nydp::NIL.isnt? names
-        lc.set args
+        lc.set_index index, args
       end
     end
   end

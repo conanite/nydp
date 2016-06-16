@@ -2,6 +2,7 @@ module Nydp
   class LexicalContext
     include Nydp::Helper
     attr_reader :values, :parent
+    attr_accessor :at_0, :at_1, :at_2, :at_3, :at_4
 
     def initialize parent
       @parent = parent
@@ -20,15 +21,15 @@ module Nydp
     end
 
     def at_index index
-      values[index]
-    end
-
-    def set value
-      values << value
+      index < 5 ? send(:"at_#{index}") : values[index]
     end
 
     def set_index index, value
-      values[index] = value
+      if (index < 5)
+        send(:"at_#{index}=", value)
+      else
+        values[index] = value
+      end
     end
 
     def to_s_with_indent str
