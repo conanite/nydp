@@ -7,13 +7,13 @@ module Nydp
       return existing.new(name) if existing
 
       getctx = ([".parent"] * depth).join
-      at_index = if binding_index < 5
+      at_index = if binding_index < 10
                    "at_#{binding_index}"
                  else
                    "at_index(#{binding_index})"
                  end
 
-      set_index = if binding_index < 5
+      set_index = if binding_index < 10
                     "at_#{binding_index}= value"
                   else
                     "set_index(#{binding_index}, value)"

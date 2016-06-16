@@ -1,12 +1,11 @@
 module Nydp
   class LexicalContext
     include Nydp::Helper
-    attr_reader :values, :parent
-    attr_accessor :at_0, :at_1, :at_2, :at_3, :at_4
+    attr_reader :parent
+    attr_accessor :at_0, :at_1, :at_2, :at_3, :at_4, :at_5, :at_6, :at_7, :at_8, :at_9
 
     def initialize parent
       @parent = parent
-      @values = []
     end
 
     def nth n
@@ -21,14 +20,20 @@ module Nydp
     end
 
     def at_index index
-      index < 5 ? send(:"at_#{index}") : values[index]
+      instance_variable_get :"@at_#{index}"
     end
 
     def set_index index, value
-      if (index < 5)
-        send(:"at_#{index}=", value)
+      instance_variable_set :"@at_#{index}", value
+    end
+
+    def method_missing mname, *args
+      if mname.to_s =~ /at_\d+=/
+        instance_variable_set :"@#{mname.to_s.sub(/=/, '')}", args[0]
+      elsif mname.to_s =~ /at_\d+/
+        instance_variable_get :"@#{mname}"
       else
-        values[index] = value
+        super
       end
     end
 
