@@ -1,11 +1,10 @@
 module Nydp
   class LexicalContext
     include Nydp::Helper
-    attr_reader :names, :values, :parent
+    attr_reader :values, :parent
 
     def initialize parent
       @parent = parent
-      @names  = []
       @values = []
     end
 
@@ -24,8 +23,7 @@ module Nydp
       values[index] || Nydp::NIL
     end
 
-    def set name, value
-      names  << name
+    def set value
       values << value
     end
 
