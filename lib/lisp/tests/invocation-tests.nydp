@@ -16,8 +16,12 @@
 (def tst-3-n (a b c . n)      "success a: ~a b: ~b c: ~c . n: ~(inspect n)"              )
 (def tst-4   (a b c d)        "success a: ~a b: ~b c: ~c d: ~d"                          )
 (def tst-4-n (a b c d . n)    "success a: ~a b: ~b c: ~c d: ~d . n: ~(inspect n)"        )
-(def tst-5   (a b c d e)      "success a: ~a b: ~b c: ~c d: ~d e: ~e"                    )
-(def tst-5-n (a b c d e . n)  "success a: ~a b: ~b c: ~c d: ~d e: ~e . n: ~(inspect n)"  )
+(def tst-5   (a b c d e)          "success a: ~a b: ~b c: ~c d: ~d e: ~e"                    )
+(def tst-5-n (a b c d e . n)      "success a: ~a b: ~b c: ~c d: ~d e: ~e . n: ~(inspect n)"  )
+(def tst-6   (a b c d e f)        "success a: ~a b: ~b c: ~c d: ~d e: ~e f: ~f"                    )
+(def tst-6-n (a b c d e f . n)    "success a: ~a b: ~b c: ~c d: ~d e: ~e f: ~f . n: ~(inspect n)"  )
+(def tst-7   (a b c d e f g)      "success a: ~a b: ~b c: ~c d: ~d e: ~e f: ~f g: ~g"                    )
+(def tst-7-n (a b c d e f g . n)  "success a: ~a b: ~b c: ~c d: ~d e: ~e f: ~f g: ~g . n: ~(inspect n)"  )
 
 (register-test
  '(suite "Invocation Tests"
@@ -94,12 +98,14 @@
                 ("five args"   (tst-4 1 2 3 4 5)     "success a: 1 b: 2 c: 3 d: 4" ))
 
          (suite "four params and rest param"
-                ("no args"     (tst-4-n)             "success a:  b:  c:  d:  . n: nil"     )
-                ("one arg"     (tst-4-n 1)           "success a: 1 b:  c:  d:  . n: nil"    )
-                ("two args"    (tst-4-n 1 2)         "success a: 1 b: 2 c:  d:  . n: nil"   )
-                ("three args"  (tst-4-n 1 2 3)       "success a: 1 b: 2 c: 3 d:  . n: nil"  )
-                ("four args"   (tst-4-n 1 2 3 4)     "success a: 1 b: 2 c: 3 d: 4 . n: nil" )
-                ("five args"   (tst-4-n 1 2 3 4 5)   "success a: 1 b: 2 c: 3 d: 4 . n: (5)" ))
+                ("no args"     (tst-4-n)               "success a:  b:  c:  d:  . n: nil"         )
+                ("one arg"     (tst-4-n 1)             "success a: 1 b:  c:  d:  . n: nil"        )
+                ("two args"    (tst-4-n 1 2)           "success a: 1 b: 2 c:  d:  . n: nil"       )
+                ("three args"  (tst-4-n 1 2 3)         "success a: 1 b: 2 c: 3 d:  . n: nil"      )
+                ("four args"   (tst-4-n 1 2 3 4)       "success a: 1 b: 2 c: 3 d: 4 . n: nil"     )
+                ("five args"   (tst-4-n 1 2 3 4 5)     "success a: 1 b: 2 c: 3 d: 4 . n: (5)"     )
+                ("six args"    (tst-4-n 1 2 3 4 5 6)   "success a: 1 b: 2 c: 3 d: 4 . n: (5 6)"   )
+                ("seven args"  (tst-4-n 1 2 3 4 5 6 7) "success a: 1 b: 2 c: 3 d: 4 . n: (5 6 7)" ))
 
          (suite "five params"
                 ("no args"     (tst-5)               "success a:  b:  c:  d:  e: "      )
@@ -107,7 +113,9 @@
                 ("two args"    (tst-5 1 2)           "success a: 1 b: 2 c:  d:  e: "    )
                 ("three args"  (tst-5 1 2 3)         "success a: 1 b: 2 c: 3 d:  e: "   )
                 ("four args"   (tst-5 1 2 3 4)       "success a: 1 b: 2 c: 3 d: 4 e: "  )
-                ("five args"   (tst-5 1 2 3 4 5)     "success a: 1 b: 2 c: 3 d: 4 e: 5" ))
+                ("five args"   (tst-5 1 2 3 4 5)     "success a: 1 b: 2 c: 3 d: 4 e: 5" )
+                ("six args"    (tst-5 1 2 3 4 5 6)   "success a: 1 b: 2 c: 3 d: 4 e: 5" )
+                ("seven args"  (tst-5 1 2 3 4 5 6 7) "success a: 1 b: 2 c: 3 d: 4 e: 5" ))
 
          (suite "five params and rest param"
                 ("no args"     (tst-5-n)             "success a:  b:  c:  d:  e:  . n: nil"      )
@@ -115,5 +123,47 @@
                 ("two args"    (tst-5-n 1 2)         "success a: 1 b: 2 c:  d:  e:  . n: nil"    )
                 ("three args"  (tst-5-n 1 2 3)       "success a: 1 b: 2 c: 3 d:  e:  . n: nil"   )
                 ("four args"   (tst-5-n 1 2 3 4)     "success a: 1 b: 2 c: 3 d: 4 e:  . n: nil"  )
-                ("five args"   (tst-5-n 1 2 3 4 5)   "success a: 1 b: 2 c: 3 d: 4 e: 5 . n: nil" ))
+                ("five args"   (tst-5-n 1 2 3 4 5)     "success a: 1 b: 2 c: 3 d: 4 e: 5 . n: nil"   )
+                ("six args"    (tst-5-n 1 2 3 4 5 6)   "success a: 1 b: 2 c: 3 d: 4 e: 5 . n: (6)"   )
+                ("seven args"  (tst-5-n 1 2 3 4 5 6 7) "success a: 1 b: 2 c: 3 d: 4 e: 5 . n: (6 7)" ))
+
+         (suite "six params"
+                ("no args"     (tst-6)               "success a:  b:  c:  d:  e:  f: "        )
+                ("one arg"     (tst-6 1)             "success a: 1 b:  c:  d:  e:  f: "       )
+                ("two args"    (tst-6 1 2)           "success a: 1 b: 2 c:  d:  e:  f: "      )
+                ("three args"  (tst-6 1 2 3)         "success a: 1 b: 2 c: 3 d:  e:  f: "     )
+                ("four args"   (tst-6 1 2 3 4)       "success a: 1 b: 2 c: 3 d: 4 e:  f: "    )
+                ("five args"   (tst-6 1 2 3 4 5)     "success a: 1 b: 2 c: 3 d: 4 e: 5 f: "   )
+                ("six args"    (tst-6 1 2 3 4 5 6)   "success a: 1 b: 2 c: 3 d: 4 e: 5 f: 6"  )
+                ("seven args"  (tst-6 1 2 3 4 5 6 7) "success a: 1 b: 2 c: 3 d: 4 e: 5 f: 6"  ))
+
+         (suite "six params and rest param"
+                ("no args"     (tst-6-n)               "success a:  b:  c:  d:  e:  f:  . n: nil"      )
+                ("one arg"     (tst-6-n 1)             "success a: 1 b:  c:  d:  e:  f:  . n: nil"     )
+                ("two args"    (tst-6-n 1 2)           "success a: 1 b: 2 c:  d:  e:  f:  . n: nil"    )
+                ("three args"  (tst-6-n 1 2 3)         "success a: 1 b: 2 c: 3 d:  e:  f:  . n: nil"   )
+                ("four args"   (tst-6-n 1 2 3 4)       "success a: 1 b: 2 c: 3 d: 4 e:  f:  . n: nil"  )
+                ("five args"   (tst-6-n 1 2 3 4 5)     "success a: 1 b: 2 c: 3 d: 4 e: 5 f:  . n: nil" )
+                ("six args"    (tst-6-n 1 2 3 4 5 6)   "success a: 1 b: 2 c: 3 d: 4 e: 5 f: 6 . n: nil" )
+                ("seven args"  (tst-6-n 1 2 3 4 5 6 7) "success a: 1 b: 2 c: 3 d: 4 e: 5 f: 6 . n: (7)" ))
+
+         (suite "seven params"
+                ("no args"     (tst-7)               "success a:  b:  c:  d:  e:  f:  g: "         )
+                ("one arg"     (tst-7 1)             "success a: 1 b:  c:  d:  e:  f:  g: "        )
+                ("two args"    (tst-7 1 2)           "success a: 1 b: 2 c:  d:  e:  f:  g: "       )
+                ("three args"  (tst-7 1 2 3)         "success a: 1 b: 2 c: 3 d:  e:  f:  g: "      )
+                ("four args"   (tst-7 1 2 3 4)       "success a: 1 b: 2 c: 3 d: 4 e:  f:  g: "     )
+                ("five args"   (tst-7 1 2 3 4 5)     "success a: 1 b: 2 c: 3 d: 4 e: 5 f:  g: "    )
+                ("six args"    (tst-7 1 2 3 4 5 6)   "success a: 1 b: 2 c: 3 d: 4 e: 5 f: 6 g: "   )
+                ("seven args"  (tst-7 1 2 3 4 5 6 7) "success a: 1 b: 2 c: 3 d: 4 e: 5 f: 6 g: 7"  ))
+
+         (suite "seven params and rest param"
+                ("no args"     (tst-7-n)               "success a:  b:  c:  d:  e:  f:  g:  . n: nil"        )
+                ("one arg"     (tst-7-n 1)             "success a: 1 b:  c:  d:  e:  f:  g:  . n: nil"       )
+                ("two args"    (tst-7-n 1 2)           "success a: 1 b: 2 c:  d:  e:  f:  g:  . n: nil"      )
+                ("three args"  (tst-7-n 1 2 3)         "success a: 1 b: 2 c: 3 d:  e:  f:  g:  . n: nil"     )
+                ("four args"   (tst-7-n 1 2 3 4)       "success a: 1 b: 2 c: 3 d: 4 e:  f:  g:  . n: nil"    )
+                ("five args"   (tst-7-n 1 2 3 4 5)     "success a: 1 b: 2 c: 3 d: 4 e: 5 f:  g:  . n: nil"   )
+                ("six args"    (tst-7-n 1 2 3 4 5 6)   "success a: 1 b: 2 c: 3 d: 4 e: 5 f: 6 g:  . n: nil"  )
+                ("seven args"  (tst-7-n 1 2 3 4 5 6 7) "success a: 1 b: 2 c: 3 d: 4 e: 5 f: 6 g: 7 . n: nil" ))
          ))
