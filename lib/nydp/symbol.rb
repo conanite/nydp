@@ -4,9 +4,9 @@ class Nydp::Symbol
   attr_reader   :hash
 
   def initialize name
+    name = name.to_s
     @name = name.to_sym
-    @inspection = name.to_s
-    @inspection = "|#{name}|" if untidy(@inspection)
+    @inspection = "|#{name}|" if untidy(name)
     @hash       = name.hash
   end
 
@@ -34,12 +34,12 @@ class Nydp::Symbol
 
   def self.find name, ns ; ns[name.to_sym] ;  end
 
-  def nydp_type  ; :symbol        ; end
-  def inspect    ; @inspection    ; end
-  def to_s       ; name.to_s      ; end
-  def to_sym     ; name           ; end
-  def to_ruby    ; to_sym         ; end
-  def eql? other ; self == other  ; end
+  def nydp_type  ; :symbol                  ; end
+  def inspect    ; @inspection || name.to_s ; end
+  def to_s       ; name.to_s                ; end
+  def to_sym     ; name                     ; end
+  def to_ruby    ; to_sym                   ; end
+  def eql? other ; self == other            ; end
   def is? nm     ; self.name == nm.to_sym   ; end
   def > other    ; self.name > other.name   ; end
   def < other    ; self.name < other.name   ; end
