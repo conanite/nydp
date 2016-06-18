@@ -1,4 +1,4 @@
-require 'nydp'
+require 'nydp/plugin'
 
 module Nydp
   class Core

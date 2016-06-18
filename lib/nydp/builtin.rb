@@ -1,6 +1,3 @@
-require 'nydp'
-require 'nydp/error'
-
 module Nydp::Builtin
   module Base
     include Nydp::Helper
