@@ -1,3 +1,7 @@
+(chapter-start 'nydp/syntax "Provides core nydp keywords and syntax, including lazy
+boolean expressions, special syntax for symbols and lists, special macros for
+scoping, assignment, anonymous functions and more...")
+
 (mac and args
   ; returns last arg if all 'args evaluate to non-nil
   ; nil otherwise
@@ -224,7 +228,7 @@
       (brace-list-build-hash args)))
 
 (mac returnlet (var val . body)
-  ; stores ,val in ,var, executes ,@body, returns ,var
+  ; stores ,val in ,var, executes ,@body, returns ,var. Saves a line of code at the end of 'let
   `(let ,var ,val ,@body ,var))
 
 (mac returning (val . body)
