@@ -1,0 +1,20 @@
+(examples-for or=
+  ("assign a simple nil variable"
+   (let x nil (or= x 42) x)
+   42)
+
+  ("assign a simple non-nil variable"
+   (let x 99 (or= x 42) x)
+   99)
+
+  ("assign a nil hash value"
+   (let h (hash)
+     (or= h.x 43)
+     h.x)
+   43)
+
+  ("assign a non-nil hash value"
+   (let h { x 999 }
+     (or= h.x 43)
+     h.x)
+   999))

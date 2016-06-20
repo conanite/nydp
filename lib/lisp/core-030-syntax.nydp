@@ -193,6 +193,10 @@ scoping, assignment, anonymous functions and more...")
 
 (mac def-assign args `(= ,@args))
 
+(mac or= (place val)
+  ; evaluate ,val and assign result to ,place only if ,place is already nil
+  `(or ,place (= ,place ,val)))
+
 (def brace-list-hash-key (k)
   (if (isa 'symbol k)      `(quote ,k)
       (caris 'unquote k)   (cadr k)
