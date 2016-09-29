@@ -12,8 +12,8 @@
              '(cond (no args) nil
                     (cond (cdr args)
                           (cond (cddr args)
-                                `(cond ,(car twargs) ,(cadr twargs) (if ,@(cddr twargs)))
-                                `(cond ,(car twargs) ,(cadr twargs)))
+                                `(cond ,(car args) ,(cadr args) (if ,@(cddr args)))
+                                `(cond ,(car args) ,(cadr args)))
                           (car args)))
              '(flow-control))
 

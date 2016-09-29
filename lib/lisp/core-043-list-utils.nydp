@@ -1,0 +1,164 @@
+(chapter-start 'list-manipulation "utilities for manipulating and iterating over lists, including filters and transforms")
+
+(def list-length (things)
+  (chapter list-manipulation)
+  (if (no things)    0
+      (atom? things) 1
+      (+ 1 (list-length:cdr things))))
+
+(def list-slices (things slice-size)
+     ; slice 'things into a list of lists each with maximum 'slice-size items
+     (chapter pagination)
+     (if (< (len things) slice-size)
+         (cons things nil)
+         (cons (firstn slice-size things)
+               (list-slices (nthcdr slice-size things)
+                            slice-size))))
+
+(def intersperse (inbetween things)
+  ; return a new list with 'inbetween in between every element of 'things
+  (if (and (pair? things) (cdr things))
+      (apply list (car things) inbetween
+             (intersperse inbetween (cdr things)))
+      things))
+
+(def intersperse-splicing (inbetween things)
+  ; expects 'things a list of lists, joins the lists
+  ; placing 'inbetween in between each list.
+  ; For example (intersperse-splicing 'X '((a b) (c d) (e f)))
+  ; returns (a b X c d X e f)
+  (apply joinlists (intersperse (list inbetween) things)))
+
+(def collect (f things)
+  ; if 'things is a list, return all the items in the list for which 'f returns non-nil
+  ; otherwise, return 'things if (f things) is non-nil
+  ; otherwise, nil
+  (rfnwith collector (items things)
+           (if (no items)
+               nil
+               (pair? items)
+               (if (f (car items))
+                   (cons (car items)
+                         (collector (cdr items)))
+                   (collector (cdr items)))
+               (f items)
+               items)))
+
+(def reject (f things)
+  ; return all the items in 'things for which 'f returns nil
+  (collect !f things))
+
+(def nth (n things)
+  ; returns the n-th item in the list 'things
+  (if (eq? n 0)
+      (car things)
+      (nth (- n 1) (cdr things))))
+
+(mac each (var things code)
+  ; repeatedly assigns an element of 'things to 'var,
+  ; and executes 'code each time
+  (chapter list-manipulation)
+  (w/uniq (xs c)
+          `((rfn ,c (,xs)
+                (if (pair? ,xs)
+                    (do
+                        (let ,var (car ,xs) ,code)
+                        (,c (cdr ,xs)))))
+           ,things)))
+
+(def reduce (f things)
+  (chapter list-manipulation)
+  ((rfn rd (acc list)
+        (if (pair? list)
+            (rd (f acc (car list))
+                (cdr list))
+            acc))
+   (car things) (cdr things)))
+
+(def proper? (list)
+  ; t if this is a proper list (last cdr is nil)
+  ; nil otherwise (last cdr is neither cons nor nil)
+  (chapter list-manipulation)
+  (or (no list)
+      (and (pair? list)
+           (proper? (cdr list)))))
+
+(def firstn (n things)
+  ; returns the first 'n items in the list 'things
+  (chapter list-manipulation)
+  (if (eq? n 0) nil
+      (cons (car things)
+            (firstn (- n 1)
+                    (cdr things)))))
+
+(def nthcdr (n things)
+  ; returns the nth cdr of the list 'things
+  (chapter list-manipulation)
+  (if (> n 0)
+      (nthcdr (- n 1) (cdr things))
+      things))
+
+(def joinlists (things . more-thingses)
+  ; return a new list which is the concatenation of all the given lists
+  ; 'things is a list
+  ; 'more-thingses is a list of lists
+  ; call like this: (joinlists '(a b c) '(x y z) '(1 2 3))
+  (chapter list-manipulation)
+  (if things
+      (cons (car things)
+            (apply joinlists
+                   (cdr things)
+                   more-thingses))
+      more-thingses
+      (apply joinlists more-thingses)))
+
+(def detect (f things)
+  ; if 'f is a function,
+  ;   if 'things is a list, return the first item in the list for which 'f returns non-nil
+  ;   otherwise, return 'things if (f things) is non-nil
+  ;   otherwise, nil
+  ; if 'f is not a function, self-invoke with a function checking for equality with f
+  ;
+  ; WARNING: if the detected thing is nil, returns t instead. A return value of nil
+  ; means the thing was not found ; non-nil means the thing was found, including when
+  ; the found thing is itself nil.
+  (if (isa 'fn f)
+      (rfnwith d (items things)
+                 (if (pair? items)
+                     (let it (car items)
+                       (or
+                        (and (f it)
+                             (or it t))
+                        (d:cdr items)))
+                     (f items)
+                     items))
+      (detect (curry eq? f)
+              things)))
+
+(def tuples (n things)
+  ;; split things into a list of lists each n long
+  (rfnwith _ (list things)
+           (if (no list)
+               nil
+               (cons (firstn n list) (_ (nthcdr n list))))))
+
+(def range (start stop)
+  ; return a list containing the range
+  ; of elements starting with 'start, up
+  ; to but not including 'stop
+  (if (< start stop)
+      (cons start
+            (range (+ start 1)
+                   stop))))
+
+(def best (f things)
+  (if (no things)
+      nil
+      (let winner (car things)
+        (each thing (cdr things)
+              (if (f thing winner)
+                  (= winner thing)))
+        winner)))
+
+(def min things (best < things))
+(def max things (best > things))

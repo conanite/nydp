@@ -1,0 +1,5 @@
+(chapter-start 'date-time "utilities for retrieving and manipulating dates and times")
+
+(def today ()
+  ; return a date for the current day
+  (date))

@@ -171,8 +171,13 @@ scoping, assignment, anonymous functions and more...")
 (mac hash-lookup (names)
   (build-hash-getters names nil))
 
-(mac dot-syntax names `(hash-lookup ,names))
-(mac dollar-syntax (_ name) `(,name))
+(mac dot-syntax names
+  ; parser expands a.b to (dot-syntax a b)
+  `(hash-lookup ,names))
+
+(mac dollar-syntax (_ name)
+  ; parser expands a$b to (dollar-syntax a b)
+  `(,name))
 
 (def dot-syntax-assignment (names value-expr)
   (let rnames (rev names)
@@ -184,6 +189,8 @@ scoping, assignment, anonymous functions and more...")
   `(hash-set ,@lookup ,value))
 
 (mac = (name value)
+  ; generic assignment which unlike builtin 'assign, knows how to assign
+  ; to hash keys
   (if (isa 'symbol name)
       `(assign ,name ,value)
       (caris 'dot-syntax name)
@@ -191,7 +198,9 @@ scoping, assignment, anonymous functions and more...")
       (caris 'hash-get name)
       (hash-get-assignment (cdr name) value)))
 
-(mac def-assign args `(= ,@args))
+(mac def-assign args
+  ; override previous definition to allow expressions like (def hsh.foo (arg arg2) ...)
+  `(= ,@args))
 
 (mac or= (place val)
   ; evaluate ,val and assign result to ,place only if ,place is already nil
@@ -215,6 +224,7 @@ scoping, assignment, anonymous functions and more...")
       `(fn (obj) ,(build-hash-lookup-from 'obj (list arg)))))
 
 (mac ampersand-syntax (pfx . rest)
+  ; parser expands a&b to (ampersand-syntax a b)
   (if (no (eq? pfx '||))
       (error "Irregular '& syntax: got prefix ~(inspect pfx) in ~(joinstr "&" (cons pfx rest))"))
   (if (cdr rest)
@@ -225,6 +235,7 @@ scoping, assignment, anonymous functions and more...")
 (mac brace-list-empty () '(hash))
 
 (mac brace-list args
+  ; parser expands { foo bar } to (brace-list foo bar)
   (if (no args)
       `(brace-list-empty)
       (no (cdr args))

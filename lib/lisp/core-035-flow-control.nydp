@@ -1,0 +1,50 @@
+(chapter-start 'flow-control "constructs for looping and error management")
+
+(mac on-err (handler . body)
+  ; executes 'body. If an error is raised, executes 'handler. Inside
+  ; 'handler, the parameter 'err refers to the error that was raised.
+  `(handle-error (fn (err) ,handler)
+                 (fn ()    ,@body)))
+
+(mac ensure (protection . body)
+  ; executes 'body. Afterwards, executes 'protection.
+  ; 'protection is always executed even if there is an error.
+  `(ensuring (fn () ,protection)
+             (fn ()    ,@body)))
+
+(mac while (test . body)
+  ; tests 'test, as long as 'test is non-nil,
+  ; repeatedly executes 'body
+  (w/uniq (rfname pred)
+    `(rfnwith ,rfname (,pred ,test)
+        (when ,pred
+          ,@body
+          (,rfname ,test)))))
+
+(mac loop (start test update . body)
+  ; execute 'start, then for as long as 'test returns non-nil,
+  ; execute 'body and 'update
+  (w/uniq (gfn gparm)
+    `(do ,start
+         ((rfn ,gfn (,gparm)
+            (if ,gparm
+                (do ,@body ,update (,gfn ,test))))
+          ,test))))
+
+(mac for (v init max . body)
+  ; assign 'init to 'v, then execute 'body 'max times,
+  ; incrementing 'v at each iteration
+  (w/uniq (gi gm)
+    `(with (,v nil ,gi ,init ,gm (+ ,max 1))
+       (loop (assign ,v ,gi) (< ,v ,gm) (assign ,v (+ ,v 1))
+         ,@body))))
+
+(def curry (func . args1)
+  ; return a new function which is the original function with
+  ; the given args1 already applied
+  ; arguments to the new function are whatever arguments remain
+  ; for the old function
+  (fn args
+      (apply func
+             (joinlists args1
+                        args))))

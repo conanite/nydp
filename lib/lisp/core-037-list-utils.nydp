@@ -1,0 +1,23 @@
+(chapter-start 'list-manipulation "utilities for manipulating and iterating over lists, including filters and transforms")
+
+(def zip (a b)
+  ; takes two lists, (p q r) and (1 2 3), returns ((p 1) (q 2) (r 3))
+  (if a
+      (cons (list (car a) (car b))
+            (zip (cdr a) (cdr b)))))
+
+(def eachr (f things)
+     (when things
+       (eachr f (cdr things))
+       (f (car things))))
+
+(mac push (x things)
+  `(= ,things (cons ,x ,things)))
+
+(def flatten (things)
+     (let acc nil
+          (rfnwith flattenize (x things)
+                   (if (pair? x)
+                       (eachr flattenize x)
+                       (push x acc)))
+          acc))
