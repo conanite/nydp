@@ -14,19 +14,20 @@ module Nydp
       script_name = f.gsub plugin.base_path, ""
       reader = Nydp::StreamReader.new(File.new(f))
       Nydp::Runner.new(vm, ns, reader, nil, (script_name || f)).run
+      yield script_name if block_given?
     }
   ensure
     apply_function ns, :"script-run", :"plugin-end", plugin.name if plugin
   end
 
-  def self.build_nydp extra_files=nil
+  def self.build_nydp extra_files=nil, &block
     ns = { }
     setup(ns)
     PLUGINS.each { |plg|
-      loadall ns, plg, plg.loadfiles
-      loadall ns, plg, plg.testfiles
+      loadall ns, plg, plg.loadfiles, &block
+      loadall ns, plg, plg.testfiles, &block
     }
-    loadall ns, nil, extra_files if extra_files
+    loadall ns, nil, extra_files, &block if extra_files
     ns
   end
 end

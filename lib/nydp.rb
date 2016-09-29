@@ -15,12 +15,21 @@ module Nydp
   def self.eval_src      ns, src_txt, name=nil ; eval_with Nydp::Runner, ns, src_txt, name                  ; end
   def self.eval_src!     ns, src_txt, name=nil ; eval_with Nydp::ExplodeRunner, ns, src_txt, name           ; end
   def self.eval_with runner, ns, src_txt, name ; runner.new(VM.new(ns), ns, reader(src_txt), nil, name).run ; end
+  def self.ms                           t1, t0 ; ((t1 - t0) * 1000).to_i                                    ; end
 
-  def self.repl
+  def self.repl options={ }
+    launch_time = Time.now
+    last_script_time = Time.now
     puts "welcome to nydp"
-    puts "^D to exit"
     reader = Nydp::ReadlineReader.new $stdin, "nydp > "
-    ns     = build_nydp
+    ns     = build_nydp do |script|
+      this_script_time = Time.now
+      puts "script #{script} time #{ms this_script_time, last_script_time}ms" if options[:verbose]
+      last_script_time = this_script_time
+    end
+    load_time = Time.now
+    puts "repl ready in #{ms(load_time, launch_time)}ms"
+    puts "^D to exit"
     Nydp::Runner.new(VM.new(ns), ns, reader, $stdout, "<stdin>").run
   end
 
