@@ -2,12 +2,24 @@ require "strscan"
 
 module Nydp
   class Tokeniser
+    BACKSLASH = /\\/.freeze
+    COMMENT   = /;.*$/.freeze
+    QUOTE     = /"/.freeze
+    PIPE      = /\|/.freeze
+    LIST_PFX  = /[^\s()]*\(/.freeze
+    BRACE_PFX = /[^\s()\}\{]*\{/.freeze
+    RPAREN    = /\)/.freeze
+    RBRACE    = /\}/.freeze
+    FLOAT     = /[-+]?[0-9]*\.[0-9]+([eE][-+]?[0-9]+)?/.freeze
+    INTEGER   = /[-+]?[0-9]+/.freeze
+    ATOM_PIPE = /[^\s()"{}\|]+\|/.freeze
+    ATOM      = /[^\s()"{}\|]+/.freeze
+
     attr_accessor :state, :finished
 
     def initialize reader
       @reader = reader
       @scanner = StringScanner.new("")
-      @state = :lisp
     end
 
     def no_more?
@@ -30,7 +42,7 @@ module Nydp
       rep = open_delimiter.to_s
       string = ""
       while (!no_more?)
-        if esc = s.scan(/\\/)
+        if esc = s.scan(BACKSLASH)
           rep    << esc
           ch = s.getch
           case ch
@@ -76,29 +88,29 @@ module Nydp
         if no_more?
           @finished = true
           return nil
-        elsif comment = s.scan(/;.*$/)
+        elsif comment = s.scan(COMMENT)
           tok = [:comment, comment[1..-1].strip]
-        elsif open_str = s.scan(/"/)
+        elsif open_str = s.scan(QUOTE)
           tok = [:string_open_delim, open_str]
-        elsif open_sym = s.scan(/\|/)
+        elsif open_sym = s.scan(PIPE)
           tok = [:sym_open_delim, open_sym]
-        elsif list_prefix = s.scan(/[^\s()]*\(/)
+        elsif list_prefix = s.scan(LIST_PFX)
           tok = [:left_paren, list_prefix[0...-1]]
-        elsif list_prefix = s.scan(/[^\s()\}\{]*\{/)
+        elsif list_prefix = s.scan(BRACE_PFX)
           tok = [:left_brace, list_prefix[0...-1]]
-        elsif s.scan(/\)/)
+        elsif s.scan(RPAREN)
           tok = [:right_paren]
-        elsif s.scan(/\}/)
+        elsif s.scan(RBRACE)
           tok = [:right_brace]
-        elsif number = s.scan(/[-+]?[0-9]*\.[0-9]+([eE][-+]?[0-9]+)?/)
+        elsif number = s.scan(FLOAT)
           tok = [:number, number.to_f]
-        elsif integer = s.scan(/[-+]?[0-9]+/)
+        elsif integer = s.scan(INTEGER)
           tok = [:number, integer.to_i]
-        elsif atom = s.scan(/[^\s()"{}\|]+\|/)
+        elsif atom = s.scan(ATOM_PIPE)
           atom = atom[0...-1]
-          rest = next_string_fragment("|", /\|/, nil) || Nydp::StringFragmentToken.new("", "")
+          rest = next_string_fragment("|", PIPE, nil) || Nydp::StringFragmentToken.new("", "")
           tok = [:symbol, "#{atom}#{rest.string}"]
-        elsif atom = s.scan(/[^\s()"{}\|]+/)
+        elsif atom = s.scan(ATOM)
           tok = [:symbol, atom]
         else
           s.getch
