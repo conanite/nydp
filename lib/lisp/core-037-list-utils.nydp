@@ -21,3 +21,18 @@
                        (eachr flattenize x)
                        (push x acc)))
           acc))
+
+(def assoc (key al)
+  ; given a list 'al of form '( (k0 v0) (k1 v1) (k2 v2) ... (kn vn) ) and
+  ; a 'key, returns the list (kx vx) from 'al where kx is equal to 'key
+  ; #attribution: inspiration from arc.arc
+  (if (pair? al)
+      (if (caris key (car al))
+          (car al)
+          (assoc key (cdr al)))))
+
+(def alref (key al)
+  ; given a list 'al of form '( (k0 v0) (k1 v1) (k2 v2) ... (kn vn) ) and
+  ; a 'key, returns vx from 'al where kx is equal to 'key
+  ; #attribution: lifted almost directly from arc.arc
+  (cadr (assoc key al)))

@@ -132,3 +132,33 @@
   ("three lists and an extra big"
    (list-slices '(a b c d e f g h i j k) 3)
    ((a b c) (d e f) (g h i) (j k))))
+
+(examples-for assoc
+  ("finds nothing in an empty list"
+   (assoc 'foo nil)
+   nil)
+
+  ("finds nothing in a non-list"
+   (assoc 'foo 'bar)
+   nil)
+
+  ("finds nothing for nonexistent key"
+   (assoc 'z '((a b) (c d)))
+   nil)
+
+  ("finds value corresponding to given key"
+   (assoc 'c '((a b) (c d)))
+   (c d)))
+
+(examples-for alref
+  ("finds nothing in an empty list"
+   (alref 'foo nil)
+   nil)
+
+  ("finds nothing for nonexistent key"
+   (alref 'z '((a b) (c d)))
+   nil)
+
+  ("finds value corresponding to given key"
+   (alref 'c '((a b) (c d)))
+   d))

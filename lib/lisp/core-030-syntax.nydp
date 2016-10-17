@@ -24,7 +24,7 @@ scoping, assignment, anonymous functions and more...")
 (def caris (obj things)
   ; returns true if 'things is a list and the first item of the
   ; list is the given object
-  (and (isa 'pair things)
+  (and (pair? things)
        (eq? (car things)  obj)))
 
 (mac unless (arg . body)
