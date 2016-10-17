@@ -6,9 +6,9 @@
      (def chapter-end ()
        (assign this-chapter-name nil))
 
-     (def chapter-start (name description)
-       (assign this-chapter-name name)
-       (chapter-describe description))
+     (def chapter-start (chapter-name description)
+       (assign this-chapter-name chapter-name)
+       (chapter-describe description chapter-name))
 
      (def chapter-new (hsh name)
        (hash-set hsh 'name name)

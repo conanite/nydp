@@ -1,4 +1,4 @@
-(chapter-start 'list-manipulation "utilities for manipulating and iterating over lists, including filters and transforms")
+(chapter-start 'list-manipulation)
 
 (def list-length (things)
   (chapter list-manipulation)
