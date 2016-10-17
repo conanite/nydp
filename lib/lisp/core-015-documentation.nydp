@@ -1,6 +1,6 @@
 (def privately () nil)
 
-((fn (this-chapter-name chapters chapter-new chapter-build chapter-find-by-name chapter-add-to-chapter)
+((fn (this-chapter-name chapters chapter-new chapter-build chapter-add-to-chapter)
      (assign chapters (hash))
 
      (def chapter-end ()
@@ -15,6 +15,7 @@
        hsh)
 
      (def chapter-names () (hash-keys chapters))
+     (def chapter-current () this-chapter-name)
 
      (def chapter-build (name chapter)
        (cond chapter
@@ -24,11 +25,8 @@
                              name
                              (chapter-new (hash) name)))))
 
-     (def chapter-find-by-name (name)
-       (chapter-build name (hash-get chapters name)))
-
      (def chapter-find (name)
-       (chapter-find-by-name (cond name name this-chapter-name)))
+       (chapter-build name (hash-get chapters name)))
 
      (def chapter-add-to-chapter (chapter attribute thing)
        (cond chapter
@@ -55,7 +53,7 @@
        (hash-set hsh 'texts    texts       )
        (hash-set hsh 'args     args        )
        (hash-set hsh 'src      src         )
-       (hash-set hsh 'chapters chapters    )
+       (hash-set hsh 'chapters (cons (chapter-current) chapters))
        (hash-set hsh 'file     this-script )
        (hash-set hsh 'plugin   this-plugin )
        hsh)
@@ -69,7 +67,6 @@
              (dox-new (dox-build (hash) name what texts args src chapters))))
 
      (def dox-add-to-chapters (item chapters)
-       (chapter-add-item item)
        (cond chapters
              (do (chapter-add-item    item (car chapters))
                  (dox-add-to-chapters item (cdr chapters)))
