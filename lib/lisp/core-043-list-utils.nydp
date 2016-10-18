@@ -1,7 +1,6 @@
 (chapter-start 'list-manipulation)
 
 (def list-length (things)
-  (chapter list-manipulation)
   (if (no things)    0
       (atom? things) 1
       (+ 1 (list-length:cdr things))))
@@ -57,7 +56,6 @@
 (mac each (var things code)
   ; repeatedly assigns an element of 'things to 'var,
   ; and executes 'code each time
-  (chapter list-manipulation)
   (w/uniq (xs c)
           `((rfn ,c (,xs)
                 (if (pair? ,xs)
@@ -67,7 +65,6 @@
            ,things)))
 
 (def reduce (f things)
-  (chapter list-manipulation)
   ((rfn rd (acc list)
         (if (pair? list)
             (rd (f acc (car list))
@@ -78,14 +75,12 @@
 (def proper? (list)
   ; t if this is a proper list (last cdr is nil)
   ; nil otherwise (last cdr is neither cons nor nil)
-  (chapter list-manipulation)
   (or (no list)
       (and (pair? list)
            (proper? (cdr list)))))
 
 (def firstn (n things)
   ; returns the first 'n items in the list 'things
-  (chapter list-manipulation)
   (if (eq? n 0) nil
       (cons (car things)
             (firstn (- n 1)
@@ -93,7 +88,6 @@
 
 (def nthcdr (n things)
   ; returns the nth cdr of the list 'things
-  (chapter list-manipulation)
   (if (> n 0)
       (nthcdr (- n 1) (cdr things))
       things))
@@ -103,7 +97,6 @@
   ; 'things is a list
   ; 'more-thingses is a list of lists
   ; call like this: (joinlists '(a b c) '(x y z) '(1 2 3))
-  (chapter list-manipulation)
   (if things
       (cons (car things)
             (apply joinlists
