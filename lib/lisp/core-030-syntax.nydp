@@ -243,9 +243,12 @@ scoping, assignment, anonymous functions and more...")
       (brace-list-build-hash args)))
 
 (mac returnlet (var val . body)
-  ; stores ,val in ,var, executes ,@body, returns ,var. Saves a line of code at the end of 'let
+  ; stores ,val in ,var, executes ,@body, returns ,var. Saves a line of code at the end of
+  ; 'let. Assumes 'body is going to do something destructive with 'val, but you want 'val before
+  ; it gets changed. See also 'returning
   `(let ,var ,val ,@body ,var))
 
 (mac returning (val . body)
-  ; stores ,val, executes ,@body, and returns ,val.
+  ; stores ,val, executes ,@body, and returns ,val. Assumes 'body is going to do something
+  ; destructive with 'val, but you want 'val before it gets changed. See also 'returnlet
   (w/uniq retval `(returnlet ,retval ,val ,@body)))
