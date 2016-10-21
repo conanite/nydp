@@ -8,9 +8,12 @@
   (def add-hook (hook-name f)
     (hash-cons hooks hook-name f))
 
+  (def clear-hooks (hook-name)
+    (= hooks.,hook-name nil))
+
   (def remove-hook (hook-name f)
     (= hooks.,hook-name
-       (select (curry !eq? f)
+       (collect (curry !eq? f)
                hooks.,hook-name)))
 
   (def run-hooks (hook-name . args)
