@@ -37,6 +37,10 @@
    (joinlists '(a b c) '(x y z) '(1 2 3))
    (a b c x y z 1 2 3))
 
+  ("nil disappears"
+   (apply joinlists '( (a b c) (d e f) nil (j k l) ) )
+   (a b c d e f j k l))
+
   ("joins three lists without recursing"
    (joinlists '(a b c) '(x (y1 y2 y3) z) '(1 2 (3 3 3)))
    (a b c x (y1 y2 y3) z 1 2 (3 3 3))))
