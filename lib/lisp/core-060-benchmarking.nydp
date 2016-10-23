@@ -42,6 +42,9 @@
 ;; (def bm-plus-1 (a) (+ a))
 ;; (def bm-plus-2 (a b) (+ a b))
 ;; (def bm-plus-3 (a b c) (+ a b c))
+;; (def bm-f-1 (a) (a))
+;; (def bm-f-2 (a b) (a b))
+;; (def bm-f-3 (a b c) (a b c))
 
 ;; (def bm-0-arg-times-call () (*))
 ;; (def bm-1-arg-times-call () (* 23))
@@ -53,6 +56,9 @@
 ;; (def bm-plus-1-call () (bm-plus-1 1))
 ;; (def bm-plus-2-call () (bm-plus-2 1 2))
 ;; (def bm-plus-3-call () (bm-plus-3 1 2 3))
+;; (def bm-f-1-call () (for i 0 10 (bm-f-1 +)))
+;; (def bm-f-2-call () (for i 0 10 (bm-f-2 + 2)))
+;; (def bm-f-3-call () (for i 0 10 (bm-f-3 + 2 3)))
 
 ;; (def bm-0-lc-call () (bm-lc-0))
 ;; (def bm-1-lc-call () (bm-lc-1 +))
@@ -120,4 +126,7 @@
     ;; (push (bm "4 arg lexical-vars  "   bm-4-lc-call        10    50000) summary)
     ;; (push (bm "hashing             "   bm-hash-fill        10   200000) summary)
     ;; (push (bm "pre-compile         "   bm-pre-compile-test 10    10000) summary)
+    ;; (push (bm "LEX         "   bm-f-1-call 10    10000) summary)
+    ;; (push (bm "LEX LEX     "   bm-f-2-call 10    10000) summary)
+    ;; (push (bm "LEX LEX LEX "   bm-f-3-call 10    10000) summary)
     (each s summary (p name " " s))))

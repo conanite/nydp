@@ -86,6 +86,19 @@ module Nydp
     end
 
     # TODO generate various Invocation_XXX classes on-demand instead of hand_coding them all up front
+    class Invocation_LEX < Invocation::Base
+      def initialize expr, src
+        super src
+        @sym = expr.car
+      end
+
+      def execute vm
+        @sym.value(vm.current_context).invoke_1 vm
+      rescue Exception => e
+        handle e, @sym.value(vm.current_context), Nydp::NIL
+      end
+    end
+
     class Invocation_SYM < Invocation::Base
       def initialize expr, src
         super src
@@ -96,6 +109,22 @@ module Nydp
         @sym.value.invoke_1 vm
       rescue Exception => e
         handle e, @sym.value, Nydp::NIL
+      end
+    end
+
+    class Invocation_LEX_LEX < Invocation::Base
+      def initialize expr, src
+        super src
+        @lex0 = expr.car
+        @lex1 = expr.cdr.car
+      end
+
+      def execute vm
+        fn = @lex0.value(vm.current_context)
+        a0 = @lex1.value(vm.current_context)
+        fn.invoke_2 vm, a0
+      rescue Exception => e
+        handle e, fn, cons(a0)
       end
     end
 
@@ -112,6 +141,24 @@ module Nydp
         fn.invoke_2 vm, a0
       rescue Exception => e
         handle e, fn, cons(a0)
+      end
+    end
+
+    class Invocation_LEX_LEX_LEX < Invocation::Base
+      def initialize expr, src
+        super src
+        @lex_0 = expr.car
+        @lex_1 = expr.cdr.car
+        @lex_2 = expr.cdr.cdr.car
+      end
+
+      def execute vm
+        fn = @lex_0.value(vm.current_context)
+        a0 = @lex_1.value(vm.current_context)
+        a1 = @lex_2.value(vm.current_context)
+        fn.invoke_3 vm, a0, a1
+      rescue Exception => e
+        handle e, fn, cons(a0, cons(a1))
       end
     end
 
