@@ -231,8 +231,13 @@ scoping, assignment, anonymous functions and more...")
       (error "Irregular '& syntax: got suffix ~(inspect (cdr rest)) in ~(joinstr "&" (cons pfx rest))")
       (build-ampersand-syntax (car rest))))
 
-(mac brace-list-mono (arg) arg)
-(mac brace-list-empty () '(hash))
+(mac brace-list-mono (arg)
+  ; override 'brace-list-mono in order to provide a useful interpretation for "{ x }" syntax
+  arg)
+
+(mac brace-list-empty ()
+  ; interprets "{ }" as new hash
+  '(hash))
 
 (mac brace-list args
   ; parser expands { foo bar } to (brace-list foo bar)
