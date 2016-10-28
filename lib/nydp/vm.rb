@@ -14,6 +14,10 @@ module Nydp
       @ns           = ns
     end
 
+    def r2n obj
+      super obj, self.ns
+    end
+
     def thread expr=nil
       instructions.push expr if expr
       while instructions.first
