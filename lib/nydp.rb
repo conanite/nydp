@@ -2,6 +2,8 @@ require 'date'
 require 'set'
 
 module Nydp
+  class Namespace < Hash
+  end
   def self.apply_function ns, function_name, *args
     function = r2n(function_name.to_sym, ns).value
     args     = r2n args, ns

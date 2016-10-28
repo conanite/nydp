@@ -21,7 +21,7 @@ module Nydp
   end
 
   def self.build_nydp extra_files=nil, &block
-    ns = { }
+    ns = Namespace.new
     setup(ns)
     PLUGINS.each { |plg|
       loadall ns, plg, plg.loadfiles, &block
