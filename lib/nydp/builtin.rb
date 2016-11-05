@@ -35,8 +35,9 @@ module Nydp::Builtin
     def invoke vm, args
       builtin_invoke vm, args
     rescue Exception => e
-      handle_error e, *(args.to_ruby)
+      handle_error e, *(args.to_a)
     end
+
 
     def handle_error e, *args
       case e

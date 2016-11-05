@@ -18,9 +18,16 @@ class Nydp::Pair
   def hash       ; @_hash ||= (car.hash + cdr.hash) ; end
   def eql? other ; self == other                    ; end
 
+  # returns Array of elements after calling #n2r on each element
   def to_ruby list=[]
     list << n2r(car)
     cdr.is_a?(Nydp::Pair) ? cdr.to_ruby(list) : list
+  end
+
+  # returns Array of elements as they are
+  def to_a list=[]
+    list << car
+    cdr.is_a?(Nydp::Pair) ? cdr.to_a(list) : list
   end
 
   def self.parse_list list

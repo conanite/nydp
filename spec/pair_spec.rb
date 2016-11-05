@@ -77,10 +77,16 @@ describe Nydp::Pair do
     expect(p.cdr).to eq Nydp::NIL
   end
 
-  it "should convert to a ruby list" do
-    pair = pair_list [:a, :b, :c, :d]
+  it "#to_ruby converts self and each element to ruby equivalent" do
+    pair = pair_list [a, b, pair_list([a, b]), c, d]
     ruby = pair.to_ruby
-    expect(ruby).to eq [:a, :b, :c, :d]
+    expect(ruby).to eq [:a, :b, [:a, :b], :c, :d]
+  end
+
+  it "#to_a converts to a ruby Array without converting elements" do
+    pair = pair_list [a, b, pair_list([a, b]), c, d]
+    ruby = pair.to_a
+    expect(ruby).to eq [a, b, pair_list([a, b]), c, d]
   end
 
   it "should have size zero when empty" do

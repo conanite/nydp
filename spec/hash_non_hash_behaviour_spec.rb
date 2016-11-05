@@ -63,7 +63,7 @@ describe Nydp::Hash do
         expect(cleanup_err_msg error.message).to eq "Called builtin/hash-set
 with args
   \"this here ain't no hash, hombre\"
-  :keysym
+  keysym
   \"foobar\""
 
         expect(cleanup_err_msg error.cause.message).to eq "hash-set: Not a hash: Nydp::StringAtom"
@@ -84,7 +84,7 @@ with args
         expect(cleanup_err_msg error.message).to eq "Called builtin/hash-get
 with args
   \"this here ain't no hash, hombre\"
-  :keysym"
+  keysym"
 
         expect(cleanup_err_msg error.cause.message).to eq "hash-get: Not a hash: Nydp::StringAtom"
       end
