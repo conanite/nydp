@@ -14,6 +14,17 @@
      x)
    "impossible")
 
+  ("handles nested errors"
+    (on-err (joinstr "\n" errors)
+            (on-err (error "foo")
+                    (on-err (error "bar")
+                            (on-err (error "toto")
+                                    (error "primum errorum")))))
+    "\"foo\"
+\"bar\"
+\"toto\"
+\"primum errorum\"")
+
   ("handles errors but any ensuring clause gets called first"
    (with (x nil y nil)
          (on-err (= x 'impossible)

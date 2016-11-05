@@ -1,7 +1,7 @@
 module Nydp
   class VM
     include Helper
-    attr_accessor :instructions, :args, :contexts, :current_context, :locals, :unhandled_error, :ns
+    attr_accessor :instructions, :args, :contexts, :current_context, :locals, :unhandled_error, :last_error, :ns
 
     module Finally     ; end
     module HandleError ; end

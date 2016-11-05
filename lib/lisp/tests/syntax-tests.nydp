@@ -8,8 +8,9 @@
    b)
 
   ("dislikes no-prefix"
-   (on-err err (pre-compile '(:foo 1 2 3)))
-   "(\"Irregular ': syntax: got (|| foo) : not prefix-syntax : in :foo\")"))
+   (on-err (joinstr "\n" errors)
+           (pre-compile '(:foo 1 2 3)))
+   "\"Irregular ': syntax: got (|| foo) : not prefix-syntax : in :foo\""))
 
 (examples-for prefix-list
   ("one argument"

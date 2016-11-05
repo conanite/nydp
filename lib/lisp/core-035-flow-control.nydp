@@ -2,9 +2,10 @@
 
 (mac on-err (handler . body)
   ; executes 'body. If an error is raised, executes 'handler. Inside
-  ; 'handler, the parameter 'err refers to the error that was raised.
-  `(handle-error (fn (err) ,handler)
-                 (fn ()    ,@body)))
+  ; 'handler, the parameter 'errors is a list of error messages extracted from
+  ; the sequence of errors that led here (Exception#cause in ruby or Throwable.getCause() in java)
+  `(handle-error (fn (errors) ,handler)
+                 (fn ()       ,@body)))
 
 (mac ensure (protection . body)
   ; executes 'body. Afterwards, executes 'protection.

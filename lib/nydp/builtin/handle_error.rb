@@ -13,13 +13,19 @@ class Nydp::Builtin::HandleError
     end
 
     def execute vm
-      e = vm.unhandled_error
+      e = vm.last_error = vm.unhandled_error
       vm.unhandled_error = nil
       return unless e
 
       vm.args = vm.args[0...vm_arg_array_size]
 
-      handler.invoke vm, cons(r2n e.message, nil)
+      msgs = []
+      while e
+        msgs << e.message
+        e = e.cause
+      end
+
+      handler.invoke_2 vm, vm.r2n(msgs)
     end
 
     def to_s
