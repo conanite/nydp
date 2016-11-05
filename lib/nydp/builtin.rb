@@ -11,40 +11,41 @@ module Nydp::Builtin
     def invoke_1 vm
       builtin_invoke_1 vm
     rescue Exception => e
-      handle_error e, Nydp::NIL
+      handle_error e
     end
 
     def invoke_2 vm, arg
       builtin_invoke_2 vm, arg
     rescue Exception => e
-      handle_error e, cons(arg)
+      handle_error e, arg
     end
 
     def invoke_3 vm, arg_0, arg_1
       builtin_invoke_3 vm, arg_0, arg_1
     rescue Exception => e
-      handle_error e, cons(arg_0, cons(arg_1))
+      handle_error e, arg_0, arg_1
     end
 
     def invoke_4 vm, arg_0, arg_1, arg_2
       builtin_invoke_4 vm, arg_0, arg_1, arg_2
     rescue Exception => e
-      handle_error e, cons(arg_0, cons(arg_1, cons(arg_2)))
+      handle_error e, arg_0, arg_1, arg_2
     end
 
     def invoke vm, args
       builtin_invoke vm, args
     rescue Exception => e
-      handle_error e, args
+      handle_error e, *(args.to_ruby)
     end
 
-    def handle_error e, args
+    def handle_error e, *args
       case e
       when Nydp::Error
         raise e
       else
-        new_msg = "Called #{self.inspect}\nwith args #{args.inspect}\nraised\n#{Nydp.indent_text e.message}\nat #{e.backtrace.first}"
-        raise $!, new_msg, $!.backtrace
+        arg_msg = args.map { |a| "  #{a.inspect}"}.join("\n")
+        new_msg = "Called #{self.inspect}\nwith args\n#{arg_msg}"
+        raise Nydp::Error.new new_msg
       end
     end
 

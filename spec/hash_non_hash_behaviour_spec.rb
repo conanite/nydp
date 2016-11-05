@@ -44,6 +44,10 @@ describe Nydp::Hash do
   describe "unfriendly non-hash" do
     let(:ahash) { Nydp::StringAtom.new "this here ain't no hash, hombre" }
 
+    def cleanup_err_msg txt
+      txt.gsub(/at \/.*:in `builtin_invoke'/, '<error info>')
+    end
+
     describe "hash set" do
       it "does nothing, returns its value" do
         k    = Nydp::Symbol.mk "keysym", ns
@@ -56,11 +60,13 @@ describe Nydp::Hash do
           error = e
         end
 
-        expect(error.message.gsub(/at \/.*:in `builtin_invoke'/, '<error info>')).to eq "Called builtin/hash-set
-with args (\"this here ain't no hash, hombre\" keysym \"foobar\")
-raised
-  hash-set: Not a hash: Nydp::StringAtom
-<error info>"
+        expect(cleanup_err_msg error.message).to eq "Called builtin/hash-set
+with args
+  \"this here ain't no hash, hombre\"
+  :keysym
+  \"foobar\""
+
+        expect(cleanup_err_msg error.cause.message).to eq "hash-set: Not a hash: Nydp::StringAtom"
       end
     end
 
@@ -75,11 +81,12 @@ raised
           error = e
         end
 
-        expect(error.message.gsub(/at \/.*:in `ruby_call'/, '<error info>')).to eq "Called builtin/hash-get
-with args (\"this here ain't no hash, hombre\" keysym)
-raised
-  hash-get: Not a hash: Nydp::StringAtom
-<error info>"
+        expect(cleanup_err_msg error.message).to eq "Called builtin/hash-get
+with args
+  \"this here ain't no hash, hombre\"
+  :keysym"
+
+        expect(cleanup_err_msg error.cause.message).to eq "hash-get: Not a hash: Nydp::StringAtom"
       end
     end
   end

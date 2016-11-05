@@ -11,9 +11,19 @@ describe Nydp::VM do
 
   describe "unhandled_error" do
     it "raises a helpful error" do
-      proc = Proc.new { run "dflkjdgjeirgjeoi" }
-      msg  = "failed to eval dflkjdgjeirgjeoi\nerror was   unbound symbol: dflkjdgjeirgjeoi"
-      expect(proc).to raise_error RuntimeError, msg
+      error = nil
+      begin
+        run "dflkjdgjeirgjeoi"
+      rescue Exception => e
+        error = e
+      end
+
+      expect(error).to be_a Nydp::Error
+      expect(error.message).to eq "failed to eval dflkjdgjeirgjeoi"
+
+      expect(error.cause).to be_a RuntimeError
+      expect(error.cause.message).to eq "unbound symbol: dflkjdgjeirgjeoi"
+
       expect(vm.unhandled_error).to eq nil
     end
 

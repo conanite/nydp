@@ -2,19 +2,6 @@ require "spec_helper"
 
 describe Nydp::Hash do
 
-  class TestThing
-    attr_accessor :a, :b, :c
-    def initialize a, b, c
-      @a, @b, @c = a, b, c
-    end
-
-    def inspect
-      "(TestThing #{a.inspect} #{b.inspect})"
-    end
-
-    def _nydp_safe_methods ; %i{ a b } ; end
-  end
-
   let(:vm) { Nydp::VM.new(ns) }
 
   describe "#to_ruby" do

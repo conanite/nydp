@@ -51,8 +51,7 @@ module Nydp
       begin
         vm.thread Pair.new(Compiler.compile(expr, Nydp::NIL), Nydp::NIL)
       rescue Exception => e
-        new_msg = "failed to eval #{expr.inspect}\nerror was #{Nydp.indent_text e.message}"
-        raise e.class, new_msg, e.backtrace
+        raise Nydp::Error.new "failed to eval #{expr.inspect}"
       end
     end
 
@@ -89,6 +88,10 @@ module Nydp
       puts e.message
       e.backtrace.each do |b|
         puts b
+      end
+      if e.cause
+        puts "\nCaused by:"
+        handle_run_error e.cause
       end
     end
 

@@ -28,3 +28,16 @@ RSpec.configure do |config|
   config.include Nydp::Helper
   config.include SpecHelper
 end
+
+class TestThing
+  attr_accessor :a, :b, :c
+  def initialize a, b, c
+    @a, @b, @c = a, b, c
+  end
+
+  def inspect
+    "(TestThing #{a.inspect} #{b.inspect})"
+  end
+
+  def _nydp_safe_methods ; %i{ a b } ; end
+end
