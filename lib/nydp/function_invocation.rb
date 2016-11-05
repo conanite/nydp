@@ -9,15 +9,18 @@ module Nydp
         @source_expression = source_expression
       end
 
-      def handle e, f, args
+      def handle e, f, *args
         case e
         when Nydp::Error, InvocationFailed
           raise e
         else
-          msg  =  "failed to execute invocation #{f.inspect} #{args.inspect}"
+          msg  = args.map { |a| "  #{a.inspect}"}.join("\n")
+          msg  =  "failed to execute invocation #{f.inspect}\n#{msg}"
           msg +=  "\nsource was #{source.inspect}"
           msg +=  "\nfunction name was #{source.car.inspect}"
-          i_f = InvocationFailed.new "#{msg}\n#{e.message}"
+          msg +=  "\nerror was #{e.class.name}"
+          msg +=  "\n#{e.message}"
+          i_f = InvocationFailed.new msg
           i_f.set_backtrace e.backtrace
           raise i_f
         end
@@ -33,7 +36,7 @@ module Nydp
         f = vm.args.pop
         f.invoke_1 vm
       rescue Exception => e
-        handle e, f, Nydp::NIL
+        handle e, f
       end
     end
 
@@ -44,7 +47,7 @@ module Nydp
 
         f.invoke_2 vm, arg
       rescue Exception => e
-        handle e, f, cons(arg)
+        handle e, f, arg
       end
     end
 
@@ -55,7 +58,7 @@ module Nydp
         f   = vm.args.pop
         f.invoke_3 vm, arg_0, arg_1
       rescue Exception => e
-        handle e, f, cons(arg_0, cons(arg_1))
+        handle e, f, arg_0, arg_1
       end
     end
 
@@ -67,7 +70,7 @@ module Nydp
         f   = vm.args.pop
         f.invoke_4 vm, arg_0, arg_1, arg_2
       rescue Exception => e
-        handle e, f, cons(arg_0, cons(arg_1, cons(arg_2)))
+        handle e, f, arg_0, arg_1, arg_2
       end
     end
 
@@ -95,7 +98,7 @@ module Nydp
       def execute vm
         @sym.value(vm.current_context).invoke_1 vm
       rescue Exception => e
-        handle e, @sym.value(vm.current_context), Nydp::NIL
+        handle e, @sym.value(vm.current_context)
       end
     end
 
@@ -108,7 +111,7 @@ module Nydp
       def execute vm
         @sym.value.invoke_1 vm
       rescue Exception => e
-        handle e, @sym.value, Nydp::NIL
+        handle e, @sym.value
       end
     end
 
@@ -124,7 +127,7 @@ module Nydp
         a0 = @lex1.value(vm.current_context)
         fn.invoke_2 vm, a0
       rescue Exception => e
-        handle e, fn, cons(a0)
+        handle e, fn, a0
       end
     end
 
@@ -140,7 +143,7 @@ module Nydp
         a0 = @lex.value(vm.current_context)
         fn.invoke_2 vm, a0
       rescue Exception => e
-        handle e, fn, cons(a0)
+        handle e, fn, a0
       end
     end
 
@@ -158,7 +161,7 @@ module Nydp
         a1 = @lex_2.value(vm.current_context)
         fn.invoke_3 vm, a0, a1
       rescue Exception => e
-        handle e, fn, cons(a0, cons(a1))
+        handle e, fn, a0, a1
       end
     end
 
@@ -176,7 +179,7 @@ module Nydp
         a1 = @lex_1.value(vm.current_context)
         fn.invoke_3 vm, a0, a1
       rescue Exception => e
-        handle e, fn, cons(a0, cons(a1))
+        handle e, fn, a0, a1
       end
     end
   end
