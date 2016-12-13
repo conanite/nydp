@@ -124,15 +124,19 @@ class Nydp::Pair
   end
 
   def inspect_rest
-    cdr_s = if cdr.is_a?(self.class)
-              cdr.inspect_rest
-            elsif cdr == Nydp::NIL
-              nil
-            else
-              ". #{cdr.inspect}"
-            end
-
-    [car.inspect, cdr_s].compact.join " "
+    res = [car.inspect]
+    it = cdr
+    while it && it != Nydp::NIL
+      if it.is_a?(self.class)
+        res << it.car.inspect
+        it = it.cdr
+      else
+        res << "."
+        res << it.inspect
+        it = nil
+      end
+    end
+    res.compact.join " "
   end
 
   def append thing

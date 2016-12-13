@@ -18,11 +18,11 @@ class Nydp::Builtin::Plus
   end
 
   def sum args, accum
-    if Nydp::NIL.is? args
-      accum
-    else
-      sum(args.cdr, (accum + args.car))
+    while args && !Nydp::NIL.is?(args)
+      accum += args.car
+      args = args.cdr
     end
+    accum
   end
 
   def name ; "+" ; end
