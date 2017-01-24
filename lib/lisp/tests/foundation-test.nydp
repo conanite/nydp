@@ -90,6 +90,14 @@
    (if t "hello" "goodbye")
    "hello")
 
+  ("function condition"
+   (if (> 5 3) "hello" "goodbye")
+   "hello")
+
+  ("function condition and outcome"
+   (if (> 5 3) (+ 5 3) (- 5 3))
+   8)
+
   ("nil is boolean false"
    (if nil "hello" "goodbye")
    "goodbye"))
