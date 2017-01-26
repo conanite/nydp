@@ -1,3 +1,12 @@
+(def bm-cond ()
+  (if (< 3 5) "less" "more"))
+
+(def bm-cond-lex (var)
+  (if var "present" "absent"))
+
+(def bm-cond-3 ()
+  (bm-cond-lex 1)
+  (bm-cond-lex nil))
 
 (def bm-pythag ()
   (for i 1 50
@@ -102,6 +111,7 @@
 
 (def rbs (name)
   (let summary nil
+    (push (bm "cond               "   bm-cond-3             10   100000) summary)
     ;; (push (bm "pythag              "   bm-pythag            5       10) summary)
     ;; (push (bm "recursive           "   bm-complicated       5     1000) summary)
     ;; (push (bm "global vars         "   bm-add-globals      10    50000) summary)

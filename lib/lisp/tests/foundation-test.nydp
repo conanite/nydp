@@ -98,6 +98,14 @@
    (if (> 5 3) (+ 5 3) (- 5 3))
    8)
 
+  ("locally-bound condition: true"
+   (let x 1 (if x "yes" "no"))
+   "yes")
+
+  ("locally-bound condition: false"
+   (let x nil (if x "yes" "no"))
+   "no")
+
   ("nil is boolean false"
    (if nil "hello" "goodbye")
    "goodbye"))
