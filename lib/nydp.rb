@@ -20,9 +20,10 @@ module Nydp
   def self.ms                           t1, t0 ; ((t1 - t0) * 1000).to_i                                    ; end
 
   def self.repl options={ }
+    silent = options[:silent]
     launch_time = Time.now
     last_script_time = Time.now
-    puts "welcome to nydp"
+    puts "welcome to nydp #{options.inspect}" unless silent
     reader = Nydp::ReadlineReader.new $stdin, "nydp > "
     ns     = build_nydp do |script|
       this_script_time = Time.now
@@ -30,8 +31,9 @@ module Nydp
       last_script_time = this_script_time
     end
     load_time = Time.now
-    puts "repl ready in #{ms(load_time, launch_time)}ms"
-    puts "^D to exit"
+    puts "nydp v#{Nydp::VERSION} repl ready in #{ms(load_time, launch_time)}ms" unless silent
+    puts "^D to exit" unless silent
+    return if options[:exit]
     Nydp::Runner.new(VM.new(ns), ns, reader, $stdout, "<stdin>").run
   end
 

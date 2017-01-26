@@ -2,4 +2,4 @@
 
 require 'nydp'
 
-Nydp.repl verbose: ($*.include? "-v")
+Nydp.repl verbose: ($*.include? "-v"), exit: ($*.include? "-x"), silent: ($*.include? "-s")
