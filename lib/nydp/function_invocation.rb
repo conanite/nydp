@@ -184,19 +184,6 @@ module Nydp
     extend Helper
     attr_accessor :function_instruction, :argument_instructions
 
-    def self.sig klass
-      case klass
-      when Nydp::Symbol              ; "SYM"
-      when Nydp::ContextSymbol       ; "LEX"
-      when Nydp::Literal             ; "LIT"
-      when Nydp::FunctionInvocation  ; "NVK"
-      when Nydp::Invocation::Base    ; "NVB"
-      when Nydp::InterpretedFunction ; "IFN"
-      when Nydp::Cond                ; "CND"
-      when Nydp::Assignment          ; "ASN"
-      else ; raise "no sig for #{klass.class.name}"
-      end
-    end
     def self.build expression, bindings
       compiled   = Compiler.compile_each(expression, bindings)
       invocation_sig = compiled.map { |x| sig x }.join("_")

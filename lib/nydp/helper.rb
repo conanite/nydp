@@ -30,6 +30,20 @@ module Nydp
     def n2r obj     ; Nydp.n2r obj     ; end
     def r2n obj, ns ; Nydp.r2n obj, ns ; end
 
+    def sig klass
+      case klass
+      when Nydp::Symbol              ; "SYM"
+      when Nydp::ContextSymbol       ; "LEX"
+      when Nydp::Literal             ; "LIT"
+      when Nydp::FunctionInvocation  ; "NVK"
+      when Nydp::Invocation::Base    ; "NVB"
+      when Nydp::InterpretedFunction ; "IFN"
+      when Nydp::Cond                ; "CND"
+      when Nydp::Assignment          ; "ASN"
+      else ; raise "no sig for #{klass.class.name}"
+      end
+    end
+
     def sym? expr, name
       expr.is_a?(Nydp::Symbol) && (expr.is? name)
     end
