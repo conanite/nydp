@@ -85,7 +85,10 @@ module Nydp
     end
 
     # TODO generate various Invocation_XXX classes on-demand instead of hand_coding them all up front
+    SIGS = Set.new
+
     class Invocation_LEX < Invocation::Base
+      SIGS << self.name
       def initialize expr, src
         super src
         @sym = expr.car
@@ -99,6 +102,7 @@ module Nydp
     end
 
     class Invocation_SYM < Invocation::Base
+      SIGS << self.name
       def initialize expr, src
         super src
         @sym = expr.car
@@ -112,6 +116,7 @@ module Nydp
     end
 
     class Invocation_LEX_LEX < Invocation::Base
+      SIGS << self.name
       def initialize expr, src
         super src
         @lex0 = expr.car
@@ -128,6 +133,7 @@ module Nydp
     end
 
     class Invocation_SYM_LEX < Invocation::Base
+      SIGS << self.name
       def initialize expr, src
         super src
         @sym = expr.car
@@ -144,6 +150,7 @@ module Nydp
     end
 
     class Invocation_LEX_LEX_LEX < Invocation::Base
+      SIGS << self.name
       def initialize expr, src
         super src
         @lex_0 = expr.car
@@ -162,6 +169,7 @@ module Nydp
     end
 
     class Invocation_SYM_LEX_LEX < Invocation::Base
+      SIGS << self.name
       def initialize expr, src
         super src
         @sym = expr.car
@@ -183,16 +191,17 @@ module Nydp
   class FunctionInvocation
     extend Helper
     attr_accessor :function_instruction, :argument_instructions
+    @@put = nil
 
     def self.build expression, bindings
       compiled   = Compiler.compile_each(expression, bindings)
       invocation_sig = compiled.map { |x| sig x }.join("_")
 
       cname  = "Invocation_#{invocation_sig}"
-      iclass = Nydp::Invocation.const_get(cname) rescue nil
-      if iclass
-        # puts "found #{cname}"
-        return iclass.new(compiled, expression)
+
+      exists = Invocation::SIGS.include? "Nydp::Invocation::#{cname}"
+      if exists
+        return Nydp::Invocation.const_get(cname).new(compiled, expression)
       end
 
       invocation = cons case expression.size
