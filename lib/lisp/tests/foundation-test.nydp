@@ -98,6 +98,16 @@
    (if (> 5 3) (+ 5 3) (- 5 3))
    8)
 
+  ("global symbol : true"
+   (do (assign global-symbol-if-test 1)
+       (if global-symbol-if-test "yes" "no"))
+   "yes")
+
+  ("global symbol : false"
+   (do (assign global-symbol-if-test nil)
+       (if global-symbol-if-test "yes" "no"))
+   "no")
+
   ("locally-bound condition: true"
    (let x 1 (if x "yes" "no"))
    "yes")
@@ -105,6 +115,26 @@
   ("locally-bound condition: false"
    (let x nil (if x "yes" "no"))
    "no")
+
+  ("locally-bound cond and truth : true"
+   (with (x 1 y "yes") (if x y "no"))
+   "yes")
+
+  ("locally-bound cond and truth : false"
+   (with (x nil y "yes") (if x y "no"))
+   "no")
+
+  ("cond with locally-bound condition, conditional if true, literal when false : true/false"
+   (let x 1 (if x (if (> x 5) "wrong" "right") "otherwise"))
+   "right")
+
+  ("cond with locally-bound condition, conditional if true, literal when false : true/true"
+   (let x 22 (if x (if (> x 5) "wrong" "right") "otherwise"))
+   "wrong")
+
+  ("cond with locally-bound condition, conditional if true, literal when false : false"
+   (let x nil (if x (if (> x 5) "wrong" "right") "otherwise"))
+   "otherwise")
 
   ("nil is boolean false"
    (if nil "hello" "goodbye")

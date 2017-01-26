@@ -39,6 +39,7 @@ module Nydp
       when Nydp::Invocation::Base    ; "NVB"
       when Nydp::InterpretedFunction ; "IFN"
       when Nydp::Cond                ; "CND"
+      when Nydp::CondBase            ; "CND"
       when Nydp::Assignment          ; "ASN"
       else ; raise "no sig for #{klass.class.name}"
       end

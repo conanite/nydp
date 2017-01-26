@@ -1,16 +1,13 @@
 module Nydp
   class ExecuteConditionalInstruction
     extend Helper
-    attr_reader :when_true, :when_false
 
     def initialize when_true, when_false
       @when_true, @when_false = when_true, when_false
     end
 
     def execute vm
-      truth = !Nydp::NIL.is?(vm.args.pop)
-      vm.instructions.push (truth ? when_true : when_false)
-      vm.contexts.push vm.current_context
+      (Nydp::NIL.is?(vm.args.pop) ? @when_false : @when_true).execute vm
     end
 
     def inspect
@@ -19,25 +16,6 @@ module Nydp
     def to_s
       "#{when_true.car.to_s} #{when_false.car.to_s}"
     end
-  end
-
-  class Cond_LEX
-    extend Helper
-    include Helper
-    attr_reader :condition, :when_true, :when_false
-
-    def initialize cond, when_true, when_false
-      @condition, @when_true, @when_false = cond, when_true, when_false
-    end
-
-    def execute vm
-      truth = !Nydp::NIL.is?(condition.value vm.current_context)
-      vm.instructions.push (truth ? when_true : when_false)
-      vm.contexts.push vm.current_context
-    end
-
-    def inspect ; "cond:#{condition.inspect}:#{when_true.inspect}:#{when_false.inspect}" ; end
-    def to_s    ; "(cond #{condition.to_s} #{when_true.to_s} #{when_false.to_s})" ; end
   end
 
   class Cond
@@ -52,8 +30,7 @@ module Nydp
     def execute vm
       vm.instructions.push conditional
       vm.contexts.push vm.current_context
-      vm.instructions.push condition
-      vm.contexts.push vm.current_context
+      condition.execute vm
     end
 
     def inspect
@@ -69,17 +46,73 @@ module Nydp
         when_true  = Compiler.compile expressions.cdr.car, bindings
         when_false = Compiler.compile expressions.cdr.cdr.car, bindings
         csig       = sig(cond)
+        tsig       = sig(when_true)
+        fsig       = sig(when_false)
+        cond_sig = "#{csig}_#{tsig}_#{fsig}"
+        # puts cond_sig
         case csig
         when "LEX"
-          Cond_LEX.new(cond, cons(when_true), cons(when_false))
+          case cond_sig
+          when "LEX_LEX_LIT"
+            Cond_LEX_LEX_LIT.new(cond, when_true, when_false.expression)
+          when "LEX_CND_LIT"
+            Cond_LEX_CND_LIT.new(cond, when_true, when_false.expression)
+          else
+            Cond_LEX.new(cond, cons(when_true), cons(when_false))
+          end
+        when "SYM"
+          Cond_SYM.new(cond, cons(when_true), cons(when_false))
         else
-          new(cons(cond), cons(when_true), cons(when_false))
+          new(cond, when_true, when_false)
         end
-
-        # new(cons(cond), cons(when_true), cons(when_false))
       else
         raise "can't compile Cond: #{expr.inspect}"
       end
+    end
+  end
+
+  class CondBase
+    extend Helper
+    include Helper
+
+    def initialize cond, when_true, when_false
+      @condition, @when_true, @when_false = cond, when_true, when_false
+    end
+
+    def inspect ; "cond:#{@condition.inspect}:#{@when_true.inspect}:#{@when_false.inspect}" ; end
+    def to_s    ; "(cond #{@condition.to_s} #{@when_true.to_s} #{@when_false.to_s})" ; end
+  end
+
+  class Cond_LEX < CondBase
+    def execute vm
+      truth = !Nydp::NIL.is?(@condition.value vm.current_context)
+      vm.instructions.push (truth ? @when_true : @when_false)
+      vm.contexts.push vm.current_context
+    end
+  end
+
+  class Cond_LEX_LEX_LIT < CondBase
+    def execute vm
+      truth = !Nydp::NIL.is?(@condition.value vm.current_context)
+      vm.push_arg(truth ? (@when_true.value vm.current_context) : @when_false)
+    end
+  end
+
+  class Cond_LEX_CND_LIT < CondBase
+    def execute vm
+      if !Nydp::NIL.is?(@condition.value vm.current_context)
+        @when_true.execute vm
+      else
+        vm.push_arg @when_false
+      end
+    end
+  end
+
+  class Cond_SYM < CondBase
+    def execute vm
+      truth = !Nydp::NIL.is?(@condition.value)
+      vm.instructions.push (truth ? @when_true : @when_false)
+      vm.contexts.push vm.current_context
     end
   end
 end
