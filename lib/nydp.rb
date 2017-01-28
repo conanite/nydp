@@ -4,6 +4,7 @@ require 'set'
 module Nydp
   class Namespace < Hash
   end
+
   def self.apply_function ns, function_name, *args
     function = r2n(function_name.to_sym, ns).value
     args     = r2n args, ns
@@ -36,39 +37,42 @@ module Nydp
     end
   end
 
-  def self.toplevel ns, reader, writer, script_name
-    runner = Nydp::Runner.new(VM.new(ns), ns, reader, writer, script_name)
+  def self.toplevel
     begin
-      runner.run
+      yield
     rescue StandardError => e
       handle_run_error e
     end
   end
 
   def self.repl options={ }
-    silent = options[:silent]
-    launch_time = Time.now
-    last_script_time = Time.now
-    puts "welcome to nydp #{options.inspect}" unless silent
-    reader = Nydp::ReadlineReader.new $stdin, "nydp > "
-    ns     = build_nydp do |script|
-      this_script_time = Time.now
-      puts "script #{script} time #{ms this_script_time, last_script_time}ms" if options[:verbose]
-      last_script_time = this_script_time
+    toplevel do
+      silent = options[:silent]
+      launch_time = Time.now
+      last_script_time = Time.now
+      puts "welcome to nydp #{options.inspect}" unless silent
+      reader = Nydp::ReadlineReader.new $stdin, "nydp > "
+      ns     = build_nydp do |script|
+        this_script_time = Time.now
+        puts "script #{script} time #{ms this_script_time, last_script_time}ms" if options[:verbose]
+        last_script_time = this_script_time
+      end
+      load_time = Time.now
+      puts "nydp v#{Nydp::VERSION} repl ready in #{ms(load_time, launch_time)}ms" unless silent
+      puts "^D to exit" unless silent
+      return if options[:exit]
+      Nydp::Runner.new(VM.new(ns), ns, reader, $stdout, "<stdin>").run
     end
-    load_time = Time.now
-    puts "nydp v#{Nydp::VERSION} repl ready in #{ms(load_time, launch_time)}ms" unless silent
-    puts "^D to exit" unless silent
-    return if options[:exit]
-    toplevel ns, reader, $stdout, "<stdin>"
   end
 
   def self.tests *options
-    verbose = options.include?(:verbose) ? "t" : "nil"
-    puts "welcome to nydp : running tests"
-    reader = Nydp::StringReader.new "(run-all-tests #{verbose})"
-    ns     = build_nydp
-    toplevel ns, reader, nil, "<test-runner>"
+    toplevel do
+      verbose = options.include?(:verbose) ? "t" : "nil"
+      puts "welcome to nydp : running tests"
+      reader = Nydp::StringReader.new "(run-all-tests #{verbose})"
+      ns     = build_nydp
+      Nydp::Runner.new(VM.new(ns), ns, reader, nil, "<test-runner>").run
+    end
   end
 end
 
