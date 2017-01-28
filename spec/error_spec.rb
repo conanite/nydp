@@ -6,7 +6,7 @@ describe Nydp::VM do
 
   def run txt
     Nydp.setup ns
-    Nydp::ExplodeRunner.new(vm, ns, Nydp::StringReader.new(txt)).run
+    Nydp::Runner.new(vm, ns, Nydp::StringReader.new(txt)).run
   end
 
   describe "unhandled_error" do
@@ -14,14 +14,14 @@ describe Nydp::VM do
       error = nil
       begin
         run "dflkjdgjeirgjeoi"
-      rescue Exception => e
+      rescue StandardError => e
         error = e
       end
 
       expect(error).to be_a Nydp::Error
       expect(error.message).to eq "failed to eval dflkjdgjeirgjeoi"
 
-      expect(error.cause).to be_a RuntimeError
+      expect(error.cause).to be_a Nydp::Error
       expect(error.cause.message).to eq "unbound symbol: dflkjdgjeirgjeoi"
 
       expect(vm.unhandled_error).to eq nil

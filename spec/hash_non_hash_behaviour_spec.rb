@@ -56,7 +56,7 @@ describe Nydp::Hash do
 
         begin
           Nydp::Builtin::HashSet.instance.invoke vm, args
-        rescue Exception => e
+        rescue StandardError => e
           error = e
         end
 
@@ -77,7 +77,7 @@ with args
 
         begin
           Nydp::Builtin::HashGet.instance.invoke vm, pair_list(args)
-        rescue Exception => e
+        rescue StandardError => e
           error = e
         end
 
