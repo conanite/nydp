@@ -15,9 +15,35 @@ module Nydp
 
   def self.reader                          txt ; Nydp::StringReader.new txt                                 ; end
   def self.eval_src      ns, src_txt, name=nil ; eval_with Nydp::Runner, ns, src_txt, name                  ; end
-  def self.eval_src!     ns, src_txt, name=nil ; eval_with Nydp::ExplodeRunner, ns, src_txt, name           ; end
   def self.eval_with runner, ns, src_txt, name ; runner.new(VM.new(ns), ns, reader(src_txt), nil, name).run ; end
   def self.ms                           t1, t0 ; ((t1 - t0) * 1000).to_i                                    ; end
+
+  def self.indent_message indent, msg
+    msg.split(/\n/).map { |line| "#{indent}#{line}" }.join("\n")
+  end
+
+  def self.handle_run_error e, indent=""
+    puts "#{indent}#{e.class.name}"
+    puts "#{indent_message indent, e.message}"
+    if e.cause
+      puts "#{indent}#{e.backtrace.first}"
+      puts "\n#{indent}Caused by:"
+      handle_run_error e.cause, "#{indent}    "
+    else
+      e.backtrace.each do |b|
+        puts "#{indent}#{b}"
+      end
+    end
+  end
+
+  def self.toplevel ns, reader, writer, script_name
+    runner = Nydp::Runner.new(VM.new(ns), ns, reader, writer, script_name)
+    begin
+      runner.run
+    rescue StandardError => e
+      handle_run_error e
+    end
+  end
 
   def self.repl options={ }
     silent = options[:silent]
@@ -34,7 +60,7 @@ module Nydp
     puts "nydp v#{Nydp::VERSION} repl ready in #{ms(load_time, launch_time)}ms" unless silent
     puts "^D to exit" unless silent
     return if options[:exit]
-    Nydp::Runner.new(VM.new(ns), ns, reader, $stdout, "<stdin>").run
+    toplevel ns, reader, $stdout, "<stdin>"
   end
 
   def self.tests *options
@@ -42,7 +68,7 @@ module Nydp
     puts "welcome to nydp : running tests"
     reader = Nydp::StringReader.new "(run-all-tests #{verbose})"
     ns     = build_nydp
-    Nydp::Runner.new(VM.new(ns), ns, reader, nil, "<test-runner>").run
+    toplevel ns, reader, nil, "<test-runner>"
   end
 end
 

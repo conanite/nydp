@@ -50,21 +50,13 @@ module Nydp
     def compile_and_eval expr
       begin
         vm.thread Pair.new(Compiler.compile(expr, Nydp::NIL), Nydp::NIL)
-      rescue Exception => e
+      rescue StandardError => e
         raise Nydp::Error.new "failed to eval #{expr.inspect}"
       end
     end
 
-    def quote expr
-      Pair.from_list [@quote, expr]
-    end
-
-    def precompile expr
-      Pair.from_list [@precompile, quote(expr)]
-    end
-
     def pre_compile expr
-      compile_and_eval(precompile(expr))
+      compile_and_eval(Pair.from_list [@precompile, Pair.from_list([@quote, expr])])
     end
 
     def evaluate expr
@@ -84,41 +76,18 @@ module Nydp
       @printer.puts val.inspect if @printer
     end
 
-    def handle_run_error e
-      puts e.message
-      e.backtrace.each do |b|
-        puts b
-      end
-      if e.cause
-        puts "\nCaused by:"
-        handle_run_error e.cause
-      end
-    end
-
     def run
       Nydp.apply_function ns, :"script-run", :"script-start", name
       res = Nydp::NIL
       begin
         while !@tokens.finished
           expr = @parser.expression(@tokens)
-          unless expr.nil?
-            begin
-              print(res = evaluate(expr))
-            rescue Exception => e
-              handle_run_error e
-            end
-          end
+          print(res = evaluate(expr)) unless expr.nil?
         end
       ensure
         Nydp.apply_function ns, :"script-run", :"script-end", name
       end
       res
-    end
-  end
-
-  class ExplodeRunner < Runner
-    def handle_run_error e
-      raise e
     end
   end
 end
