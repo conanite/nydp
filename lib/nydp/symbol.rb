@@ -15,7 +15,7 @@ class Nydp::Symbol
   end
 
   def value context=nil
-    raise "unbound symbol: #{self.inspect}" if @value == nil
+    raise Nydp::Error.new("unbound symbol: #{self.inspect}") if @value == nil
     @value
   end
 
