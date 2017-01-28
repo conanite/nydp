@@ -96,6 +96,8 @@ module Nydp
         OR_LEX_LEX.new cond, nil, when_false
       else
         case cond_sig
+        when "LIT_LIT"
+          Nydp::Cond_LEX_LIT_LIT.new(cond, when_true.expression, when_false.expression)
         when "LEX_LIT"
           Nydp::Cond_LEX_LEX_LIT.new(cond, when_true, when_false.expression)
         when "CND_LIT"
@@ -142,6 +144,13 @@ module Nydp
   #     end
   #   end
   # end
+
+  class Cond_LEX_LIT_LIT < CondBase # (def no (arg) (cond arg nil t))
+    def execute vm
+      truth = !Nydp::NIL.is?(@condition.value vm.current_context)
+      vm.push_arg(truth ? @when_true : @when_false)
+    end
+  end
 
   class Cond_LEX_LEX_LIT < CondBase
     def execute vm

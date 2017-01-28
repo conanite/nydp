@@ -35,6 +35,33 @@
   (bm-cond-LEX-LEX-LIT 1 2)
   (bm-cond-LEX-LEX-LIT nil 3))
 
+(def bm-cond-OR (x)
+  (if x x "no"))
+
+(def bm-cond-OR2 (x y z)
+  (if x x (if y y z)))
+
+(def bm-cond-8 ()
+  (bm-cond-OR 1)
+  (bm-cond-OR nil))
+
+(def bm-cond-OR-LEX-LEX (x y)
+  (if x x y))
+
+(def bm-cond-9 ()
+  (bm-cond-OR-LEX-LEX 1)
+  (bm-cond-OR-LEX-LEX nil))
+
+(def bm-cond-10 ()
+  (bm-cond-OR2 1 2 3)
+  (bm-cond-OR2 nil 2 3)
+  (bm-cond-OR2 nil nil 3)
+  (bm-cond-OR2 nil nil nil))
+
+(def bm-cond-lex-lit-lit ()
+  (no nil)
+  (no 1))
+
 (def bm-pythag ()
   (for i 1 50
     (for j 1 50
@@ -138,10 +165,12 @@
 
 (def rbs (name)
   (let summary nil
-    (push (bm "cond               "   bm-cond               10   50000) summary)
-    (push (bm "cond               "   bm-cond-3             10   50000) summary)
-    (push (bm "cond               "   bm-cond-4             10   50000) summary)
-    (push (bm "cond               "   bm-cond-5             10   50000) summary)
-    (push (bm "cond               "   bm-cond-6             10   50000) summary)
-    (push (bm "cond               "   bm-cond-7             10   50000) summary)
+    ;; (push (bm "cond with OR       "   bm-cond-9             10  40000) summary)
+    ;; (push (bm "cond with OR       "   bm-cond-9             10  100000) summary)
+    (push (bm "cond with OR       "   bm-cond-lex-lit-lit             10  100000) summary)
+    ;; (push (bm "cond               "   bm-cond-3             10   50000) summary)
+    ;; (push (bm "cond               "   bm-cond-4             10   50000) summary)
+    ;; (push (bm "cond               "   bm-cond-5             10   50000) summary)
+    ;; (push (bm "cond               "   bm-cond-6             10   50000) summary)
+    ;; (push (bm "cond               "   bm-cond-7             10   50000) summary)
     (each s summary (p name " " s))))
