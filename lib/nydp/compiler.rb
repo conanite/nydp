@@ -9,7 +9,7 @@ module Nydp
 
     def self.compile expression, bindings
       compile_expr expression, bindings
-    rescue Exception => e
+    rescue StandardError => e
       raise Nydp::Error.new "failed to compile expression:\n#{expression.inspect}"
     end
 

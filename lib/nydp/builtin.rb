@@ -10,31 +10,31 @@ module Nydp::Builtin
 
     def invoke_1 vm
       builtin_invoke_1 vm
-    rescue Exception => e
+    rescue StandardError => e
       handle_error e
     end
 
     def invoke_2 vm, arg
       builtin_invoke_2 vm, arg
-    rescue Exception => e
+    rescue StandardError => e
       handle_error e, arg
     end
 
     def invoke_3 vm, arg_0, arg_1
       builtin_invoke_3 vm, arg_0, arg_1
-    rescue Exception => e
+    rescue StandardError => e
       handle_error e, arg_0, arg_1
     end
 
     def invoke_4 vm, arg_0, arg_1, arg_2
       builtin_invoke_4 vm, arg_0, arg_1, arg_2
-    rescue Exception => e
+    rescue StandardError => e
       handle_error e, arg_0, arg_1, arg_2
     end
 
     def invoke vm, args
       builtin_invoke vm, args
-    rescue Exception => e
+    rescue StandardError => e
       handle_error e, *(args.to_a)
     end
 

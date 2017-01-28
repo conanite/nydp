@@ -9,16 +9,20 @@ module Nydp
         @source_expression = source_expression
       end
 
-      def handle e, f, *args
+      def handle e, f, invoker, *args
         case e
         when Nydp::Error, InvocationFailed
           raise e
         else
-          msg  = args.map { |a| "  #{a.inspect}"}.join("\n")
-          msg  =  "failed to execute invocation #{f.inspect}\n#{msg}"
-          msg +=  "\nsource was #{source.inspect}"
-          msg +=  "\nfunction name was #{source.car.inspect}"
-          raise InvocationFailed.new msg
+          if e.is_a?(NoMethodError) && !f.respond_to?(invoker)
+            raise InvocationFailed.new("#{f} is not a function")
+          else
+            msg  = args.map { |a| "  #{a.inspect}"}.join("\n")
+            msg  =  "failed to execute invocation #{f.inspect}\n#{msg}"
+            msg +=  "\nsource was #{source.inspect}"
+            msg +=  "\nfunction name was #{source.car.inspect}"
+            raise InvocationFailed.new msg
+          end
         end
       end
 
@@ -31,8 +35,8 @@ module Nydp
       def execute vm
         f = vm.args.pop
         f.invoke_1 vm
-      rescue Exception => e
-        handle e, f
+      rescue StandardError => e
+        handle e, f, :invoke_1
       end
     end
 
@@ -40,10 +44,9 @@ module Nydp
       def execute vm
         arg = vm.args.pop
         f = vm.args.pop
-
         f.invoke_2 vm, arg
-      rescue Exception => e
-        handle e, f, arg
+      rescue StandardError => e
+        handle e, f, :invoke_2, arg
       end
     end
 
@@ -53,8 +56,8 @@ module Nydp
         arg_0 = vm.args.pop
         f   = vm.args.pop
         f.invoke_3 vm, arg_0, arg_1
-      rescue Exception => e
-        handle e, f, arg_0, arg_1
+      rescue StandardError => e
+        handle e, f, :invoke_3, arg_0, arg_1
       end
     end
 
@@ -65,8 +68,8 @@ module Nydp
         arg_0 = vm.args.pop
         f   = vm.args.pop
         f.invoke_4 vm, arg_0, arg_1, arg_2
-      rescue Exception => e
-        handle e, f, arg_0, arg_1, arg_2
+      rescue StandardError => e
+        handle e, f, :invoke_4, arg_0, arg_1, arg_2
       end
     end
 
@@ -79,8 +82,8 @@ module Nydp
       def execute vm
         args = vm.pop_args @arg_count
         args.car.invoke vm, args.cdr
-      rescue Exception => e
-        handle e, args.car, args.cdr
+      rescue StandardError => e
+        handle e, args.car, :invoke, args.cdr
       end
     end
 
@@ -96,8 +99,8 @@ module Nydp
 
       def execute vm
         @sym.value(vm.current_context).invoke_1 vm
-      rescue Exception => e
-        handle e, @sym.value(vm.current_context)
+      rescue StandardError => e
+        handle e, @sym.value(vm.current_context), :invoke_1
       end
     end
 
@@ -110,8 +113,8 @@ module Nydp
 
       def execute vm
         @sym.value.invoke_1 vm
-      rescue Exception => e
-        handle e, @sym.value
+      rescue StandardError => e
+        handle e, @sym.value, :invoke_1
       end
     end
 
@@ -127,8 +130,8 @@ module Nydp
         fn = @lex0.value(vm.current_context)
         a0 = @lex1.value(vm.current_context)
         fn.invoke_2 vm, a0
-      rescue Exception => e
-        handle e, fn, a0
+      rescue StandardError => e
+        handle e, fn, :invoke_2, a0
       end
     end
 
@@ -144,8 +147,8 @@ module Nydp
         fn = @sym.value
         a0 = @lex.value(vm.current_context)
         fn.invoke_2 vm, a0
-      rescue Exception => e
-        handle e, fn, a0
+      rescue StandardError => e
+        handle e, fn, :invoke_2, a0
       end
     end
 
@@ -163,8 +166,8 @@ module Nydp
         a0 = @lex_1.value(vm.current_context)
         a1 = @lex_2.value(vm.current_context)
         fn.invoke_3 vm, a0, a1
-      rescue Exception => e
-        handle e, fn, a0, a1
+      rescue StandardError => e
+        handle e, fn, :invoke_3, a0, a1
       end
     end
 
@@ -182,8 +185,8 @@ module Nydp
         a0 = @lex_0.value(vm.current_context)
         a1 = @lex_1.value(vm.current_context)
         fn.invoke_3 vm, a0, a1
-      rescue Exception => e
-        handle e, fn, a0, a1
+      rescue StandardError => e
+        handle e, fn, :invoke_3, a0, a1
       end
     end
   end

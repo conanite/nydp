@@ -30,7 +30,7 @@ module Nydp
             instructions.push thisi.cdr
           end
           thisi.car.execute(self)
-        rescue Exception => e
+        rescue StandardError => e
           handle_error e
         end
       end
