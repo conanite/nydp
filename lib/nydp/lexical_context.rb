@@ -44,8 +44,19 @@ module Nydp
       me + (parent ? parent.to_s_with_indent("  #{str}") : '')
     end
 
-    def to_s
+    def pretty
       to_s_with_indent ''
+    end
+
+    def to_s
+      values = []
+      n = 0
+      while at_index n
+        values << at_index(n).inspect
+        n += 1
+      end
+      parent = parent ? " parent #{parent.to_s}" : ""
+      "(context (#{values.join ' '})#{parent})"
     end
   end
 end

@@ -28,7 +28,8 @@ module Nydp
 
     def nydp_type ; "fn" ; end
     def to_s
-      "(closure #{context.inspect} : #{ifn.to_s})"
+      "(closure #{context.to_s} : #{ifn.to_s})"
     end
+    def inspect ; to_s ; end
   end
 end
