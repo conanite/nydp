@@ -1,5 +1,7 @@
 module Nydp
   class AssignmentInstruction
+    attr_accessor :name
+
     def initialize name
       @name = name
     end
@@ -30,7 +32,7 @@ module Nydp
     end
 
     def to_s
-      "#assignment #{@instructions.cdr.car} #{@value_src.inspect}"
+      "(assign #{@instructions.cdr.car.name} #{@value_src.inspect})"
     end
 
     def inspect; to_s ; end
