@@ -37,7 +37,8 @@ class #{cname} < Nydp::ContextSymbol
     vm.push_arg value vm.current_context
   end
 
-  def inspect ; to_s                               ; end
+  def depth   ; #{depth}                               ; end
+  def inspect ; to_s                                   ; end
   def to_s    ; "[#{depth}##{binding_index}]\#{@name}" ; end
 end
 KLASS
