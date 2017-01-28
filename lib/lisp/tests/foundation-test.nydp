@@ -108,6 +108,26 @@
        (if global-symbol-if-test "yes" "no"))
    "no")
 
+  ("condition and when-true are the same ; literal when-false (true)"
+   (let x 1 (if x x "no"))
+   1)
+
+  ("condition and when-true are the same ; literal when-false (false)"
+   (let x nil (if x x "no"))
+   "no")
+
+  ("condition and when-true are the same ; cond when-false (true)"
+   (with (x 1 y 2) (if x x (if y y "else")))
+   1)
+
+  ("condition and when-true are the same ; cond when-false (false/true)"
+   (with (x nil y 2) (if x x (if y y "else")))
+   2)
+
+  ("condition and when-true are the same ; cond when-false (false/false)"
+   (with (x nil y nil) (if x x (if y y "else")))
+   "else")
+
   ("locally-bound condition: true"
    (let x 1 (if x "yes" "no"))
    "yes")
