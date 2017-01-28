@@ -42,3 +42,17 @@
              '(h k v)
              '(hash-set h k (cons v (hash-get h k)))
              '(hash-manipulation))
+
+(def join-str (prefix joint things)
+  (chapter string-manipulation)
+  ; equivalent to (join-str "~prefix~joint~(car things)" joint (cdr things)) - except
+  ; 'string-pieces hasn't been defined yet, and if it were, it would be defined in terms of
+  ; 'join-str, so it would be circular.
+  ; see 'joinstr for a more powerful and easier-to-use implementation of the same idea
+  (if things
+      (join-str (+ (to-string prefix)
+                   joint
+                   (to-string (car things)))
+                joint
+                (cdr things))
+      prefix))

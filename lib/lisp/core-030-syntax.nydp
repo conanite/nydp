@@ -47,7 +47,7 @@ scoping, assignment, anonymous functions and more...")
              (fn (,var) ,@body)))
 
 (def-colon-syntax || names
-  (error "Irregular ': syntax: got ~(inspect names) : not prefix-syntax : in ~(joinstr ":" names)"))
+  (error "Irregular ': syntax: got ~(inspect names) : not prefix-syntax : in ~(join-str (car names) ":" (cdr names))"))
 
 (mac colon-syntax names
   ; handle syntax of the form a:b, which the parser expands to
@@ -68,9 +68,9 @@ scoping, assignment, anonymous functions and more...")
   ; For example,
   ; (!eq? a 10) is the same as (no:eq? a 10), which is the same as (no (eq? a 10))
   (if (no (eq? pfx '||))
-      (error "Irregular '! syntax: got prefix ~(inspect pfx) in ~(joinstr "!" (cons pfx rest))"))
+      (error "Irregular '! syntax: got prefix ~(inspect pfx) in ~(join-str pfx "!" rest)"))
   (if (cdr rest)
-      (error "Irregular '! syntax: got suffix ~(inspect (cdr rest)) in ~(joinstr "!" (cons pfx rest))")
+      (error "Irregular '! syntax: got suffix ~(inspect (cdr rest)) in ~(join-str pfx "!" rest)")
       (if (caris 'colon-syntax (car rest))
           `(colon-syntax no ,@(cdar rest))
           `(colon-syntax no ,(car rest)))))
@@ -117,13 +117,11 @@ scoping, assignment, anonymous functions and more...")
        (,name ,@(map cadr ppairs)))))
 
 (let uniq-counter 0
-     (def uniq (prefix)
-          (sym (joinstr "-"
-                        (list prefix
-                              (assign uniq-counter
-                                      (+ uniq-counter 1))))))
-     (def reset-uniq-counter ()
-          (assign uniq-counter 0)))
+  (def uniq (prefix)
+    (assign uniq-counter (+ uniq-counter 1))
+    (sym (join-str prefix "-" (list uniq-counter))))
+  (def reset-uniq-counter ()
+    (assign uniq-counter 0)))
 
 (mac w/uniq (vars . body)
   ; creates a lexical scope with a unique symbol assigned to
@@ -226,9 +224,9 @@ scoping, assignment, anonymous functions and more...")
 (mac ampersand-syntax (pfx . rest)
   ; parser expands a&b to (ampersand-syntax a b)
   (if (no (eq? pfx '||))
-      (error "Irregular '& syntax: got prefix ~(inspect pfx) in ~(joinstr "&" (cons pfx rest))"))
+      (error "Irregular '& syntax: got prefix ~(inspect pfx) in ~(join-str pfx "&" rest)"))
   (if (cdr rest)
-      (error "Irregular '& syntax: got suffix ~(inspect (cdr rest)) in ~(joinstr "&" (cons pfx rest))")
+      (error "Irregular '& syntax: got suffix ~(inspect (cdr rest)) in ~(join-str pfx "&" rest)")
       (build-ampersand-syntax (car rest))))
 
 (mac brace-list-mono (arg)
