@@ -31,6 +31,8 @@ class #{cname} < Nydp::ContextSymbol
 
   def assign value, ctx
     ctx#{getctx}.#{set_index}
+  rescue StandardError => e
+    raise "problem in \#{self.class.name}#assign, name is \#{@name}, depth is \#{depth}, index is #{binding_index}"
   end
 
   def execute vm
