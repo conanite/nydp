@@ -17,35 +17,27 @@ module Nydp
 
     def invoke_1 vm, parent_context
       vm.instructions.push self.body
-      vm.contexts.push LexicalContext.new(parent_context)
+      vm.contexts.push set_args_0 parent_context
     end
 
     def invoke_2 vm, parent_context, arg
-      lc = LexicalContext.new parent_context
-      set_args_1 lc, arg
       vm.instructions.push self.body
-      vm.contexts.push lc
+      vm.contexts.push set_args_1(parent_context, arg)
     end
 
     def invoke_3 vm, parent_context, arg_0, arg_1
-      lc = LexicalContext.new parent_context
-      set_args_2 lc, arg_0, arg_1
       vm.instructions.push self.body
-      vm.contexts.push lc
+      vm.contexts.push set_args_2(parent_context, arg_0, arg_1)
     end
 
     def invoke_4 vm, parent_context, arg_0, arg_1, arg_2
-      lc = LexicalContext.new parent_context
-      set_args_3 lc, arg_0, arg_1, arg_2
       vm.instructions.push self.body
-      vm.contexts.push lc
+      vm.contexts.push set_args_3(parent_context, arg_0, arg_1, arg_2)
     end
 
     def invoke vm, parent_context, arg_values
-      lc = LexicalContext.new parent_context
-      set_args lc, arg_values
       vm.instructions.push self.body
-      vm.contexts.push lc
+      vm.contexts.push set_args(parent_context, arg_values)
     end
 
     def setup_context context, names, values

@@ -1,12 +1,22 @@
 module Nydp::LexicalContextBuilder
   extend Nydp::Helper
 
+  def self.mklc nexpected
+    (nexpected > 0) ? "lc = Nydp::LexicalContext.new lc\n    " : ""
+  end
+
+  def self.build_arg_names ngiven
+    (["lc"] + (0...ngiven      ).map { |i| "arg_#{i}"}).join ", "
+  end
+
   def self.build_set_args_n_method ngiven, nexpected
     setter_count = [ngiven, nexpected].min
-    arg_names = (0...ngiven      ).map { |i| "arg_#{i}"}
     setters   = (0...setter_count).map { |i| "lc.at_#{i}= arg_#{i}"}
-"  def set_args_#{ngiven} lc, #{arg_names.join ", "}
-    #{setters.join "\n    "}
+"  def set_args_#{ngiven} #{build_arg_names ngiven}
+    #{mklc nexpected}#{setters.join "\n    "}
+    lc
+   rescue StandardError => e
+     raise \"error in \#{self.class.name}#set_args_#{ngiven}\"
   end
 "
   end
@@ -26,9 +36,12 @@ module Nydp::LexicalContextBuilder
     if ngiven > setter_count
       rest_setter = "lc.at_#{nexpected}= #{build_arg_conses arg_names[setter_count..-1], 0}"
     end
-"  def set_args_#{ngiven} lc, #{arg_names.join ", "}
-    #{setters.join "\n    "}
+"  def set_args_#{ngiven} #{build_arg_names ngiven}
+    #{mklc 1}#{setters.join "\n    "}
     #{rest_setter}
+    lc
+   rescue StandardError => e
+     raise \"error in \#{self.class.name}#set_args_#{ngiven}\"
   end
 "
   end
@@ -36,7 +49,10 @@ module Nydp::LexicalContextBuilder
   def self.build_set_args_method nexpected
     setters   = (0...nexpected).map { |i| "lc.at_#{i}= args#{ ([".cdr"] * i).join }.car"}
 "  def set_args lc, args
-    #{setters.join "\n    "}
+    #{mklc nexpected}#{setters.join "\n    "}
+    lc
+   rescue StandardError => e
+     raise \"error in \#{self.class.name}#set_args\"
   end
 "
   end
@@ -45,8 +61,11 @@ module Nydp::LexicalContextBuilder
     setters   = (0...nexpected).map { |i| "lc.at_#{i}= args#{ ([".cdr"] * i).join }.car"}
     rest_set  = "lc.at_#{nexpected}= args#{ ([".cdr"] *(nexpected)).join }"
 "  def set_args lc, args
-    #{setters.join "\n    "}
+    #{mklc 1}#{setters.join "\n    "}
     #{rest_set}
+    lc
+   rescue StandardError => e
+     raise \"error in \#{self.class.name}#set_args\"
   end
 "
   end
@@ -56,7 +75,7 @@ module Nydp::LexicalContextBuilder
     existing  = const_get(name) rescue nil
     return name if existing
 
-    n_methods = (1..3).map { |given| build_set_args_n_method given, expected_arg_count }
+    n_methods = (0..3).map { |given| build_set_args_n_method given, expected_arg_count }
     x_method  = build_set_args_method expected_arg_count
     klass     = <<KLASS
 module #{name}
@@ -74,7 +93,7 @@ KLASS
     existing  = const_get(name) rescue nil
     return name if existing
 
-    n_methods = (1..3).map { |given| build_set_args_n_rest_method given, proper_arg_count }
+    n_methods = (0..3).map { |given| build_set_args_n_rest_method given, proper_arg_count }
     x_method  = build_set_args_rest_method proper_arg_count
     klass     = <<KLASS
 module #{name}
