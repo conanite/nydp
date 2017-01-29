@@ -53,14 +53,13 @@
       (car things)
       (nth (- n 1) (cdr things))))
 
-(mac each (var things code)
+(mac each (var things . body)
   ; repeatedly assigns an element of 'things to 'var,
-  ; and executes 'code each time
+  ; and executes 'body each time
   (w/uniq (xs c)
           `((rfn ,c (,xs)
                 (if (pair? ,xs)
-                    (do
-                        (let ,var (car ,xs) ,code)
+                    (do (let ,var (car ,xs) ,@body)
                         (,c (cdr ,xs)))))
            ,things)))
 
