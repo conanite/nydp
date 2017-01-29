@@ -55,8 +55,8 @@ module Nydp
         values << at_index(n).inspect
         n += 1
       end
-      parent = parent ? " parent #{parent.to_s}" : ""
-      "(context (#{values.join ' '})#{parent})"
+      parent_s = parent ? " parent #{parent.to_s}" : ""
+      "(context (#{values.join ' '})#{parent_s})"
     end
   end
 end
