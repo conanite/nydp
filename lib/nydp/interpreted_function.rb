@@ -63,7 +63,6 @@ module Nydp
       ifn = Nydp::InterpretedFunction.new
       ifn.arg_names = arg_list
       ifn.extend Nydp::LexicalContextBuilder.select arg_list
-      ifn.initialize_names arg_list
       ifn.body = compile_body body, cons(my_params, bindings), []
       ifn
     end

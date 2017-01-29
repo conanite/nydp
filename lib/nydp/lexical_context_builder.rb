@@ -60,8 +60,6 @@ module Nydp::LexicalContextBuilder
     x_method  = build_set_args_method expected_arg_count
     klass     = <<KLASS
 module #{name}
-  def initialize_names names ; end
-
 #{n_methods.join "\n"}
 #{x_method}
 end
@@ -80,8 +78,6 @@ KLASS
     x_method  = build_set_args_rest_method proper_arg_count
     klass     = <<KLASS
 module #{name}
-  def initialize_names names ; end
-
 #{n_methods.join "\n"}
 #{x_method}
 end
