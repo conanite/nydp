@@ -79,10 +79,10 @@ scoping, assignment, anonymous functions and more...")
   `(cond ,condition (do ,@body)))
 
 (def pairs (things)
-     (if (no things)       nil
-       (no (cdr things)) (list (list (car things)))
-       (cons (list (car things) (cadr things))
-             (pairs (cddr things)))))
+  (if (no things)       nil
+      (no (cdr things)) (list (list (car things)))
+      (cons (list (car things) (cadr things))
+            (pairs (cddr things)))))
 
 (mac with (parms . body)
      `((fn ,(map car (pairs parms))

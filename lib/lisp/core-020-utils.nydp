@@ -9,12 +9,13 @@
                "with arguments a b c d e, return b if a is true, otherwise return d if c is true, otherwise e"
                "and so on for subsequent arguments")
              'args
-             '(cond (no args) nil
+             '(cond args
                     (cond (cdr args)
                           (cond (cddr args)
                                 `(cond ,(car args) ,(cadr args) (if ,@(cddr args)))
                                 `(cond ,(car args) ,(cadr args)))
-                          (car args)))
+                          (car args))
+                    nil)
              '(flow-control))
 
 (dox-add-doc 'map
@@ -22,11 +23,10 @@
              '("transforms the list 'things by applying 'f to each item"
                "returns the resulting list")
              '(f things)
-             '(if (no things)
-                  nil
-                  (pair? things)
+             '(if (pair? things)
                   (cons (f (car things)) (map f (cdr things)))
-                  (map f (list things)))
+                  things
+                  (f things))
              '(list-manipulation))
 
 (dox-add-doc 'rev

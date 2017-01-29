@@ -32,11 +32,11 @@
   (chapter list-manipulation)
   (chapter string-manipulation)
   (chapter hash-manipulation)
-  (if (no things)      0
-      (pair? things)   (list-length things)
+  (if (pair? things)   (list-length things)
       (string? things) (string-length things)
       (hash? things)   (list-length:hash-keys things)
-      nil))
+      things           nil
+      0))
 
 (assign dynamics (hash))
 

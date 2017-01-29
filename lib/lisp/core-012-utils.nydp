@@ -1,11 +1,12 @@
 
 (hash-set macs 'if (fn args
-                       (cond (no args) nil
+                       (cond args
                              (cond (cdr args)
                                    (cond (cddr args)
                                          `(cond ,(car args) ,(cadr args) (if ,@(cddr args)))
                                          `(cond ,(car args) ,(cadr args)))
-                                   (car args)))))
+                                   (car args))
+                             nil)))
 
 (def map (f things)
   ; transforms the list 'things by applying 'f to each item
@@ -20,10 +21,10 @@
   (hash-set h k (cons v (hash-get h k))))
 
 (def rev-accum (things acc)
-  (cond (no things)
-        acc
+  (cond things
         (rev-accum (cdr things)
                    (cons (car things)
-                         acc))))
+                         acc))
+        acc))
 
 (def rev (things) (rev-accum things nil))

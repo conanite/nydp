@@ -71,6 +71,18 @@
     (for j 1 50
       (sqrt (+ (* i i) (* j j))))))
 
+(def bm-len-str ()
+  (len "abcd"))
+
+(def bm-len-pair ()
+  (len '(a b c d)))
+
+(def bm-len-hash ()
+  (len {a 1}))
+
+(def bm-len-fn ()
+  (len list))
+
 (def bm-repeat (f n)
   (for b 1 n (f)))
 
@@ -172,7 +184,11 @@
     ;; (push (bm "cond with OR       "   bm-cond-9             10  40000) summary)
     ;; (push (bm "cond with OR       "   bm-cond-9             10  100000) summary)
     ;; (push (bm "cond with OR       "   bm-cond-lex-lit-lit             10  100000) summary)
-    (push (bm "optimise DO forms "   bm-faster-do             10  10000) summary)
+    ;; (push (bm "optimise DO forms "   bm-faster-do             10  10000) summary)
+    ;; (push (bm "length of string "   bm-len-str              10  40000) summary)
+    (push (bm "length of pair "     bm-len-pair             10  10000) summary)
+    ;; (push (bm "length of hash "     bm-len-hash             10  15000) summary)
+    ;; (push (bm "length of uncountable "     bm-len-fn        10  50000) summary)
     ;; (push (bm "cond               "   bm-cond-3             10   50000) summary)
     ;; (push (bm "cond               "   bm-cond-4             10   50000) summary)
     ;; (push (bm "cond               "   bm-cond-5             10   50000) summary)

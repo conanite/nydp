@@ -70,11 +70,11 @@
            (qq-skip-unquote-splicing arg rest level)))
 
 (def qq-do-unquote-splicing (arg rest level)
-     (cond (no rest)
-           arg
+     (cond rest
            (list '+
                  (pre-compile arg)
-                 (qq-quasiquote rest level))))
+                 (qq-quasiquote rest level))
+           arg))
 
 (def qq-skip-unquote-splicing (arg rest level)
      (list 'cons
@@ -117,18 +117,18 @@
            (pre-compile xs)
            (list 'list ''unquote (qq-quasiquote xs (- level 1)))))
 
-(def qq-quasiquote (xs level)
-            (cond (no xs)
-                  nil
-                  (cond (pair? xs)
-                        (cond (eq? (car xs) 'unquote)
-                              (qq-maybe-unquote (cadr xs) level)
-                              (cond (eq? (car xs) 'unquote-splicing)
-                                    (qq-handle-unquote-splicing (cadr xs) nil level)
-                                    (cond (eq? (car xs) 'quasiquote)
-                                          (list 'list ''quasiquote (qq-quasiquote (cdr xs) (+ level 1)))
-                                          (qq-unquote? (car xs) (cdr xs) level))))
-                        (list 'quote xs))))
+(def qq-quasiquote (things level)
+  (cond things
+        (cond (pair? things)
+              (cond (eq? (car things) 'unquote)
+                    (qq-maybe-unquote (cadr things) level)
+                    (cond (eq? (car things) 'unquote-splicing)
+                          (qq-handle-unquote-splicing (cadr things) nil level)
+                          (cond (eq? (car things) 'quasiquote)
+                                (list 'list ''quasiquote (qq-quasiquote (cdr things) (+ level 1)))
+                                (qq-unquote? (car things) (cdr things) level))))
+              (list 'quote things))
+        nil))
 
 (hash-set macs 'quasiquote
           (fn (arg) (qq-quasiquote arg 0)))

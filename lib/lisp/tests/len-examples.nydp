@@ -3,6 +3,7 @@
   ("zero"          (len "")         0)
   ("nil is zero"   (len nil)        0)
   ("sym is nil"    (len 'abc)       nil)
+  ("fn is nil"     (len len)        nil)
   ("number is nil" (len 234)        nil)
 
   ("ignores backslash-escaped interpolation symbol"  (len "hello \~world")  12)
