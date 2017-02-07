@@ -4,7 +4,7 @@
   (inspect src))
 
 (def dox-show-info (name what texts args src)
-  ; show the given dox info
+  ; show the given info.src dox info
   ; 'info arg is a dox object from the dox system
   "~(if (eq? what 'mac) "Macro"
         (eq? what 'def) "Function"
@@ -58,7 +58,7 @@ Examples for ~name
          (if (no infos)
              (p "No documentation for" ',name)
              (each info infos
-                   (p (dox-show-info info.name info.what info.texts info.args))))
+                   (p (dox-show-info info.name info.what info.texts info.args info.src))))
          (let examples (dox-examples ',name)
            (if (no examples)
                (p "No examples for" ',name)
