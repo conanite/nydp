@@ -8,11 +8,13 @@
 (def list-slices (things slice-size)
      ; slice 'things into a list of lists each with maximum 'slice-size items
      (chapter pagination)
-     (if (< (len things) slice-size)
-         (cons things nil)
-         (cons (firstn slice-size things)
-               (list-slices (nthcdr slice-size things)
-                            slice-size))))
+     (if things
+         (if (> slice-size (len things))
+             (list things)
+             (cons (firstn slice-size things)
+                   (list-slices (nthcdr slice-size things)
+                                slice-size)))
+         nil))
 
 (def intersperse (inbetween things)
   ; return a new list with 'inbetween in between every element of 'things
@@ -80,10 +82,10 @@
 
 (def firstn (n things)
   ; returns the first 'n items in the list 'things
-  (if (eq? n 0) nil
-      (cons (car things)
-            (firstn (- n 1)
-                    (cdr things)))))
+  (if (eq? n 0)   nil
+      things      (cons (car things)
+                        (firstn (- n 1)
+                                (cdr things)))))
 
 (def nthcdr (n things)
   ; returns the nth cdr of the list 'things

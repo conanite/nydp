@@ -36,10 +36,9 @@
    (parse "$this.that.zozo")
    ((dot-syntax (dollar-syntax || this) that zozo)))
 
-
-  ("parses an expression"
+  ("parses a list of expressions"
    (parse "(foo bar \"hello, String\") 1 2 (3 t nil) nil")
-   ((foo bar "hello, String") 1 2 (3 t nil))))
+   ((foo bar "hello, String") 1 2 (3 t nil) nil)))
 
 (examples-for parse-in-string
   ("parses a plain string"

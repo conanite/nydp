@@ -55,7 +55,7 @@ class Nydp::Pair
   end
 
   def == other
-    (other.respond_to? :car) && (self.car == other.car) && (self.cdr == other.cdr)
+    Nydp::NIL.isnt?(other) && (other.respond_to? :car) && (self.car == other.car) && (self.cdr == other.cdr)
   end
 
   def size

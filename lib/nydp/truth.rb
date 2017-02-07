@@ -18,7 +18,7 @@ module Nydp
     def cdr         ; self          ; end
     def size        ; 0             ; end
     def is?   other ; other.class == self.class ; end
-    def isnt? other ; !is?(other)   ; end
+    def isnt? other ; other.class != self.class ; end
     def to_s        ; ""            ; end
     def + other     ; other         ; end
     def copy        ; self          ; end
