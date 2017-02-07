@@ -81,6 +81,11 @@ module Nydp
     end
 
     def execute vm
+      # TODO do not create a new Closure if this function does not refer to it
+      #      - including top-level function definitions
+      #      - and any other function that does not refer to any lexically-bound outer variable
+      #      - for example (fn (x) (* x x)) in (map λx(* x x) things) does not need a closure, because
+      #        the function does not refer to any lexical variable outside itself.
       vm.push_arg Closure.new(self, vm.current_context)
     end
 

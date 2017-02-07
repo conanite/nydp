@@ -12,7 +12,7 @@ module Nydp
       def handle e, f, invoker, *args
         case e
         when Nydp::Error, InvocationFailed
-          raise e
+          raise
         else
           if e.is_a?(NoMethodError) && !f.respond_to?(invoker)
             raise InvocationFailed.new("#{f} is not a function")
