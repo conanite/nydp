@@ -51,7 +51,7 @@ module Nydp
       begin
         vm.thread Pair.new(Compiler.compile(expr, Nydp::NIL), Nydp::NIL)
       rescue StandardError => e
-        raise Nydp::Error.new "failed to eval #{expr.inspect}"
+        raise Nydp::Error, "failed to eval #{expr.inspect}"
       end
     end
 
