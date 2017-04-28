@@ -45,6 +45,16 @@
                (f items)
                items)))
 
+(assign select collect)
+
+(def compact (things)
+  ; return a new list containing only non-nil items from the given list
+  (collect present? things))
+
+(def +nz args
+  ; return the sum of all non-nil values (consider nil as zero)
+  (apply + (compact args)))
+
 (def reject (f things)
   ; return all the items in 'things for which 'f returns nil
   (collect !f things))

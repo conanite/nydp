@@ -27,6 +27,16 @@
             "zz")
    nil))
 
+(examples-for compact
+  ("removes all nil items in list"
+   (compact (list 'a 'b nil 'c nil 'd nil nil))
+   (a b c d)))
+
+(examples-for +0
+  ("only adds non-nil items"
+   (+nz 1 2 nil 3 nil 4 nil nil)
+   10))
+
 (examples-for reject
   ("returns all non-matching items in a list"
    (reject (fn (x) (eq? (len x) 2))
