@@ -21,8 +21,12 @@ describe Nydp::Pair do
       expect(Nydp::Pair.new(NIL, NIL)).to eq Nydp::Pair.new(NIL, NIL)
     end
 
+    it "there is no empty list, only NIL" do
+      expect(Nydp::Pair.from_list([])).to eq Nydp::NIL
+    end
+
     it "is false for (nil) == nil" do
-      expect(Nydp::Pair.from_list([Nydp::NIL]) == Nydp::NIL).to be_false
+      expect(Nydp::Pair.from_list([Nydp::NIL]) == Nydp::NIL).to eq false
     end
 
     it "should be true for nested empty lists" do

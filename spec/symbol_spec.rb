@@ -17,7 +17,7 @@ describe Nydp::Symbol do
 
   it "should create a new symbol" do
     sym = Nydp::Symbol.mk :foo, ns
-    expect(sym.name.should).to eq :foo
+    expect(sym.name).to eq :foo
   end
 
   it "should not create a new symbol when the symbol already exists" do
