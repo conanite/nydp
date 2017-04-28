@@ -4,6 +4,9 @@ module Nydp
 
     def initialize ns
       @ns = ns
+      # TODO pre-initialize all the hard-coded syms used here, eg
+      # @quote = sym(:quote)
+      # @quasiquote = sym(:quasiquote)
     end
 
     def sym name
