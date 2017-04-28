@@ -63,6 +63,6 @@
     (w/uniq h
             `(let ,h (hash)
                (def ,name ,args
-                 ,@(if forms.comment (map λc(list 'comment c)) forms.comment)
+                 ,@(if forms.comment (map (fn (c) list 'comment c)) forms.comment)
                  ,(if forms.chapter `(chapter ,forms.chapter))
                  (cache-get ,h (list ,@args) (do ,@(hash-get forms nil))))))))
