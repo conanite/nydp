@@ -5,7 +5,7 @@
   ("zero-params assumes nil initial parameter"
    (let ck0 (curry chicken-korma)
      (ck0 1 2 3 4 5))
-   (nil 1 2 3 4))
+   (1 2 3 4 5))
 
   ("one param"
    (let ck0 (curry chicken-korma 'x)
@@ -17,12 +17,12 @@
      ((curry ck0 'y) 1 2 3))
    (x y 1 2 3))
 
-  ("two params ignores second param"
+  ("two params"
    (let ck0 (curry chicken-korma 'x 'y)
      (ck0 1 2 3))
-   (x 1 2 3 nil))
+   (x y 1 2 3))
 
   ("three params ignores second and third params"
    (let ck0 (curry chicken-korma 'x 'y 'z)
      (ck0 1 2))
-   (x 1 2 nil nil)))
+   (x y z 1 2)))

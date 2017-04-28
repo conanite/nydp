@@ -40,12 +40,12 @@
        (loop (assign ,v ,gi) (< ,v ,gm) (assign ,v (+ ,v 1))
          ,@body))))
 
-(def curry (func arg)
+(mac curry (func . args1)
   ; return a new function which is the original function with
   ; the given args1 already applied
   ; arguments to the new function are whatever arguments remain
   ; for the old function
-  (fn args (apply func arg args)))
+  `(fn args (apply ,func ,@args1 args)))
 
 (mac cache-get (hsh key val)
   ; if ,key is already in ,hsh - return the associated value.
