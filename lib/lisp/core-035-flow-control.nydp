@@ -40,12 +40,29 @@
        (loop (assign ,v ,gi) (< ,v ,gm) (assign ,v (+ ,v 1))
          ,@body))))
 
-(def curry (func . args1)
+(def curry (func arg)
   ; return a new function which is the original function with
   ; the given args1 already applied
   ; arguments to the new function are whatever arguments remain
   ; for the old function
-  (fn args
-      (apply func
-             (joinlists args1
-                        args))))
+  (fn args (apply func arg args)))
+
+(mac cache-get (hsh key val)
+  ; if ,key is already in ,hsh - return the associated value.
+  ; if ,key is not already in ,hsh - evaluate ,val, store the result
+  ; under ,key in ,hsh, and return it
+  (w/uniq (h k v)
+    `(with (,h ,hsh ,k ,key)
+           (let ,v (hash-get ,h ,k)
+             (or ,v (returnlet ,v ,val (hash-set ,h ,k ,v)))))))
+
+(mac defmemo (name args . body)
+  ; same as 'def, but caches the result, keyed on args, so for a given set of args the result
+  ; is only ever calculated once
+  (let forms (filter-forms (build-def-hash (hash)) body)
+    (w/uniq h
+            `(let ,h (hash)
+               (def ,name ,args
+                 ,@(if forms.comment (map λc(list 'comment c)) forms.comment)
+                 ,(if forms.chapter `(chapter ,forms.chapter))
+                 (cache-get ,h (list ,@args) (do ,@(hash-get forms nil))))))))
