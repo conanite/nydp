@@ -8,15 +8,19 @@ class Nydp::Pair
     @car, @cdr = car, cdr
   end
 
-  def nydp_type  ; :pair                            ; end
-  def caar       ; car.car                          ; end
-  def cadr       ; cdr.car                          ; end
-  def cdar       ; car.cdr                          ; end
-  def cddr       ; cdr.cdr                          ; end
-  def car= thing ; @car = thing ; @_hash = nil      ; end
-  def cdr= thing ; @cdr = thing ; @_hash = nil      ; end
-  def hash       ; @_hash ||= (car.hash + cdr.hash) ; end
-  def eql? other ; self == other                    ; end
+  def nydp_type  ; :pair                                      ; end
+  def caar       ; car.car                                    ; end
+  def cadr       ; cdr.car                                    ; end
+  def cdar       ; car.cdr                                    ; end
+  def cddr       ; cdr.cdr                                    ; end
+  def car= thing ; @car = thing ; @_hash = nil                ; end
+  def cdr= thing ; @cdr = thing ; @_hash = nil                ; end
+  def hash       ; @_hash ||= (car.hash + cdr.hash)           ; end
+  def eql? other ; self == other                              ; end
+  def copy       ; cons(car, cdr.copy)                        ; end
+  def +    other ; copy.append other                          ; end
+  def size       ; 1 + (cdr.is_a?(Nydp::Pair) ? cdr.size : 0) ; end
+  def inspect    ; "(#{inspect_rest})"                        ; end
 
   # returns Array of elements after calling #n2r on each element
   def to_ruby list=[]
@@ -46,20 +50,8 @@ class Nydp::Pair
     end
   end
 
-  def copy
-    cons(car, cdr.copy)
-  end
-
-  def + other
-    copy.append other
-  end
-
   def == other
     Nydp::NIL.isnt?(other) && (other.respond_to? :car) && (self.car == other.car) && (self.cdr == other.cdr)
-  end
-
-  def size
-    1 + (cdr.is_a?(Nydp::Pair) ? cdr.size : 0)
   end
 
   def proper?
@@ -69,10 +61,6 @@ class Nydp::Pair
   def each &block
     yield car
     cdr.each(&block) unless Nydp::NIL.is?(cdr)
-  end
-
-  def inspect
-    "(#{inspect_rest})"
   end
 
   def to_s
