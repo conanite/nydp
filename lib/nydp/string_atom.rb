@@ -13,8 +13,9 @@ module Nydp
     def inspect    ; string.inspect ; end
     def hash       ; string.hash    ; end
     def length     ; string.length  ; end
-    def > other    ; self.string > other.string ; end
-    def < other    ; self.string < other.string ; end
+    def > other    ; self.string > other.string     ; end
+    def < other    ; self.string < other.string     ; end
+    def * other    ; StringAtom.new(string * other) ; end
 
     def <=> other
       self < other ? -1 : (self == other ? 0 : 1)

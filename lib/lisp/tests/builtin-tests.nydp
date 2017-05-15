@@ -78,7 +78,9 @@
   ("multiplies 1 float"   (* 4.2)          4.2)
   ("multiplies 2 floats"  (* 4.2 0.5)      2.1)
   ("multiplies 3 floats"  (* 4.2 -2.5)   -10.5)
-  ("multiplies 4 floats"  (* 6.6 1.1 3.3) 23.958))
+  ("multiplies 4 floats"  (* 6.6 1.1 3.3) 23.958)
+
+  ("multiplies a string"  (* "foo" 3)     "foofoofoo"))
 
 (examples-for mod
   ("modulus for two ints" (mod 64 6) 4))
