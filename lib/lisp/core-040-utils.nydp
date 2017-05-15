@@ -1,17 +1,5 @@
 (chapter-start 'nydp-core "essential functions for getting anything done")
 
-(def joinstr (txt . things)
-  ; flatten 'things into a single list (ie unnest lists)
-  ; convert each item to a string
-  ; return a single string which is the concatenation of each
-  ; stringified item, with given 'txt inserted in between
-  ; each item
-  (let joinables (flatten things)
-    (apply +
-           (to-string (car joinables))
-           (flatten (zip (map (fn (_) txt) (cdr joinables))
-                         (map to-string (cdr joinables)))))))
-
 (def iso (x y)
      (or (eq? x y)
          (and (pair? x)
@@ -21,6 +9,7 @@
 
 (def x1      (thing) thing)
 (def sym?    (arg)   (isa 'symbol arg))
+(def num?    (arg)   (isa 'number arg))
 (def string? (arg)   (isa 'string arg))
 (mac just    (arg)   arg)
 (def quotify (arg)   `(quote ,arg))

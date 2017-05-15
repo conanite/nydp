@@ -11,9 +11,9 @@
   ; each item
   (let joinables (flatten things)
     (apply +
-           (to-string (car joinables))
-           (flatten (zip (map (fn (_) txt) (cdr joinables))
-                         (map to-string (cdr joinables)))))))
+           (to-string:car joinables)
+           (flatten (map (fn (x) (list txt x))
+                         (cdr joinables))))))
 
 (def j items
   ; delegate to 'joinstr with an empty join string
