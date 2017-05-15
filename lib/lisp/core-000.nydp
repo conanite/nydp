@@ -6,6 +6,7 @@
 ;; README.md however for some significant differences
 
 (assign   list (fn args args))
+(assign   noop (fn args nil))
 (assign   caar (fn (arg) (car (car arg))))
 (assign   cadr (fn (arg) (car (cdr arg))))
 (assign   cdar (fn (arg) (cdr (car arg))))

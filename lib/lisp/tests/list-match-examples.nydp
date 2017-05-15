@@ -1,0 +1,40 @@
+(examples-for list-match?
+  ("match the first element of a list"
+   (list-match? (list (curry eq? 'foo))
+                '(foo bar zorro))
+   t)
+
+  ("the first element is a sym and the second element is a number: true"
+   (list-match? (list sym? num?)
+                '(foo 1 blah blah matches))
+   t)
+
+  ("the first element is a sym and the second element is a number: wrong first element"
+   (list-match? (list sym? num?)
+                '("doesn't" 1 match at all))
+   nil)
+
+  ("the first element is a sym and the second element is a number: wrong second element"
+   (list-match? (list sym? num?)
+                '(does not match at all))
+   nil)
+
+  ("list has 3 elements: true"
+   (list-match? λx(eq? (len x) 3)
+                '(this does match))
+   t)
+
+  ("list has 3 elements: false"
+   (list-match? λx(eq? (len x) 3)
+                '(this does not match))
+   nil)
+
+  ("match improper list: true"
+   (list-match? (cons num? (cons sym? sym?))
+                '(10 green . bottles))
+   t)
+
+  ("match improper list: false"
+   (list-match? (cons sym? (cons num? sym?))
+                '(this doesnt match))
+   nil))

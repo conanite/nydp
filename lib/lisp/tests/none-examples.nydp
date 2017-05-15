@@ -1,0 +1,16 @@
+(examples-for none?
+  ("nil when any items match"
+   (none? num? '(1 nil nil 4))
+   nil)
+
+  ("nil for a non-nil atom"
+   (and (none? string? "really, all") t)
+   nil)
+
+  ("t for nil"
+   (none? x1 nil)
+   t)
+
+  ("t when all items are nil"
+   (and (none? x1 '(nil nil nil nil)) t)
+   t))

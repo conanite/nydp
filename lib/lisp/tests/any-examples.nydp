@@ -1,0 +1,28 @@
+(examples-for any?
+  ("true when any item is non-nil"
+   (and (any? num? '(1 nil nil 4)) t)
+   t)
+
+  ("true for an atom"
+   (and (any? string? "really, all") t)
+   t)
+
+  ("false for an atom"
+   (any? num? "really, all")
+   nil)
+
+  ("false for nil"
+   (any? x1 nil)
+   nil)
+
+  ("false when all items are nil"
+   (any? sym? '(nil nil nil nil))
+   nil)
+
+  ("true when at least one item is nil when looking for nil"
+   (any? no '(1 2 nil 4))
+   t)
+
+  ("false when no item is nil when looking for nil"
+   (any? no '(1 2 3 4))
+   nil))

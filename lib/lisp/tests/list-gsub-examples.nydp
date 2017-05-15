@@ -1,0 +1,25 @@
+(examples-for list-gsub
+  ("it replaces a number in a nested list"
+   (list-gsub '(foo (1 2 3 42)
+                    (bar (40 41 42 (nested 43 42 41))))
+              42
+              99)
+   (foo (1 2 3 99)
+        (bar (40 41 99 (nested 43 99 41)))))
+
+  ("it replaces a sym in a nested list"
+   (list-gsub '(foo (1 2 3 42)
+                    (foo (40 41 42 (foo 43 42 foo))))
+              'foo
+              'zzz)
+   (zzz (1 2 3 42)
+        (zzz (40 41 42 (zzz 43 42 zzz)))))
+
+
+  ("it replaces a list in a nested list"
+   (list-gsub '(foo (1 (a b c) 3 42)
+                    (foo (40 (a b c) 42 ((a b c) 43 42 foo))))
+              '(a b c)
+              'zzz)
+   (foo (1 zzz 3 42)
+        (foo (40 zzz 42 (zzz 43 42 foo))))))

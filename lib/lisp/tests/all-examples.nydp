@@ -1,0 +1,20 @@
+(examples-for all?
+  ("true when all items are numeric"
+   (all? num? '(1 2 3 4))
+   t)
+
+  ("false when all items are not numeric"
+   (all? num? '(1 2 x 4))
+   nil)
+
+  ("true for an atom"
+   (and (all? string? "really, all") t)
+   t)
+
+  ("false for nil"
+   (all? x1 nil)
+   nil)
+
+  ("false when any item is nil"
+   (and (all? x1 '(1 2 nil 4)) t)
+   nil))

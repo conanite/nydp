@@ -166,3 +166,57 @@
 
 (def min things (best < things))
 (def max things (best > things))
+
+(def map-recurse (on-atom on-list things)
+  ((afn (xs)
+    (if (pair? xs)
+        (on-list self xs)
+        xs
+        (on-atom xs)))
+   things))
+
+(def list-gsub (list old new)
+  ; recursively replaces 'old with 'new inside 'list
+  (map-recurse (fn (s) (if (eq? s old) new s))
+               (fn (m things)
+                   (if (eq? things old)
+                       new
+                       (map m things)))
+               list))
+
+(def all? (f things)
+  ; if 'things is a list, true when all items are non-nil
+  ; if 'things is an atom, true when non-nil
+  (if (pair? things)
+      (and (f:car things)
+           (or (no:cdr things)
+               (all? f (cdr things))))
+      (f things)))
+
+(def any? (f things)
+  ; if 'things is a list, true when at least one item is non-nil
+  ; if 'things is an atom, true when non-nil
+  (if (pair? things)
+      (or (f:car things)
+          (and (cdr things)
+               (any? f (cdr things))))
+      (f things)))
+
+(def none? (f things)
+  ; if 'things is a list, true when all items are nil
+  ; if 'things is an atom, true when nil
+  (if (pair? things)
+      (and (no:f:car things)
+           (none? f (cdr things)))
+      (no:f things)))
+
+(def list-match? (matchers things)
+  ; 'matchers is a list of functions
+  ; 'things is a list of items to match
+  ; true when each function in 'matchers returns non-nil for the corresponding value in 'things
+  (if (pair? matchers)
+      (and ((car matchers) (car things))
+           (list-match? (cdr matchers) (cdr things)))
+      matchers
+      (matchers things)
+      t))
