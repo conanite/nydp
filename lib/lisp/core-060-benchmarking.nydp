@@ -1,104 +1,104 @@
-(def bm-cond ()
-  (if (< 3 5) "less" "more"))
+;; (def bm-cond ()
+;;   (if (< 3 5) "less" "more"))
 
-(def bm-cond-lex (var)
-  (if var "present" "absent"))
+;; (def bm-cond-lex (var)
+;;   (if var "present" "absent"))
 
-(def bm-cond-sym ()
-  (if bm-cond-sym-value "present" "absent"))
+;; (def bm-cond-sym ()
+;;   (if bm-cond-sym-value "present" "absent"))
 
-(def bm-cond-3 ()
-  (bm-cond-lex 1)
-  (bm-cond-lex nil))
+;; (def bm-cond-3 ()
+;;   (bm-cond-lex 1)
+;;   (bm-cond-lex nil))
 
-(def bm-cond-4 ()
-  (assign bm-cond-sym-value 1)
-  (bm-cond-sym)
-  (assign bm-cond-sym-value nil)
-  (bm-cond-sym))
+;; (def bm-cond-4 ()
+;;   (assign bm-cond-sym-value 1)
+;;   (bm-cond-sym)
+;;   (assign bm-cond-sym-value nil)
+;;   (bm-cond-sym))
 
-(def bm-cond-LEX-LEX-LIT (a b)
-  (if a b nil))
+;; (def bm-cond-LEX-LEX-LIT (a b)
+;;   (if a b nil))
 
-(def bm-cond-LEX-CND-LIT (a)
-  (if a (if (< a 3) "yes" "no") "other"))
+;; (def bm-cond-LEX-CND-LIT (a)
+;;   (if a (if (< a 3) "yes" "no") "other"))
 
-(def bm-cond-6 ()
-  (if (< 3 5) (+ 3 5) (- 3 5)))
+;; (def bm-cond-6 ()
+;;   (if (< 3 5) (+ 3 5) (- 3 5)))
 
-(def bm-cond-7 ()
-  (bm-cond-LEX-CND-LIT nil)
-  (bm-cond-LEX-CND-LIT 1)
-  (bm-cond-LEX-CND-LIT 5))
+;; (def bm-cond-7 ()
+;;   (bm-cond-LEX-CND-LIT nil)
+;;   (bm-cond-LEX-CND-LIT 1)
+;;   (bm-cond-LEX-CND-LIT 5))
 
-(def bm-cond-5 ()
-  (bm-cond-LEX-LEX-LIT 1 2)
-  (bm-cond-LEX-LEX-LIT nil 3))
+;; (def bm-cond-5 ()
+;;   (bm-cond-LEX-LEX-LIT 1 2)
+;;   (bm-cond-LEX-LEX-LIT nil 3))
 
-(def bm-cond-OR (x)
-  (if x x "no"))
+;; (def bm-cond-OR (x)
+;;   (if x x "no"))
 
-(def bm-cond-OR2 (x y z)
-  (if x x (if y y z)))
+;; (def bm-cond-OR2 (x y z)
+;;   (if x x (if y y z)))
 
-(def bm-cond-8 ()
-  (bm-cond-OR 1)
-  (bm-cond-OR nil))
+;; (def bm-cond-8 ()
+;;   (bm-cond-OR 1)
+;;   (bm-cond-OR nil))
 
-(def bm-cond-OR-LEX-LEX (x y)
-  (if x x y))
+;; (def bm-cond-OR-LEX-LEX (x y)
+;;   (if x x y))
 
-(def bm-cond-9 ()
-  (bm-cond-OR-LEX-LEX 1)
-  (bm-cond-OR-LEX-LEX nil))
+;; (def bm-cond-9 ()
+;;   (bm-cond-OR-LEX-LEX 1)
+;;   (bm-cond-OR-LEX-LEX nil))
 
-(def bm-cond-10 ()
-  (bm-cond-OR2 1 2 3)
-  (bm-cond-OR2 nil 2 3)
-  (bm-cond-OR2 nil nil 3)
-  (bm-cond-OR2 nil nil nil))
+;; (def bm-cond-10 ()
+;;   (bm-cond-OR2 1 2 3)
+;;   (bm-cond-OR2 nil 2 3)
+;;   (bm-cond-OR2 nil nil 3)
+;;   (bm-cond-OR2 nil nil nil))
 
-(def bm-cond-lex-lit-lit ()
-  (no nil)
-  (no 1))
+;; (def bm-cond-lex-lit-lit ()
+;;   (no nil)
+;;   (no 1))
 
-(def bm-faster-do ()
-  (each x '(0 1 2 3 4 5 6 7 8 9) ;; each uses 'do internally
-    x))
+;; (def bm-faster-do ()
+;;   (each x '(0 1 2 3 4 5 6 7 8 9) ;; each uses 'do internally
+;;     x))
 
-(def bm-pythag ()
-  (for i 1 50
-    (for j 1 50
-      (sqrt (+ (* i i) (* j j))))))
+;; (def bm-pythag ()
+;;   (for i 1 50
+;;     (for j 1 50
+;;       (sqrt (+ (* i i) (* j j))))))
 
-(def bm-len-str ()
-  (len "abcd"))
+;; (def bm-len-str ()
+;;   (len "abcd"))
 
-(def bm-len-pair ()
-  (len '(a b c d)))
+;; (def bm-len-pair ()
+;;   (len '(a b c d)))
 
-(def bm-len-hash ()
-  (len {a 1}))
+;; (def bm-len-hash ()
+;;   (len {a 1}))
 
-(def bm-len-fn ()
-  (len list))
+;; (def bm-len-fn ()
+;;   (len list))
 
-(def bm-repeat (f n)
-  (for b 1 n (f)))
+;; (def bm-repeat (f n)
+;;   (for b 1 n (f)))
 
-(def bm (desc f repeats iterations)
-     (p "\n================================================")
-     (p "Benchmark: ~desc - ~repeats runs of ~iterations iterations each")
-     (let times 0
-          (for reps 1 repeats
-               (let started (time)
-                    (bm-repeat f iterations)
-                    (let elapsed (- (time) started)
-                         (assign times (+ elapsed times))
-                         (p "  took: ~elapsed ms, ~(/ elapsed iterations) ms per iteration"))))
-          (p "total ~(just times), average ~(/ times repeats) per run")
-          (p "================================================\n")
-          "~desc : total ~(just times), average ~(/ times repeats) per run"))
+;; (def bm (desc f repeats iterations)
+;;      (p "\n================================================")
+;;      (p "Benchmark: ~desc - ~repeats runs of ~iterations iterations each")
+;;      (let times 0
+;;           (for reps 1 repeats
+;;                (let started (time)
+;;                     (bm-repeat f iterations)
+;;                     (let elapsed (- (time) started)
+;;                          (assign times (+ elapsed times))
+;;                          (p "  took: ~elapsed ms, ~(/ elapsed iterations) ms per iteration"))))
+;;           (p "total ~(just times), average ~(/ times repeats) per run")
+;;           (p "================================================\n")
+;;           "~desc : total ~(just times), average ~(/ times repeats) per run"))
 
 ;; (assign a 1)
 ;; (assign b 1)
@@ -162,22 +162,17 @@
 ;;   (for i 1 10
 ;;        (pre-compile (dox-src rbs))))
 
-;; (def bm-hash-fill
-;;   (let h {}
-;;     (=h.aa 1) (=h.ab 2) (=h.ac 3) (=h.ba 4) (=h.bb 5) (=h.bc 6)
-;;     (=h.ca 1) (=h.cb 2) (=h.cc 3) (=h.ca 4) (=h.cb 5) (=h.cc 6)
-;;     (=h.da 1) (=h.db 2) (=h.dc 3) (=h.da 4) (=h.db 5) (=h.dc 6)
-;;     (=h.aa 1) (=h.ab 2) (=h.ac 3) (=h.ba 4) (=h.bb 5) (=h.bc 6)
-;;     (=h.ca 1) (=h.cb 2) (=h.cc 3) (=h.ca 4) (=h.cb 5) (=h.cc 6)
-;;     (=h.da 1) (=h.db 2) (=h.dc 3) (=h.da 4) (=h.db 5) (=h.dc 6)
-;;     (list (list h.aa h.ab h.ac h.ba h.bb h.bc)
-;;           (list h.aa h.ab h.ac h.ba h.bb h.bc)
-;;           (list h.ca h.cb h.cc h.ca h.cb h.cc)
-;;           (list h.da h.db h.dc h.da h.db h.dc)
-;;           (list h.aa h.ab h.ac h.ba h.bb h.bc)
-;;           (list h.ca h.cb h.cc h.ca h.cb h.cc)
-;;           (list h.da h.db h.dc h.da h.db h.dc)
-;;           (list h.da h.ab h.ac h.ba h.bb h.bc))))
+;; (def bm-sym-lex-lex-lex () (with (a 1 b 2 c 3) (+ a b c)))
+;; (def bm-sym-lex-lit-lex () (with (a 1 c 3) (+ a 2 c)))
+
+;; (def bm-hash-fill ()
+;;   (with (h {} v1 1 v2 2 v3 3 v4 4 v5 5 v6 6)
+;;     (= h.aa v1) (= h.ab v2) (= h.ac v3) (= h.ba v4) (= h.bb v5) (= h.bc v6)
+;;     (= h.ca v1) (= h.cb v2) (= h.cc v3) (= h.ca v4) (= h.cb v5) (= h.cc v6)
+;;     (= h.da v1) (= h.db v2) (= h.dc v3) (= h.da v4) (= h.db v5) (= h.dc v6)
+;;     (= h.aa v1) (= h.ab v2) (= h.ac v3) (= h.ba v4) (= h.bb v5) (= h.bc v6)
+;;     (= h.ca v1) (= h.cb v2) (= h.cc v3) (= h.ca v4) (= h.cb v5) (= h.cc v6)
+;;     (= h.da v1) (= h.db v2) (= h.dc v3) (= h.da v4) (= h.db v5) (= h.dc v6)))
 
 (def rbs (name)
   (let summary nil
@@ -186,7 +181,10 @@
     ;; (push (bm "cond with OR       "   bm-cond-lex-lit-lit             10  100000) summary)
     ;; (push (bm "optimise DO forms "   bm-faster-do             10  10000) summary)
     ;; (push (bm "length of string "   bm-len-str              10  40000) summary)
-    (push (bm "length of pair "     bm-len-pair             10  10000) summary)
+    ;; (push (bm "length of pair "     bm-len-pair                10  10000) summary)
+    ;; (push (bm "sig opt 1"           bm-sym-lex-lex-lex         10 100000) summary)
+    ;; (push (bm "sig opt 2"           bm-sym-lex-lit-lex         10 100000) summary)
+    ;; (push (bm "hashing"             bm-hash-fill               10 5000) summary)
     ;; (push (bm "length of hash "     bm-len-hash             10  15000) summary)
     ;; (push (bm "length of uncountable "     bm-len-fn        10  50000) summary)
     ;; (push (bm "cond               "   bm-cond-3             10   50000) summary)

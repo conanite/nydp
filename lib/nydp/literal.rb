@@ -7,10 +7,6 @@ module Nydp
       @expression = expression
     end
 
-    def lisp_apply
-      expression
-    end
-
     def self.build expression, bindings
       new expression
     end

@@ -147,32 +147,31 @@ module Nydp
 
   class Cond_LEX_LIT_LIT < CondBase # (def no (arg) (cond arg nil t))
     def execute vm
-      truth = !Nydp::NIL.is?(@condition.value vm.current_context)
-      vm.push_arg(truth ? @when_true : @when_false)
+      falsity = Nydp::NIL.is?(@condition.value vm.current_context)
+      vm.push_arg(falsity ? @when_false : @when_true)
     end
   end
 
   class Cond_LEX_LEX_LIT < CondBase
     def execute vm
-      truth = !Nydp::NIL.is?(@condition.value vm.current_context)
-      vm.push_arg(truth ? (@when_true.value vm.current_context) : @when_false)
+      falsity = Nydp::NIL.is?(@condition.value vm.current_context)
+      vm.push_arg(falsity ? @when_false : (@when_true.value vm.current_context))
     end
   end
 
   class Cond_LEX_CND_LIT < CondBase
     def execute vm
-      if !Nydp::NIL.is?(@condition.value vm.current_context)
-        @when_true.execute vm
-      else
+      if Nydp::NIL.is?(@condition.value vm.current_context)
         vm.push_arg @when_false
+      else
+        @when_true.execute vm
       end
     end
   end
 
   class Cond_SYM < CondBase
     def execute vm
-      truth = !Nydp::NIL.is?(@condition.value)
-      vm.instructions.push (truth ? @when_true : @when_false)
+      vm.instructions.push (Nydp::NIL.is?(@condition.value) ? @when_false : @when_true)
       vm.contexts.push vm.current_context
     end
   end

@@ -3,10 +3,19 @@ module Nydp
   end
 
   module Invocation
+    @@sig_counts = Hash.new { |h,k| h[k] = 0}
+
+    # def self.sig name ; @@sig_counts[name] += 1 ; end
+
+    # def self.whazzup
+    #   puts @@sig_counts.to_a.sort_by { |c| c[1] }.map { |c| "#{c[1]}\t#{c[0]}"}
+    # end
+
     class Base
       include Helper
-      def initialize source_expression
+      def initialize source_expression, sig=nil
         @source_expression = source_expression
+        @sig = sig
       end
 
       def handle e, f, invoker, *args
@@ -33,6 +42,7 @@ module Nydp
 
     class Invocation_1 < Invocation::Base
       def execute vm
+#        Invocation.sig @sig
         f = vm.args.pop
         f.invoke_1 vm
       rescue StandardError => e
@@ -42,6 +52,7 @@ module Nydp
 
     class Invocation_2 < Invocation::Base
       def execute vm
+#        Invocation.sig @sig
         arg = vm.args.pop
         f = vm.args.pop
         f.invoke_2 vm, arg
@@ -52,6 +63,7 @@ module Nydp
 
     class Invocation_3 < Invocation::Base
       def execute vm
+#        Invocation.sig @sig
         arg_1 = vm.args.pop
         arg_0 = vm.args.pop
         f   = vm.args.pop
@@ -63,6 +75,7 @@ module Nydp
 
     class Invocation_4 < Invocation::Base
       def execute vm
+        # Invocation.sig @sig
         arg_2 = vm.args.pop
         arg_1 = vm.args.pop
         arg_0 = vm.args.pop
@@ -80,6 +93,7 @@ module Nydp
       end
 
       def execute vm
+#        Invocation.sig @sig
         args = vm.pop_args @arg_count
         args.car.invoke vm, args.cdr
       rescue StandardError => e
@@ -98,6 +112,7 @@ module Nydp
       end
 
       def execute vm
+#        Invocation.sig self.class.name
         @sym.value(vm.current_context).invoke_1 vm
       rescue StandardError => e
         handle e, @sym.value(vm.current_context), :invoke_1
@@ -112,6 +127,7 @@ module Nydp
       end
 
       def execute vm
+#        Invocation.sig self.class.name
         @sym.value.invoke_1 vm
       rescue StandardError => e
         handle e, @sym.value, :invoke_1
@@ -127,6 +143,7 @@ module Nydp
       end
 
       def execute vm
+#        Invocation.sig self.class.name
         fn = @lex0.value(vm.current_context)
         a0 = @lex1.value(vm.current_context)
         fn.invoke_2 vm, a0
@@ -144,11 +161,27 @@ module Nydp
       end
 
       def execute vm
-        fn = @sym.value
+#        Invocation.sig self.class.name
         a0 = @lex.value(vm.current_context)
-        fn.invoke_2 vm, a0
+        @sym.value.invoke_2 vm, a0
       rescue StandardError => e
-        handle e, fn, :invoke_2, a0
+        handle e, @sym.value, :invoke_2, a0
+      end
+    end
+
+    class Invocation_SYM_LIT < Invocation::Base
+      SIGS << self.name
+      def initialize expr, src
+        super src
+        @sym = expr.car
+        @lit = expr.cdr.car.expression
+      end
+
+      def execute vm
+#        Invocation.sig self.class.name
+        @sym.value.invoke_2 vm, @lit
+      rescue StandardError => e
+        handle e, @sym.value, :invoke_2, @lit
       end
     end
 
@@ -162,6 +195,7 @@ module Nydp
       end
 
       def execute vm
+#        Invocation.sig self.class.name
         fn = @lex_0.value(vm.current_context)
         a0 = @lex_1.value(vm.current_context)
         a1 = @lex_2.value(vm.current_context)
@@ -181,12 +215,71 @@ module Nydp
       end
 
       def execute vm
-        fn = @sym.value
+#        Invocation.sig self.class.name
         a0 = @lex_0.value(vm.current_context)
         a1 = @lex_1.value(vm.current_context)
-        fn.invoke_3 vm, a0, a1
+        @sym.value.invoke_3 vm, a0, a1
       rescue StandardError => e
-        handle e, fn, :invoke_3, a0, a1
+        handle e, @sym.value, :invoke_3, a0, a1
+      end
+    end
+
+    class Invocation_SYM_LEX_LEX_LEX < Invocation::Base
+      SIGS << self.name
+      def initialize expr, src
+        super src
+        @sym = expr.car
+        @lex_0 = expr.cdr.car
+        @lex_1 = expr.cdr.cdr.car
+        @lex_2 = expr.cdr.cdr.cdr.car
+      end
+
+      def execute vm
+#        Invocation.sig self.class.name
+        a0 = @lex_0.value(vm.current_context)
+        a1 = @lex_1.value(vm.current_context)
+        a2 = @lex_2.value(vm.current_context)
+        @sym.value.invoke_4 vm, a0, a1, a2
+      rescue StandardError => e
+        handle e, @sym.value, :invoke_4, a0, a1, a2
+      end
+    end
+
+    class Invocation_SYM_LEX_LIT_LEX < Invocation::Base
+      SIGS << self.name
+      def initialize expr, src
+        super src
+        @sym = expr.car
+        @lex_0 = expr.cdr.car
+        @lit_1 = expr.cdr.cdr.car.expression
+        @lex_2 = expr.cdr.cdr.cdr.car
+      end
+
+      def execute vm
+        # Invocation.sig self.class.name
+        a0 = @lex_0.value(vm.current_context)
+        a2 = @lex_2.value(vm.current_context)
+        @sym.value.invoke_4 vm, a0, @lit_1, a2
+      rescue StandardError => e
+        handle e, @sym.value, :invoke_4, a0, @lit_1, a2
+      end
+    end
+
+    class Invocation_SYM_LIT_LEX < Invocation::Base
+      SIGS << self.name
+      def initialize expr, src
+        super src
+        @sym = expr.car
+        @lit_0 = expr.cdr.car.expression
+        @lex_1 = expr.cdr.cdr.car
+      end
+
+      def execute vm
+#        Invocation.sig self.class.name
+        a1 = @lex_1.value(vm.current_context)
+        @sym.value.invoke_3 vm, @lit_0, a1
+      rescue StandardError => e
+        handle e, @sym.value, :invoke_3, @lit_0, a1
       end
     end
   end
@@ -194,13 +287,14 @@ module Nydp
   class FunctionInvocation
     extend Helper
     attr_accessor :function_instruction, :argument_instructions
-    @@put = nil
 
     def self.build expression, bindings
       compiled   = Compiler.compile_each(expression, bindings)
       invocation_sig = compiled.map { |x| sig x }.join("_")
 
       cname  = "Invocation_#{invocation_sig}"
+
+      # puts expression.inspect if cname == "Invocation_SYM_LEX_LIT_LEX"
 
       exists = Invocation::SIGS.include? "Nydp::Invocation::#{cname}"
       if exists
@@ -219,14 +313,16 @@ module Nydp
                         else
                           Invocation::Invocation_N.new(expression.size, expression)
                         end
-      new invocation, compiled, expression
+      new invocation, compiled, expression, cname
     end
 
-    def initialize function_instruction, argument_instructions, source
+    def initialize function_instruction, argument_instructions, source, sig=nil
       @function_instruction, @argument_instructions, @source = function_instruction, argument_instructions, source
+      @sig = sig
     end
 
     def execute vm
+##      Invocation.sig @sig
       vm.instructions.push function_instruction
       vm.contexts    .push vm.current_context
       vm.instructions.push argument_instructions

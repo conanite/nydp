@@ -62,6 +62,7 @@ module Nydp
       puts "^D to exit" unless silent
       return if options[:exit]
       Nydp::Runner.new(VM.new(ns), ns, reader, $stdout, "<stdin>").run
+      # Nydp::Invocation.whazzup
     end
   end
 
