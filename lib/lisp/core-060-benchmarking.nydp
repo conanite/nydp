@@ -1,3 +1,5 @@
+(chapter-start 'core-benchmarking "utils for benchmarking / measuring performance improvements")
+
 ;; (def bm-cond ()
 ;;   (if (< 3 5) "less" "more"))
 
@@ -83,23 +85,6 @@
 ;; (def bm-len-fn ()
 ;;   (len list))
 
-;; (def bm-repeat (f n)
-;;   (for b 1 n (f)))
-
-;; (def bm (desc f repeats iterations)
-;;      (p "\n================================================")
-;;      (p "Benchmark: ~desc - ~repeats runs of ~iterations iterations each")
-;;      (let times 0
-;;           (for reps 1 repeats
-;;                (let started (time)
-;;                     (bm-repeat f iterations)
-;;                     (let elapsed (- (time) started)
-;;                          (assign times (+ elapsed times))
-;;                          (p "  took: ~elapsed ms, ~(/ elapsed iterations) ms per iteration"))))
-;;           (p "total ~(just times), average ~(/ times repeats) per run")
-;;           (p "================================================\n")
-;;           "~desc : total ~(just times), average ~(/ times repeats) per run"))
-
 ;; (assign a 1)
 ;; (assign b 1)
 
@@ -174,8 +159,32 @@
 ;;     (= h.ca v1) (= h.cb v2) (= h.cc v3) (= h.ca v4) (= h.cb v5) (= h.cc v6)
 ;;     (= h.da v1) (= h.db v2) (= h.dc v3) (= h.da v4) (= h.db v5) (= h.dc v6)))
 
+(def bm-or-lex-lex-lex (a b c) (or a b c))
+(def bm-faster-or ()
+  (bm-or-lex-lex-lex 1 2 3)
+  (bm-or-lex-lex-lex nil 2 3))
+
+(def bm-repeat (f n)
+  ; used in benchmarking
+  (for b 1 n (f)))
+
+(def bm (desc f repeats iterations)
+     (p "\n================================================")
+     (p "Benchmark: ~desc - ~repeats runs of ~iterations iterations each")
+     (let times 0
+          (for reps 1 repeats
+               (let started (time)
+                    (bm-repeat f iterations)
+                    (let elapsed (- (time) started)
+                         (assign times (+ elapsed times))
+                         (p "  took: ~elapsed ms, ~(/ elapsed iterations) ms per iteration"))))
+          (p "total ~(just times), average ~(/ times repeats) per run")
+          (p "================================================\n")
+          "~desc : total ~(just times), average ~(/ times repeats) per run"))
+
 (def rbs (name)
   (let summary nil
+    (push (bm "cond with OR       "   bm-faster-or             10  40000) summary)
     ;; (push (bm "cond with OR       "   bm-cond-9             10  40000) summary)
     ;; (push (bm "cond with OR       "   bm-cond-9             10  100000) summary)
     ;; (push (bm "cond with OR       "   bm-cond-lex-lit-lit             10  100000) summary)

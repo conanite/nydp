@@ -134,10 +134,14 @@ scoping, assignment, anonymous functions and more...")
 (mac or args
   ; lazy-evaluates each argument, returns the first
   ; non-nil result, or nil if all evaluate to nil.
-  (cond args
-        (w/uniq ora
-                `(let ,ora ,(car args)
-                   (cond ,ora ,ora (or ,@(cdr args)))))))
+  (if (cdr args)
+      (let arg (car args)
+        (if (isa 'symbol arg)
+            `(cond ,arg ,arg (or ,@(cdr args)))
+            (w/uniq ora
+                    `(let ,ora ,arg
+                       (cond ,ora ,ora (or ,@(cdr args)))))))
+      (car args)))
 
 (mac pop (xs)
      (w/uniq gp

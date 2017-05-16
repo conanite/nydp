@@ -114,19 +114,20 @@
    (cond a (cond b c))))
 
 (examples-for or
-  ("expands 'or"
+  ("expands a tricky 'or"
    (do (reset-uniq-counter)
-       (pre-compile '(or a b c)))
+       (pre-compile '(or (a) (b) (c))))
    ((fn (ora-1)
         (cond ora-1
               ora-1
               ((fn (ora-2)
                    (cond ora-2
                          ora-2
-                         ((fn (ora-3)
-                              (cond ora-3
-                                    ora-3
-                                    nil)) c))) b))) a)))
+                         (c))) (b)))) (a)))
+
+  ("expands a simple symbol-only 'or"
+   (pre-compile '(or a b c))
+   (cond a a (cond b b c))))
 
 (examples-for w/uniq
   ("w/uniq provides unique variables for macro expansion"
