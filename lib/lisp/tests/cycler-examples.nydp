@@ -1,0 +1,7 @@
+(def/cycler cycler-testing-example (c1 c2 c3))
+
+(examples-for cycler
+  ("returns each item in the list, over and over"
+   (list (cycler-testing-example) (cycler-testing-example) (cycler-testing-example) (cycler-testing-example)
+         (cycler-testing-example) (cycler-testing-example) (cycler-testing-example) (cycler-testing-example))
+   (c1 c2 c3 c1 c2 c3 c1 c2)))

@@ -77,3 +77,12 @@
   ; of parameters for 'f. Effectively, calls (apply f item)
   ; for each item in 'args
   (map λa(apply f a) args))
+
+(mac def/cycler (name things)
+  ; create a function called 'name ; each invocation of the function will
+  ; return the next value in 'things, cycling around to the start if no things are left
+  `(with (i -1 xs ',things list-len ,(len things))
+         (def ,name (j)
+           (comment ,(just "each call to ~name returns the next value from ~(inspect things)"))
+           (nth (= i (mod (+ 1 (or j i)) list-len))
+                xs))))
