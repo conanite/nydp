@@ -259,3 +259,13 @@ scoping, assignment, anonymous functions and more...")
   ; stores ,val, executes ,@body, and returns ,val. Assumes 'body is going to do something
   ; destructive with 'val, but you want 'val before it gets changed. See also 'returnlet
   (w/uniq retval `(returnlet ,retval ,val ,@body)))
+
+(mac aif (expr . body)
+  ; like if, except the value of each condition is locally bound to the variable 'it
+  ; eg (aif (find thing) (show it))
+  ; source: arc.arc
+  `(let it ,expr
+     (if it
+         ,@(if (cddr body)
+               `(,(car body) (aif ,@(cdr body)))
+               body))))

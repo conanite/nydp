@@ -1,0 +1,20 @@
+(examples-for aif
+  ("binds 'it in dependent expression"
+   (aif (* 2 3)
+        (+ it 1))
+   7)
+
+  ("binds 'it in subsequent dependent expressions"
+   (aif nil
+        (ignore it)
+        "hello"
+        "~it world")
+   "hello world")
+
+  ("recurses as necessary"
+   (explain-mac 1 '(aif (a) (b) (c) (d) (e)))
+   (let it (a) (if it (b) (aif (c) (d) (e)))))
+
+  ("avoids unnecessary expansion"
+   (explain-mac 1 '(aif (a) (b) (c)))
+   (let it (a) (if it (b) (c)))))
