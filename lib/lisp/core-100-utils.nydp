@@ -86,3 +86,27 @@
            (comment ,(just "each call to ~name returns the next value from ~(inspect things)"))
            (nth (= i (mod (+ 1 (or j i)) list-len))
                 xs))))
+
+(def fill-bucket (items bucket size-f bucket-size maximum-size)
+  ; returns a list (list a b c) where
+  ; 'a is a subset of 'items
+  ; 'b is the sum of sizes of items in 'a : (apply + (map size-f a))
+  ; 'c is the subset of 'items not in 'a
+  ; invariants:
+  ; b < maximum-size
+  ; 'a + 'c is equal to 'items
+  ; arguments:
+  ; 'items is the list of things of which you have too many
+  ; 'bucket is either nil, or a list if you have an existing partially-filled bucket
+  ; 'size-f is a function that can tell the size of each item in 'items
+  ; 'bucket-size is the size of the existing bucket, or 0 if empty
+  ; 'maximum-size is the maximum allowed size for the bucket
+  (let next-item (car items)
+    (let next-size (+ (size-f next-item) bucket-size)
+      (if (< next-size maximum-size)
+          (fill-bucket (cdr items)
+                       (cons next-item bucket)
+                       size-f
+                       next-size
+                       maximum-size)
+          (list (rev bucket) bucket-size items)))))

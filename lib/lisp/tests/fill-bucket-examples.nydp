@@ -1,0 +1,20 @@
+(examples-for fill-bucket
+  ("fills a bucket with 12 characters"
+   (fill-bucket '("1" "2345" "67" "890" "1" "2345" "678")
+                nil
+                len
+                0
+                12)
+   (("1" "2345" "67" "890" "1")
+    11
+    ("2345" "678")))
+
+  ("fills a bucket up to 100"
+   (fill-bucket '(1 2 3 4 5 6 7 8 9 10)
+                nil
+                λx(* x x)
+                0
+                100)
+   ((1 2 3 4 5 6)
+    91
+    (7 8 9 10))))
