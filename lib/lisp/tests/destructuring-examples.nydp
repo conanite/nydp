@@ -1,0 +1,64 @@
+(examples-for destructure/with
+  ("with just one arg"
+   (destructure/with 'xxx '(a) 0)
+   (a (nth 0 xxx)))
+
+  ("with several args"
+   (destructure/with 'xxx '(a b (c d) e) 0)
+   (a     (nth 0 xxx)
+    b     (nth 1 xxx)
+    (c d) (nth 2 xxx)
+    e     (nth 3 xxx)))
+
+  ("with several complex args and a rest-arg"
+   (destructure/with 'xxx '(a (b c) (d (e f)) g . h) 0)
+   (a          (nth 0 xxx)
+    (b c)      (nth 1 xxx)
+    (d (e f))  (nth 2 xxx)
+    g          (nth 3 xxx)
+    h          (lastcdr xxx))))
+
+(examples-for destructure/build
+  ("with no args"
+   (destructure/build nil nil '(x))
+   (fn nil x))
+
+  ("with one arg"
+   (destructure/build '(a) nil '(x))
+   (fn (a) x))
+
+  ("with one rest-arg"
+   (destructure/build 'args nil '(x))
+   (fn args x))
+
+  ("with one destructuring arg"
+   (do (reset-uniq-counter)
+        (destructure/build '((a b)) nil '(x)))
+   (fn (destructure-1) (with (a (nth 0 destructure-1) b (nth 1 destructure-1)) x)))
+
+  ("with complex args"
+   (do (reset-uniq-counter)
+       (destructure/build '(a (b c) (d (e f)) g . h) nil '(x)))
+   (fn (a destructure-1 destructure-2 g . h)
+       (with (d     (nth 0 destructure-2)
+              (e f) (nth 1 destructure-2))
+             (with (b (nth 0 destructure-1)
+                    c (nth 1 destructure-1))
+                   x)))))
+
+(examples-for fun
+  ("complete expansion, handles recursive destructures"
+   (do (reset-uniq-counter)
+       (pre-compile '(fun ((a (b c)) d . e) x)))
+   (fn (destructure-1 d . e)
+       ((fn (a destructure-2)
+            ((fn (b c) x)
+             (nth 0 destructure-2)
+             (nth 1 destructure-2))) (nth 0 destructure-1) (nth 1 destructure-1))))
+
+  ("implicit in 'let and 'with"
+   (with ((a b)       (list "h" "e")
+          (c (d e f)) (list "l" (list "l" "o" " ")))
+          (let (g (h (i j) k)) (list "w" (list "o" (list "r" "l") "d"))
+            (string-pieces a b c d e f g h i j k)))
+   "hello world"))

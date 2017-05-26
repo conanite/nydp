@@ -269,3 +269,29 @@ scoping, assignment, anonymous functions and more...")
          ,@(if (cddr body)
                `(,(car body) (aif ,@(cdr body)))
                body))))
+
+(def destructure/with (var args n)
+  ; provides the argument expression to 'with when
+  ; destructuring arguments are present in a 'fun definition
+  (if (pair? args)
+      `(,(car args) (nth ,n ,var) ,@(destructure/with var (cdr args) (+ n 1)))
+      args
+      `(,args (lastcdr ,var))))
+
+(def destructure/build (given-args new-args body)
+  ; used internally by 'fun
+  (if (pair? given-args)
+      (if (sym? (car given-args))
+          (destructure/build (cdr given-args)
+                             (cons (car given-args) new-args)
+                             body)
+          (w/uniq destructure
+                  (destructure/build (cdr given-args)
+                                     (cons destructure new-args)
+                                     `((with ,(destructure/with destructure (car given-args) 0) ,@body)))))
+      `(fn ,(rev new-args given-args) ,@body)))
+
+(mac fun (args . body)
+  ; build a 'fn form, changing 'args and 'body to
+  ; properly handle any destructuring args if present
+  (destructure/build args nil body))

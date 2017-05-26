@@ -7,6 +7,7 @@
 
 (assign   list (fn args args))
 (assign   noop (fn args nil))
+(assign     x1 (fn (arg) arg))
 (assign   caar (fn (arg) (car (car arg))))
 (assign   cadr (fn (arg) (car (cdr arg))))
 (assign   cdar (fn (arg) (cdr (car arg))))
@@ -20,3 +21,4 @@
 (assign    isa (fn (type obj) (eq? (type-of obj) type)))
 (assign  pair? (fn (arg) (isa 'pair arg)))
 (assign  hash? (fn (arg) (isa 'hash arg)))
+(assign   sym? (fn (arg) (isa 'symbol arg)))

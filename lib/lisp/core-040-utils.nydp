@@ -7,8 +7,6 @@
               (iso (car x) (car y))
               (iso (cdr x) (cdr y)))))
 
-(def x1      (thing) thing)
-(def sym?    (arg)   (isa 'symbol arg))
 (def num?    (arg)   (isa 'number arg))
 (def string? (arg)   (isa 'string arg))
 (mac just    (arg)   arg)
