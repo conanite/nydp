@@ -20,11 +20,9 @@
   ; push 'v onto the value for 'k in 'h
   (hash-set h k (cons v (hash-get h k))))
 
-(def rev-accum (things acc)
-  (cond things
-        (rev-accum (cdr things)
-                   (cons (car things)
-                         acc))
-        acc))
-
-(def rev (things) (rev-accum things nil))
+(def rev (things last-cdr)
+  ; 'things - the list to be reversed
+  ; 'last-cdr - (normally nil) - an item (atom, list, nil, anything) to be consed to the end of the reversed list.
+  (if (pair? things)
+      (rev (cdr things) (cons (car things) last-cdr))
+      last-cdr))

@@ -20,6 +20,14 @@
    (rev '(a b c))
    (c b a))
 
+  ("'rev reverses a list, appending another list"
+   (rev '(a b c) '(x y z))
+   (c b a x y z))
+
+  ("'rev reverses a list, appending an improper ending"
+   (rev '(a b c) 'surprise)
+   (c b a . surprise))
+
   ("'rev handles nil"
    (rev nil)
    nil)

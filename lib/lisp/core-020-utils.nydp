@@ -33,7 +33,7 @@
              'def
              '("returns 'things in reverse order")
              '(things)
-             '(rev-accum things nil)
+             '(if (pair? things) (rev (cdr things) (cons (car things) last-cdr)) last-cdr)
              '(list-manipulation))
 
 (dox-add-doc 'hash-cons
