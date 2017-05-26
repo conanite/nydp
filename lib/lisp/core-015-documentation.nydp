@@ -144,7 +144,7 @@
 
 (def define-mac-expr (name args body-forms)
   ; used internally by 'mac
-  `(do (hash-set macs ',name (fn ,args ,@(hash-get body-forms nil)))
+  `(do (hash-set macs ',name (fun ,args ,@(hash-get body-forms nil)))
        (dox-add-doc ',name
                     'mac
                     ',(map car (hash-get body-forms 'comment))
@@ -160,7 +160,7 @@
              'mac
              '("define a new global macro")
              '(name args . body)
-             '`(hash-set macs ',name (fn ,ooargs ,@body))
+             '`(hash-set macs ',name (fn ,args ,@body))
              '(nydp-core))
 
 (dox-add-doc 'do
@@ -174,7 +174,7 @@
 
 (def define-def-expr (name args body-forms)
   ; used internally by 'def
-  `(do (def-assign ,name (fn ,args ,@(hash-get body-forms nil)))
+  `(do (def-assign ,name (fun ,args ,@(hash-get body-forms nil)))
        (dox-add-doc ',name
                     'def
                     ',(map car (hash-get body-forms 'comment))

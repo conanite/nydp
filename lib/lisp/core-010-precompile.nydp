@@ -56,12 +56,16 @@
         (fn (arg)
             (pre-compile-with macs arg)))
 
+; we override this later to provide argument deconstruction
+(hash-set macs 'fun
+          (fn args (cons 'fn args)))
+
 ; we override this later to provide automatic documentation
 (hash-set macs 'def
           (fn (name args . body)
               (list 'assign
                     name
-                    (+ (list 'fn args)
+                    (+ (list 'fun args)
                        body))))
 
 (def qq-handle-unquote-splicing (arg rest level)

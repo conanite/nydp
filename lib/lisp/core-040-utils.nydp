@@ -49,7 +49,7 @@
   ; 'things is a list, 'x is the name of a variable, and 'expr
   ; is evaluated and collected for each 'x in 'things
   (chapter list-manipulation)
-  `(map (fn (,x) ,expr) ,things))
+  `(map (fun (,x) ,expr) ,things))
 
 (def atom? (thing)
   ; 't if 'thing is not a list or a hash

@@ -41,7 +41,7 @@
   ; complete form for pretty-printing, and indent being the current
   ; indent level.
   `(do (hash-set pp/special-forms ',name
-                 (fn ,args ,@body))
+                 (fun ,args ,@body))
        (dox-add-doc ',name
                     'pp/def
                     (list "pretty-printer for forms starting with ~(quote ,name)")

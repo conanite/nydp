@@ -85,8 +85,8 @@ scoping, assignment, anonymous functions and more...")
             (pairs (cddr things)))))
 
 (mac with (parms . body)
-     `((fn ,(map car (pairs parms))
-           ,@body)
+     `((fun ,(map car (pairs parms))
+            ,@body)
        ,@(map cadr (pairs parms))))
 
 (mac let (var val . body)
@@ -113,7 +113,7 @@ scoping, assignment, anonymous functions and more...")
   ; invocation)
   (let ppairs (pairs params)
     `(let ,name nil
-       (assign ,name (fn ,(map car ppairs) ,@body))
+       (assign ,name (fun ,(map car ppairs) ,@body))
        (,name ,@(map cadr ppairs)))))
 
 (let uniq-counter 0

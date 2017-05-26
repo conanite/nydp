@@ -1,24 +1,24 @@
 (examples-for explain-mac
   ("does nothing if n is zero"
-   (explain-mac 0 '(afn (a) (+ 2 a)))
-   (afn (a) (+ 2 a)))
+   (explain-mac 0 '(afn (a) (let b (+ 2 a) (* b b))))
+   (afn (a) (let b (+ 2 a) (* b b))))
 
-  ("expands once for n = 1"
-   (explain-mac 1 '(afn (a) (+ 2 a)))
-   (rfn self (a) (+ 2 a)))
+  ("expands once for n = 1; does not expand inside forms"
+   (explain-mac 1 '(afn (a) (let b (+ 2 a) (* b b))))
+   (rfn self (a) (let b (+ 2 a) (* b b))))
 
   ("expands twice for n = 2"
-   (explain-mac 2 '(afn (a) (+ 2 a)))
-   (let self nil (assign self (fn (a) (+ 2 a)))))
+   (explain-mac 2 '(afn (a) (let b (+ 2 a) (* b b))))
+   (let self nil (assign self (fn (a) (let b (+ 2 a) (* b b))))))
 
   ("expands thrice for n = 3"
-   (explain-mac 3 '(afn (a) (+ 2 a)))
-   (with (self nil) (assign self (fn (a) (+ 2 a)))))
+   (explain-mac 3 '(afn (a) (let b (+ 2 a) (* b b))))
+   (with (self nil) (assign self (fn (a) (let b (+ 2 a) (* b b))))))
 
   ("expands four times for n = 4"
-   (explain-mac 4 '(afn (a) (+ 2 a)))
-   ((fn (self) (assign self (fn (a) (+ 2 a)))) nil))
+   (explain-mac 4 '(afn (a) (let b (+ 2 a) (* b b))))
+   ((fun (self) (assign self (fn (a) (let b (+ 2 a) (* b b))))) nil))
 
   ("returns same expression for n > number of possible expansions"
-   (explain-mac 10 '(afn (a) (+ 2 a)))
-   ((fn (self) (assign self (fn (a) (+ 2 a)))) nil)))
+   (explain-mac 10 '(afn (a) (let b (+ 2 a) (* b b))))
+   ((fun (self) (assign self (fn (a) (let b (+ 2 a) (* b b))))) nil)))
