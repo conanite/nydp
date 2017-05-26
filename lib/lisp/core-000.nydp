@@ -5,8 +5,8 @@
 ;; to, 'do, 'rfn, 'loop, 'for) were directly inspired by (aka stolen from) arc.arc. See
 ;; README.md however for some significant differences
 
+(assign   noop (fn))
 (assign   list (fn args args))
-(assign   noop (fn args nil))
 (assign     x1 (fn (arg) arg))
 (assign   caar (fn (arg) (car (car arg))))
 (assign   cadr (fn (arg) (car (cdr arg))))
