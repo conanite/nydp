@@ -46,7 +46,7 @@ Suppose you want to invoke the function named `question` with some arguments. Do
 ```ruby
 ns     = Nydp.build_nydp     # keep this for later re-use, it's expensive to set up
 
-answer = Nydp.apply_function ns, :question, :life, ["The Universe" and(everything)]
+answer = Nydp.apply_function ns, :question, :life, ["The Universe", and_also(everything)]
 
 ==> 42
 ```
@@ -54,7 +54,6 @@ answer = Nydp.apply_function ns, :question, :life, ["The Universe" and(everythin
 `ns` is just a plain old ruby hash, mapping ruby symbols to nydp symbols for quick lookup at nydp compile-time. The nydp symbols maintain the values of global variables, including all builtin functions and any other functions defined using `def`.
 
 You can maintain multiple `ns` instances without mutual interference. In other words, assigning global variables while one `ns` is in scope will not affect the values of variables in any other `ns` (unless you've specifically arranged it to be so by duplicating namespaces or some such sorcery).
-
 
 ## Different from Arc :
 
@@ -175,8 +174,6 @@ nydp > { a 1 b (author-name) }
 
 ```
 
-
-
 #### 4. Sensible, nestable string interpolation
 
 The parser detects lisp code inside strings. When this happens, instead of emitting a string literal, the parser emits a form whose car is the symbol `string-pieces`.
@@ -220,18 +217,6 @@ inside interpolations and report them correctly.
 Sorry. While technically possible ... why bother?
 
 
-#### 6. No argument destructuring
-
-However, this doesn't need to be built-in, it can be done with macros alone. On the other hand, "rest" arguments are implicitly available using the same syntax as Arc uses:
-
-```lisp
-(def fun (a b . others) ...)
-```
-
-In this example, `others` is either nil, or a list containing the third and subsequent arguments to the call to `fun`. For many examples of this kind of invocation, see [invocation-tests](lib/lisp/tests/invocation-tests.nydp) in the `tests` directory.
-
-
-
 ## Besides that, what can Nydp do?
 
 #### 1. Functions and variables exist in the same namespace.
@@ -267,7 +252,33 @@ nydp> (foo)
 ==> nil
 ```
 
-#### 6. Basic error handling
+#### 6. Argument destructuring
+
+This is not built-in to the language, but is available via the 'fun macro. Use 'fun as a drop-in replacement for 'fn and you get destructuring.
+
+```lisp
+(def funny (a (b c) . others)
+     xxx)
+```
+
+Equivalent to, and effectively pre-compiled to:
+
+```lisp
+(def funny (a d . others)
+     (with (b (nth 0 d)
+            c (nth 1 d))
+       xxx))
+```
+
+Note that `d` in this example will in real-life be a gensym and will not clobber your existing namespace.
+
+In this example, `others` is either nil, or a list containing the third and subsequent arguments to the call to `funny`. For many examples of this kind of invocation, see [invocation-tests](lib/lisp/tests/invocation-tests.nydp) in the `tests` directory. See also [destructuring-examples](lib/lisp/tests/destructuring-examples.nydp)
+
+Nested destructuring lists work as expected.
+
+`def`, 'with', and `let` all expand to forms using `fun`.
+
+#### 7. Basic error handling
 
 ```lisp
 nydp> (on-err (p "error")
@@ -278,7 +289,7 @@ make sure this happens
 error
 ```
 
-#### 7 Intercept comments
+#### 8. Intercept comments
 
 ```lisp
 nydp > (parse "; blah blah")
@@ -289,7 +300,7 @@ nydp > (parse "; blah blah")
 Except in 'mac and 'def forms, by default, `comment` is a macro that expands to nil. If you have a better idea, go for it. Any comments present at the
 beginning of the `body` argument to `mac` or `def` are considered documentation. (See "self-documenting" below).
 
-#### 8 Prefix lists
+#### 9. Prefix lists
 
 The parser emits a special form if it detects a prefix-list, that is, a list with non-delimiter characters immediately preceding
 the opening delimiter. For example:
@@ -336,7 +347,7 @@ Use 'define-prefix-list-macro to define a new handler for a prefix-list. Here's 
 In this case, the regex matches an initial 'λ ; there is no constraint however on the kind of regex a prefix-list-macro might use.
 
 
-#### 9 Self-documenting
+#### 10. Self-documenting
 
 Once the 'dox system is bootstrapped, any further use of 'mac or 'def will create documentation.
 
@@ -370,7 +381,7 @@ Not as friendly, but more amenable to programmatic manipulation. Each subsequent
 it as a macro, or define it again in some other context) will generate a new documentation structure, which will simply be preprended to
 the existing list.
 
-#### 10 Pretty-Printing
+#### 11. Pretty-Printing
 
 'dox above uses the pretty printer to display code source. The pretty-printer is hard-coded to handle some special cases,
 so it will unparse special syntax, prefix-lists, quote, quasiquote, unquote, and unquote-splicing.
@@ -396,7 +407,7 @@ nydp > (p:pp:dox-src 'pp/find-breaks)
 The pretty-printer is still rather primitive in that it only indents according to some hard-coded rules, and according to argument-count
 for documented macros. It has no means of wrapping forms that get too long, or that extend beyond a certain predefined margin or column number.
 
-#### 11 DSLs
+#### 12. DSLs
 
 The `pre-compile` system (described earlier in "Macro-expansion runs in lisp") is available for implementing local, mini-languages. To do this, use `pre-compile-with`
 in a macro. `pre-compile-with` expects a hash with expansion rules, and an expression to expand using these rules. For example, to build a "describe" dsl :
