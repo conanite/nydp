@@ -1,0 +1,26 @@
+(examples-for ampersand-syntax
+  ("shortcut for hash-get"
+   (&key { key 'value })
+   value)
+
+  ("acts as function"
+   (map &key (list { key 1 } { key 2 } { key 3 }))
+   (1 2 3))
+
+  ("assigns to key"
+   (let h { key 12 }
+     (= (&key h) 13)
+     h.key)
+   13)
+
+  ("assigns to key.subkey"
+   (let h { key { subkey 41 } }
+     (= (&key.subkey h) 42)
+     h.key.subkey)
+   42)
+
+  ("even works with 'push"
+   (let h { key { subkey '(1 2 3) } }
+     (push 99 (&key.subkey h))
+     h.key.subkey)
+   (99 1 2 3)))

@@ -190,15 +190,41 @@ scoping, assignment, anonymous functions and more...")
 (def hash-get-assignment (lookup value)
   `(hash-set ,@lookup ,value))
 
+(def ampersand-expression? (name)
+  (and (pair? name)
+       (caris 'ampersand-syntax (car name))))
+
+(def ampersand-expression-assignment (place value)
+  ; (= (&key (expr)) (val))
+  ; (= ((ampersand-syntax key) (expr)) (val))
+  ; 'place is ((ampersand-syntax || key) (expr))
+  ; we need (hash-set (expr) 'key (val))
+  ; however,
+  ; (= (&key.subkey (expr)) (val))
+  ; 'place is ((ampersand-syntax || (dot-syntax key subkey)) (expr))
+  ; we need (hash-set (hash-get (expr) 'key) 'subkey (val))
+  (with (k   (cadr:cdar place)
+         hsh (cadr place))
+    (if (caris 'dot-syntax k)
+        (dot-syntax-assignment (cons hsh (cdr k)) value)
+        `(hash-set ,hsh ',k ,value))))
+
 (mac = (name value)
   ; generic assignment which unlike builtin 'assign, knows how to assign
   ; to hash keys
+  ; (= (hash-get (expr) 'key) (val) => (hash-set (expr) 'key (val))
+  ; (= h.k (val))                   => (hash-set h 'k (val))
+  ; (= h.j.k (val))                 => (hash-set (hash-get h 'j) 'k (val))
+  ; (= (&key (expr)) (val))         => (hash-set (expr) 'key (val))
+  ; (= (&j.k (expr)) (val))         => (hash-set (hash-get (expr) 'j) 'k (val))
   (if (isa 'symbol name)
       `(assign ,name ,value)
       (caris 'dot-syntax name)
       (dot-syntax-assignment (cdr name) value)
       (caris 'hash-get name)
-      (hash-get-assignment (cdr name) value)))
+      (hash-get-assignment (cdr name) value)
+      (ampersand-expression? name)
+      (ampersand-expression-assignment name value)))
 
 (mac def-assign args
   ; override previous definition to allow expressions like (def hsh.foo (arg arg2) ...)
