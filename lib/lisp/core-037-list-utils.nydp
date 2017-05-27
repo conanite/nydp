@@ -12,9 +12,11 @@
        (f (car things))))
 
 (mac push (x things)
+  ; assign (cons x things) to things
   `(= ,things (cons ,x ,things)))
 
 (def flatten (things)
+  ; flatten the given list, recursively
      (let acc nil
           (rfnwith flattenize (x things)
                    (if (pair? x)
