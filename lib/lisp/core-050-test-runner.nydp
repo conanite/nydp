@@ -26,15 +26,15 @@
 
 (def execute-single-test (desc test passf failf verbose)
   (if verbose (p desc " - " (car test)))
-  (with (expected (nth 2 test) result (eval (nth 1 test)))
-        (if (iso result expected)
-            (passf)
-            (do (p desc " - " (car test) " - FAILED:
-   running  " (pp (nth 1 test)) ",
-   expected " (inspect expected) ",
-   got      " (inspect result) "
-")
-                (failf)))))
+  (on-err (error (j "FAILED " desc " - " (car test)) (pp:nth 1 test))
+          (with (expected (nth 2 test) result (eval (nth 1 test)))
+                (if (iso result expected)
+                    (passf)
+                    (do (p desc " - " (car test) " - FAILED:
+                           running  " (pp (nth 1 test)) ",
+                           expected " (inspect expected) ",
+                           got      " (inspect result) "\n")
+                        (failf))))))
 
 (def execute-tests (desc tests passf failf verbose)
   (execute-test desc
