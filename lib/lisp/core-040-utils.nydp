@@ -7,10 +7,16 @@
               (iso (car x) (car y))
               (iso (cdr x) (cdr y)))))
 
-(def num?    (arg)   (isa 'number arg))
-(def string? (arg)   (isa 'string arg))
-(mac just    (arg)   arg)
-(def quotify (arg)   `(quote ,arg))
+(def num?    (arg) (comment "true if arg is a number") (isa 'number arg))
+(def string? (arg) (comment "true if arg is a string") (isa 'string arg))
+
+(mac just (expr)
+  ; this is useful sometimes when 'expr can't stand on its own due to lexical ambiguity, most often in string interpolations
+  ; for example, in "hello ~person, how are you", the parser will try to interpolate the symbol "person," rather than the
+  ; expected "person". In this case, use "hello ~(just person), how are you"
+  expr)
+
+(def quotify (arg) `(quote ,arg))
 
 (def len (things)
   ; return the length of 'things where 'things may be nil, a string, list or hash
