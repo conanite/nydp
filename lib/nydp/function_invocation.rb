@@ -24,7 +24,7 @@ module Nydp
           raise
         else
           if e.is_a?(NoMethodError) && !f.respond_to?(invoker)
-            raise InvocationFailed.new("#{f} is not a function")
+            raise InvocationFailed.new("#{f} is not a function: args were #{args.inspect}")
           else
             msg  = args.map { |a| "  #{a.inspect}"}.join("\n")
             msg  =  "failed to execute invocation #{f.inspect}\n#{msg}"
