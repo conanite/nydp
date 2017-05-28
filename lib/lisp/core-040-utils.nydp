@@ -18,6 +18,10 @@
 
 (def quotify (arg) `(quote ,arg))
 
+(defmemo k (arg)
+  ; return a function that always returns 'arg, similar to K in SKI calculus
+  (fn nil arg))
+
 (def len (things)
   ; return the length of 'things where 'things may be nil, a string, list or hash
   ; length of nil is zero, length of hash is number of keys, length of string
