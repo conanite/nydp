@@ -87,7 +87,7 @@
            (nth (= i (mod (+ 1 (or j i)) list-len))
                 xs))))
 
-(def fill-bucket (items bucket size-f bucket-size maximum-size)
+(def bucket/fill (items bucket size-f bucket-size maximum-size)
   ; returns a list (list a b c) where
   ; 'a is a subset of 'items
   ; 'b is the sum of sizes of items in 'a : (apply + (map size-f a))
@@ -101,12 +101,34 @@
   ; 'size-f is a function that can tell the size of each item in 'items
   ; 'bucket-size is the size of the existing bucket, or 0 if empty
   ; 'maximum-size is the maximum allowed size for the bucket
-  (let next-item (car items)
-    (let next-size (+ (size-f next-item) bucket-size)
-      (if (< next-size maximum-size)
-          (fill-bucket (cdr items)
-                       (cons next-item bucket)
-                       size-f
-                       next-size
-                       maximum-size)
-          (list (rev bucket) bucket-size items)))))
+  ; implementation note: this function exploits the behaviour of '> returning its last argument when true
+  (aif (and items
+            (> maximum-size (+ (size-f (car items)) bucket-size)))
+       (bucket/fill (cdr items)
+                    (cons (car items) bucket)
+                    size-f
+                    it
+                    maximum-size)
+       (list (rev bucket) bucket-size items)))
+
+(def bucket/new (buckets)
+  ; used by 'fill-buckets
+  (cons { bucket-size 0 } buckets))
+
+(def fill-buckets (items max buckets size-f key)
+  ; useful for pagination where each item may have a different size
+  ; returns a list of hash with keys 'bucket-size and key
+  ; if buckets is non-nil, assumes it is a list of previously-established buckets
+  ; will add new items to first bucket if its 'bucket-size permits
+  (if items
+      (if buckets
+          (let initial (car buckets)
+            (let (these size others)
+              (bucket/fill items nil size-f initial.bucket-size max)
+              (hash-set initial key these)
+              (= initial.bucket-size size)
+              (if others
+                  (fill-buckets others max (bucket/new buckets) size-f key)
+                  (fill-buckets others max buckets size-f key))))
+          (fill-buckets items max (bucket/new buckets) size-f key))
+      buckets))

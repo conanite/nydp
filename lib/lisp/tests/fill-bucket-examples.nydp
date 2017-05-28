@@ -1,6 +1,6 @@
 (examples-for fill-bucket
   ("fills a bucket with 12 characters"
-   (fill-bucket '("1" "2345" "67" "890" "1" "2345" "678")
+   (bucket/fill '("1" "2345" "67" "890" "1" "2345" "678")
                 nil
                 len
                 0
@@ -10,7 +10,7 @@
     ("2345" "678")))
 
   ("fills a bucket up to 100"
-   (fill-bucket '(1 2 3 4 5 6 7 8 9 10)
+   (bucket/fill '(1 2 3 4 5 6 7 8 9 10)
                 nil
                 λx(* x x)
                 0
@@ -18,3 +18,40 @@
    ((1 2 3 4 5 6)
     91
     (7 8 9 10))))
+
+(examples-for fill-buckets
+  ("returns an empty list for no items"
+   (let pages (fill-buckets '() 30   nil λx(* x x) 'line-items)
+     (= pages (fill-buckets '() 30 pages       len 'history   ))
+     (= pages (fill-buckets '() 30 pages     (k 1) 'payments  ))
+     (rev:map λb(list 'size b.bucket-size 'line-items b.line-items 'history b.history 'payments b.payments)
+              pages))
+   ())
+
+  ("returns a single bucket for few items"
+   (let pages (fill-buckets '()                               30   nil λx(* x x) 'line-items)
+     (= pages (fill-buckets '("aa" "bbbb" "c" "ddddd" "eeee") 30 pages       len 'history   ))
+     (= pages (fill-buckets '()                               30 pages     (k 1) 'payments  ))
+     (rev:map λb(list 'size b.bucket-size 'line-items b.line-items 'history b.history 'payments b.payments)
+              pages))
+   ((size 16 line-items nil history ("aa" "bbbb" "c" "ddddd" "eeee") payments nil)))
+
+  ("accumulates subsequent items in subsequent buckets"
+   (let pages (fill-buckets '(1 2 2 4 3 3 1)   30   nil λx(* x x) 'line-items)
+     (= pages (fill-buckets '()                30 pages       len 'history   ))
+     (= pages (fill-buckets '(pay pay pay pay) 30 pages     (k 3) 'payments  ))
+     (rev:map λb(list 'size b.bucket-size 'line-items b.line-items 'history b.history 'payments b.payments)
+              pages))
+   ((size 25 line-items (1 2 2 4) history nil payments nil)
+    (size 28 line-items (3 3 1)   history nil payments (pay pay pay))
+    (size  3 line-items nil       history nil payments (pay))))
+
+  ("use fill-buckets for complex pagination where you have several sets of elements, each element having a different size"
+   (let pages (fill-buckets '(1 2 2 4 3 3 1)                   30   nil λx(* x x) 'line-items)
+     (= pages (fill-buckets '("aa" "bbbb" "c" "ddddd" "eeee")  30 pages       len 'history   ))
+     (= pages (fill-buckets '(pay pay pay pay)                 30 pages     (k 1) 'payments  ))
+     (rev:map λb(list 'size b.bucket-size 'line-items b.line-items 'history b.history 'payments b.payments)
+              pages))
+   ((size 25 line-items (1 2 2 4) history nil               payments nil)
+    (size 26 line-items (3 3 1)   history ("aa" "bbbb" "c") payments nil)
+    (size 13 line-items nil       history ("ddddd" "eeee")  payments (pay pay pay pay)))))
