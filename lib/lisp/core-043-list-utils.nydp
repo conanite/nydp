@@ -34,6 +34,7 @@
   ; if 'things is a list, return all the items in the list for which 'f returns non-nil
   ; otherwise, return 'things if (f things) is non-nil
   ; otherwise, nil
+  ; note that this preserves improper lists and may return only the lastcdr if all else fails...
   (rfnwith collector (items things)
            (if (no items)
                nil

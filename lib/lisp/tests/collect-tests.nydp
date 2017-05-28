@@ -22,6 +22,10 @@
    (collect (fn (x) (eq? (len x) 2)) '("aa" "bbb" "cc" "ddd" . "ee"))
    ("aa" "cc" . "ee"))
 
+  ("preserves structure of improper list: returns just the lastcdr"
+   (collect (fn (x) (eq? (len x) 2)) '("aaa" "bbb" "ccc" "ddd" . "ee"))
+   "ee")
+
   ("returns nil if it's an atom and doesn't match"
    (collect (fn (x) (eq? (len x) 20))
             "zz")
