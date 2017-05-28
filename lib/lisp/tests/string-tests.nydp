@@ -3,6 +3,10 @@
    (string-split "a and b and c and d" " and ")
    ("a" "b" "c" "d"))
 
+  ("with no delimiter argument, returns chars in string"
+   (collect !empty? (string-split "word"))
+   ("w" "o" "r" "d"))
+
   ("returns empty leading, internal, and trailing segments"
    (string-split "and" "and")
    ("" ""))

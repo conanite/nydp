@@ -29,5 +29,5 @@
 (define-prefix-list-macro "^λ.+" vars expr
   ;; allows (map λa(upcase a.name) people)
   ;; as shortcut for (map (fn (a) (upcase a.name)) people)
-  (let var-list (map sym (cdr:string-split vars))
+  (let var-list (map sym (collect !empty? (cdr:string-split vars)))
     `(fn ,var-list ,expr)))
