@@ -32,7 +32,7 @@ describe Nydp::StringAtom do
 
     f.invoke vm, pair_list([foo, bar])
 
-    expect(vm.args.pop).to eq Nydp::T
+    expect(vm.args.pop).to eq bar
   end
 
   it "works with builtin greater-than when false" do
@@ -48,7 +48,7 @@ describe Nydp::StringAtom do
 
     f.invoke vm, pair_list([bar, foo])
 
-    expect(vm.args.pop).to eq Nydp::T
+    expect(vm.args.pop).to eq foo
   end
 
   it "works with builtin less-than when false" do

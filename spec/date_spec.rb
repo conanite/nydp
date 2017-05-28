@@ -60,7 +60,7 @@ describe Nydp::Date do
 
         f.invoke vm, pair_list([d1, d0])
 
-        expect(vm.args.pop).to eq Nydp::T
+        expect(vm.args.pop).to eq d0
       end
 
       it "compares with nil" do
@@ -86,7 +86,7 @@ describe Nydp::Date do
 
         f.invoke vm, pair_list([d0, d1])
 
-        expect(vm.args.pop).to eq Nydp::T
+        expect(vm.args.pop).to eq d1
       end
 
       it "works with builtin less-than when false" do

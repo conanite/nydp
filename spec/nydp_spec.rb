@@ -47,8 +47,8 @@ describe Nydp do
 
   it "should compare integers" do
     expect(run "(> 13 17)").to eq Nydp::NIL
-    expect(run "(> 29 23)").to eq Nydp::T
-    expect(run "(< 13 17)").to eq Nydp::T
+    expect(run "(> 29 23)").to eq 23
+    expect(run "(< 13 17)").to eq 17
     expect(run "(< 29 23)").to eq Nydp::NIL
   end
 
