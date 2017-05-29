@@ -16,7 +16,7 @@
     (b c)      (nth 1 xxx)
     (d (e f))  (nth 2 xxx)
     g          (nth 3 xxx)
-    h          (lastcdr xxx))))
+    h          (nthcdr 4 xxx))))
 
 (examples-for destructure/build
   ("with no args"
@@ -55,6 +55,11 @@
             ((fn (b c) x)
              (nth 0 destructure-2)
              (nth 1 destructure-2))) (nth 0 destructure-1) (nth 1 destructure-1))))
+
+  ("nested improper arguments"
+   (let (a (b c . d) e) (list "A" (list "B" "C" "D0" "D1" "D2") "E")
+     (string-pieces a b c d e))
+   "ABCD0D1D2E")
 
   ("implicit in 'let and 'with"
    (with ((a b)       (list "h" "e")

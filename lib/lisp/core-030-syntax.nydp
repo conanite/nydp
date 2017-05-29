@@ -302,7 +302,7 @@ scoping, assignment, anonymous functions and more...")
   (if (pair? args)
       `(,(car args) (nth ,n ,var) ,@(destructure/with var (cdr args) (+ n 1)))
       args
-      `(,args (lastcdr ,var))))
+      `(,args (nthcdr ,n ,var))))
 
 (def destructure/build (given-args new-args body)
   ; used internally by 'fun
