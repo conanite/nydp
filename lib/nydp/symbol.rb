@@ -1,4 +1,6 @@
 class Nydp::Symbol
+  class Unbound < StandardError ; end
+
   EMPTY = :""
   attr_accessor :name
   attr_reader   :hash
@@ -15,7 +17,7 @@ class Nydp::Symbol
   end
 
   def value context=nil
-    raise Nydp::Error.new("unbound symbol: #{self.inspect}") if @value == nil
+    raise Unbound.new("unbound symbol: #{self.inspect}") if @value == nil
     @value
   end
 
