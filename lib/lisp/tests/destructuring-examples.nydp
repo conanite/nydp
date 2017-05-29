@@ -61,8 +61,12 @@
      (string-pieces a b c d e))
    "ABCD0D1D2E")
 
+  ; a lot of ceremony here to suppress side-effects of compiling really crap code and just get the warnings
   ("warns about arg names shadowing macro names"
-   (do (on-err nil (pre-compile '(fun (aif (and or) . when) "ignore")))
+   (do (without-hooks 'warnings/new
+                      λ(on-err nil
+                               (pre-compile '(fun (aif (and or) . when)
+                                                  "ignore"))))
        warnings/list)
    ((arg-shadows-macro "arg " when " shadows macro " when " in arg list " (aif (and or) . when))
     (arg-shadows-macro "arg " or " shadows macro " or " in arg list " (aif (and or) . when))

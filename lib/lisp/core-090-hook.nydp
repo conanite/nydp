@@ -1,21 +1,45 @@
+(chapter-start 'nydp/hooks "event management - execute a piece of code when something happens")
+
 (let hooks {}
   (def hook-names ()
+    ; return the list of hook-names
     (hash-keys hooks))
 
   (def hooks-for (hook-name)
+    ; return the list of hooks for 'hook-name
     hooks.,hook-name)
 
   (def add-hook (hook-name f)
+    ; add a function 'f to execute when 'hook-name is fired
     (hash-cons hooks hook-name f))
 
   (def clear-hooks (hook-name)
+    ; remove all hooks for 'hook-name
     (= hooks.,hook-name nil))
 
+  (def without-hooks (hook-name f)
+    ; temporarily remove all hooks for 'hook-name, restoring them after running 'f
+    (let previous-hooks (hooks-for hook-name)
+      (ensure (= hooks.,hook-name previous-hooks)
+              (clear-hooks hook-name)
+              (f))))
+
   (def remove-hook (hook-name f)
+    ; only works if you have a reference to the original function
     (= hooks.,hook-name
        (collect (curry !eq? f)
                hooks.,hook-name)))
 
   (def run-hooks (hook-name . args)
+    ; apply all functions attached to 'hook-name to given 'args
     (each hook (hooks-for hook-name)
           (apply hook args))))
+
+(add-hook 'warnings/new λw(apply p w))
+
+(let super warnings/new
+  (def warnings/new (kind . info)
+    ; enhance original warnings/new to run the 'warnings/new hook
+    (chapter nydp/warnings)
+    (apply super kind info)
+    (run-hooks 'warnings/new (cons kind info))))
