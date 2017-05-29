@@ -26,7 +26,7 @@
   `(push (cons ,regex (fn (,prefix-var ,list-var) ,@body))
          prefix-list-prefixes))
 
-(define-prefix-list-macro "^λ.+" vars expr
+(define-prefix-list-macro "^λ.*" vars expr
   ;; allows (map λa(upcase a.name) people)
   ;; as shortcut for (map (fn (a) (upcase a.name)) people)
   (let var-list (map sym (collect !empty? (cdr:string-split vars)))

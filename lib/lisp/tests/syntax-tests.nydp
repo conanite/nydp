@@ -23,6 +23,12 @@
            '(a b c d e f))
    "a:b:c:d:e:f")
 
+  ("with no args"
+   (let x 15
+     (let y λ(* x x)
+       (y)))
+   225)
+
   ("with two args, to be sure"
    (λpq(+ p (* p q)) 3 5)
    18))
