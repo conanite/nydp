@@ -61,6 +61,14 @@
      (string-pieces a b c d e))
    "ABCD0D1D2E")
 
+  ("warns about arg names shadowing macro names"
+   (do (on-err nil (pre-compile '(fun (aif (and or) . when) "ignore")))
+       warnings/list)
+   ((arg-shadows-macro "arg " when " shadows macro " when " in arg list " (aif (and or) . when))
+    (arg-shadows-macro "arg " or " shadows macro " or " in arg list " (aif (and or) . when))
+    (arg-shadows-macro "arg " and " shadows macro " and " in arg list " (aif (and or) . when))
+    (arg-shadows-macro "arg " aif " shadows macro " aif " in arg list " (aif (and or) . when))))
+
   ("implicit in 'let and 'with"
    (with ((a b)       (list "h" "e")
           (c (d e f)) (list "l" (list "l" "o" " ")))

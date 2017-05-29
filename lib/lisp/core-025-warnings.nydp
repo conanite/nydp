@@ -1,0 +1,15 @@
+(chapter-start 'nydp/warnings "Store, display, and manage warnings")
+
+(def warnings/clear nil
+  ; clear all stored warnings
+  (assign warnings/list nil))
+
+(warnings/clear)
+
+(def warnings (f)
+  ; apply f to each stored warning. For example, (warnings p) to print warnings to console
+  (mapply f warnings))
+
+(def warnings/new (kind . info)
+  ; store a warning for future retrieval or display
+  (assign warnings/list (cons (cons kind info) warnings/list)))
