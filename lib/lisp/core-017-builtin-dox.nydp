@@ -66,3 +66,18 @@
 (dox-add-doc 'script-run      'def '("announces the start of a plugin load or a script load."
                                      "'event may be one of '(script-start script-end plugin-start plugin-end)"
                                      "'name is the name of the script or plugin concerned")                                                                      '(event name)         nil '(nydp-core))
+
+(dox-add-doc 'chapter-end     'def '("Announce the end of a chapter. Called by 'plugin-start, 'plugin-end, 'script-start, 'script-end")                          nil                   nil '(nydp/documentation))
+(dox-add-doc 'chapter-start   'def '("Announce the start of a chapter. Creates a new chapter if the named chapter does not already exist")                 '(chapter-name description) nil '(nydp/documentation))
+(dox-add-doc 'chapter-names   'def '("Get the names of all the chapters nydp knows about")                                                                       nil                   nil '(nydp/documentation))
+(dox-add-doc 'chapter-current 'def '("Get the name of the chapter in progress right now - this is normally the last value sent to 'chapter-start")               nil                   nil '(nydp/documentation))
+(dox-add-doc 'chapter-delete  'def '("Remove the named chapter")                                                                                                 '(name)               nil '(nydp/documentation))
+(dox-add-doc 'chapter-find    'def '("Get the named chapter")                                                                                                    '(name)               nil '(nydp/documentation))
+(dox-add-doc 'dox-add-doc     'def '("Store the provided documentation item."
+                                     "'name is the name of the item"
+                                     "'what is the type of the item ('def or 'mac or 'thingy ... this is user-definable, not related to 'type-of)"
+                                     "'texts is a list of strings to store for this item"
+                                     "'args is the args if the item has the notion of args"
+                                     "'src the source code of the item if any"
+                                     "'chapters the chapters to which the item should be added, if any")                                          '(name what texts args src chapters) nil '(nydp/documentation))
+(dox-add-doc 'dox-add-examples 'def '("Add the given examples to the dox for the named item")                                                                    '(name example-exprs) nil '(nydp/documentation))

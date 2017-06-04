@@ -7,7 +7,7 @@
 (mac make-make-op (opname op)
   `(mac ,opname (name n . body)
      `(mac ,name (x)
-        `(,',',op ,,n ,x))))
+        `(',',,op ,,n ,x))))
 
 (make-make-op make-mult *)
 (make-make-op make-plus +)

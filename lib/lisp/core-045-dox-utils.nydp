@@ -84,3 +84,9 @@ Examples for ~name
                         (apply macfn
                                (cdr expr)))
             expr))))
+
+(def chapter-remove-item (chapter-name item-name)
+  ; remove the named item from the named chapter
+  (chapter nydp/documentation)
+  (let ch (chapter-find chapter-name)
+    (= ch.items (collect (fn (item) (!eq? item.name item-name)) ch.items))))

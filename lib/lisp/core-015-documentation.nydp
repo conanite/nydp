@@ -14,9 +14,6 @@
        (hash-set hsh 'name name)
        hsh)
 
-     (def chapter-names () (hash-keys chapters))
-     (def chapter-current () this-chapter-name)
-
      (def chapter-build (name chapter)
        (cond chapter
              chapter
@@ -25,8 +22,10 @@
                              name
                              (chapter-new (hash) name)))))
 
-     (def chapter-find (name)
-       (chapter-build name (hash-get chapters name)))
+     (def chapter-names   ()     (hash-keys chapters))
+     (def chapter-current ()     this-chapter-name)
+     (def chapter-delete  (name) (hash-set chapters name nil))
+     (def chapter-find    (name) (chapter-build name (hash-get chapters name)))
 
      (def chapter-add-to-chapter (chapter attribute thing)
        (cond chapter
@@ -85,8 +84,6 @@
        (cond (dox? name)
              (hash-get (car (dox-lookup name)) attr)))
 
-     (def dox-chapter-names () (hash-keys chapters      ))
-     (def dox-chapter   (name) (hash-get chapters name  ))
      (def dox-what-is?  (name) (dox-get-attr name 'what ))
      (def dox-src       (name) (dox-get-attr name 'src  ))
      (def dox-examples  (name) (hash-get examples name  ))
