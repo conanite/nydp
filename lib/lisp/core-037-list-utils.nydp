@@ -1,10 +1,10 @@
 (chapter-start 'list-manipulation "utilities for manipulating and iterating over lists, including filters and transforms")
 
-(def zip (a b)
-  ; takes two lists, (p q r) and (1 2 3), returns ((p 1) (q 2) (r 3))
-  (if a
-      (cons (list (car a) (car b))
-            (zip (cdr a) (cdr b)))))
+(def zip args
+  ; takes a list of lists, ((p q r) (1 2 3) (a b c) ...), returns ((p 1 a ...) (q 2 b ...) (r 3 c ...))
+  (if (car args)
+      (cons (map car args)
+            (apply zip (map cdr args)))))
 
 (def eachr (f things)
      (when things

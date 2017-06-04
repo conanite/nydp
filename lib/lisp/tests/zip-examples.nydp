@@ -1,0 +1,16 @@
+(examples-for zip
+  ("joins two lists"
+   (zip '(a b c) '(1 2 3))
+   ((a 1) (b 2) (c 3)))
+
+  ("joins more lists"
+   (zip '(a b) '(1 2) '(p q) '(41 42 43) '(x y zip))
+   ((a 1 p 41 x) (b 2 q 42 y)))
+
+  ("resulting list is as long as first list"
+   (zip '(a b) '(1 2 3 4 5 6) nil)
+   ((a 1 nil) (b 2 nil)))
+
+  ("resulting list is nil if first list is nil"
+   (zip nil '(1 2 3 4 5) '(p q r))
+   nil))
