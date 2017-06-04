@@ -89,4 +89,4 @@ Examples for ~name
   ; remove the named item from the named chapter
   (chapter nydp/documentation)
   (let ch (chapter-find chapter-name)
-    (= ch.items (collect (fn (item) (!eq? item.name item-name)) ch.items))))
+    (= ch.contents (collect (fn (item) (!eq? item.name item-name)) ch.contents))))
