@@ -52,7 +52,8 @@ module Nydp
       last_script_time = Time.now
       puts "welcome to nydp #{options.inspect}" unless silent
       reader = Nydp::ReadlineReader.new $stdin, "nydp > "
-      ns     = build_nydp do |script|
+      ns     = options[:ns]
+      ns   ||= build_nydp do |script|
         this_script_time = Time.now
         puts "script #{script} time #{ms this_script_time, last_script_time}ms" if options[:verbose]
         last_script_time = this_script_time
