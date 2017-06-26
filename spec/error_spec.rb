@@ -21,7 +21,7 @@ describe Nydp::VM do
       expect(error).to be_a Nydp::Error
       expect(error.message).to eq "failed to eval dflkjdgjeirgjeoi"
 
-      expect(error.cause).to be_a Nydp::Error
+      expect(error.cause).to be_a Nydp::Symbol::Unbound
       expect(error.cause.message).to eq "unbound symbol: dflkjdgjeirgjeoi"
 
       expect(vm.unhandled_error).to eq nil
