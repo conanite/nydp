@@ -25,6 +25,10 @@
    "a x b x c x d"))
 
 (examples-for string-match
+  ("no match returns nil"
+   (string-match "this that another" "XXXX")
+   nil)
+
   ("match with regexp"
    (let m (string-match "a and b and c and d" "and")
      (list m.match m.captures))

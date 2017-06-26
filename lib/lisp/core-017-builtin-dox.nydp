@@ -42,6 +42,7 @@
 (dox-add-doc 'string-length   'def '("return the length of 'arg")                                                                                                '(arg)                nil '(string-manipulation))
 (dox-add-doc 'string-replace  'def '("replace 'pattern with 'insert in 'str")                                                                                    '(pattern insert str) nil '(string-manipulation))
 (dox-add-doc 'string-split    'def '("split 'str delimited by 'delim")                                                                                           '(str delim)          nil '(string-manipulation))
+(dox-add-doc 'string-match    'def '("if 'str matches 'pattern, return hash with keys 'match and 'captures ; otherwise nil")                                     '(str pattern)        nil '(string-manipulation))
 (dox-add-doc 'time            'def '("with no args, return the current time."
                                      "With one arg, if 'arg-0 is a number, return the current time plus 'arg-0 seconds."
                                      "With one arg, if 'arg-0 is a date, return the time at the beginning of the given date."
