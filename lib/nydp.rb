@@ -47,12 +47,12 @@ module Nydp
 
   def self.repl options={ }
     toplevel do
-      silent = options[:silent]
+      silent = options.delete :silent
+      ns     = options.delete :ns
       launch_time = Time.now
       last_script_time = Time.now
       puts "welcome to nydp #{options.inspect}" unless silent
       reader = Nydp::ReadlineReader.new $stdin, "nydp > "
-      ns     = options[:ns]
       ns   ||= build_nydp do |script|
         this_script_time = Time.now
         puts "script #{script} time #{ms this_script_time, last_script_time}ms" if options[:verbose]
