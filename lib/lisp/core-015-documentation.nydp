@@ -61,9 +61,9 @@
        (hash-cons dox (hash-get item 'name) item)
        (dox-add-to-chapters item (hash-get item 'chapters)))
 
-     (def dox-add-doc (name what texts args src chapters)
+     (def dox-add-doc (name what texts args src chapters more)
        (cond (no (privately))
-             (dox-new (dox-build (hash) name what texts args src chapters))))
+             (dox-new (dox-build (if more more (hash)) name what texts args src chapters))))
 
      (def dox-add-to-chapters (item chapters)
        (cond chapters
