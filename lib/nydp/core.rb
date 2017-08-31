@@ -78,6 +78,7 @@ module Nydp
       Symbol.mk(:"math-floor"  , ns).assign Nydp::Builtin::MathFloor.instance
       Symbol.mk(:"⌈"           , ns).assign Nydp::Builtin::MathCeiling.instance
       Symbol.mk(:"math-ceiling", ns).assign Nydp::Builtin::MathCeiling.instance
+      Symbol.mk(:"math-round"  , ns).assign Nydp::Builtin::MathRound.instance
     end
   end
 end

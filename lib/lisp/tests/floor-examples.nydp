@@ -15,3 +15,28 @@
   ("alias for 'math-ceiling"
    (math-ceiling 3.1415)
    4))
+
+(examples-for round
+  ("rounds the given to the nearest integer"
+   (math-round 3.1415)
+   3)
+
+  ("rounds the given to the nearest integer"
+   (math-round -3.1415)
+   -3)
+
+  ("rounds the given to the nearest negative integer"
+   (math-round -3.999)
+   -4)
+
+  ("rounds the given to the nearest integer"
+   (math-round 3.999)
+   4)
+
+  ("rounds half-away from zero"
+   (math-round 12.5)
+   13)
+
+  ("rounds negatively half-away from zero"
+   (math-round -1.5)
+   -2))
