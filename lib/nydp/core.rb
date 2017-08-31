@@ -73,6 +73,7 @@ module Nydp
       Symbol.mk(:"vm-info",     ns).assign Nydp::Builtin::VmInfo.instance
       Symbol.mk(:"pre-compile", ns).assign Nydp::Builtin::PreCompile.instance
       Symbol.mk(:"script-run" , ns).assign Nydp::Builtin::ScriptRun.instance
+      Symbol.mk(:"**"         , ns).assign Nydp::Builtin::MathPower.instance
     end
   end
 end
