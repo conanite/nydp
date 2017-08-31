@@ -3,14 +3,30 @@
    (⌊ 12.5)
    12)
 
+  ("rounds the given to the nearest integer below"
+   (⌊ 32.32)
+   32)
+
+  ("rounds the given to the nearest integer below negatively"
+   (⌊ -32.32)
+   -33)
+
   ("alias for 'math-floor"
    (math-floor 3.1415)
    3))
 
 (examples-for ⌈
-  ("rounds the given to the nearest integer below"
+  ("rounds the given to the nearest integer above"
+   (⌈ 25.25)
+   26)
+
+  ("rounds the given to the nearest integer above"
    (⌈ 12.5)
    13)
+
+  ("rounds the given to the nearest integer above negatively"
+   (⌈ -25.25)
+   -25)
 
   ("alias for 'math-ceiling"
    (math-ceiling 3.1415)
