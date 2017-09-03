@@ -19,23 +19,12 @@ describe Nydp::Parser do
   let(:dotsyn)           { Nydp::Symbol.mk :"dot-syntax",         ns }
   let(:cocosyn)          { Nydp::Symbol.mk :"colon-colon-syntax", ns }
   let(:colosyn)          { Nydp::Symbol.mk :"colon-syntax",       ns }
+  let(:string_pieces)    { Nydp::Symbol.mk :"string-pieces",      ns }
 
   it "should return a stream of tokens" do
     reader = Nydp::StringReader.new ""
-    t = Nydp::Tokeniser.new reader
+    t = Nydp.new_tokeniser reader
     expect(t.next_token).to eq nil
-  end
-
-  it "should return another stream of tokens" do
-    reader = Nydp::StringReader.new "(a b c 1 2 3)"
-    t = Nydp::Tokeniser.new reader
-    tt = []
-    tok = t.next_token
-    while tok
-      tt << tok
-      tok = t.next_token
-    end
-    expect(tt).to eq [[:left_paren, ""], [:symbol, "a"], [:symbol, "b"], [:symbol, "c"], [:number, 1.0], [:number, 2.0], [:number, 3.0], [:right_paren]]
   end
 
   it "should parse an empty expression" do
@@ -53,7 +42,7 @@ describe Nydp::Parser do
   it "should parse untidy symbols" do
     s0 = sym "foo bar"
     s1 = sym ""
-    s2 = sym '" hello, there, silly billy!"'
+    s2 = sym '" hello, there, silly billy"'
     expect(parse "(|foo bar| || |\" hello, there, silly billy!\"|)").to eq pair_list([s0, s1, s2])
   end
 
@@ -75,8 +64,11 @@ describe Nydp::Parser do
     expect(parse "(1 2 3 . 4)").to eq pair_list([1, 2, 3], 4)
   end
 
+  it "should parse an improper list containing symbols" do
+    expect(parse "(foo foo . bar)").to eq pair_list([foo, foo], bar)
+  end
+
   it "should parse a string" do
-    s1 = sym 'string-pieces'
     s2 = Nydp::StringFragmentCloseToken.new "hello there", '"hello there"'
 
     x1 = 1
@@ -101,7 +93,6 @@ describe Nydp::Parser do
   end
 
   it "should not get confused by embedded lisp in a string" do
-    s1 = sym 'string-pieces'
     s2 = Nydp::StringFragmentCloseToken.new "hello (1 2 3) there", '"hello (1 2 3) there"'
 
     x1 = 1
@@ -114,7 +105,6 @@ describe Nydp::Parser do
   end
 
   it "should handle escaped quotes inside a string" do
-    s1 = sym 'string-pieces'
     s2 = Nydp::StringFragmentCloseToken.new "hello there \"jimmy\"", '"hello there \"jimmy\""'
 
     x1 = 1
@@ -255,6 +245,37 @@ describe Nydp::Parser do
     expect(parse "(a b (c) d)").to eq pair_list([a, b, pair_list([c]), d])
   end
 
+  it "parses a simple string" do
+    expect(parse '"foo"').to eq Nydp::StringAtom.new("foo")
+  end
+
+  it "parses a string with a simple interpolation" do
+    str = Nydp::StringAtom.new("foo ")
+    empty = Nydp::StringAtom.new("")
+    expect(parse '"foo ~foo"').to eq pair_list([string_pieces, str, foo, empty])
+  end
+
+  it "parses a string with a more complex interpolation" do
+    strf = Nydp::StringAtom.new("foo ")
+    strb = Nydp::StringAtom.new(" bar")
+    expect(parse '"foo ~(foo bar) bar"').to eq pair_list([string_pieces, strf, pair_list([foo, bar]), strb])
+  end
+
+  it "parses a string with an interpolation containing a nested interpolation" do
+    strf = Nydp::StringAtom.new("foo ")
+    strb = Nydp::StringAtom.new(" bar")
+
+    nested = pair_list [string_pieces, strf, foo, strb]
+    expr   = pair_list [foo, nested, bar]
+
+    expect(parse '"foo ~(foo "foo ~foo bar" bar) bar"').to eq pair_list([string_pieces, strf, expr, strb])
+  end
+
+  it "parses a string with only an interpolation" do
+    empty = Nydp::StringAtom.new("")
+    expect(parse '"~foo"').to eq pair_list([string_pieces, empty, foo, empty])
+  end
+
   it "should even parse comments" do
     txt = "(def foo (bar)
   ; here's a comment
@@ -266,5 +287,31 @@ describe Nydp::Parser do
     fdef = Nydp::Symbol.mk(:def, ns)
     expr = pair_list([fdef, foo, fbar, c1, fzab])
     expect(parse txt).to eq expr
+  end
+
+  it "parses an expression with whitespace before closing paren" do
+    txt = <<NYDP
+(def plugin-end   (name) (assign this-plugin nil ) (chapter-end))
+NYDP
+    expect(parse(txt).to_a.inspect).to eq "[def, plugin-end, (name), (assign this-plugin nil), (chapter-end)]"
+  end
+
+  it "parses a more complete expression" , :focus do
+    txt = <<NYDP
+(mac def (name args . body)
+  ; define a new function in the global namespace
+  (chapter nydp-core)
+  (define-def-expr name args (filter-forms (build-def-hash (hash)) body)))
+NYDP
+    parsed = parse(txt).to_a
+    expect(parsed[0]).to eq sym("mac")
+    expect(parsed[1]).to eq sym("def")
+    args = parsed[2].to_a
+    expect(args[0]).to eq sym("name")
+    expect(args[1]).to eq sym("args")
+    expect(args[2]).to be_nil
+    expect(parsed[2].cdr.cdr).to eq sym("body")
+    expect(parsed[3].to_a).to eq [sym("comment"), Nydp::StringAtom.new("define a new function in the global namespace")]
+    expect(parsed[4].to_a).to eq [sym("chapter"), sym("nydp-core")]
   end
 end

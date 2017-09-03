@@ -121,6 +121,10 @@ module Nydp
     INTERPOLATION_SIGN = /~/
     INTERPOLATION_ESCAPES = { /~\s/ => true, /~~/ => "~" }
 
+    def embedded token_stream
+      string token_stream, "", :eof
+    end
+
     def string token_stream, open_delimiter, close_delimiter
       fragments = [sym(:"string-pieces")]
       string_token = token_stream.next_string_fragment(open_delimiter, close_delimiter, INTERPOLATION_SIGN, INTERPOLATION_ESCAPES)

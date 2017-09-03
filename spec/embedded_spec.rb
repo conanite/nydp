@@ -19,40 +19,40 @@ describe Nydp::Parser do
   let(:cocosyn)          { Nydp::Symbol.mk :"colon-colon-syntax", ns }
   let(:colosyn)          { Nydp::Symbol.mk :"colon-syntax",       ns }
 
-  def parse_string txt, open_delim, close_delim
+  def parse_string txt
     reader = Nydp::StringReader.new txt
-    Nydp::Parser.new(ns).string(Nydp::Tokeniser.new(reader), open_delim, close_delim)
+    Nydp.new_parser(ns).embedded(Nydp.new_tokeniser(reader))
   end
 
   it "should parse empty string" do
-    expected = pair_list([sym('string-pieces'), Nydp::StringFragmentCloseToken.new('','$%')])
-    actual   = parse_string "%", '$', /%/
+    expected = pair_list([sym('string-pieces'), Nydp::StringFragmentCloseToken.new('','')])
+    actual   = parse_string ""
     expect(actual).to eq Nydp::StringAtom.new ''
   end
 
   it "should parse external text" do
-    actual   = parse_string "a fluffy bunny!", 'EAT ', /!/
-    expect(actual)        .to eq Nydp::StringAtom.new "a fluffy bunny"
-    expect(actual.inspect).to eq '"a fluffy bunny"'
+    actual   = parse_string "a fluffy bunny!"
+    expect(actual)        .to eq Nydp::StringAtom.new "a fluffy bunny!"
+    expect(actual.inspect).to eq '"a fluffy bunny!"'
   end
 
   it "should parse a string delimited by eof" do
     expected = pair_list([sym('string-pieces'), Nydp::StringFragmentCloseToken.new('a fluffy bunny!','a fluffy bunny!')])
-    actual   = parse_string "a fluffy bunny!", '', :eof
+    actual   = parse_string "a fluffy bunny!"
     expect(actual)        .to eq Nydp::StringAtom.new "a fluffy bunny!"
     expect(actual.inspect).to eq '"a fluffy bunny!"'
   end
 
   it "should parse a string with embedded code, delimited by eof" do
     x1 = sym('string-pieces')
-    x2 = Nydp::StringFragmentToken.new('a fluffy bunny! ',':a fluffy bunny! ~')
+    x2 = Nydp::StringFragmentToken.new('a fluffy bunny! ','a fluffy bunny! ~')
     x2 = Nydp::StringAtom.new(x2.string, x2)
     x3 = sym('expr')
     x4 = Nydp::StringFragmentCloseToken.new(' a purple cow!',' a purple cow!')
     x4 = Nydp::StringAtom.new(x4.string, x4)
 
     expected = pair_list([x1,x2,x3,x4])
-    actual   = parse_string "a fluffy bunny! ~expr a purple cow!", ':', :eof
+    actual   = parse_string "a fluffy bunny! ~expr a purple cow!"
     expect(actual).to eq expected
   end
 
@@ -63,14 +63,14 @@ describe Nydp::Parser do
     n4 = sym(:zop)
 
     x1 = sym('string-pieces')
-    x2 = Nydp::StringFragmentToken.new('a fluffy bunny! ','------->a fluffy bunny! ~')
+    x2 = Nydp::StringFragmentToken.new('a fluffy bunny! ','a fluffy bunny! ~')
     x2 = Nydp::StringAtom.new(x2.string, x2)
     x3 = pair_list [n1, n2, n3, n4]
     x4 = Nydp::StringFragmentCloseToken.new(' a purple cow!',' a purple cow!')
     x4 = Nydp::StringAtom.new(x4.string, x4)
 
     expected = pair_list([x1,x2,x3,x4])
-    actual   = parse_string "a fluffy bunny! ~(foo bar \"an embedded bunny :)\" zop) a purple cow!", '------->', :eof
+    actual   = parse_string 'a fluffy bunny! ~(foo bar "an embedded bunny :)" zop) a purple cow!'
     expect(actual).to eq expected
   end
 
@@ -79,7 +79,7 @@ describe Nydp::Parser do
     e2 = sym(:bunny)
 
     s1 = sym('string-pieces')
-    s2 = Nydp::StringFragmentToken.new('a rather ','"a rather ~')
+    s2 = Nydp::StringFragmentToken.new('a rather ','a rather ~')
     s2 = Nydp::StringAtom.new(s2.string, s2)
     s3 = pair_list [e1, e2]
     s4 = Nydp::StringFragmentCloseToken.new(' bunny :)',' bunny :)"')
@@ -91,19 +91,19 @@ describe Nydp::Parser do
     n4 = sym(:zop)
 
     x1 = sym('string-pieces')
-    x2 = Nydp::StringFragmentToken.new('a fluffy bunny! ','------->a fluffy bunny! ~')
+    x2 = Nydp::StringFragmentToken.new('a fluffy bunny! ','a fluffy bunny! ~')
     x2 = Nydp::StringAtom.new(x2.string, x2)
     x3 = pair_list [n1, n2, n3, n4]
     x4 = Nydp::StringFragmentCloseToken.new(' a purple cow!',' a purple cow!')
     x4 = Nydp::StringAtom.new(x4.string, x4)
 
     expected = pair_list([x1,x2,x3,x4])
-    actual   = parse_string "a fluffy bunny! ~(foo bar \"a rather ~(describe bunny) bunny :)\" zop) a purple cow!", '------->', :eof
+    actual   = parse_string "a fluffy bunny! ~(foo bar \"a rather ~(describe bunny) bunny :)\" zop) a purple cow!"
     expect(actual).to eq expected
   end
 
   it "parses a string that looks like html with little bits of embedded code in it" do
-    parsed = parse_string "<div id='item_~{id}'><label>~{data-label-1}</label> ~{data-content-1}</div>", '', :eof
+    parsed = parse_string "<div id='item_~{id}'><label>~{data-label-1}</label> ~{data-content-1}</div>"
     expect(parsed.inspect).to eq '(string-pieces "<div id=\'item_" (brace-list id) "\'><label>" (brace-list data-label-1) "</label> " (brace-list data-content-1) "</div>")'
   end
 end

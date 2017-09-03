@@ -68,8 +68,8 @@ module Nydp
     def initialize vm, ns, stream, printer=nil, name=nil
       super vm, ns, name
       @printer    = printer
-      @parser     = Nydp::Parser.new(ns)
-      @tokens     = Nydp::Tokeniser.new stream
+      @parser     = Nydp.new_parser(ns)
+      @tokens     = Nydp.new_tokeniser stream
     end
 
     def print val

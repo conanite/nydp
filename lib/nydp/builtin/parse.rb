@@ -2,8 +2,8 @@ class Nydp::Builtin::Parse
   include Nydp::Builtin::Base, Singleton
 
   def builtin_invoke vm, args
-    parser = Nydp::Parser.new(vm.ns)
-    tokens = Nydp::Tokeniser.new Nydp::StringReader.new args.car.to_s
+    parser = Nydp.new_parser(vm.ns)
+    tokens = Nydp.new_tokeniser Nydp::StringReader.new args.car.to_s
     exprs  = []
     while !tokens.finished
       expr = parser.expression(tokens)
