@@ -18,21 +18,26 @@ module Nydp
     def r2n              obj ; super obj, @ns              ; end
 
     def push_instructions ii, ctx
-      @instructions.push @current_instructions
-      @current_instructions = ii
+      if NIL != @current_instructions
+        @instructions.push @current_instructions
+        @contexts.push @current_context
+      end
 
-      @contexts.push @current_context
+      @current_instructions = ii
       @current_context = ctx
     end
 
     def push_ctx_instructions ii
-      @instructions.push @current_instructions
+      if NIL != @current_instructions
+        @instructions.push @current_instructions
+        @contexts.push @current_context
+      end
+
       @current_instructions = ii
-      contexts.push @current_context
     end
 
     def thread_with_expr expr
-      push_instructions expr, nil
+      @current_instructions = expr
       thread
     end
 

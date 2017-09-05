@@ -42,7 +42,7 @@ describe Nydp::Parser do
   it "should parse untidy symbols" do
     s0 = sym "foo bar"
     s1 = sym ""
-    s2 = sym '" hello, there, silly billy"'
+    s2 = sym '" hello, there, silly billy!"'
     expect(parse "(|foo bar| || |\" hello, there, silly billy!\"|)").to eq pair_list([s0, s1, s2])
   end
 
@@ -296,7 +296,7 @@ NYDP
     expect(parse(txt).to_a.inspect).to eq "[def, plugin-end, (name), (assign this-plugin nil), (chapter-end)]"
   end
 
-  it "parses a more complete expression" , :focus do
+  it "parses a more complete expression" do
     txt = <<NYDP
 (mac def (name args . body)
   ; define a new function in the global namespace

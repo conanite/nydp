@@ -9,6 +9,10 @@ describe Nydp do
     Nydp.eval_src ns, txt
   end
 
+  it "invokes a zero-arg function" do
+    expect(run('(to-string)').to_s).to eq ""
+  end
+
   it "should make a symbol from a string" do
     expect(run '(sym "the-family")').to eq sym(:"the-family")
   end
@@ -80,7 +84,12 @@ describe Nydp do
   end
 
   it "should recurse without consuming extra memory" do
-    program = "(assign f1 (fn (x acc) (cond (< x 1) (vm-info) (f1 (- x 1) (+ x acc))))) (f1 1000 0)"
+    program = "(assign f1 (fn (x acc)
+                              (cond (< x 1)
+                                    (vm-info)
+                                    (f1 (- x 1)
+                                        (+ x acc)))))
+               (f1 1000 0)"
     expected = parse "((contexts . 0) (instructions . 0) (args . 0))"
     expect(run program).to eq expected
   end
