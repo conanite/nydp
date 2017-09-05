@@ -18,7 +18,7 @@ module Nydp
     def r2n              obj ; super obj, @ns              ; end
 
     def push_instructions ii, ctx
-      if NIL != @current_instructions
+      if @current_instructions && NIL != @current_instructions
         @instructions.push @current_instructions
         @contexts.push @current_context
       end
@@ -28,7 +28,7 @@ module Nydp
     end
 
     def push_ctx_instructions ii
-      if NIL != @current_instructions
+      if @current_instructions && NIL != @current_instructions
         @instructions.push @current_instructions
         @contexts.push @current_context
       end
