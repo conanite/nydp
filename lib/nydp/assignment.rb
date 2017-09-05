@@ -38,8 +38,7 @@ module Nydp
     def inspect; to_s ; end
 
     def execute vm
-      vm.instructions.push @instructions
-      vm.contexts.push vm.current_context
+      vm.push_ctx_instructions @instructions
     end
   end
 end

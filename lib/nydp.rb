@@ -5,6 +5,7 @@ module Nydp
   class Namespace < Hash
   end
 
+  # TODO: write VM #apply_function so we have fewer calls to VM.new
   def self.apply_function ns, function_name, *args
     function = r2n(function_name.to_sym, ns).value
     args     = r2n args, ns

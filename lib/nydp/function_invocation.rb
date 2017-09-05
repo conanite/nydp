@@ -24,7 +24,7 @@ module Nydp
           raise
         else
           if e.is_a?(NoMethodError) && !f.respond_to?(invoker)
-            raise InvocationFailed.new("#{f} is not a function: args were #{args.inspect}")
+            raise InvocationFailed.new("#{f.inspect} is not a function: args were #{args.inspect}")
           else
             msg  = args.map { |a| "  #{a.inspect}"}.join("\n")
             msg  =  "failed to execute invocation #{f.inspect}\n#{msg}"
@@ -323,10 +323,8 @@ module Nydp
 
     def execute vm
 ##      Invocation.sig @sig
-      vm.instructions.push function_instruction
-      vm.contexts    .push vm.current_context
-      vm.instructions.push argument_instructions
-      vm.contexts    .push vm.current_context
+      vm.push_ctx_instructions function_instruction
+      vm.push_ctx_instructions argument_instructions
     end
 
     def inspect ; @source.inspect ; end

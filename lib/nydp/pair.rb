@@ -1,4 +1,5 @@
 class Nydp::Pair
+  NIL = Nydp::NIL
   include Nydp::Helper, Enumerable
   extend Nydp::Helper
 
@@ -51,7 +52,7 @@ class Nydp::Pair
   end
 
   def == other
-    Nydp::NIL.isnt?(other) && (other.respond_to? :car) && (self.car == other.car) && (self.cdr == other.cdr)
+    (NIL != other) && (other.respond_to? :car) && (self.car == other.car) && (self.cdr == other.cdr)
   end
 
   def proper?

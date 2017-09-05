@@ -10,41 +10,37 @@ module Nydp
   end
 
   class InterpretedFunction
+    NIL = Nydp::NIL
     include Helper
     extend Helper
 
     attr_accessor :arg_names, :body, :context_builder
 
     def invoke_1 vm, parent_context
-      vm.instructions.push self.body
-      vm.contexts.push set_args_0 parent_context
+      vm.push_instructions self.body, set_args_0(parent_context)
     end
 
     def invoke_2 vm, parent_context, arg
-      vm.instructions.push self.body
-      vm.contexts.push set_args_1(parent_context, arg)
+      vm.push_instructions self.body, set_args_1(parent_context, arg)
     end
 
     def invoke_3 vm, parent_context, arg_0, arg_1
-      vm.instructions.push self.body
-      vm.contexts.push set_args_2(parent_context, arg_0, arg_1)
+      vm.push_instructions self.body, set_args_2(parent_context, arg_0, arg_1)
     end
 
     def invoke_4 vm, parent_context, arg_0, arg_1, arg_2
-      vm.instructions.push self.body
-      vm.contexts.push set_args_3(parent_context, arg_0, arg_1, arg_2)
+      vm.push_instructions self.body, set_args_3(parent_context, arg_0, arg_1, arg_2)
     end
 
     def invoke vm, parent_context, arg_values
-      vm.instructions.push self.body
-      vm.contexts.push set_args(parent_context, arg_values)
+      vm.push_instructions self.body, set_args(parent_context, arg_values)
     end
 
     def setup_context context, names, values
       if pair? names
         context.set names.car, values.car
         setup_context context, names.cdr, values.cdr
-      elsif Nydp::NIL.isnt? names
+      elsif NIL != names
         context.set names, values
       end
     end
@@ -75,7 +71,7 @@ module Nydp
       if pair? arg_list
         index_parameters arg_list.car, hsh
         index_parameters arg_list.cdr, hsh
-      elsif Nydp::NIL.isnt? arg_list
+      elsif NIL != arg_list
         hsh[arg_list] = hsh.size
       end
     end

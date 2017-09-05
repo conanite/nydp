@@ -4,6 +4,7 @@
      (or (eq? x y)
          (and (pair? x)
               (pair? y)
+              (eq? (len x) (len y))
               (iso (car x) (car y))
               (iso (cdr x) (cdr y)))))
 

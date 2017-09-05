@@ -17,8 +17,8 @@ module Nydp
     def car         ; self          ; end
     def cdr         ; self          ; end
     def size        ; 0             ; end
-    def is?   other ; other.class == self.class ; end
-    def isnt? other ; other.class != self.class ; end
+    def is?   other ; self == other ; end
+    def isnt? other ; self != other ; end
     def to_s        ; ""            ; end
     def + other     ; other         ; end
     def copy        ; self          ; end

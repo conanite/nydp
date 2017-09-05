@@ -5,7 +5,7 @@ module Nydp
     extend Helper
 
     def self.skip_empty bindings
-      while Nydp::NIL.isnt?(bindings) && bindings.car.empty?
+      while (NIL != bindings) && bindings.car.empty?
         bindings = bindings.cdr
       end
       bindings
@@ -14,7 +14,7 @@ module Nydp
     def self.build name, bindings
       bindings = skip_empty bindings
       depth = 0
-      while Nydp::NIL.isnt? bindings
+      while NIL != bindings
         here = bindings.car
         if here.key? name
           binding_index = here[name]

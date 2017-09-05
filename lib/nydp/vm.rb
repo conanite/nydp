@@ -1,7 +1,8 @@
 module Nydp
   class VM
+    NIL = Nydp::NIL
     include Helper
-    attr_accessor :instructions, :args, :contexts, :current_context, :locals, :unhandled_error, :last_error, :ns
+    attr_accessor :instructions, :args, :contexts, :current_context, :locals, :unhandled_error, :last_error, :ns, :thisi
 
     module Finally     ; end
     module HandleError ; end
@@ -14,36 +15,51 @@ module Nydp
       @ns           = ns
     end
 
-    def r2n obj
-      super obj, self.ns
+    def r2n              obj ; super obj, @ns              ; end
+
+    def push_instructions ii, ctx
+      @instructions.push @current_instructions
+      @current_instructions = ii
+
+      @contexts.push @current_context
+      @current_context = ctx
     end
 
-    def thread expr=nil
-      instructions.push expr if expr
-      while instructions.first
+    def push_ctx_instructions ii
+      @instructions.push @current_instructions
+      @current_instructions = ii
+      contexts.push @current_context
+    end
+
+    def thread_with_expr expr
+      push_instructions expr, nil
+      thread
+    end
+
+    def thread
+      while @current_instructions
         begin
-          thisi = instructions.pop
-          if thisi.cdr.is_a? Nydp::Nil
-            self.current_context = contexts.pop
+          if NIL == @current_instructions
+            @current_instructions = @instructions.pop
+            @current_context      = @contexts.pop
           else
-            self.current_context = contexts.last
-            instructions.push thisi.cdr
+            now = @current_instructions.car
+            @current_instructions = @current_instructions.cdr
+            now.execute(self)
           end
-          thisi.car.execute(self)
+
         rescue StandardError => e
           handle_error e
         end
       end
-      raise_unhandled_error
-      args.pop
-    end
 
-    def raise_unhandled_error
-      if unhandled_error
-        e = unhandled_error
-        self.unhandled_error = nil
+      if @unhandled_error
+        e = @unhandled_error
+        @unhandled_error = nil
         raise e
       end
+
+      args.pop
     end
 
     def handle_error ex
@@ -52,19 +68,18 @@ module Nydp
       protecti = []
       protectc = []
 
-      while (instructions.length > 0) && !(instructions.last.car.is_a? HandleError)
-        if instructions.last.car.is_a? Finally
-          protecti << instructions.last
-          protectc << contexts.last
+      while (@instructions.length > 0) && !(@instructions.last.car.is_a? HandleError)
+        if @instructions.last.car.is_a? Finally
+          protecti << @instructions.last
+          protectc << @contexts.last
         end
 
-        instructions.pop
-        contexts.pop
+        @instructions.pop
+        @contexts.pop
       end
 
       while protecti.length > 0
-        instructions.push protecti.pop
-        contexts.push protectc.pop
+        push_instructions protecti.pop, protectc.pop
       end
     end
 

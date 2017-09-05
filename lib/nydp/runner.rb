@@ -49,7 +49,7 @@ module Nydp
 
     def compile_and_eval expr
       begin
-        vm.thread Pair.new(Compiler.compile(expr, Nydp::NIL), Nydp::NIL)
+        vm.thread_with_expr Pair.new(Compiler.compile(expr, Nydp::NIL), Nydp::NIL)
       rescue StandardError => e
         raise Nydp::Error, "failed to eval #{expr.inspect}"
       end

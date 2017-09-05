@@ -28,8 +28,7 @@ module Nydp
     end
 
     def execute vm
-      vm.instructions.push conditional
-      vm.contexts.push vm.current_context
+      vm.push_ctx_instructions conditional
       condition.execute vm
     end
 
@@ -78,8 +77,7 @@ module Nydp
   class Cond_LEX < CondBase
     def execute vm
       truth = !Nydp::NIL.is?(@condition.value vm.current_context)
-      vm.instructions.push (truth ? @when_true : @when_false)
-      vm.contexts.push vm.current_context
+      vm.push_ctx_instructions (truth ? @when_true : @when_false)
     end
 
     def self.build cond, when_true, when_false
@@ -171,8 +169,7 @@ module Nydp
 
   class Cond_SYM < CondBase
     def execute vm
-      vm.instructions.push (Nydp::NIL.is?(@condition.value) ? @when_false : @when_true)
-      vm.contexts.push vm.current_context
+      vm.push_ctx_instructions (Nydp::NIL.is?(@condition.value) ? @when_false : @when_true)
     end
   end
 end
