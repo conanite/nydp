@@ -109,6 +109,12 @@
                     size-f
                     it
                     maximum-size)
+       (and items (eq? bucket-size 0))
+       (bucket/fill (cdr items)
+                    (cons (car items) bucket)
+                    size-f
+                    (size-f (car items))
+                    maximum-size)
        (list (rev bucket) bucket-size items)))
 
 (def bucket/new (buckets)
@@ -124,7 +130,7 @@
       (if buckets
           (let initial (car buckets)
             (let (these size others)
-              (bucket/fill items nil size-f initial.bucket-size max)
+                 (bucket/fill items nil size-f initial.bucket-size max)
               (hash-set initial key these)
               (= initial.bucket-size size)
               (if others

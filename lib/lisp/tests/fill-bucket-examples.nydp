@@ -36,6 +36,13 @@
               pages))
    ((size 16 line-items nil history ("aa" "bbbb" "c" "ddddd" "eeee") payments nil)))
 
+  ("returns a single overfilled bucket for an oversized item"
+   (let pages (fill-buckets '("aa34567890123456" "eeee") 12 nil len 'history   )
+     (rev:map λb(list 'size b.bucket-size b.history)
+              pages))
+   ((size 16 ("aa34567890123456"))
+    (size  4 ("eeee"))))
+
   ("accumulates subsequent items in subsequent buckets"
    (let pages (fill-buckets '(1 2 2 4 3 3 1)   30   nil λx(* x x) 'line-items)
      (= pages (fill-buckets '()                30 pages       len 'history   ))
