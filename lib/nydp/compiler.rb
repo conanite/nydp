@@ -40,7 +40,7 @@ module Nydp
     def self.compile_pair expression, bindings
       key = expression.car
       if sym?(key, :cond)
-        Cond.build expression.cdr, bindings
+        Cond.build expression.cdr, bindings # todo: replace with function? (cond x (fn () iftrue) (fn () iffalse)) -->> performance issues, creating two closures for every cond invocation
       elsif sym?(key, :quote)
         Literal.build expression.cadr, bindings
       elsif sym?(key, :assign)
