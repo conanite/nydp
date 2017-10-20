@@ -1,6 +1,17 @@
 module Nydp::LexicalContextBuilder
   extend Nydp::Helper
 
+  def self.const_missing(const)
+    if const.to_s =~ /^B_\d+(_Rest)?$/
+      name = const.to_s.split(/_/)
+      size = name[1].to_i
+      name[2] ? build_builder_rest_class(const, size) : build_builder_class(const, size)
+      const_get const
+    else
+      super(const)
+    end
+  end
+
   def self.mklc nexpected
     (nexpected > 0) ? "lc = Nydp::LexicalContext.new lc\n    " : ""
   end
@@ -70,40 +81,20 @@ module Nydp::LexicalContextBuilder
 "
   end
 
-  def self.get_builder_class expected_arg_count
-    name      = "B_#{expected_arg_count}"
-    existing  = const_get(name) rescue nil
-    return name if existing
-
-    n_methods = (0..3).map { |given| build_set_args_n_method given, expected_arg_count }
-    x_method  = build_set_args_method expected_arg_count
-    klass     = <<KLASS
-module #{name}
-#{n_methods.join "\n"}
-#{x_method}
-end
-KLASS
-
-    eval klass
-    name
+  def self.define_module name, code
+    const_set name.to_sym, Module.new { eval code }
   end
 
-  def self.get_builder_rest_class proper_arg_count
-    name      = "B_#{proper_arg_count}_Rest"
-    existing  = const_get(name) rescue nil
-    return name if existing
+  def self.build_builder_class name, expected_arg_count
+    n_methods = (0..3).map { |given| build_set_args_n_method given, expected_arg_count }
+    x_method  = build_set_args_method expected_arg_count
+    define_module name, "#{n_methods.join "\n"}\n#{x_method}"
+  end
 
+  def self.build_builder_rest_class name, proper_arg_count
     n_methods = (0..3).map { |given| build_set_args_n_rest_method given, proper_arg_count }
     x_method  = build_set_args_rest_method proper_arg_count
-    klass     = <<KLASS
-module #{name}
-#{n_methods.join "\n"}
-#{x_method}
-end
-KLASS
-
-    eval klass
-    name
+    define_module name, "#{n_methods.join "\n"}\n#{x_method}"
   end
 
   def self.select arg_names
@@ -114,13 +105,6 @@ KLASS
       size   = 0
       proper = Nydp::NIL.is? arg_names
     end
-
-    if proper
-      class_name = get_builder_class size
-    else
-      class_name = get_builder_rest_class size
-    end
-
-    self.const_get(class_name.to_sym)
+    const_get(proper ? :"B_#{size}" : :"B_#{size}_Rest")
   end
 end
