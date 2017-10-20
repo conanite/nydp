@@ -1,12 +1,12 @@
 module Nydp
   PLUGINS = []
 
-  def self.plug_in plugin ; PLUGINS << plugin                   ; end
-  def self.load_rake_tasks; PLUGINS.each &:load_rake_tasks      ; end
-  def self.setup ns;        PLUGINS.each { |plg| plg.setup ns } ; end
-  def self.loadfiles;       PLUGINS.map(&:loadfiles).flatten    ; end
-  def self.testfiles;       PLUGINS.map(&:testfiles).flatten    ; end
-  def self.plugin_names   ; PLUGINS.map(&:name)                 ; end
+  def self.plug_in  plugin ; PLUGINS << plugin                   ; end
+  def self.load_rake_tasks ; PLUGINS.each &:load_rake_tasks      ; end
+  def self.setup        ns ; PLUGINS.each { |plg| plg.setup ns } ; end
+  def self.loadfiles       ; PLUGINS.map(&:loadfiles).flatten    ; end
+  def self.testfiles       ; PLUGINS.map(&:testfiles).flatten    ; end
+  def self.plugin_names    ; PLUGINS.map(&:name)                 ; end
   def self.loadall ns, plugin, files
     vm = VM.new(ns)
     apply_function ns, :"script-run", :"plugin-start", plugin.name if plugin
@@ -20,14 +20,13 @@ module Nydp
     apply_function ns, :"script-run", :"plugin-end", plugin.name if plugin
   end
 
-  def self.build_nydp extra_files=nil, &block
+  def self.build_nydp &block
     ns = Namespace.new
     setup(ns)
     PLUGINS.each { |plg|
       loadall ns, plg, plg.loadfiles, &block
       loadall ns, plg, plg.testfiles, &block
     }
-    loadall ns, nil, extra_files, &block if extra_files
     ns
   end
 end
