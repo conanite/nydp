@@ -18,3 +18,11 @@ ignore:
   - .xcf$
   - .pdf$
   - /select2/.*.js$
+stats:
+  nydp:
+    - ".*\\.nydp"
+  code:
+    - "lib/.*\\.(rb|rake)"
+  test:
+    - "spec/.*"
+    - "test/.*"
