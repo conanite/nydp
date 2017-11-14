@@ -78,6 +78,8 @@
 (dox-add-doc 'chapter-current 'def '("Get the name of the chapter in progress right now - this is normally the last value sent to 'chapter-start")               nil                   nil '(nydp/documentation))
 (dox-add-doc 'chapter-delete  'def '("Remove the named chapter")                                                                                                 '(name)               nil '(nydp/documentation))
 (dox-add-doc 'chapter-find    'def '("Get the named chapter")                                                                                                    '(name)               nil '(nydp/documentation))
+(dox-add-doc 'set-intersection 'def '("return the intersection of the given lists")                                                                              'args                 nil '(list-manipulation))
+(dox-add-doc 'set-union       'def '("return the union of the given lists")                                                                                      'args                 nil '(list-manipulation))
 (dox-add-doc 'dox-add-doc     'def '("Store the provided documentation item."
                                      "'name is the name of the item"
                                      "'what is the type of the item ('def or 'mac or 'thingy ... this is user-definable, not related to 'type-of)"
