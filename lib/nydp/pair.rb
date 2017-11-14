@@ -22,6 +22,9 @@ class Nydp::Pair
   def +    other ; copy.append other                          ; end
   def size       ; 1 + (cdr.is_a?(Nydp::Pair) ? cdr.size : 0) ; end
   def inspect    ; "(#{inspect_rest})"                        ; end
+  def &    other ; self.class.from_list((Set.new(self) & other).to_a)           ; end
+  def |    other ; self.class.from_list((Set.new(self) | other).to_a)           ; end
+  def proper?    ; Nydp::NIL.is?(cdr) || (cdr.is_a?(Nydp::Pair) && cdr.proper?) ; end
 
   # returns Array of elements after calling #n2r on each element
   def to_ruby list=[]
@@ -53,10 +56,6 @@ class Nydp::Pair
 
   def == other
     (NIL != other) && (other.respond_to? :car) && (self.car == other.car) && (self.cdr == other.cdr)
-  end
-
-  def proper?
-    Nydp::NIL.is?(cdr) || (cdr.is_a?(Nydp::Pair) && cdr.proper?)
   end
 
   def each &block

@@ -74,11 +74,15 @@ module Nydp
       Symbol.mk(:"pre-compile" , ns).assign Nydp::Builtin::PreCompile.instance
       Symbol.mk(:"script-run"  , ns).assign Nydp::Builtin::ScriptRun.instance
       Symbol.mk(:"**"          , ns).assign Nydp::Builtin::MathPower.instance
-      Symbol.mk(:"⌊"           , ns).assign Nydp::Builtin::MathFloor.instance
-      Symbol.mk(:"math-floor"  , ns).assign Nydp::Builtin::MathFloor.instance
-      Symbol.mk(:"⌈"           , ns).assign Nydp::Builtin::MathCeiling.instance
-      Symbol.mk(:"math-ceiling", ns).assign Nydp::Builtin::MathCeiling.instance
-      Symbol.mk(:"math-round"  , ns).assign Nydp::Builtin::MathRound.instance
+      Symbol.mk(:"⌊"               , ns).assign Nydp::Builtin::MathFloor.instance
+      Symbol.mk(:"math-floor"      , ns).assign Nydp::Builtin::MathFloor.instance
+      Symbol.mk(:"⌈"               , ns).assign Nydp::Builtin::MathCeiling.instance
+      Symbol.mk(:"math-ceiling"    , ns).assign Nydp::Builtin::MathCeiling.instance
+      Symbol.mk(:"math-round"      , ns).assign Nydp::Builtin::MathRound.instance
+      Symbol.mk(:"⋂"               , ns).assign Nydp::Builtin::SetIntersection.instance
+      Symbol.mk(:"set-intersection", ns).assign Nydp::Builtin::SetIntersection.instance
+      Symbol.mk(:"⋃"               , ns).assign Nydp::Builtin::SetUnion.instance
+      Symbol.mk(:"set-union"       , ns).assign Nydp::Builtin::SetUnion.instance
     end
   end
 end

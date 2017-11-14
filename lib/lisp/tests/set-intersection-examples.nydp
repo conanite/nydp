@@ -1,0 +1,16 @@
+(examples-for ⋂
+  ("returns a single arg"
+   (⋂ '(a b c))
+   (a b c))
+
+  ("returns intersection of two args"
+   (⋂ '(a b c) '(a b d))
+   (a b))
+
+  ("returns intersection of three args"
+   (⋂ '(a b c d e) '(a b c d f) '(z b c d g))
+   (b c d))
+
+  ("returns intersection of four args"
+   (⋂ '(a b c d e) '(a b c d f) '(z b d c g) '(z y g c d))
+   (c d)))
