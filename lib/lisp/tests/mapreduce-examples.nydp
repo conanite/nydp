@@ -1,0 +1,10 @@
+(examples-for mapreduce
+  ("maps a function over a list and sums the result"
+   (mapreduce car + '((2 3) (5 7) (11 13)) 0)
+   18)
+
+  ("extracts an attribute and sums the result"
+   (mapreduce &age + (list { name "a" age 10 }
+                           { name "b" age  7 }
+                           { name "c" age 12 }) 0)
+   29))

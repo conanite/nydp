@@ -19,6 +19,16 @@
   ; map 'f over 'things and sum the resulting list
   (apply + 0.0 (map f things)))
 
+(def mapreduce (fmap freduce things)
+  ; same as (reduce freduce (map fmap things))
+  ; returns the resulting list
+  (if (pair? things)
+      (freduce (fmap (car things))
+               (mapreduce fmap freduce (cdr things)))
+      things
+      (freduce (map fmap things))
+      (freduce)))
+
 (def hash-values (h)
   ; return values for each key in hash 'h
   (map (fn (k) h.,k) (hash-keys h)))

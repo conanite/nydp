@@ -164,6 +164,19 @@
   (bm-or-lex-lex-lex 1 2 3)
   (bm-or-lex-lex-lex nil 2 3))
 
+(def build-mapsum-data (count data)
+  (if (> count 0)
+      (build-mapsum-data (- count 1)
+                         (cons { mappit (rand 10) }
+                               data))
+      data))
+
+(let mapsum-data (build-mapsum-data 1000)
+  (def bm-mapsum    () (mapsum &mappit mapsum-data))
+  (def bm-mapreduce () (mapreduce &mappit + mapsum-data 0)))
+
+
+
 (def bm-repeat (f n)
   ; used in benchmarking
   (for b 1 n (f)))
@@ -184,7 +197,9 @@
 
 (def rbs (name)
   (let summary nil
-    (push (bm "cond with OR       "   bm-faster-or             10  40000) summary)
+    (push (bm "mapsum    "   bm-mapsum             10  100) summary)
+    (push (bm "mapreduce "   bm-mapreduce          10  100) summary)
+    ;; (push (bm "cond with OR       "   bm-faster-or             10  40000) summary)
     ;; (push (bm "cond with OR       "   bm-cond-9             10  40000) summary)
     ;; (push (bm "cond with OR       "   bm-cond-9             10  100000) summary)
     ;; (push (bm "cond with OR       "   bm-cond-lex-lit-lit             10  100000) summary)
