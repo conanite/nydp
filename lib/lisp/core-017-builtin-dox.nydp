@@ -41,6 +41,9 @@
 (dox-add-doc 'inspect   'def '("return a string representing 'arg, potentially (but not always) in a way that can be parsed back in to get the original object") '(arg)                nil '(nydp-core))
 (dox-add-doc 'comment   'def '("does nothing at all." "Intercepted inside 'def and 'mac and used for documentation")                                             '(arg)                nil '(nydp-core))
 (dox-add-doc 'parse-in-string 'def '("parse the given string assuming a string-open delimiter has already been encountered")                                     '(str)                nil '(nydp-core))
+(dox-add-doc 'rand            'def '("return a random number ; with no args, between 0 and 1"
+                                     "with 1 arg, an integer less than arg"
+                                     "with two args, an integer >= arg 0 and < arg 1")                                                                           'args                 nil '(math))
 (dox-add-doc 'random-string   'def '("return a random string of length 'len (default 10)")                                                                       '(len)                nil '(string-manipulation))
 (dox-add-doc 'to-string       'def '("return a human-readable string representation of 'arg")                                                                    '(arg)                nil '(string-manipulation))
 (dox-add-doc 'string-length   'def '("return the length of 'arg")                                                                                                '(arg)                nil '(string-manipulation))
