@@ -1,5 +1,24 @@
 (def privately () nil)
 
+(assign comments nil)
+
+(def fetch-and-clear-comments ()
+  ((fn (c) (assign comments nil) c) (rev comments)))
+
+(def filter-comments (form acc)
+  (if (no form)
+      (rev acc)
+      (pair? form)
+      (filter-comments (cdr form)
+                       (if (if (pair? (car form))
+                               (eq? (caar form)
+                                    'comment))
+                           acc
+                           (cons (filter-comments (car form)
+                                                  nil)
+                                 acc)))
+      form))
+
 ((fn (this-chapter-name chapters chapter-new chapter-build chapter-add-to-chapter)
      (assign chapters (hash))
 
@@ -171,10 +190,10 @@
 
 (def define-def-expr (name args body-forms)
   ; used internally by 'def
-  `(do (def-assign ,name (fun ,args ,@(hash-get body-forms nil)))
+  `(do (def-assign ,name (fun ,args ,@(filter-comments (hash-get body-forms nil))))
        (dox-add-doc ',name
                     'def
-                    ',(map car (hash-get body-forms 'comment))
+                    ',(+ (fetch-and-clear-comments) (map car (hash-get body-forms 'comment)))
                     ',args
                     '(def ,name ,args ,@(hash-get body-forms nil))
                     ',(map car (hash-get body-forms 'chapter)))))
@@ -183,3 +202,7 @@
   ; define a new function in the global namespace
   (chapter nydp-core)
   (define-def-expr name args (filter-forms (build-def-hash (hash)) body)))
+
+(mac comment (txt)
+  (assign comments (cons txt comments))
+  nil)

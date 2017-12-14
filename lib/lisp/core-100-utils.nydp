@@ -15,10 +15,6 @@
            (map λx(hash-get tmp x)
                 (sort:hash-keys tmp)))))
 
-(def mapsum (f things)
-  ; map 'f over 'things and sum the resulting list
-  (apply + 0.0 (map f things)))
-
 (def mapreduce (fmap freduce things)
   ; same as (reduce freduce (map fmap things))
   ; returns the resulting list
@@ -29,9 +25,11 @@
       (freduce (map fmap things))
       (freduce)))
 
-(def hash-values (h)
-  ; return values for each key in hash 'h
-  (map (fn (k) h.,k) (hash-keys h)))
+; map 'f over 'things and sum the resulting list
+(def mapsum (f things) (mapreduce f + things))
+
+; return values for each key in hash 'h
+(def hash-values (h) (map (fn (k) h.,k) (hash-keys h)))
 
 (def seen? ()
   ; returns a new function f which takes a parameter x
@@ -43,9 +41,8 @@
   (let seen (hash)
     λx(returning seen.,x (= seen.,x t))))
 
-(def uniqify (things)
-  ; return a list containing all the elements of 'things, but with no duplicates
-  (reject (seen?) things))
+; return a list containing all the elements of 'things, but with no duplicates
+(def uniqify (things) (reject (seen?) things))
 
 (def group-by (f things)
   ; return a hash of 'things keyed by (f thing) for
@@ -64,9 +61,8 @@
         (let mi (m2i anchor)
           (map λm(i2m (+ mi m)) mm))))
 
-(mac auto-hash names
-  ; (auto-hash a b c) same as { a a b b c c }
-  `(brace-list ,@(flatten:map λn(list n n) names)))
+; (auto-hash a b c) same as { a a b b c c }
+(mac auto-hash names `(brace-list ,@(flatten:map λn(list n n) names)))
 
 (mac accum (accfn-name . body)
   (w/uniq acc
@@ -75,18 +71,19 @@
          ,@body
          (rev ,acc)))))
 
-(mac ++ (place inc)
-  `(= ,place (+ ,place ,(or inc 1))))
+; increment the value at 'place by 'inc (default 1)
+(mac ++ (place inc) `(= ,place (+ ,place ,(or inc 1))))
 
+; return a function that returns 'start on first invocation,
+; and 'start + n * 'incr for each nth invocation
 (def seqf (start incr)
   (let i (or incr 1)
     (fn () (returning start (++ start i)))))
 
-(def mapply (f args)
-  ; like 'map, but assumes each item in 'args is a list
-  ; of parameters for 'f. Effectively, calls (apply f item)
-  ; for each item in 'args
-  (map λa(apply f a) args))
+; like 'map, but assumes each item in 'args is a list
+; of parameters for 'f. Effectively, calls (apply f item)
+; for each item in 'args
+(def mapply (f args) (map λa(apply f a) args))
 
 (mac def/cycler (name things)
   ; create a function called 'name ; each invocation of the function will

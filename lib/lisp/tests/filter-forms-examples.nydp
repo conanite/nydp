@@ -44,3 +44,33 @@
                                  (this)
                                  (that))))
    ((("hello") ("more details") ("very rigourous")) ((this) (that)))))
+
+(examples-for filter-comments
+  ("returns nil for nil"
+   (filter-comments nil nil)
+   nil)
+
+  ("returns atom for atom"
+   (filter-comments 12 nil)
+   12)
+
+  ("returns list for list"
+   (filter-comments '(a b c d) nil)
+   (a b c d))
+
+  ("returns list without comment for list with comment"
+   (filter-comments '(a b (comment "hahaha") c d) nil)
+   (a b c d))
+
+  ("returns nothing for comment"
+   (filter-comments '((comment "hahaha")) nil)
+   nil)
+
+  ("weeds out nested comments"
+   (filter-comments '(1 2 (3 4
+                             (comment "yoyo") 5
+                             (6 7 (comment "eight") 8 9)
+                             { 10 (comment "eleven") 11 12 13 }
+                             (comment "fourteen") 14) (comment "fifteen") 15
+                             (if 16 (comment "seventeen") 17 (comment "eighteen") 18 19)))
+   (1 2 (3 4 5 (6 7 8 9) (brace-list 10 11 12 13) 14) 15 (if 16 17 18 19))))
