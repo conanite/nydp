@@ -1,4 +1,9 @@
 module Nydp
+  module AutoWrap
+    def _nydp_wrapper ns ; self ; end
+    def to_ruby          ; self ; end
+  end
+
   R2NHELPERS = {
     ::Symbol   => ->(obj, ns) { Nydp::Symbol.mk(obj, ns)                            },
     Array      => ->(obj, ns) { Nydp::Pair.from_list obj.map { |o| Nydp.r2n o, ns } },
