@@ -6,6 +6,15 @@
       (cons (map car args)
             (apply zip (map cdr args)))))
 
+; invokes 'f for each element of 'things, first element processed first
+; ( "l" in "eachl" = "leftmost first" )
+(def eachl (f things)
+     (when things
+       (f (car things))
+       (eachl f (cdr things))))
+
+; invokes 'f for each element of 'things, last element processed first
+; ( "r" in "eachr" = "rightmost first" )
 (def eachr (f things)
      (when things
        (eachr f (cdr things))

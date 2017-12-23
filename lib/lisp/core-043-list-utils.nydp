@@ -221,3 +221,6 @@
       matchers
       (matchers things)
       t))
+
+; given an arg 'f, invoke 'f with no args
+(def self-invoke (f) (f))
