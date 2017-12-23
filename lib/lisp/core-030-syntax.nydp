@@ -226,13 +226,11 @@ scoping, assignment, anonymous functions and more...")
       (ampersand-expression? name)
       (ampersand-expression-assignment name value)))
 
-(mac def-assign args
-  ; override previous definition to allow expressions like (def hsh.foo (arg arg2) ...)
-  `(= ,@args))
+; override previous definition to allow expressions like (def hsh.foo (arg arg2) ...)
+(mac def-assign args `(= ,@args))
 
-(mac or= (place val)
-  ; evaluate ,val and assign result to ,place only if ,place is already nil
-  `(or ,place (= ,place ,val)))
+; evaluate ,val and assign result to ,place only if ,place is already nil
+(mac or= (place val) `(or ,place (= ,place ,val)))
 
 (def brace-list-hash-key (k)
   (if (isa 'symbol k)      `(quote ,k)
@@ -259,32 +257,28 @@ scoping, assignment, anonymous functions and more...")
       (error "Irregular '& syntax: got suffix ~(inspect (cdr rest)) in ~(join-str pfx "&" rest)")
       (build-ampersand-syntax (car rest))))
 
-(mac brace-list-mono (arg)
-  ; override 'brace-list-mono in order to provide a useful interpretation for "{ x }" syntax
-  arg)
+; override 'brace-list-mono in order to provide a useful interpretation for "{ x }" syntax
+(mac brace-list-mono (arg) arg)
 
-(mac brace-list-empty ()
-  ; interprets "{ }" as new hash
-  '(hash))
+; interprets "{ }" as new hash
+(mac brace-list-empty () '(hash))
 
+; parser expands { foo bar } to (brace-list foo bar)
 (mac brace-list args
-  ; parser expands { foo bar } to (brace-list foo bar)
   (if (no args)
       `(brace-list-empty)
       (no (cdr args))
       `(brace-list-mono ,(car args))
       (brace-list-build-hash args)))
 
-(mac returnlet (var val . body)
-  ; stores ,val in ,var, executes ,@body, returns ,var. Saves a line of code at the end of
-  ; 'let. Assumes 'body is going to do something destructive with 'val, but you want 'val before
-  ; it gets changed. See also 'returning
-  `(let ,var ,val ,@body ,var))
+; stores ,val in ,var, executes ,@body, returns ,var. Saves a line of code at the end of
+; 'let. If 'body assigns to 'var, the assigned value of 'var will be returned. See also 'returning
+(mac returnlet (var val . body) `(let ,var ,val ,@body ,var))
 
-(mac returning (val . body)
-  ; stores ,val, executes ,@body, and returns ,val. Assumes 'body is going to do something
-  ; destructive with 'val, but you want 'val before it gets changed. See also 'returnlet
-  (w/uniq retval `(returnlet ,retval ,val ,@body)))
+; stores ,val, executes ,@body, and returns ,val. Assumes 'body is going to do something
+; destructive with 'val, but you want 'val before it gets changed. Note that if 'val is mutated
+; (eg hash), the mutated value will be returned. See also 'returnlet
+(mac returning (val . body) (w/uniq retval `(returnlet ,retval ,val ,@body)))
 
 (mac aif (expr . body)
   ; like if, except the value of each condition is locally bound to the variable 'it
