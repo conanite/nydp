@@ -16,21 +16,19 @@ module Nydp
       end
     end
 
-    def initialize ruby_date
-      @ruby_date = ruby_date
-    end
+    def initialize ruby_date ; @ruby_date = ruby_date ; end
 
-    def to_s      ; ruby_date.to_s    ; end
-    def to_ruby   ; ruby_date         ; end
-    def inspect   ; ruby_date.inspect ; end
-    def nydp_type ; :date             ; end
-    def + int     ; r2n(ruby_date + int            , nil) ; end
-    def > other   ; is_date?(other) && ruby_date > other.ruby_date           ; end
-    def < other   ; is_date?(other) && ruby_date < other.ruby_date           ; end
-    def == other  ; is_date?(other) && ruby_date == other.ruby_date          ; end
-    def <=> other ; is_date?(other) && ruby_date <=> other.ruby_date         ; end
-    def eql? d    ; self == d                             ; end
-    def hash      ; ruby_date.hash                        ; end
+    def to_s      ; ruby_date.to_s                                   ; end
+    def to_ruby   ; ruby_date                                        ; end
+    def inspect   ; ruby_date.inspect                                ; end
+    def nydp_type ; :date                                            ; end
+    def +     int ; r2n(ruby_date + int, nil)                        ; end
+    def >   other ; is_date?(other) && ruby_date > other.ruby_date   ; end
+    def <   other ; is_date?(other) && ruby_date < other.ruby_date   ; end
+    def ==  other ; is_date?(other) && ruby_date == other.ruby_date  ; end
+    def <=> other ; is_date?(other) && ruby_date <=> other.ruby_date ; end
+    def eql?    d ; self == d                                        ; end
+    def hash      ; ruby_date.hash                                   ; end
     def is_date? other ; other.is_a? Nydp::Date                                            ; end
     def -        other ; r2n(ruby_date - (is_date?(other) ? other.ruby_date : other), nil) ; end
 

@@ -18,6 +18,8 @@
  ("navigates to week end from sun"   (let d (date 2015 11  1) (to-string d.end-of-week))         "2015-11-01" )
  ("navigates to week end"            (let d (date 2015 11  6) (to-string d.end-of-week))         "2015-11-08" )
 
+ ("parses string" (let d (date "2004-03-12") (list d.year d.month d.day)) (2004 3 12))
+
  ("can act as hash key"
   (with (h {} d (date 2015 11 8))
     (hash-set h d "on this day")
