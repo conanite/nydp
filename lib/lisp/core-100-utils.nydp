@@ -15,6 +15,10 @@
            (map λx(hash-get tmp x)
                 (sort:hash-keys tmp)))))
 
+; like 'sort-by, except when 'f returns nil, use 'instead as the sort key instead
+(def safe-sort-by (f instead things)
+  (sort-by λi(or (f i) instead) things))
+
 (def mapreduce (fmap freduce things)
   ; same as (reduce freduce (map fmap things))
   ; returns the resulting list
