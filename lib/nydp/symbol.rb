@@ -1,19 +1,22 @@
 class Nydp::Symbol
   class Unbound < StandardError ; end
-
   EMPTY = :""
   attr_accessor :name
-  attr_reader   :hash
+
+  def self.new name
+    special(name.to_s.to_sym) || super
+  end
 
   def initialize name
     name = name.to_s
     @name = name.to_sym
-    @inspection = "|#{name}|" if untidy(name)
-    @hash       = name.hash
+    @inspection = "|#{name.gsub(/\|/, '\|')}|" if untidy(name)
   end
 
+  def hash ; name.hash ; end # can't cache this, it seems to break when unmarshalling
+
   def untidy str
-    (str == "") || (str == nil) || (str =~ /\s/)
+    (str == "") || (str == nil) || (str =~ /[\s\|,\(\)"]/)
   end
 
   def value context=nil
@@ -21,41 +24,51 @@ class Nydp::Symbol
     @value
   end
 
-  def self.mk name, ns
-    name = name.to_sym
+  def self.special name
     return Nydp::NIL if name == :nil
     return Nydp::T   if name == :t
-    sym = ns[name]
-    unless sym
-      sym = new(name)
-      ns[name] = sym
-    end
-    sym
+    nil
   end
 
+  def self.mk name, ns
+    name = name.to_s.to_sym
+    ns[name] ||= new(name)
+  end
 
   def self.find name, ns ; ns[name.to_sym] ;  end
 
-  def nydp_type  ; :symbol                  ; end
-  def inspect    ; @inspection || name.to_s ; end
-  def to_s       ; name.to_s                ; end
-  def to_sym     ; name                     ; end
-  def to_ruby    ; to_sym                   ; end
-  def eql? other ; self == other            ; end
-  def is? nm     ; self.name == nm.to_sym   ; end
-  def > other    ; self.name > other.name   ; end
-  def < other    ; self.name < other.name   ; end
-  def <=> other  ; self.name <=> other.name ; end
+  def nydp_type           ; :symbol                  ; end
+  def inspect             ; @inspection || name.to_s ; end
+  def to_s                ; name.to_s                ; end
+  def to_sym              ; name                     ; end
+  def to_ruby             ; to_sym                   ; end
+  def is?              nm ; self.name == nm.to_sym   ; end
+  def >             other ; self.name > other.name   ; end
+  def <             other ; self.name < other.name   ; end
+  def <=>           other ; self.name <=> other.name ; end
+  def assign value, _=nil ; @value = value           ; end
+  def execute          vm ; vm.push_arg self.value   ; end
 
   def == other
     other.is_a?(Nydp::Symbol) && (self.name == other.name)
   end
 
-  def execute vm
-    vm.push_arg self.value
+  alias eql? ==
+end
+
+class Nydp::FrozenSymbol < Nydp::Symbol
+  @@frozen = { }
+
+  def self.mk name
+    name = name.to_s.to_sym
+    @@frozen[name] ||= new(name)
   end
 
-  def assign value, _=nil
-    @value = value
+  def value _=nil
+    raise Unbound.new("frozen symbol: #{self.inspect}")
+  end
+
+  def assign v, _=nil
+    raise "can't assign to frozen: #{self.inspect}"
   end
 end

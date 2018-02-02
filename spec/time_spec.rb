@@ -8,7 +8,7 @@ describe Nydp::Date do
 
   it "r2n does not convert ruby Time" do
     rd = Time.now
-    nd = Nydp.r2n rd, ns
+    nd = Nydp.r2n rd
 
     expect(nd).to be_a Time
     expect(nd).to eq rd

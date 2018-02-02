@@ -7,11 +7,9 @@ module Nydp
 
   # TODO: write VM #apply_function so we have fewer calls to VM.new
   def self.apply_function ns, function_name, *args
-    function = r2n(function_name.to_sym, ns).value
-    args     = r2n args, ns
     vm       = VM.new(ns)
-
-    function.invoke vm, args
+    function = Symbol.mk(function_name.to_sym, ns).value
+    function.invoke vm, r2n(args)
     vm.thread
   end
 
@@ -89,6 +87,7 @@ require "nydp/error"
 require "nydp/truth"
 require "nydp/version"
 require "nydp/helper"
+require 'nydp/core_ext'
 require "nydp/symbol"
 require "nydp/symbol_lookup"
 require "nydp/pair"

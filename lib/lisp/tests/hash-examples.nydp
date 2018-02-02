@@ -28,7 +28,7 @@
   ("returns nil for a symbol"  (hash-keys 'lipstick)  nil)
 
   ("returns date operations"
-   (hash-keys (date 2015 11 18))
+   (sort:hash-keys (date 2015 11 18))
    (beginning_of_month
     beginning_of_week
     beginning_of_year

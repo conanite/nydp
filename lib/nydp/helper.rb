@@ -1,39 +1,18 @@
 module Nydp
   module AutoWrap
-    def _nydp_wrapper ns ; self ; end
-    def to_ruby          ; self ; end
+    def _nydp_wrapper ; self ; end
+    def to_ruby       ; self ; end
   end
 
-  R2NHELPERS = {
-    ::Symbol   => ->(obj, ns) { Nydp::Symbol.mk(obj, ns)                            },
-    Array      => ->(obj, ns) { Nydp::Pair.from_list obj.map { |o| Nydp.r2n o, ns } },
-    String     => ->(obj, ns) { Nydp::StringAtom.new obj.to_s                       },
-    NilClass   => ->(obj, ns) { Nydp::NIL                                           },
-    FalseClass => ->(obj, ns) { Nydp::NIL                                           },
-    TrueClass  => ->(obj, ns) { Nydp::T                                             },
-    ::Date     => ->(obj, ns) { Nydp::Date.new obj                                  },
-  }
-
-  def self.n2r nydp
-    nydp.respond_to?(:to_ruby) ? nydp.to_ruby : nydp
+  module Converter
+    def n2r         o ; o.respond_to?(:to_ruby) ? o.to_ruby : o ; end
+    def r2n o, ns=nil ; o._nydp_wrapper                         ; end
   end
 
-  def self.r2n ruby_obj, ns
-    return ruby_obj._nydp_wrapper(ns) if ruby_obj.respond_to? :_nydp_wrapper
-
-    rklass = ruby_obj.class
-    R2NHELPERS.each do |hklass, proc|
-      if rklass <= hklass
-        return proc.call ruby_obj, ns
-      end
-    end
-
-    ruby_obj
-  end
+  extend Converter
 
   module Helper
-    def n2r obj     ; Nydp.n2r obj     ; end
-    def r2n obj, ns ; Nydp.r2n obj, ns ; end
+    include Converter
 
     def sig klass
       case klass

@@ -15,8 +15,6 @@ module Nydp
       @ns           = ns
     end
 
-    def r2n              obj ; super obj, @ns              ; end
-
     def push_instructions ii, ctx
       if @current_instructions && NIL != @current_instructions
         @instructions.push @current_instructions

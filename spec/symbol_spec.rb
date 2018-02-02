@@ -5,6 +5,37 @@ describe Nydp::Symbol do
   let(:foo) { Nydp::Symbol.mk :FOO, ns }
   let(:vm)  { Nydp::VM.new(ns)         }
 
+  describe "#inspect" do
+    it "wraps itself in pipe chars if empty" do
+      sym = Nydp::Symbol.mk "", ns
+      expect(sym.inspect).to eq "||"
+    end
+    it "wraps itself in pipe chars if nil" do
+      sym = Nydp::Symbol.mk nil, ns
+      expect(sym.inspect).to eq "||"
+    end
+    it "wraps itself in pipe chars if it has spaces" do
+      sym = Nydp::Symbol.mk "hello world", ns
+      expect(sym.inspect).to eq "|hello world|"
+    end
+    it "wraps itself in pipe chars if it has pipe chars" do
+      sym = Nydp::Symbol.mk "hello|world", ns
+      expect(sym.inspect).to eq '|hello\|world|'
+    end
+    it "wraps itself in pipe chars if it contains quote chars" do
+      sym = Nydp::Symbol.mk "hello 'world'", ns
+      expect(sym.inspect).to eq "|hello 'world'|"
+    end
+    it "wraps itself in pipe chars if it contains doublequote chars" do
+      sym = Nydp::Symbol.mk 'hello "world"', ns
+      expect(sym.inspect).to eq '|hello "world"|'
+    end
+    it "wraps itself in pipe chars if it has other punctuation" do
+      sym = Nydp::Symbol.mk 'hello,(world)', ns
+      expect(sym.inspect).to eq '|hello,(world)|'
+    end
+  end
+
   it "returns a ruby symbol in #to_ruby" do
     sym = Nydp::Symbol.mk :foo, ns
     expect(sym.to_ruby).to eq :foo

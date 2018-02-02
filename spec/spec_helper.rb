@@ -37,5 +37,8 @@ class TestThing
     "(TestThing #{a.inspect} #{b.inspect})"
   end
 
-  def _nydp_safe_methods ; %i{ a b } ; end
+  def _nydp_get name
+    name = name.to_s.to_sym
+    send(name) if name == :a || name == :b
+  end
 end

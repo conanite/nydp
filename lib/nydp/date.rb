@@ -22,15 +22,15 @@ module Nydp
     def to_ruby   ; ruby_date                                        ; end
     def inspect   ; ruby_date.inspect                                ; end
     def nydp_type ; :date                                            ; end
-    def +     int ; r2n(ruby_date + int, nil)                        ; end
+    def +     int ; r2n(ruby_date + int)                             ; end
     def >   other ; is_date?(other) && ruby_date > other.ruby_date   ; end
     def <   other ; is_date?(other) && ruby_date < other.ruby_date   ; end
     def ==  other ; is_date?(other) && ruby_date == other.ruby_date  ; end
     def <=> other ; is_date?(other) && ruby_date <=> other.ruby_date ; end
     def eql?    d ; self == d                                        ; end
     def hash      ; ruby_date.hash                                   ; end
-    def is_date? other ; other.is_a? Nydp::Date                                            ; end
-    def -        other ; r2n(ruby_date - (is_date?(other) ? other.ruby_date : other), nil) ; end
+    def is_date? other ; other.is_a? Nydp::Date                                       ; end
+    def -        other ; r2n(ruby_date - (is_date?(other) ? other.ruby_date : other)) ; end
 
     @@pass_through = %i{ monday? tuesday? wednesday? thursday? friday? saturday? sunday? }
     @@keys = Set.new %i{
@@ -68,17 +68,17 @@ module Nydp
       class_eval "def #{n} * ; ruby_date.#{n} ; end"
     end
 
-    def keys                     ; @@keys                                           ; end
-    def dispatch key, y, m, d, w ; self.send(key, y, m, d, w) if keys.include?(key) ; end
+    def _nydp_keys               ; @@keys.to_a                                            ; end
+    def dispatch key, y, m, d, w ; self.send(key, y, m, d, w) if _nydp_keys.include?(key) ; end
 
-    def [] key
+    def _nydp_get key
       key = key.to_s.gsub(/-/, '_').to_sym
       y = ruby_date.year
       m = ruby_date.month
       d = ruby_date.day
       w = ruby_date.wday
 
-      r2n(dispatch(key, y, m, d, w), nil)
+      r2n(dispatch(key, y, m, d, w))
     end
   end
 end

@@ -9,6 +9,8 @@ module Nydp
     def assign  *_ ; self             ; end
     def nydp_type  ; :truth           ; end
     def to_ruby    ; true             ; end
+    def _nydp_get    a ; Nydp::T      ; end
+    def _nydp_set a, v ; Nydp::T      ; end
   end
 
   class Nil
@@ -26,7 +28,9 @@ module Nydp
     def inspect     ; "nil"         ; end
     def nydp_type   ; :nil          ; end
     def to_ruby     ; nil           ; end
-    def execute vm  ; vm.push_arg self ; end
+    def execute     vm ; vm.push_arg self ; end
+    def _nydp_get    a ; Nydp::NIL        ; end
+    def _nydp_set a, v ; Nydp::NIL        ; end
   end
 
   NIL = Nil.instance

@@ -7,7 +7,7 @@ describe Nydp::Date do
 
   it "converts ruby Date to Nydp::Date" do
     rd = Date.parse "2015-06-08"
-    nd = Nydp.r2n rd, ns
+    nd = Nydp.r2n rd
 
     expect(nd).        to be_a Nydp::Date
     expect(nd.to_s).   to eq "2015-06-08"
@@ -33,16 +33,16 @@ describe Nydp::Date do
 
   it "returns date components" do
     rd = Date.parse "2015-06-08"
-    nd = Nydp.r2n rd, ns
+    nd = Nydp.r2n rd
 
-    expect(nd[:year]). to eq 2015
-    expect(nd[:month]).to eq 6
-    expect(nd[:day]).  to eq 8
+    expect(nd._nydp_get(:year) ).to eq 2015
+    expect(nd._nydp_get(:month)).to eq 6
+    expect(nd._nydp_get(:day)  ).to eq 8
   end
 
   describe "date maths" do
-    let(:d0) { Nydp.r2n Date.today, ns       }
-    let(:d1) { Nydp.r2n (Date.today + 6), ns }
+    let(:d0) { Nydp.r2n Date.today       }
+    let(:d1) { Nydp.r2n (Date.today + 6) }
 
     it "works with builtin minus" do
       minus = Nydp::Builtin::Minus.instance
@@ -120,31 +120,31 @@ describe Nydp::Date do
 
   it "returns relative dates by year" do
     rd = Date.parse "2015-06-08"
-    nd = Nydp.r2n rd, ns
+    nd = Nydp.r2n rd
 
-    expect(nd[:"last-year"].to_s).          to eq "2014-06-08"
-    expect(nd[:"next-year"].to_s).          to eq "2016-06-08"
-    expect(nd[:"beginning-of-year"].to_s).  to eq "2015-01-01"
-    expect(nd[:"end-of-year"].to_s).        to eq "2015-12-31"
+    expect(nd._nydp_get(:"last-year").to_s).          to eq "2014-06-08"
+    expect(nd._nydp_get(:"next-year").to_s).          to eq "2016-06-08"
+    expect(nd._nydp_get(:"beginning-of-year").to_s).  to eq "2015-01-01"
+    expect(nd._nydp_get(:"end-of-year").to_s).        to eq "2015-12-31"
   end
 
   it "returns relative dates by month" do
     rd = Date.parse "2015-06-08"
-    nd = Nydp.r2n rd, ns
+    nd = Nydp.r2n rd
 
-    expect(nd[:"last-month"].to_s).          to eq "2015-05-08"
-    expect(nd[:"next-month"].to_s).          to eq "2015-07-08"
-    expect(nd[:"beginning-of-month"].to_s).  to eq "2015-06-01"
-    expect(nd[:"end-of-month"].to_s).        to eq "2015-06-30"
+    expect(nd._nydp_get(:"last-month").to_s).          to eq "2015-05-08"
+    expect(nd._nydp_get(:"next-month").to_s).          to eq "2015-07-08"
+    expect(nd._nydp_get(:"beginning-of-month").to_s).  to eq "2015-06-01"
+    expect(nd._nydp_get(:"end-of-month").to_s).        to eq "2015-06-30"
   end
 
   it "returns relative dates by week" do
     rd = Date.parse "2015-03-12"
-    nd = Nydp.r2n rd, ns
+    nd = Nydp.r2n rd
 
-    expect(nd[:"last-week"].to_s).          to eq "2015-03-05"
-    expect(nd[:"next-week"].to_s).          to eq "2015-03-19"
-    expect(nd[:"beginning-of-week"].to_s).  to eq "2015-03-09"
-    expect(nd[:"end-of-week"].to_s).        to eq "2015-03-15"
+    expect(nd._nydp_get(:"last-week").to_s).          to eq "2015-03-05"
+    expect(nd._nydp_get(:"next-week").to_s).          to eq "2015-03-19"
+    expect(nd._nydp_get(:"beginning-of-week").to_s).  to eq "2015-03-09"
+    expect(nd._nydp_get(:"end-of-week").to_s).        to eq "2015-03-15"
   end
 end

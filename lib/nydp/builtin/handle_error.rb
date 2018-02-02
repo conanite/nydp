@@ -25,7 +25,7 @@ class Nydp::Builtin::HandleError
         e = e.cause
       end
 
-      handler.invoke_2 vm, vm.r2n(msgs)
+      handler.invoke_2 vm, r2n(msgs)
     end
 
     def to_s

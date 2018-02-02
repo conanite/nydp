@@ -66,7 +66,7 @@ with args
   keysym
   \"foobar\""
 
-        expect(cleanup_err_msg error.cause.message).to eq "hash-set: Not a hash: Nydp::StringAtom"
+        expect(cleanup_err_msg error.cause.message).to eq "_nydp_get : not settable: keysym on Nydp::StringAtom"
       end
     end
 
@@ -86,7 +86,7 @@ with args
   \"this here ain't no hash, hombre\"
   keysym"
 
-        expect(cleanup_err_msg error.cause.message).to eq "hash-get: Not a hash: Nydp::StringAtom"
+        expect(cleanup_err_msg error.cause.message).to eq "_nydp_get : not gettable: keysym on Nydp::StringAtom"
       end
     end
   end
