@@ -1,0 +1,12 @@
+(examples-for zap
+  ("it adds a value to place"
+    (let a 10
+      (zap + a 2)
+      a)
+    12)
+
+  ("it multiplies the value in a place"
+    (let a 10
+      (zap * a 2)
+      a)
+    20))

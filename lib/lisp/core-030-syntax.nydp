@@ -325,3 +325,7 @@ scoping, assignment, anonymous functions and more...")
   ; properly handle any destructuring args if present
   (fun/approve-arg-names args args)
   (destructure/build args nil body))
+
+; assign (f place) to place
+(mac zap (f place . args)
+  `(= ,place (,f ,place ,@args)))
