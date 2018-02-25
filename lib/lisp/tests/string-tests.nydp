@@ -24,6 +24,15 @@
    (string-replace "and|or" "x" "a and b or c and d")
    "a x b x c x d"))
 
+(examples-for string-truncate
+  ("truncates a string to the given length"
+   (string-truncate "a and b and c and d" 8)
+   "a and b ")
+
+  ("truncate to zero"
+   (string-truncate "a and b and long and complex" 0)
+   ""))
+
 (examples-for string-match
   ("no match returns nil"
    (string-match "this that another" "XXXX")

@@ -1,5 +1,6 @@
 (chapter-start 'string-manipulation "utilities for manipulating strings")
 
+; return a new string with leading and trailing whitespace removed
 (def string-strip (txt)
   (string-replace "(^\\s+|\\s+$)" "" txt))
 
@@ -26,3 +27,7 @@
   ; override this in order to provide specific interpolation behaviour
   ; (for example, formatting numbers or stripping HTML tags)
   (j pieces))
+
+; return the first 'length chars of string 'str
+(def string-truncate (str length)
+  (string-replace "(.{~|length|}).*" "\\1" str))
