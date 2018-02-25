@@ -169,3 +169,15 @@
   ("argument default value is nil"
    ( (fn (x y z) (list x y (car z))) 'a 'b )
    (a b nil)))
+
+(examples-for do
+  ("executes its content"
+   (let premesolithic 3
+     (do
+       (assign premesolithic (* premesolithic 4))
+       (let jurassic 17
+         (do
+           (= jurassic (+ jurassic premesolithic))
+           (= premesolithic (+ jurassic premesolithic))
+           (* premesolithic 2)))))
+   82))
