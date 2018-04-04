@@ -23,14 +23,17 @@
 ; assign (cons x things) to things
 (mac push (x things) `(= ,things (cons ,x ,things)))
 
-; flatten the given list, recursively
-(def flatten (things)
+; flatten the given list, transforming each leaf-item, recursively
+(def flatmap (f things)
      (let acc nil
           (rfnwith flattenize (x things)
                    (if (pair? x)
                        (eachr flattenize x)
-                       (push x acc)))
+                       (push (f x) acc)))
           acc))
+
+; flatten the given list, recursively
+(def flatten (things) (flatmap x1 things))
 
 ; given a list 'al of form '( (k0 v0) (k1 v1) (k2 v2) ... (kn vn) ) and
 ; a 'key, returns the list (kx vx) from 'al where kx is equal to 'key

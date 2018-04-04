@@ -16,16 +16,15 @@
            (flatten (map (fn (x) (list txt x))
                          (cdr joinables))))))
 
-(def j items
-  ; delegate to 'joinstr with an empty join string
-  ; shortcut for (joinstr ""  items)
-  (joinstr "" items))
+; stringify join all the things and join them with no separator, like (joinstr "" things)
+(def j things
+  (apply + (flatmap to-string things)))
 
+; string-interpolation syntax emits this form. Default implementation
+; is to delegate to 'j , but containing forms may use macros that
+; override this in order to provide specific interpolation behaviour
+; (for example, formatting numbers or stripping HTML tags)
 (def string-pieces pieces
-  ; string-interpolation syntax emits this form. Default implementation
-  ; is to delegate to 'j , but containing forms may use macros that
-  ; override this in order to provide specific interpolation behaviour
-  ; (for example, formatting numbers or stripping HTML tags)
   (j pieces))
 
 ; return the first 'length chars of string 'str
