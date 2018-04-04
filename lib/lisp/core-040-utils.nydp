@@ -40,23 +40,31 @@
 
 (mac dynamic (name)
   ; creates a dynamic variable.
-  (hash-set dynamics name t)
-  (let with-mac-name (sym "w/~name")
+  (let with-mac-name (sym:+ "w/" name)
     (w/uniq prev
       `(do
-        (mac ,with-mac-name (new-value . body)
-             (w/uniq result
-                     `(let ,',prev (hash-get (thread-locals) ',',name)
-                           (hash-set (thread-locals) ',',name ,new-value)
-                           (let ,result (do ,@body)
-                             (hash-set (thread-locals) ',',name ,',prev)
-                             ,result))))
-           (def ,name () (hash-get (thread-locals) ',name))))))
+         (hash-set dynamics ',name t)
+         (mac ,with-mac-name (new-value . body)
+           (w/uniq result
+                   `(let ,',prev (hash-get (thread-locals) ',',name)
+                      (hash-set (thread-locals) ',',name ,new-value)
+                      (returning (do ,@body)
+                        (hash-set (thread-locals) ',',name ,',prev)))))
+         (def ,name () (hash-get (thread-locals) ',name))))))
+
+
+; overrides 'privately defined earlier in documentation manager
+(dynamic privately)
+
+; suppress documentation of anything defined in 'body
+(mac in-private body
+  `(w/privately t ,@body))
 
 (mac mapx (things x expr)
   ; a macro wrapper for 'map
   ; 'things is a list, 'x is the name of a variable, and 'expr
   ; is evaluated and collected for each 'x in 'things
+  ; usage: (mapx items v (to-string v)) equivalent to (map to-string items)
   (chapter list-manipulation)
   `(map (fun (,x) ,expr) ,things))
 
