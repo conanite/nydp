@@ -38,7 +38,7 @@
 
 (assign dynamics (hash))
 
-(mac dynamic (name)
+(mac dynamic (name initial)
   ; creates a dynamic variable.
   (let with-mac-name (sym:+ "w/" name)
     (w/uniq prev
@@ -50,6 +50,7 @@
                       (hash-set (thread-locals) ',',name ,new-value)
                       (returning (do ,@body)
                         (hash-set (thread-locals) ',',name ,',prev)))))
+         ,(if initial `(hash-set (thread-locals) ',name ,initial))
          (def ,name () (hash-get (thread-locals) ',name))))))
 
 
