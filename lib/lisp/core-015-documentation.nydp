@@ -64,7 +64,7 @@
 (assign this-script nil)
 (assign this-plugin "Nydp Core")
 
-((fn (dox examples chapters dox-new dox-build)
+((fn (dox examples chapters types dox-new dox-build)
      (def dox-build (hsh name what texts args src chapters)
        (hash-set hsh 'name     name        )
        (hash-set hsh 'what     what        )
@@ -78,6 +78,7 @@
 
      (def dox-new (item)
        (hash-cons dox (hash-get item 'name) item)
+       (hash-cons types (hash-get item 'what) item)
        (dox-add-to-chapters item (hash-get item 'chapters)))
 
      (def dox-add-doc (name what texts args src chapters more)
@@ -93,11 +94,13 @@
      (def dox-add-examples (name example-exprs)
        (hash-cons examples name example-exprs))
 
-     (def dox-lookup (sym) (hash-get dox sym))
+     (def dox-lookup (name) (hash-get dox name))
 
      (def dox? (sym) (hash-key? dox sym))
 
      (def dox-names () (hash-keys dox))
+     (def dox-types () (hash-keys types))
+     (def dox-items-by-type (type) (hash-get types type))
 
      (def dox-get-attr (name attr)
        (cond (dox? name)
@@ -108,7 +111,7 @@
      (def dox-examples  (name) (hash-get examples name  ))
      (def dox-args      (name) (dox-get-attr name 'args ))
      (def dox-example-names () (hash-keys examples      )))
- (hash) (hash) (hash) nil)
+ (hash) (hash) (hash) (hash) nil)
 
 (def plugin-start (name) (assign this-plugin name) (chapter-end))
 (def plugin-end   (name) (assign this-plugin nil ) (chapter-end))

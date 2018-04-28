@@ -91,3 +91,6 @@
                                      "'src the source code of the item if any"
                                      "'chapters the chapters to which the item should be added, if any")                                          '(name what texts args src chapters) nil '(nydp/documentation))
 (dox-add-doc 'dox-add-examples 'def '("Add the given examples to the dox for the named item")                                                                    '(name example-exprs) nil '(nydp/documentation))
+(dox-add-doc 'dox-types        'def '("Get the list of types of documented items")                                                                                                 nil nil '(nydp/documentation))
+(dox-add-doc 'dox-lookup       'def '("Get the documentation for the given item")                                                                                              '(name) nil '(nydp/documentation))
+(dox-add-doc 'dox-items-by-type 'def '("Get the list of dox items of a given type")                                                                                            '(type) nil '(nydp/documentation))
