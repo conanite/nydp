@@ -92,6 +92,6 @@ Examples for ~name
     (= ch.contents (collect (fn (item) (!eq? item.name item-name)) ch.contents))))
 
 ; return the first dox item of the given type with the given name
-(def dox-item-by-type (name type)
+(def dox-item-by-type (type name)
   (let n (sym name)
-    (detect λi(eq? n i.name) (dox-items-by-type type))))
+    (detect (fn (i) (eq? n i.name)) (dox-items-by-type type))))
