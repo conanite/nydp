@@ -90,3 +90,10 @@ Examples for ~name
   (chapter nydp/documentation)
   (let ch (chapter-find chapter-name)
     (= ch.contents (collect (fn (item) (!eq? item.name item-name)) ch.contents))))
+
+; return the first dox item of the given type with the given name
+(def dox-item-by-type (name type)
+  (rfnwith flt (items (dox-items-by-type type))
+    (if items (if (eq? name (&name (car items)))
+                  (car items)
+                  (flt:cdr items)))))
