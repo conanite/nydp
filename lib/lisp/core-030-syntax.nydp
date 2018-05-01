@@ -127,7 +127,7 @@ scoping, assignment, anonymous functions and more...")
   ; creates a lexical scope with a unique symbol assigned to
   ; each variable in 'vars ; executes the 'body.
   (if (pair? vars)
-      `(with ,(apply + (map (fn (n) (list n '(uniq ',n))) vars))
+      `(with ,(apply + (map (fn (n) `(,n (uniq ',n))) vars))
              ,@body)
       `(let ,vars (uniq ',vars) ,@body)))
 

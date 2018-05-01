@@ -1,10 +1,5 @@
 class Nydp::Builtin::CdrSet
   include Nydp::Builtin::Base, Singleton
 
-  def builtin_invoke vm, args
-    pair = args.car
-    arg = args.cdr.car
-    pair.cdr = arg
-    vm.push_arg pair
-  end
+  def builtin_invoke vm, args ; vm.push_arg(args.car.cdr = args.cdr.car) ; end
 end

@@ -1,0 +1,6 @@
+(examples-for cdr-set
+  ("sets cdr of a cons cell"
+   (let things '(a b c d)
+     (cdr-set things '(x y z))
+     things)
+   (a x y z)))

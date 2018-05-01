@@ -69,11 +69,12 @@
 (mac auto-hash names `(brace-list ,@(flatten:map λn(list n n) names)))
 
 (mac accum (accfn-name . body)
-  (w/uniq acc
-    `(let ,acc nil
-       (let ,accfn-name λa(push a ,acc)
+  (w/uniq (things last-cons)
+    `(with (,last-cons (cons) ,things nil)
+       (= ,things ,last-cons)
+       (let ,accfn-name λa(= ,last-cons (cdr-set ,last-cons (cons a)))
          ,@body
-         (rev ,acc)))))
+         (cdr ,things)))))
 
 ; increment the value at 'place by 'inc (default 1)
 (mac ++ (place inc) `(= ,place (+ ,place ,(or inc 1))))

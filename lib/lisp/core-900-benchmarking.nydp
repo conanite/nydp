@@ -159,6 +159,30 @@
 ;;     (= h.ca v1) (= h.cb v2) (= h.cc v3) (= h.ca v4) (= h.cb v5) (= h.cc v6)
 ;;     (= h.da v1) (= h.db v2) (= h.dc v3) (= h.da v4) (= h.db v5) (= h.dc v6)))
 
+  ;; (def bm-acc ()
+  ;;   (accum z
+  ;;     (z 0) (z 1) (z 2) (z 3) (z 4) (z 5) (z 6) (z 7) (z 8) (z 9)
+  ;;     (z 0) (z 1) (z 2) (z 3) (z 4) (z 5) (z 6) (z 7) (z 8) (z 9)
+  ;;     (z 0) (z 1) (z 2) (z 3) (z 4) (z 5) (z 6) (z 7) (z 8) (z 9)
+  ;;     (z 0) (z 1) (z 2) (z 3) (z 4) (z 5) (z 6) (z 7) (z 8) (z 9)
+  ;;     (z 0) (z 1) (z 2) (z 3) (z 4) (z 5) (z 6) (z 7) (z 8) (z 9)
+  ;;     (z 0) (z 1) (z 2) (z 3) (z 4) (z 5) (z 6) (z 7) (z 8) (z 9)
+  ;;     (z 0) (z 1) (z 2) (z 3) (z 4) (z 5) (z 6) (z 7) (z 8) (z 9)
+  ;;     (z 0) (z 1) (z 2) (z 3) (z 4) (z 5) (z 6) (z 7) (z 8) (z 9)
+  ;;     (z 0) (z 1) (z 2) (z 3) (z 4) (z 5) (z 6) (z 7) (z 8) (z 9)))
+
+  ;; (def bm-facc ()
+  ;;   (faccum z
+  ;;     (z 0) (z 1) (z 2) (z 3) (z 4) (z 5) (z 6) (z 7) (z 8) (z 9)
+  ;;     (z 0) (z 1) (z 2) (z 3) (z 4) (z 5) (z 6) (z 7) (z 8) (z 9)
+  ;;     (z 0) (z 1) (z 2) (z 3) (z 4) (z 5) (z 6) (z 7) (z 8) (z 9)
+  ;;     (z 0) (z 1) (z 2) (z 3) (z 4) (z 5) (z 6) (z 7) (z 8) (z 9)
+  ;;     (z 0) (z 1) (z 2) (z 3) (z 4) (z 5) (z 6) (z 7) (z 8) (z 9)
+  ;;     (z 0) (z 1) (z 2) (z 3) (z 4) (z 5) (z 6) (z 7) (z 8) (z 9)
+  ;;     (z 0) (z 1) (z 2) (z 3) (z 4) (z 5) (z 6) (z 7) (z 8) (z 9)
+  ;;     (z 0) (z 1) (z 2) (z 3) (z 4) (z 5) (z 6) (z 7) (z 8) (z 9)
+  ;;     (z 0) (z 1) (z 2) (z 3) (z 4) (z 5) (z 6) (z 7) (z 8) (z 9)))
+
 (in-private
   (def bm-j ()
     (j "abc" '(d e f (g h i)) (list "jk" "lm")))
@@ -201,7 +225,8 @@
 
 (def rbs (name)
   (let summary nil
-    (push (bm "j    "   bm-j             10  500) summary)
+    ;; (push (bm "accum    "   bm-acc             10  500) summary)
+    ;; (push (bm "accum    "   bm-facc            10  500) summary)
     ;; (push (bm "mapsum    "   bm-mapsum             10  100) summary)
     ;; (push (bm "mapreduce "   bm-mapreduce          10  100) summary)
     ;; (push (bm "cond with OR       "   bm-faster-or             10  40000) summary)
