@@ -8,13 +8,27 @@
                                    (car args))
                              nil)))
 
-(def map (f things)
-  ; transforms the list 'things by applying 'f to each item
-  ; returns the resulting list
+(def map-helper-0 (f things lc _)
   (if (pair? things)
-      (cons (f (car things)) (map f (cdr things)))
+      (map-helper-0 f (cdr things) (cdr-set lc (cons (f (car things)))))
       things
-      (f things)))
+      (cdr-set lc (f things))))
+
+(def map-helper-1 (f things acc)
+  (map-helper-0 f things acc)
+  (cdr acc))
+
+;; transforms the list 'things by applying 'f to each item, returns the resulting list
+;; conceptually, does the following:
+;;
+;;   (if (pair? things)
+;;       (cons (f (car things)) (map f (cdr things)))
+;;       things
+;;       (f things))
+;;
+;; however the actual version is more complicated to allow for TCO ("modulo-cons" issue)
+(def map (f things)
+  (map-helper-1 f things (cons)))
 
 (def hash-cons (h k v)
   ; push 'v onto the value for 'k in 'h

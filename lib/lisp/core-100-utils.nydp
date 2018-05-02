@@ -150,3 +150,8 @@
                   (fill-buckets others max buckets size-f key))))
           (fill-buckets items max (bucket/new buckets) size-f key))
       buckets))
+
+; return the list except for the last element
+(def all-but-last (things)
+  (accum acc ((afn (xs) (when (cdr xs) (acc (car xs)) (self (cdr xs))))
+              things)))
