@@ -14,7 +14,7 @@ module Nydp
   end
 
   class Nil
-    include Singleton
+    include Singleton, Enumerable
     def init_with * ; Nydp::NIL     ; end
     def car         ; self          ; end
     def cdr         ; self          ; end
@@ -31,6 +31,9 @@ module Nydp
     def execute     vm ; vm.push_arg self ; end
     def _nydp_get    a ; Nydp::NIL        ; end
     def _nydp_set a, v ; Nydp::NIL        ; end
+    def each           ;                  ; end # nil behaves like an empty list
+    def &        other ; self             ; end
+    def |        other ; other            ; end
   end
 
   NIL = Nil.instance

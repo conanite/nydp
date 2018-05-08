@@ -3,13 +3,29 @@
    (⋂ '(a b c))
    (a b c))
 
+  ("returns a single nil arg"
+   (⋂ nil)
+   nil)
+
   ("returns intersection of two args"
    (⋂ '(a b c) '(a b d))
    (a b))
 
+  ("returns intersection of list and nil"
+   (⋂ '(a b c) nil)
+   nil)
+
+  ("returns intersection of nil and list"
+   (⋂ nil '(a b c))
+   nil)
+
   ("returns intersection of three args"
    (⋂ '(a b c d e) '(a b c d f) '(z b c d g))
    (b c d))
+
+  ("returns intersection of list, nil, and another list"
+   (⋂ '(a b c d e) nil '(z b c d g))
+   nil)
 
   ("returns intersection of four args"
    (⋂ '(a b c d e) '(a b c d f) '(z b d c g) '(z y g c d))

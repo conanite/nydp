@@ -7,9 +7,17 @@
    (⋃ '(a b c) '(a b d))
    (a b c d))
 
+  ("returns union of arg and nil"
+   (⋃ '(a b c) nil)
+   (a b c))
+
   ("returns union of three args"
    (⋃ '(a b c d e) '(a b c d f) '(z b c d g))
    (a b c d e f z g))
+
+  ("returns union of arg nil arg"
+   (⋃ '(a b c d e) nil '(z b c d g))
+   (a b c d e z g))
 
   ("returns union of four args"
    (⋃ '(a b c d e) '(a b c d f) '(z b d c g) '(z y g c d))
