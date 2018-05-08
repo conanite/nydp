@@ -226,6 +226,9 @@ scoping, assignment, anonymous functions and more...")
       (ampersand-expression? name)
       (ampersand-expression-assignment name value)))
 
+; increment the value at 'place by 'inc (default 1)
+(mac ++ (place inc) `(= ,place (+ ,place ,(or inc 1))))
+
 ; override previous definition to allow expressions like (def hsh.foo (arg arg2) ...)
 (mac def-assign args `(= ,@args))
 

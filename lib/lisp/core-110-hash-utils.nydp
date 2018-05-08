@@ -1,0 +1,7 @@
+(chapter-start 'hash-manipulation "utilities for manipulating, accessing and altering hash objects")
+
+; return values for each key in hash 'h
+(def hash-values (h) (map (fn (k) h.,k) (hash-keys h)))
+
+; (auto-hash a b c) same as { a a b b c c }
+(mac auto-hash names `(brace-list ,@(flatten:map λn(list n n) names)))

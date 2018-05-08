@@ -1,3 +1,5 @@
+(chapter-start 'list-manipulation)
+
 (def include? (thing things)
   ; alias for 'detect
   ; true if thing is in things, nil otherwise
@@ -32,9 +34,6 @@
 ; map 'f over 'things and sum the resulting list
 (def mapsum (f things) (mapreduce f + things))
 
-; return values for each key in hash 'h
-(def hash-values (h) (map (fn (k) h.,k) (hash-keys h)))
-
 (def seen? ()
   ; returns a new function f which takes a parameter x
   ; for each call to f with any value Z for x
@@ -65,9 +64,6 @@
         (let mi (m2i anchor)
           (map λm(i2m (+ mi m)) mm))))
 
-; (auto-hash a b c) same as { a a b b c c }
-(mac auto-hash names `(brace-list ,@(flatten:map λn(list n n) names)))
-
 (mac accum (accfn-name . body)
   (w/uniq (things last-cons)
     `(with (,last-cons (cons) ,things nil)
@@ -83,10 +79,6 @@
          (rfnwith r (n start)
            (if (< n stop)
                (r (+ (acc n) 1))))))
-
-
-; increment the value at 'place by 'inc (default 1)
-(mac ++ (place inc) `(= ,place (+ ,place ,(or inc 1))))
 
 ; return a function that returns 'start on first invocation,
 ; and 'start + n * 'incr for each nth invocation
