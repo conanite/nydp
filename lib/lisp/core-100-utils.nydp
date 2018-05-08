@@ -72,9 +72,18 @@
   (w/uniq (things last-cons)
     `(with (,last-cons (cons) ,things nil)
        (= ,things ,last-cons)
-       (let ,accfn-name λa(= ,last-cons (cdr-set ,last-cons (cons a)))
+       (let ,accfn-name (fn (a) (= ,last-cons (cdr-set ,last-cons (cons a))) a)
          ,@body
          (cdr ,things)))))
+
+; return a list containing the range of elements starting with 'start,
+; up to but not including 'stop
+(def range (start stop)
+  (accum acc
+         (rfnwith r (n start)
+           (if (< n stop)
+               (r (+ (acc n) 1))))))
+
 
 ; increment the value at 'place by 'inc (default 1)
 (mac ++ (place inc) `(= ,place (+ ,place ,(or inc 1))))
