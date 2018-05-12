@@ -1,0 +1,35 @@
+(chapter-start 'settings "Utilities for managing settings")
+
+(assign settings {})
+
+; convert expr to a function that returns the expr, unless expr is a symbol in which case we assume it already refers to a fn
+(def settings/fn (expr)
+  (if (sym? expr) expr
+      (or (atom? expr) (no expr)) `(k ,expr)
+      `(fn (_) ,expr)))
+
+; update value of setting 'name
+(mac set-setting (name value)
+  `(do (hash-cons (dox-item-by-type 'setting ',(sym name))
+                  'values
+                  { plugin this-plugin script this-script value ',value })
+       (hash-set settings ',(sym name) ,(settings/fn value))))
+
+(mac def-setting (name initial)
+  ; define a setting in the given 'context with a 'name and an 'initial value, with a 'doc to explain it
+  ; if value is a function, it is invoked with 'context and 'name to retrieve its value
+  ; if value is a constant, it is wrapped in a function to return the constant
+  (let context (car:string-split name ".")
+    `(do (dox-add-doc ',(sym name)
+                      'setting
+                      ',(fetch-and-clear-comments)
+                      nil
+                      '(def-setting ,name ,initial)
+                      '(,(sym "settings/~context"))
+                      { setting { default ',initial context ',context name ',name } })
+         (set-setting ,(sym name) ,initial))))
+
+; get the value of the given setting
+(def setting (name)
+  (on-err (error "can't get value of setting ~name")
+          ((hash-get settings (sym name)) name)))

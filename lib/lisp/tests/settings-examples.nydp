@@ -1,0 +1,24 @@
+(examples-for settings/fn
+  ("returns arg if it is a sym"
+   (settings/fn 'foobar)
+   foobar)
+
+  ("returns fn wrapper for arg if it is a string"
+   (settings/fn "hello")
+   (k "hello"))
+
+  ("returns fn wrapper for arg if it is a number"
+   (settings/fn 42)
+   (k 42))
+
+  ("returns fn wrapper for arg if it is nil"
+   (settings/fn nil)
+   (k nil))
+
+  ("wraps arg in a fn expression if it is a hash"
+   (settings/fn '{ a 1 b 2 })
+   (fn (_) { a 1 b 2 }))
+
+  ("wraps arg in a fn expression if it is a complex expression"
+   (settings/fn '(let foo this that (rfnwith (complex stuff) (%td.tricky#syntax))))
+   (fn (_) (let foo this that (rfnwith (complex stuff) ((percent-syntax || (dot-syntax td tricky#syntax))))))))
