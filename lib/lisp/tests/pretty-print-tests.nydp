@@ -206,13 +206,12 @@ toto")
    (pp '(def yoohoo (it) (wrangle "foobar" it)))
    "(def yoohoo (it) (wrangle \"foobar\" it))")
 
-  ("a 'let form"
-   (pp '(let acc nil
-            (rfnwith flattenize (x things)
-                     (if (pair? x)
-                         (eachr flattenize x)
-                         (push x acc)))
-            acc))
+  ("something with a nil and t literal"
+   (pp '(def yoohoo (it) (wrangle nil t it)))
+   "(def yoohoo (it) (wrangle nil t it))")
+
+  ("a 'let form squished into one line"
+   (pp '(let acc nil (rfnwith flattenize (x things) (if (pair? x) (eachr flattenize x) (push x acc))) acc))
    "(let acc nil
      (rfnwith flattenize (x things)
               (if (pair? x)
@@ -221,13 +220,11 @@ toto")
      acc)")
 
 
-  ("a real-life example from utils"
+  ("a real-life example from utils with improper 'if formatting"
    (pp '(def flatten (things)
           (let acc nil
             (rfnwith flattenize (x things)
-                     (if (pair? x)
-                         (eachr flattenize x)
-                         (push x acc)))
+                     (if (pair? x) (eachr flattenize x) (push x acc)))
             acc)))
    "(def flatten (things)
      (let acc nil

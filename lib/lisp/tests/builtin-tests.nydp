@@ -84,3 +84,12 @@
 
 (examples-for mod
   ("modulus for two ints" (mod 64 6) 4))
+
+(examples-for inspect
+  ("truth"            (inspect t)        "t")
+  ("nil"              (inspect nil)      "nil")
+  ("number"           (inspect 42)       "42")
+  ("string"           (inspect "hello")  "\"hello\"")
+  ("list"             (inspect '(fn (x) (this that))) "(fn (x) (this that))")
+  ("list with string" (inspect '(fn (x) (this "string"))) "(fn (x) (this \"string\"))")
+  ("list with sym"    (inspect '(fn (x) (this 'quoted))) "(fn (x) (this (quote quoted)))"))
