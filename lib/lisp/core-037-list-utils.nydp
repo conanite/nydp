@@ -29,6 +29,7 @@
           (rfnwith flattenize (x things)
                    (if (pair? x)
                        (eachr flattenize x)
+                       x
                        (push (f x) acc)))
           acc))
 

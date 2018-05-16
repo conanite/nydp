@@ -37,7 +37,11 @@
    (g f (c d e) b a)))
 
 (examples-for flatten
-  ("'flatten returns a flat list of things"
+  ("removes empty lists and nil"
+   (flatten '(a b nil (c d () e nil) f ()))
+   (a b c d e f))
+
+  ("returns a flat list of things"
    (flatten '((poo (x) (* x x)) (1 2 3)))
    (poo x * x x 1 2 3)))
 

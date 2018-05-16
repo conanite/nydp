@@ -48,9 +48,8 @@
 
 (assign select collect)
 
-(def compact (things)
-  ; return a new list containing only non-nil items from the given list
-  (collect present? things))
+; return a new list containing only 'present? items from the given list
+(def compact (things) (collect present? things))
 
 (def +nz args
   ; return the sum of all non-nil values (consider nil as zero)
