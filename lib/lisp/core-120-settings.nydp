@@ -29,7 +29,9 @@
                       { setting { default ',initial context ',context name ',name } })
          (set-setting ,(sym name) ,initial))))
 
-; get the value of the given setting
+; get the value of the given setting. Raises an error if the setting is unknown
 (def setting (name)
-  (on-err (error "can't get value of setting ~name")
-          ((hash-get settings (sym name)) name)))
+  (aif (hash-get settings (sym name))
+       (on-err (error "can't get value of setting ~name")
+               (it name))
+       (error "unknown setting ~(inspect name)")))
