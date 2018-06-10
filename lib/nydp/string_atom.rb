@@ -1,9 +1,8 @@
 module Nydp
   class StringAtom
-    attr_accessor :string, :token
-    def initialize string, token=nil
-      @string, @token = string, token
-    end
+    attr_accessor :string
+
+    def initialize string ; @string = string ; end
 
     def nydp_type  ; :string                                     ; end
     def to_s       ; string                                      ; end
