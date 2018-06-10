@@ -35,7 +35,15 @@
     (each hook (hooks-for hook-name)
           (apply hook args))))
 
-(add-hook 'warnings/new λw(apply p w))
+; install a hook for a particular kind of event
+;
+; example
+; (on transaction (account amount) (update account total (+ account.total amount)))
+;
+; same as (add-hook 'transaction (fn (account amount) (update account total (+ account.total amount))))
+;
+(mac on (event args . body)
+  `(add-hook ',event (fn ,args ,@body)))
 
 (let super warnings/new
   (def warnings/new (kind . info)
@@ -43,3 +51,5 @@
     (chapter nydp/warnings)
     (apply super kind info)
     (run-hooks 'warnings/new (cons kind info))))
+
+(on warnings/new w (apply p w))
