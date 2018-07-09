@@ -71,6 +71,7 @@ module Nydp
       Symbol.mk(:"hash-keys",   ns).assign(Nydp::Builtin::HashKeys.instance)
       Symbol.mk(:"hash-key?",   ns).assign(Nydp::Builtin::HashKeyPresent.instance)
       Symbol.mk(:"hash-merge",  ns).assign(Nydp::Builtin::HashMerge.instance)
+      Symbol.mk(:"hash-slice",  ns).assign(Nydp::Builtin::HashSlice.instance)
       Symbol.mk(:"vm-info",     ns).assign Nydp::Builtin::VmInfo.instance
       Symbol.mk(:"pre-compile" , ns).assign Nydp::Builtin::PreCompile.instance
       Symbol.mk(:"script-run"  , ns).assign Nydp::Builtin::ScriptRun.instance

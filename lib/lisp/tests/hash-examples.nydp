@@ -10,6 +10,12 @@
   ("  t for a hash"    (hash? {a 1 b 2})       t  )
   ("nil for a symbol"  (hash? 'foo)            nil))
 
+(examples-for hash-slice
+  ("returns a new hash containing only the specified keys"
+   (let h (hash-slice { a 1 b 2 c 3 d 4 } '(a b e f))
+     (list (hash-keys h) (hash-values h)))
+   ((a b) (1 2))))
+
 (examples-for hash-merge
   ("merge with symbol keys"
    (let h (hash-merge { a 1 b 2 c 3 } { a 99 c 98 d 97 })
