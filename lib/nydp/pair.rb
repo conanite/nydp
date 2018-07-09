@@ -24,6 +24,7 @@ class Nydp::Pair
   def inspect    ; "(#{inspect_rest})"                        ; end
   def &    other ; self.class.from_list((Set.new(self) & other).to_a)           ; end
   def |    other ; self.class.from_list((Set.new(self) | other).to_a)           ; end
+  def -    other ; self.class.from_list((Set.new(self) - other).to_a)           ; end
   def proper?    ; Nydp::NIL.is?(cdr) || (cdr.is_a?(Nydp::Pair) && cdr.proper?) ; end
 
   # returns Array of elements after calling #n2r on each element
