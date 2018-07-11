@@ -61,9 +61,11 @@ class Nydp::Builtin::HashSlice
   include Nydp::Helper, Nydp::Builtin::Base, Singleton
 
   def builtin_invoke vm, args
-    old = args.car
-    h = old.class.new
-    args.cdr.car.each { |k,v| h[k] = old[k] if old.key?(k) }
+    old   = args.car
+    h     = old.class.new
+    slice = args.cdr.car
+    slice = slice.map { |k| n2r k } unless old.is_a? Nydp::Hash
+    slice.each { |k| h[k] = old[k] if old.key?(k) }
     vm.push_arg h
   end
 end

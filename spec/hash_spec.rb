@@ -143,4 +143,26 @@ describe Nydp::Hash do
       end
     end
   end
+
+  describe "hash-slice" do
+    it "returns a new hash containing only the given keys from the old hash" do
+      hash = Nydp::Hash.new
+      sfoo = sym "foo"
+      sbar = sym "bar"
+      syak = sym "yak"
+      szeb = sym "zeb"
+
+      h = Nydp::Hash.new
+
+      h[sfoo] = 16
+      h[sbar] = 42
+      h[szeb] = 99
+
+      args       = [h, pair_list([sbar, syak, szeb])]
+
+      Nydp::Builtin::HashSlice.instance.invoke vm, pair_list(args)
+
+      expect(vm.args.pop).to eq({ sbar => 42, szeb => 99 })
+    end
+  end
 end

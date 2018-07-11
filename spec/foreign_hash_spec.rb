@@ -84,5 +84,17 @@ describe Nydp::Hash do
         expect(vm.args.pop).to eq pair_list [sym("k0"), sym("k1")]
       end
     end
+
+    describe "hash-slice" do
+      it "returns a new hash containing only the given keys from the old hash" do
+        ahash[:k0] = 42
+        ahash[:k1] = 84
+        args       = [ahash, pair_list([sym("k0"), sym("k1")])]
+
+        Nydp::Builtin::HashSlice.instance.invoke vm, pair_list(args)
+
+        expect(vm.args.pop).to eq({ k0: 42, k1: 84 })
+      end
+    end
   end
 end
