@@ -12,9 +12,14 @@
    "hello world")
 
   ("recurses as necessary"
-   (explain-mac 1 '(aif (a) (b) (c) (d) (e)))
-   (let it (a) (if it (b) (aif (c) (d) (e)))))
+   (explain-mac 2 '(aif (a) (b) (c) (d) (e)))
+   (let it (a) (if it (b) (ifv it (c) (d) (e)))))
+
+  ("assigns each successive condition to 'it"
+   (aif (eq? 1 2) nil
+        42        (list it it))
+   (42 42))
 
   ("avoids unnecessary expansion"
-   (explain-mac 1 '(aif (a) (b) (c)))
+   (explain-mac 2 '(aif (a) (b) (c)))
    (let it (a) (if it (b) (c)))))

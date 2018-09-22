@@ -283,15 +283,18 @@ scoping, assignment, anonymous functions and more...")
 ; (eg hash), the mutated value will be returned. See also 'returnlet
 (mac returning (val . body) (w/uniq retval `(returnlet ,retval ,val ,@body)))
 
-(mac aif (expr . body)
-  ; like if, except the value of each condition is locally bound to the variable 'it
-  ; eg (aif (find thing) (show it))
-  ; source: arc.arc
-  `(let it ,expr
-     (if it
+(mac ifv (var expr . body)
+  `(let ,var ,expr
+     (if ,var
          ,@(if (cddr body)
-               `(,(car body) (aif ,@(cdr body)))
+               `(,(car body) (ifv ,var ,@(cdr body)))
                body))))
+
+; like if, except the value of each condition is locally bound to the variable 'it
+; eg (aif (find thing) (show it))
+; source: arc.arc
+(mac aif (expr . body)
+  `(ifv it ,expr ,@body))
 
 (def destructure/with (var args n)
   ; provides the argument expression to 'with when
