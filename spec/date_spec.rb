@@ -147,4 +147,18 @@ describe Nydp::Date do
     expect(nd._nydp_get(:"beginning-of-week").to_s).  to eq "2015-03-09"
     expect(nd._nydp_get(:"end-of-week").to_s).        to eq "2015-03-15"
   end
+
+  it "returns age relative to today" do
+    rd = Date.parse "2014-03-12"
+    nd = Nydp.r2n rd
+    allow(::Date).to receive_messages(today: Date.parse("2016-06-21"))
+    expect(nd._nydp_get(:age)).to eq({ years: 2, months: 3 })
+  end
+
+  it "returns a negative age relative to today for a date in the future" do
+    rd = Date.parse "2094-11-18"
+    nd = Nydp.r2n rd
+    allow(::Date).to receive_messages(today: Date.parse("2016-06-21"))
+    expect(nd._nydp_get(:age)).to eq({ years: -78, months: -5 })
+  end
 end

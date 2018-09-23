@@ -38,7 +38,7 @@ module Nydp
       last_year  next_year  beginning_of_year  end_of_year
       last_month next_month beginning_of_month end_of_month
       last_week  next_week  beginning_of_week  end_of_week
-      yesterday  tomorrow
+      yesterday  tomorrow   age
     } + @@pass_through
 
     def year               y, m, d, w ; y ; end
@@ -63,6 +63,13 @@ module Nydp
 
     def yesterday          y, m, d, w ; ruby_date - 1                ; end
     def tomorrow           y, m, d, w ; ruby_date + 1                ; end
+
+    def age y,m,d,w # args not used
+      interval = (::Date.today - ruby_date) / 365.0
+      age_in_years = interval.to_i
+      extra_months = (12 * (interval - age_in_years)).to_i
+      { years: age_in_years, months: extra_months }
+    end
 
     @@pass_through.each do |n|
       class_eval "def #{n} * ; ruby_date.#{n} ; end"
