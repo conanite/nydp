@@ -116,6 +116,16 @@ scoping, assignment, anonymous functions and more...")
        (assign ,name (fun ,(map car ppairs) ,@body))
        (,name ,@(map cadr ppairs)))))
 
+;; (andify a b c) is equivalent to
+;; (fn args (and (apply a args) (apply b args) (apply c args)))
+;; or more simply
+;; (fn (x) (and (a x) (b x) (c x)))
+(def andify args
+  (fn args2 (rfnwith self (ands args)
+                     (if ands (if (apply (car ands) args2)
+                                  (self (cdr ands)))
+                         t))))
+
 (let uniq-counter 0
   (def uniq (prefix)
     (assign uniq-counter (+ uniq-counter 1))

@@ -1,0 +1,7 @@
+(examples-for andify
+  ("takes a list of functions A and returns a function that applies its arguments to each f in A in turn, returning the logical AND of the set of return values"
+   (with (even?   λn(eq? (mod n 2) 0)
+          triple? λn(eq? (mod n 3) 0)
+          big?    λn(> n 10))
+         (select (andify even? triple? big?) (range -10 31)))
+   (12 18 24 30)))
