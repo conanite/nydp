@@ -66,12 +66,12 @@
    (do (without-hooks 'warnings/new
                       λ(on-err nil
                                (pre-compile '(fun (aif (and or) . when)
-                                                  "ignore"))))
+                                                  ignore))))
        warnings/list)
-   ((arg-shadows-macro "arg " when " shadows macro " when " in arg list " (aif (and or) . when))
-    (arg-shadows-macro "arg " or " shadows macro " or " in arg list " (aif (and or) . when))
-    (arg-shadows-macro "arg " and " shadows macro " and " in arg list " (aif (and or) . when))
-    (arg-shadows-macro "arg " aif " shadows macro " aif " in arg list " (aif (and or) . when))))
+   ((arg-shadows-macro "arg " when " shadows macro " when " in arg list " (aif (and or) . when) " and body " (ignore) )
+    (arg-shadows-macro "arg "   or " shadows macro "   or " in arg list " (aif (and or) . when) " and body " (ignore) )
+    (arg-shadows-macro "arg "  and " shadows macro "  and " in arg list " (aif (and or) . when) " and body " (ignore) )
+    (arg-shadows-macro "arg "  aif " shadows macro "  aif " in arg list " (aif (and or) . when) " and body " (ignore) )))
 
   ("implicit in 'let and 'with"
    (with ((a b)       (list "h" "e")
