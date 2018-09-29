@@ -3,7 +3,7 @@ require "strscan"
 module Nydp
   class Tokeniser
     BACKSLASH = /\\/.freeze
-    COMMENT   = /;.*$/.freeze
+    COMMENT   = /;;?.*$/.freeze
     QUOTE     = /"/.freeze
     PIPE      = /\|/.freeze
     LIST_PFX  = /[^\s()]*\(/.freeze
@@ -89,7 +89,7 @@ module Nydp
           @finished = true
           return nil
         elsif comment = s.scan(COMMENT)
-          tok = [:comment, comment[1..-1].strip]
+          tok = [:comment, comment.gsub(/^;;?\s*/, '').strip]
         elsif open_str = s.scan(QUOTE)
           tok = [:string_open_delim, open_str]
         elsif open_sym = s.scan(PIPE)
