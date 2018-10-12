@@ -214,3 +214,7 @@
 
 ; given an arg 'f, invoke 'f with no args
 (def self-invoke (f) (f))
+
+;; returns the first element of 'things iff it is the only element of 'things
+(def list-single-element (things)
+  (if (no (cdr things)) (car things))

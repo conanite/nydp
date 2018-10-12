@@ -1,3 +1,17 @@
+(examples-for list-single-element
+  ("returns nothing from an empty list"
+   (list-single-element nil)
+   nil)
+
+  ("returns first item from a list with one item"
+   (list-single-element '(x))
+   x)
+
+  ("returns nothing from a list with more than one item"
+   (list-single-element '(x y z))
+   nil))
+
+
 (examples-for iso
   ("(nil) is not the same as nil"
    (iso '(nil) nil)
