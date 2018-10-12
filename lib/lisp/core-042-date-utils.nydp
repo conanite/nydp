@@ -1,5 +1,9 @@
 (chapter-start 'date-time "utilities for retrieving and manipulating dates and times")
 
+;; return a date for the current day
 (def today ()
-  ; return a date for the current day
   (date))
+
+;; return a Time object representing the time 's seconds ago
+(def seconds-ago (s)
+  (- (time) s))
