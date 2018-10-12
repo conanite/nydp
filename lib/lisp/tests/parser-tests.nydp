@@ -9,8 +9,13 @@
   ("parses an empty symbol"         (parse "||")               (||) )
   ("parses a colon-syntax symbol"   (parse "this:that")        ((colon-syntax this that)) )
   ("parses a percent-syntax symbol" (parse "this%that")        ((percent-syntax this that)) )
+  ("parses combined percent-colon"  (parse "%this:%that")      ((colon-syntax (percent-syntax || this) (percent-syntax || that))) )
   ("parses a prefix dollar"         (parse "$this")            ((dollar-syntax || this)))
   ("parses a prefix dollar-dot"     (parse "$.this")           ((dot-syntax (dollar-syntax || ||) this)))
+
+  ("parses combined percent-colon-dot"
+   (parse "%this.foo:%that.bar")
+   ((colon-syntax (percent-syntax || (dot-syntax this foo)) (percent-syntax || (dot-syntax that bar)))) )
 
   ("parse custom prefix-lists with a special-syntax prefix"
    (parse "x.y(1 2 3)")

@@ -45,11 +45,11 @@ module Nydp
 
     SYMBOL_OPERATORS =
       [
-        [ /%/,      "percent-syntax"    ],
         [ /\!/,     "bang-syntax"       ],
         [ /::/,     "colon-colon-syntax"],
         [ /:/,      "colon-syntax"      ],
         [ /&/,      "ampersand-syntax"  ],
+        [ /%/,      "percent-syntax"    ],
         [ /\./,     "dot-syntax"        ],
         [ /\$/,     "dollar-syntax"     ],
         [ /->/,     "arrow-syntax"      ],
