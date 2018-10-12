@@ -11,9 +11,9 @@
 
 ;; like 'map, but for a hash instead of a list ; provided function 'f takes two arguments,
 ;; a key and the corresponding value from the given hash
-(def map-hash (f h)
+(def map-hash (f h pre)
   (map λk(f k (hash-get h k))
-       (hash-keys h)))
+       ((or pre x1) (hash-keys h))))
 
 ;; Return a new hash where keys are (map f things) and values are the corresponding things.
 ;; No attempt is made to avoid clobbering items. Use 'group-by if there are duplicate keys.
