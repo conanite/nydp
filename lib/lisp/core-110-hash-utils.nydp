@@ -1,7 +1,23 @@
 (chapter-start 'hash-manipulation "utilities for manipulating, accessing and altering hash objects")
 
 ; return values for each key in hash 'h
-(def hash-values (h) (map λk(hash-get h k) (hash-keys h)))
+(def hash-values (h)
+  (map λk(hash-get h k)
+       (hash-keys h)))
 
 ; (auto-hash a b c) same as { a a b b c c }
-(mac auto-hash names `(brace-list ,@(flatten:map λn(list n n) names)))
+(mac auto-hash names
+  `(brace-list ,@(flatten:map λn(list n n) names)))
+
+;; like 'map, but for a hash instead of a list ; provided function 'f takes two arguments,
+;; a key and the corresponding value from the given hash
+(def map-hash (f h)
+  (map λk(f k (hash-get h k))
+       (hash-keys h)))
+
+;; Return a new hash where keys are (map f things) and values are the corresponding things.
+;; No attempt is made to avoid clobbering items. Use 'group-by if there are duplicate keys.
+(def hashify (f things)
+  (returnlet hsh {}
+             (each thing things
+                   (hash-set hsh (f thing) thing))))

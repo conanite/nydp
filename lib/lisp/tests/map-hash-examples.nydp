@@ -1,0 +1,5 @@
+(examples-for map-hash
+  ("iterates over key-value pairs"
+   (map-hash (fn (k v) "~k is for ~v")
+             { a 1 b 2 c 3 })
+   ("a is for 1" "b is for 2" "c is for 3")))
