@@ -217,4 +217,11 @@
 
 ;; returns the first element of 'things iff it is the only element of 'things
 (def list-single-element (things)
-  (if (no (cdr things)) (car things))
+  (if (no (cdr things)) (car things)))
+
+;; like map, but function 'f takes two arguments: the thing and the 0-based index of the thing
+(def map-with-index (f things)
+  (let i -1
+    (map (fn (thing)
+             (f thing (++ i)))
+         things)))

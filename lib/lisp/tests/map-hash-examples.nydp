@@ -1,11 +1,11 @@
 (examples-for map-hash
   ("iterates over key-value pairs"
-   (map-hash (fn (k v) "~k is for ~v")
-             { a 1 b 2 c 3 })
-   ("a is for 1" "b is for 2" "c is for 3"))
+   (map-hash (fn (k v i) "pos.~i : ~k is for ~v")
+             { a 42 b 729 c 1024 })
+   ("pos.0 : a is for 42" "pos.1 : b is for 729" "pos.2 : c is for 1024"))
 
   ("sorts keys before iterating"
-   (map-hash (fn (k v) "~k is for ~v")
+   (map-hash (fn (k v i) "pos.~i : ~k is for ~v")
              { "aa" 1 "bbb" 2 "c" 3 }
              (fn (keys) (sort-by len keys)))
-   ("c is for 3" "aa is for 1" "bbb is for 2" )))
+   ("pos.0 : c is for 3" "pos.1 : aa is for 1" "pos.2 : bbb is for 2" )))

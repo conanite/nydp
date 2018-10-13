@@ -9,11 +9,11 @@
 (mac auto-hash names
   `(brace-list ,@(flatten:map λn(list n n) names)))
 
-;; like 'map, but for a hash instead of a list ; provided function 'f takes two arguments,
-;; a key and the corresponding value from the given hash
+;; like 'map, but for a hash instead of a list ; provided function 'f takes three arguments,
+;; a key, the corresponding value from the given hash, and the index of the item in the list
 (def map-hash (f h pre)
-  (map λk(f k (hash-get h k))
-       ((or pre x1) (hash-keys h))))
+  (map-with-index λki(f k (hash-get h k) i)
+                  ((or pre x1) (hash-keys h))))
 
 ;; Return a new hash where keys are (map f things) and values are the corresponding things.
 ;; No attempt is made to avoid clobbering items. Use 'group-by if there are duplicate keys.

@@ -8,7 +8,7 @@
                                    (car args))
                              nil)))
 
-(def map-helper-0 (f things lc _)
+(def map-helper-0 (f things lc)
   (if (pair? things)
       (map-helper-0 f (cdr things) (cdr-set lc (cons (f (car things)))))
       things
