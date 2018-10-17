@@ -286,5 +286,11 @@ toto")
    "%x.y")
 
   ("brace list"
-   (pp '(&x {a 1 b "two" c 'three d ,four e (sub invocation) f {sub brace list} }))
-   "(&x { a 1 b \"two\" c 'three d ,four e (sub invocation) f { sub brace list } })"))
+   (pp '(let hello {a 1 b "two" c 'three d ,four e (sub invocation) f {sub brace list here} }))
+"(let hello { a 1
+       b \"two\"
+       c 'three
+       d ,four
+       e (sub invocation)
+       f { sub brace
+         list here } })"))

@@ -3,11 +3,11 @@
 (assign pp/newline       (uniq 'newline))
 (assign pp/newline/noi   (uniq 'newline/noi))
 
+;; (eq? char "\n") "\\n"
 (def pp/esc-ch (char)
   (if (eq? char "\"") "\\\""
       (eq? char "\~") "\\\~"
       (eq? char "\\") "\\\\"
-      (eq? char "\n") "\\n"
       char))
 
 (def pp/esc-str-literal (txt)
@@ -35,11 +35,11 @@
       (isa 'hash thing)          "{ ~(joinstr " " (pp/kv thing)) }"
       (inspect thing)))
 
+;; define a pretty-printer function for forms beginning with the
+;; given name. 'args are usually (form indent), form being the
+;; complete form for pretty-printing, and indent being the current
+;; indent level.
 (mac pp/def (name args . body)
-  ; define a pretty-printer function for forms beginning with the
-  ; given name. 'args are usually (form indent), form being the
-  ; complete form for pretty-printing, and indent being the current
-  ; indent level.
   `(do (hash-set pp/special-forms ',name
                  (fun ,args ,@body))
        (dox-add-doc ',name
@@ -48,6 +48,7 @@
                     ',args
                     '(pp/def ,name ,args ,@body))))
 
+
 (pp/def string-pieces    (pp form indent) (pp/string-pieces pp (cdr form)))
 (pp/def quasiquote       (pp form indent) "`~(pp (cadr form) (cons "" indent))" )
 (pp/def quote            (pp form indent) "'~(pp (cadr form) (cons "" indent))" )
@@ -55,7 +56,12 @@
 (pp/def unquote-splicing (pp form indent) ",@~(pp (cadr form) (cons " " indent))")
 (pp/def comment          (pp form indent) "; ~(cadr form)\n")
 (pp/def prefix-list      (pp form indent) "~(cadr form)~(pp (caddr form))")
-(pp/def brace-list       (pp form indent) "{ ~(joinstr " " (map λe(pprint e (cons "  " indent)) (cdr form))) }")
+
+
+(def pp/brace-list-pair (pp (k v) indent) "~k ~(pp v indent)")
+
+(pp/def brace-list (pp form indent)
+  "{ ~(joinstr " " (map λe(pprint e (cons " " indent)) (intersperse-splicing pp/newline (pairs:cdr form)))) }")
 
 (def pp/unsyntax (form)
   (if (pair? form)
@@ -160,9 +166,9 @@
       (pprint (pp/break-pair form) indent)
       (pp/literal form indent)))
 
+;; better than (def pp (form) (inspect form))
 (def pp (form) (pp/cleanup:pp/printer (pp/dotify:pp/unsyntax form) nil))
-;; (def pp (form) (inspect form))
 
+;; use the pretty-printer to elegantly display the given source code
 (def dox-show-src (src)
-  ; use the pretty-printer to elegantly display the given source code
   (pp src))
