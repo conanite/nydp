@@ -43,7 +43,19 @@
 ; same as (add-hook 'transaction (fn (account amount) (update account total (+ account.total amount))))
 ;
 (mac on (event args . body)
-  `(add-hook ',event (fn ,args ,@body)))
+  (let hookfn (if (isa 'symbol (car body))
+                  (car body)
+                  `(fn ,args ,@body))
+    (w/uniq dox-item
+      `(let ,dox-item (car:dox-lookup ',event)
+         (if (no ,dox-item) (error "unknown hook ~(just ',event)"))
+         (add-hook ',event ,hookfn)
+         (hash-cons ,dox-item 'hooks
+            { src      ',hookfn
+              args     ',args
+              chapter  (chapter-current)
+              file     this-script
+              plugin   this-plugin })))))
 
 (let super warnings/new
   (def warnings/new (kind . info)
