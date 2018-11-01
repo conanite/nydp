@@ -51,7 +51,7 @@ class Nydp::Pair
     if n >= list.size
       last
     else
-      new list[n], from_list(list, last, n+1)
+      Nydp::Pair.new list[n], from_list(list, last, n+1)
     end
   end
 
