@@ -85,6 +85,16 @@
 (examples-for mod
   ("modulus for two ints" (mod 64 6) 4))
 
+(examples-for abs
+  ("a positive integer"  (abs   64)   64)
+  ("a negative integer"  (abs  -42)   42)
+  ("zero"                (abs    0)    0)
+  ("negative zero"       (abs   -0)    0)
+  ("float zero"          (abs  0.0)    0)
+  ("float negative zero" (abs -0.0)    0)
+  ("float negative"      (abs -1.6)  1.6)
+  ("float positive"      (abs  4.2)  4.2))
+
 (examples-for inspect
   ("truth"            (inspect t)        "t")
   ("nil"              (inspect nil)      "nil")

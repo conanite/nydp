@@ -47,6 +47,7 @@ module Nydp
       Symbol.mk(:nil,   ns).assign Nydp::NIL
       Symbol.mk(:rand,  ns).assign Nydp::Builtin::Rand.instance
       Symbol.mk(:sort,  ns).assign Nydp::Builtin::Sort.instance
+      Symbol.mk(:abs,   ns).assign Nydp::Builtin::Abs.instance
       Symbol.mk(:sqrt,  ns).assign Nydp::Builtin::Sqrt.instance
       Symbol.mk(:t,     ns).assign Nydp::T
       Symbol.mk(:sym,   ns).assign Nydp::Builtin::Sym.instance
