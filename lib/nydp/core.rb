@@ -25,9 +25,10 @@ module Nydp
     end
 
     def setup ns
-      Symbol.mk(:cons,  ns).assign(Nydp::Builtin::Cons.instance)
-      Symbol.mk(:car,   ns).assign(Nydp::Builtin::Car.instance)
-      Symbol.mk(:cdr,   ns).assign(Nydp::Builtin::Cdr.instance)
+      Symbol.mk(:cons    , ns).assign(Nydp::Builtin::RubyWrap.instance("Cons", 2, %{ Nydp::Pair.new(a0, a1) }))
+      Symbol.mk(:car     , ns).assign(Nydp::Builtin::RubyWrap.instance("Car" , 1, %{ a0.car }))
+      Symbol.mk(:cdr     , ns).assign(Nydp::Builtin::RubyWrap.instance("Cdr" , 1, %{ a0.cdr }))
+
       Symbol.mk(:+,     ns).assign(Nydp::Builtin::Plus.instance)
       Symbol.mk(:-,     ns).assign(Nydp::Builtin::Minus.instance)
       Symbol.mk(:*,     ns).assign(Nydp::Builtin::Times.instance)
@@ -64,7 +65,7 @@ module Nydp
       Symbol.mk("string-split"   , ns).assign(Nydp::Builtin::StringSplit.instance)
       Symbol.mk("time"           , ns).assign(Nydp::Builtin::Time.instance)
       Symbol.mk("thread-locals"  , ns).assign(Nydp::Builtin::ThreadLocals.instance)
-      Symbol.mk("type-of",      ns).assign(Nydp::Builtin::TypeOf.instance)
+      Symbol.mk("type-of"        , ns).assign(Nydp::Builtin::TypeOf.instance)
       Symbol.mk(:"eq?",         ns).assign(Nydp::Builtin::IsEqual.instance)
       Symbol.mk(:"cdr-set",     ns).assign(Nydp::Builtin::CdrSet.instance)
       Symbol.mk(:"hash-get",    ns).assign(Nydp::Builtin::HashGet.instance)

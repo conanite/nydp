@@ -48,9 +48,9 @@ module Nydp
 
   def self.repl options={ }
     toplevel do
-      silent = options.delete :silent
-      ns     = options.delete :ns
-      launch_time = Time.now
+      launch_time      = Time.now
+      silent           = options.delete :silent
+      ns               = options.delete :ns
       last_script_time = Time.now
       puts "welcome to nydp #{options.inspect}" unless silent
       reader = Nydp::ReadlineReader.new $stdin, "nydp > "
