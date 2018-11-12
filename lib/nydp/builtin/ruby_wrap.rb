@@ -16,10 +16,11 @@ class Nydp::Builtin::RubyWrap
     end
 
     def to_ruby
-      generic_code = code.gsub(/a0/, "args.car")
-                       .gsub(/a1/, "args.cdr.car")
-                       .gsub(/a2/, "args.cdr.cdr.car")
-                       .gsub(/a3/, "args.cdr.cdr.cdr.car")
+      generic_code = code.
+                       gsub(/a0/, "args.car").
+                       gsub(/a1/, "args.cdr.car").
+                       gsub(/a2/, "args.cdr.cdr.car").
+                       gsub(/a3/, "args.cdr.cdr.cdr.car")
       <<CODE
 class #{name}
   include Nydp::Builtin::Base, Singleton
@@ -36,7 +37,6 @@ CODE
     end
   end
 
-
   def self.const_missing const
     coder = @@codes[const]
     coder ? class_eval(coder.to_ruby) : super
@@ -45,8 +45,9 @@ CODE
 
   def self.build name, args, code
     @@codes[name.to_sym] = Coder.new(name.to_sym, args, code)
-    const_get name
   end
 
-  def self.instance name, args, code ; build(name, args, code).instance ; end
+  build(:Cons, 2, %{ Nydp::Pair.new(a0, a1) })
+  build(:Car , 1, %{ a0.car })
+  build(:Cdr , 1, %{ a0.cdr })
 end

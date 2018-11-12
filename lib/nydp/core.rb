@@ -25,9 +25,9 @@ module Nydp
     end
 
     def setup ns
-      Symbol.mk(:cons    , ns).assign(Nydp::Builtin::RubyWrap.instance("Cons", 2, %{ Nydp::Pair.new(a0, a1) }))
-      Symbol.mk(:car     , ns).assign(Nydp::Builtin::RubyWrap.instance("Car" , 1, %{ a0.car }))
-      Symbol.mk(:cdr     , ns).assign(Nydp::Builtin::RubyWrap.instance("Cdr" , 1, %{ a0.cdr }))
+      Symbol.mk(:cons    , ns).assign(Nydp::Builtin::RubyWrap::Cons.instance)
+      Symbol.mk(:car     , ns).assign(Nydp::Builtin::RubyWrap::Car.instance)
+      Symbol.mk(:cdr     , ns).assign(Nydp::Builtin::RubyWrap::Cdr.instance)
 
       Symbol.mk(:+,     ns).assign(Nydp::Builtin::Plus.instance)
       Symbol.mk(:-,     ns).assign(Nydp::Builtin::Minus.instance)
