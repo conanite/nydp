@@ -205,3 +205,21 @@
   ("finds value corresponding to given key"
    (alref 'c '((a b) (c d)))
    d))
+
+(examples-for list/fill
+  ("returns an overfull list unchanged"
+   (list/fill '(a b c) λ(just 'x) 2)
+   (a b c))
+
+  ("returns a full list unchanged"
+   (list/fill '(a b c) λ(just 'x) 3)
+   (a b c))
+
+  ("returns an unfull list with extra items"
+   (list/fill '(a b c) λ(just 'x) 4)
+   (a b c x))
+
+  ("returns an unfull list with extra items"
+   (let idx 0
+     (list/fill '(a b c) λ(++ idx) 10))
+   (a b c 1 2 3 4 5 6 7)))

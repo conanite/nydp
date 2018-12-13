@@ -160,3 +160,18 @@
               (acc (car xs))
               (self (cdr xs))))
           things)))
+
+;; returns a list containing 'existing items, that has at least 'minimum items, building new items if necessary
+;;
+;; useful if you want to show, for example, two parent fields, but you don't know in advance whether there
+;; are zero, one, two, or more parents already present
+;;
+;; existing: the existing list
+;; buildf: a zero-argument function to build a new item
+;; minimum: the minimum number of items in the returned list.
+;;
+(def list/fill (existing buildf minimum)
+  (let missing (- minimum (len existing))
+    (if (> missing 0)
+        (+ existing (map buildf (range 0 missing)))
+        existing)))
