@@ -13,6 +13,17 @@
        (f (car things))
        (eachl f (cdr things))))
 
+;; if things is a pair,
+;;   if (cdr things) is nil, return (car things)
+;;   else recurse on (cdr things)
+;; else return things
+(def list/last (things)
+  (if (pair? things)
+      (aif (cdr things)
+           (list/last it)
+           (car things))
+      things))
+
 ; invokes 'f for each element of 'things, last element processed first
 ; ( "r" in "eachr" = "rightmost first" )
 (def eachr (f things)

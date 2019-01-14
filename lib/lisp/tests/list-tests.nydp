@@ -223,3 +223,24 @@
    (let idx 0
      (list/fill '(a b c) λ(++ idx) 10))
    (a b c 1 2 3 4 5 6 7)))
+
+(examples-for list/last
+  ("returns the thing if it's nil"
+   (list/last nil)
+   nil)
+
+  ("returns the thing if it's not a pair"
+   (list/last 42)
+   42)
+
+  ("returns the cdr if it's not a pair"
+   (list/last '(x . y))
+   y)
+
+  ("returns the last item in the list"
+   (list/last '(x y z))
+   z)
+
+  ("returns nil if it's the last item in the list"
+   (list/last '(x y z nil))
+   nil))
