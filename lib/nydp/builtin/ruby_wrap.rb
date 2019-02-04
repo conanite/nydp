@@ -1,7 +1,11 @@
 class Nydp::Builtin::RubyWrap
-  @@codes = { }
+  @@builtins           = { }
 
-  class Coder < Struct.new(:name, :size, :code)
+  def self.builtins
+    @@builtins
+  end
+
+  class Coder < Struct.new(:name, :size, :code, :helpers)
     def msize ; size + 1 ; end
 
     def arg_mapper
@@ -23,7 +27,7 @@ class Nydp::Builtin::RubyWrap
                        gsub(/a3/, "args.cdr.cdr.cdr.car")
       <<CODE
 class #{name}
-  include Nydp::Builtin::Base, Singleton
+  include Nydp::Builtin::Base, Singleton#{helpers}
 
   def builtin_invoke_#{msize} vm#{ arg_mapper }
     vm.push_arg(#{code})
@@ -38,16 +42,28 @@ CODE
   end
 
   def self.const_missing const
-    coder = @@codes[const]
+    coder = @@builtins[const]
     coder ? class_eval(coder.to_ruby) : super
     const_get const
   end
 
-  def self.build name, args, code
-    @@codes[name.to_sym] = Coder.new(name.to_sym, args, code)
+  class WrapperBuilder
+    def initialize default_helpers
+      @default_helpers = default_helpers.to_s.strip != "" ? ", #{default_helpers}" : ""
+    end
+
+    def build name, args, code, helpers=""
+      extra_helpers = helpers.to_s.strip != "" ? ", #{helpers}" : ""
+      Nydp::Builtin::RubyWrap.builtins[name.to_sym] = Coder.new(name.to_sym, args, code, "#{@default_helpers}#{extra_helpers}")
+    end
   end
 
-  build(:Cons, 2, %{ Nydp::Pair.new(a0, a1) })
-  build(:Car , 1, %{ a0.car })
-  build(:Cdr , 1, %{ a0.cdr })
+  def self.builder includes
+    WrapperBuilder.new(includes)
+  end
+
+  core_builder = builder ""
+  core_builder.build(:Cons, 2, %{ Nydp::Pair.new(a0, a1) })
+  core_builder.build(:Car , 1, %{ a0.car })
+  core_builder.build(:Cdr , 1, %{ a0.cdr })
 end
