@@ -11,6 +11,9 @@ module Nydp
     function = Symbol.mk(function_name.to_sym, ns).value
     function.invoke vm, r2n(args)
     vm.thread
+  rescue StandardError => e
+    friendly_args = args.map { |a| a.respond_to?(:_nydp_compact_inspect) ? a._nydp_compact_inspect : a }
+    raise "Invoking #{function_name}\nwith args #{friendly_args.inspect}"
   end
 
   def self.reader                          txt ; Nydp::StringReader.new txt                                 ; end
