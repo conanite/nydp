@@ -74,6 +74,8 @@ module Nydp
         Pair.from_list [sym(:unquote), parse_symbol($1)]
       when /^\.$/
         sym txt
+      when /^@$/
+        sym txt
       else
         SYMBOL_OPERATORS.each do |rgx, name|
           syms = txt.split(rgx, -1)

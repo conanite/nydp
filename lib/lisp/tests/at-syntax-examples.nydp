@@ -1,0 +1,17 @@
+(examples-for at-syntax
+  ("at-symbol as argument"
+   (let @ {}
+     (= @foo 1)
+     (= @bar 2)
+     (list @foo @bar))
+   (1 2))
+
+  ("at-syntax assignment"
+   (pre-compile '(= @a 42))
+   (hash-set @ 'a 42))
+
+  ("mixed at-syntax and dot-syntax assignment"
+   (pre-compile '(= @a.b 42))
+   (hash-set (hash-get @ 'a) 'b 42)))
+
+;; (let @ {} 123)

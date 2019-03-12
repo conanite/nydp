@@ -38,9 +38,7 @@ scoping, assignment, anonymous functions and more...")
 
 (mac at-syntax names
   (if (eq? (car names) '||)
-      (if (eq? (cadr names) '||)
-          'at-symbol
-          `(prefix-at-syntax ,@(cdr names)))
+      `(prefix-at-syntax ,@(cdr names))
       (error "unknown at-syntax: expected prefix-syntax (eg @name), got ~(join-str (car names) "@" (cdr names))")))
 
 (def expand-colon-syntax (names)
@@ -101,8 +99,10 @@ scoping, assignment, anonymous functions and more...")
             ,@body)
        ,@(map cadr (pairs parms))))
 
+;; same as ( (fn (var) body) val ) -> ie create a lexical scope
+;; where val is assigned to var, execute 'body in that scope
 (mac let (var val . body)
-     `(with (,var ,val) ,@body))
+  `(with (,var ,val) ,@body))
 
 (mac rfn (name parms . body)
   ; creates a named, locally-scoped function
