@@ -21,15 +21,27 @@ scoping, assignment, anonymous functions and more...")
               (apply orf
                      (cdr args)))))
 
+; returns true if 'things is a list and the first item of the
+; list is the given object
 (def caris (obj things)
-  ; returns true if 'things is a list and the first item of the
-  ; list is the given object
   (and (pair? things)
        (eq? (car things)  obj)))
 
+; evaluate 'body if 'arg is nil
 (mac unless (arg . body)
-  ; evaluate 'body if 'arg is nil
   `(if (no ,arg) (do ,@body)))
+
+; looks up a key in @
+; assumes local lexical context has defined a hash called '@
+(mac prefix-at-syntax (name . names)
+  `(hash-get @ ,name))
+
+(mac at-syntax names
+  (if (eq? (car names) '||)
+      (if (eq? (cadr names) '||)
+          'at-symbol
+          `(prefix-at-syntax ,@(cdr names)))
+      (error "unknown at-syntax: expected prefix-syntax (eg @name), got ~(join-str (car names) "@" (cdr names))")))
 
 (def expand-colon-syntax (names)
   (if (no (cdr names))
@@ -120,6 +132,7 @@ scoping, assignment, anonymous functions and more...")
 ;; (fn args (and (apply a args) (apply b args) (apply c args)))
 ;; or more simply
 ;; (fn (x) (and (a x) (b x) (c x)))
+;; note: alias as 'andf ??
 (def andify args
   (fn args2 (rfnwith self (ands args)
                      (if ands (if (apply (car ands) args2)

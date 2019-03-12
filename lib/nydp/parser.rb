@@ -54,6 +54,7 @@ module Nydp
         [ /\$/,     "dollar-syntax"     ],
         [ /->/,     "arrow-syntax"      ],
         [ /[=][>]/, "rocket-syntax"     ],
+        [ /@/,      "at-syntax"         ],
       ]
 
     def parse_symbol txt

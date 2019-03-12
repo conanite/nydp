@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe Nydp::Parser do
+  let(:empty)            { Nydp::Symbol.mk :"",                   ns }
   let(:aa)               { Nydp::Symbol.mk :aa,                   ns }
   let(:a)                { Nydp::Symbol.mk :a,                    ns }
   let(:b)                { Nydp::Symbol.mk :b,                    ns }
@@ -9,6 +10,7 @@ describe Nydp::Parser do
   let(:zz)               { Nydp::Symbol.mk :zz,                   ns }
   let(:foo)              { Nydp::Symbol.mk :foo,                  ns }
   let(:bar)              { Nydp::Symbol.mk :bar,                  ns }
+  let(:foobar)           { Nydp::Symbol.mk :foobar,               ns }
   let(:zab)              { Nydp::Symbol.mk :zab,                  ns }
   let(:quote)            { Nydp::Symbol.mk :quote,                ns }
   let(:quasiquote)       { Nydp::Symbol.mk :quasiquote,           ns }
@@ -19,6 +21,7 @@ describe Nydp::Parser do
   let(:dotsyn)           { Nydp::Symbol.mk :"dot-syntax",         ns }
   let(:cocosyn)          { Nydp::Symbol.mk :"colon-colon-syntax", ns }
   let(:colosyn)          { Nydp::Symbol.mk :"colon-syntax",       ns }
+  let(:atsyn)            { Nydp::Symbol.mk :"at-syntax",          ns }
   let(:string_pieces)    { Nydp::Symbol.mk :"string-pieces",      ns }
 
   it "should return a stream of tokens" do
@@ -154,6 +157,14 @@ describe Nydp::Parser do
 
   it "should parse a colon-colon symbol" do
     expect(parse "foo::bar").to eq  pair_list([cocosyn, foo, bar])
+  end
+
+  it "should parse an at symbol" do
+    expect(parse "foo@bar").to eq  pair_list([atsyn, foo, bar])
+  end
+
+  it "should parse a prefix-at symbol" do
+    expect(parse "@foobar").to eq  pair_list([atsyn, empty, foobar])
   end
 
   it "should parse a colon-symbol within a colon-colon within a dotted symbol" do
