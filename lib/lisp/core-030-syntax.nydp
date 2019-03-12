@@ -34,7 +34,7 @@ scoping, assignment, anonymous functions and more...")
 ; looks up a key in @
 ; assumes local lexical context has defined a hash called '@
 (mac prefix-at-syntax (name . names)
-  `(hash-get @ ,name))
+  `(hash-get @ ',name))
 
 (mac at-syntax names
   (if (eq? (car names) '||)
@@ -247,7 +247,14 @@ scoping, assignment, anonymous functions and more...")
       (caris 'hash-get name)
       (hash-get-assignment (cdr name) value)
       (ampersand-expression? name)
-      (ampersand-expression-assignment name value)))
+      (ampersand-expression-assignment name value)
+      (caris 'at-syntax name)
+      `(hash-set @ ',(caddr name) ,value)
+      (error "unknown assignment to place: ~(inspect name)")))
+
+;; quiet assignment ; lie =, but expression returns nil
+(mac #= (name value)
+  `(do (= ,name ,value) nil))
 
 ; increment the value at 'place by 'inc (default 1)
 (mac ++ (place inc) `(= ,place (+ ,place ,(or inc 1))))

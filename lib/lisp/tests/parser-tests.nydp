@@ -29,13 +29,21 @@
    (parse "%this.and.that")
    ((percent-syntax || (dot-syntax this and that))) )
 
+  ("parses a plain at-symbol"
+   (pre-compile (car (parse "@")))
+   at-symbol)
+
+  ("parses a plain at-prefix-syntax symbol"
+   (parse "@this")
+   ((at-syntax || this)))
+
   ("parses an at-prefix-mixed-with-dot-syntax symbol"
    (parse "@this.and.that")
    ((dot-syntax (at-syntax || this) and that)))
 
   ("at-prefix-mixed-with-dot-syntax expands to plain hash lookup: @this.and.that equivalent to @.this.and.that"
    (pre-compile (car (parse "@this.and.that")))
-   (hash-get (hash-get (hash-get at-symbol this) (quote and)) (quote that)))
+   (hash-get (hash-get (hash-get at-symbol (quote this)) (quote and)) (quote that)))
 
   ("parses a dot-syntax symbol"
    (parse "this.that.zozo")
