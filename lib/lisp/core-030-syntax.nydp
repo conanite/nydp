@@ -252,7 +252,7 @@ scoping, assignment, anonymous functions and more...")
       `(hash-set @ ',(caddr name) ,value)
       (error "unknown assignment to place: ~(inspect name)")))
 
-;; quiet assignment ; lie =, but expression returns nil
+;; quiet assignment ; like =, but expression returns nil
 (mac #= (name value)
   `(do (= ,name ,value) nil))
 
