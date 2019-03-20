@@ -47,4 +47,21 @@
  ("adds days"             (let d (date 2015 11  8) (to-string (+ d  1))) "2015-11-09")
  ("adds more days"        (let d (date 2015 11  8) (to-string (+ d 10))) "2015-11-18")
  ("subtracts a day"       (let d (date 2015 11 18) (to-string (- d  1))) "2015-11-17")
- ("subtracts more days"   (let d (date 2015 11 18) (to-string (- d  5))) "2015-11-13"))
+ ("subtracts more days"   (let d (date 2015 11 18) (to-string (- d  5))) "2015-11-13")
+
+ ("finds anniversary before a given date in previous year"
+  (to-string (anniversary/previous (date 2019 6 21) (date 1949 10 3)))
+  "2018-10-03")
+
+ ("finds anniversary before a given date in same year"
+  (to-string (anniversary/previous (date 2019 11 20) (date 1949 10 3)))
+  "2019-10-03")
+
+ ("finds anniversary after a given date in same year"
+  (to-string (anniversary/next (date 2019 6 21) (date 1949 10 3)))
+  "2019-10-03")
+
+ ("finds anniversary after a given date in following year"
+  (to-string (anniversary/next (date 2019 11 20) (date 1949 10 3)))
+  "2020-10-03")
+ )

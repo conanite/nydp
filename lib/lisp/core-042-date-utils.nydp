@@ -7,3 +7,19 @@
 ;; return a Time object representing the time 's seconds ago
 (def seconds-ago (s)
   (- (time) s))
+
+(def anniversary/previous (anchor anniv)
+  (let d (date anchor.year
+               anniv.month
+               anniv.day)
+    (if (< d anchor)
+        d
+        d.last-year)))
+
+(def anniversary/next (anchor anniv)
+  (let d (date anchor.year
+               anniv.month
+               anniv.day)
+    (if (> d anchor)
+        d
+        d.next-year)))
