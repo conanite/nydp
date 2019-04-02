@@ -1,3 +1,29 @@
+(examples-for string/pad-left
+  ("does not change a string whose length is greater than the given length"
+   (string/pad-left "Toronto" 3 "X")
+   "Toronto")
+
+  ("adds left padding to a string such that the result is the given length"
+   (string/pad-left "toto" 8 "X")
+   "XXXXtoto")
+
+  ("accepts multi-character padding"
+   (string/pad-left "toto" 12 "XYZ")
+   "XYZXYZXYtoto"))
+
+(examples-for string/pad-right
+  ("does not change a string whose length is greater than the given length"
+   (string/pad-right "Toronto" 3 "X")
+   "Toronto")
+
+  ("adds right padding to a string such that the result is the given length"
+   (string/pad-right "toto" 8 "X")
+   "totoXXXX")
+
+  ("accepts multi-character padding"
+   (string/pad-right "toto" 12 "XYZ")
+   "totoXYZXYZXY"))
+
 (examples-for string-split
   ("splits a string using given expression"
    (string-split "a and b and c and d" " and ")
