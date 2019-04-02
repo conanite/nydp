@@ -1,3 +1,20 @@
+(examples-for hash-replace-keys
+  ("changes strings to symbols"
+   (let h (hash-replace-keys λk(sym k) { "a" 1 "b" 2 "c" 3 })
+     (list (hash-keys h) (hash-values h)))
+   ((a b c) (1 2 3)))
+
+  ("appends a character to keys"
+   (let h (hash-replace-keys λk(string-pieces k "!") { "a" 1 "b" 2 "c" 3 })
+     (list (hash-keys h) (hash-values h)))
+   (("a!" "b!" "c!") (1 2 3))))
+
+(examples-for hash
+  ("builds a hash"
+   (let h (hash "a" 1 'b 2 '(x y) 3)
+     (list (hash-keys h) (hash-values h)))
+   (("a" b (x y)) (1 2 3))))
+
 (examples-for hash-values
   ("returns the list of values of the given hash"
    (hash-values { a 1 b 2 c 'c d "hello" })

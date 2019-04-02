@@ -21,3 +21,10 @@
   (returnlet hsh {}
              (each thing things
                    (hash-set hsh (f thing) thing))))
+
+;; return a new hash containing all the values of the given
+;; hash, but with each corresponding key 'k replaced by (f k)
+(def hash-replace-keys (f hsh)
+  (returnlet newh {}
+    (each k (hash-keys hsh)
+      (hash-set newh (f k) (hash-get hsh k)))))

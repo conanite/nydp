@@ -2,8 +2,18 @@ require "nydp/hash"
 
 class Nydp::Builtin::Hash
   include Nydp::Helper, Nydp::Builtin::Base, Singleton
+
   def builtin_invoke vm, args
-    vm.push_arg(Nydp::Hash.new)
+    vm.push_arg(build_hash Nydp::Hash.new, args)
+  end
+
+  def build_hash h, args
+    return h if Nydp::NIL.is? args
+    k = args.car
+    rest = args.cdr
+    v = rest.car
+    h[k] = v
+    build_hash h, rest.cdr
   end
 end
 
