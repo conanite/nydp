@@ -32,12 +32,12 @@ module Nydp::Builtin
       handle_error e, arg_0, arg_1, arg_2
     end
 
+    # called from 'apply (among others)
     def invoke vm, args
       builtin_invoke vm, args
     rescue StandardError => e
       handle_error e, *(args.to_a)
     end
-
 
     def handle_error e, *args
       case e
