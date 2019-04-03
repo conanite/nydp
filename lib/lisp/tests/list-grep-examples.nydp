@@ -1,0 +1,32 @@
+(examples-for list/grep
+  ("it finds strings"
+   (list/grep
+    string?
+    (list 'foo "bar" '(a b "c d" e) { ignores "hash elements" }))
+   ("bar" "c d"))
+
+  ("it finds items whose car is carryon"
+   (list/grep
+    λf(caris 'carryon f)
+    '(foo
+      (carryon 1 2 3 42)
+      (bar (40 41 42 (carryon 43 (carryon 42) 41)))
+      42
+      99))
+   ((carryon 1 2 3 42)
+    (carryon 43 (carryon 42) 41)
+    (carryon 42)))
+
+  ("it finds items of length 3"
+   (list/grep
+    λf(eq? 3 (len f))
+    '(foo
+      (2 3 42)
+      (bar (40 41 42) (43 (x y z) 41))
+      42
+      99))
+   ((2 3 42)
+    (bar (40 41 42) (43 (x y z) 41))
+    (40 41 42)
+    (43 (x y z) 41)
+    (x y z))))

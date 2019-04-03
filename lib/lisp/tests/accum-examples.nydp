@@ -4,4 +4,14 @@
           (a 1)
           (a 2)
           (a 3))
-   (1 2 3)))
+   (1 2 3))
+
+  ("accum function returns the accumulated object in each case"
+   (let watcher nil
+     (let accumulated (accum b
+                             (= watcher (cons (b 1) watcher))
+                             (= watcher (cons (b 2) watcher))
+                             (= watcher (cons (b 3) watcher)))
+       (list 'watcher watcher 'accumulated accumulated)))
+   (watcher     (3 2 1)
+    accumulated (1 2 3))))

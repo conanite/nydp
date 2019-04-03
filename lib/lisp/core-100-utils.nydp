@@ -175,3 +175,16 @@
     (if (> missing 0)
         (+ existing (map buildf (range 0 missing)))
         existing)))
+
+;; recursively search the given form for forms matching 'matcher
+;; matcher is a function which returns nil for non-match, anything else for match
+;; returns the list of non-nil objects returned by 'matcher
+;; 'matcher will be called with the entire form, and if the form is a list, with each element of the form, recursively
+(def list/grep (matcher form)
+  (accum matches
+    (let maybe λi(if (matcher i) (matches i))
+      (list/traverse maybe maybe form))))
+
+;; recursively seeks forms in 'form whose car is 'symbol
+(def list/seek-cars (form symbol)
+  (list-grep form λf(caris symbol f)))

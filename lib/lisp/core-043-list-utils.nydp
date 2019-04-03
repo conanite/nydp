@@ -158,6 +158,13 @@
 (def min things (best < things))
 (def max things (best > things))
 
+;; iterate over 'things, calling 'on-atom for each non-list element, and calling
+;; 'on-list for each list element.
+;; 'on-atom takes one parameter, the element in question;
+;; 'on-list takes two parameters: a function to call for recursing, and the list in question.
+;; 'on-list should be something like (fn (rec xs) (foo xs) (map rec xs)) to construct a new list,
+;; or (fn (rec xs) (foo xs) (eachl rec xs)) to iterate without constructing a new list
+;; see 'list-gsub for an example of constructing a new list using this.
 (def map-recurse (on-atom on-list things)
   ((afn (xs)
     (if (pair? xs)
@@ -166,8 +173,20 @@
         (on-atom xs)))
    things))
 
+;; like map-recurse, but doesn't depend on caller to initiate recursion
+;; 'on-atom and 'on-list are functions each taking one parameter
+;; return value is last returned item from on-atom or on-list
+(def list/traverse (on-atom on-list things)
+  (map-recurse
+   (fn (s)
+       (on-atom s))
+   (fn (rec xs)
+       (on-list xs)
+       (eachl rec xs))
+   things))
+
+;; recursively replaces 'old with 'new inside 'list
 (def list-gsub (list old new)
-  ; recursively replaces 'old with 'new inside 'list
   (map-recurse (fn (s) (if (eq? s old) new s))
                (fn (m things)
                    (if (eq? things old)
