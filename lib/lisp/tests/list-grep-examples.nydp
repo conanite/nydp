@@ -29,4 +29,12 @@
     (bar (40 41 42) (43 (x y z) 41))
     (40 41 42)
     (43 (x y z) 41)
-    (x y z))))
+    (x y z)))
+
+  ("it finds code within interpolated strings"
+   (list/seek-cars 'include (parse-in-string "
+<div>~~(include \"empty-name.html\")</div>
+<div>~~(map λn(let name n (include \"show-name.html\")) {names})'</div>
+"))
+   ((include "empty-name.html")
+    (include "show-name.html"))))

@@ -186,5 +186,5 @@
       (list/traverse maybe maybe form))))
 
 ;; recursively seeks forms in 'form whose car is 'symbol
-(def list/seek-cars (form symbol)
-  (list-grep form λf(caris symbol f)))
+(def list/seek-cars (symbol form)
+  (list/grep λf(caris symbol f) form))
