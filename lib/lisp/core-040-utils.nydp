@@ -11,21 +11,20 @@
 (def num?    (arg) (comment "true if arg is a number") (isa 'number arg))
 (def string? (arg) (comment "true if arg is a string") (isa 'string arg))
 
-(mac just (expr)
-  ; this is useful sometimes when 'expr can't stand on its own due to lexical ambiguity, most often in string interpolations
-  ; for example, in "hello ~person, how are you", the parser will try to interpolate the symbol "person," rather than the
-  ; expected "person". In this case, use "hello ~(just person), how are you"
-  expr)
+;; this is useful sometimes when 'expr can't stand on its own due to lexical ambiguity, most often in string interpolations
+;; for example, in "hello ~person, how are you", the parser will try to interpolate the symbol "person," rather than the
+;; expected "person". In this case, use "hello ~(just person), how are you"
+(mac just (expr) expr)
 
 (def quotify (arg) `(quote ,arg))
 
-; return a function that always returns 'arg, similar to K in SKI calculus
+;; return a function that always returns 'arg, similar to K in SKI calculus
 (defmemo k (arg) (fn nil arg))
 
+;; return the length of 'things where 'things may be nil, a string, list or hash
+;; length of nil is zero, length of hash is number of keys, length of string
+;; is number of characters, length of list is number of direct items - no recursive counting
 (def len (things)
-  ; return the length of 'things where 'things may be nil, a string, list or hash
-  ; length of nil is zero, length of hash is number of keys, length of string
-  ; is number of characters, length of list is number of direct items - no recursive counting
   (chapter list-manipulation)
   (chapter string-manipulation)
   (chapter hash-manipulation)
@@ -37,8 +36,8 @@
 
 (assign dynamics (hash))
 
+;; creates a dynamic variable.
 (mac dynamic (name initial)
-  ; creates a dynamic variable.
   (let with-mac-name (sym:+ "w/" name)
     (w/uniq prev
       `(do
@@ -53,10 +52,10 @@
          (def ,name () (hash-get (thread-locals) ',name))))))
 
 
-; overrides 'privately defined earlier in documentation manager
+;; overrides 'privately defined earlier in documentation manager
 (dynamic privately)
 
-; suppress documentation of anything defined in 'body
+;; suppress documentation of anything defined in 'body
 (mac in-private body
   `(w/privately t ,@body))
 

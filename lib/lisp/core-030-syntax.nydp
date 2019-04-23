@@ -25,7 +25,7 @@ scoping, assignment, anonymous functions and more...")
 ; list is the given object
 (def caris (obj things)
   (and (pair? things)
-       (eq? (car things)  obj)))
+       (eq? (car things) obj)))
 
 ; evaluate 'body if 'arg is nil
 (mac unless (arg . body)

@@ -1,3 +1,29 @@
+
+;;
+;; problem: work out where a starting column of a form on its starting line, need to add
+;; this amount to its indent if it is broken
+;;
+;; TODO:
+;;
+;; alternative approach: given a form <expr>, ask <expr> recursively
+;; to provide the following:
+;;
+;; { inline: (... <sub-expr> <sub-expr> ...)
+;;   broken: (... <newline "  "> <sub-expr> <newline "  "> <sub-expr> ...)  }
+;;
+;; printer returns <inline> if acceptable, otherwise produces <broken>, recursively deciding on <inline>
+;; for each <sub-expr>
+;;
+;; each <newline "  "> carries the amount of indent required for the containing form, needs to be added to
+;; the amount of indent required for outer forms
+;;
+;;
+;;
+;; also TODO:
+;;
+;; use (module pp ...) and remove all those prefixes...
+;;
+
 (assign pp/special-forms (hash))
 (assign pp/syntaxes      (hash))
 (assign pp/newline       (uniq 'newline))
