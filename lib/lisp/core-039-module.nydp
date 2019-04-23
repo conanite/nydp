@@ -1,0 +1,24 @@
+;; creates a private namespace for support functions for one or more explicitly exported/public functions
+;;
+;; (module foo
+;;   (def h ...)
+;;   (def u ...)
+;;   (export bar (x y) (h u x y)))
+;;
+;; results in 'foo/bar being universally available, but 'h and 'u are visible only within the module and override
+;; any other 'h or 'u defined elsewhere, in the scope of the module.
+(mac module (module-name . forms)
+  (let private-names nil
+    (let module-forms
+         { def        (fn (name args . body)
+                          (push nil  private-names)
+                          (push name private-names)
+                          `(assign ,name (fn ,args ,@body)))
+           export-def macs.def
+           export     (fn (name args . body)
+                          `(export-def
+                            ,(sym (+ (to-string module-name) "/" (to-string name)))
+                            ,args
+                            ,@body)) }
+      (let module-body (pre-compile-each module-forms forms)
+        `(with (,@private-names) ,@module-body)))))

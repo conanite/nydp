@@ -1,0 +1,10 @@
+(examples-for module
+  ("it overrides external namespace internally"
+   (with (x (fn (n) "the old outside x ~n")
+          y (fn (n) "the old outside y ~n"))
+     (module foo
+       (def x (n) (* 2 n))
+       (def y (n) (+ 2 n))
+       (export bar (a b) (* (x a) (y b))))
+    (list (foo/bar 3 5) (x 43) (y 44)))
+   (42 "the old outside x 43" "the old outside y 44")))
