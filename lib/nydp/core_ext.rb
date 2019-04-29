@@ -1,8 +1,9 @@
 class Object
-  def _nydp_get    a ; raise "_nydp_get : not gettable: #{a.inspect} on #{self.class.name}" ; end
-  def _nydp_set a, v ; raise "_nydp_get : not settable: #{a.inspect} on #{self.class.name}" ; end
-  def _nydp_keys     ; []   ; end
-  def _nydp_wrapper  ; self ; end
+  def _nydp_get     a ; raise "_nydp_get : not gettable: #{a.inspect} on #{self.class.name}" ; end
+  def _nydp_set  a, v ; raise "_nydp_get : not settable: #{a.inspect} on #{self.class.name}" ; end
+  def _nydp_keys      ; []   ; end
+  def _nydp_wrapper   ; self ; end
+  def lexical_reach n ; n    ; end
 end
 
 class NilClass

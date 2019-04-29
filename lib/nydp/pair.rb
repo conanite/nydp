@@ -27,6 +27,16 @@ class Nydp::Pair
   def -    other ; self.class.from_list((Set.new(self) - other).to_a)           ; end
   def proper?    ; Nydp::NIL.is?(cdr) || (cdr.is_a?(Nydp::Pair) && cdr.proper?) ; end
 
+  def index_of x
+    if x == car
+      0
+    elsif pair?(cdr)
+      1 + cdr.index_of(x)
+    else
+      nil
+    end
+  end
+
   # returns Array of elements after calling #n2r on each element
   def to_ruby list=[]
     list << n2r(car)

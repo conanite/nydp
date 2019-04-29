@@ -4,9 +4,6 @@ module Nydp
 
     def initialize ifn, context
       @ifn, @context = ifn, context
-      # TODO don't create a closure where it's not needed (zero_arg functions), use parent context instead
-      # TODO see SymbolLookup for how to ensure variable references stay on track
-      # TODO see InterpretedFunction for where to not instantiate new LexicalContext
     end
 
     def invoke_1 vm

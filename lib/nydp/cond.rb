@@ -6,6 +6,10 @@ module Nydp
       @when_true, @when_false = when_true, when_false
     end
 
+    def lexical_reach n
+      [@when_true.lexical_reach(n), @when_false.lexical_reach(n)].max
+    end
+
     def execute vm
       (Nydp::NIL.is?(vm.args.pop) ? @when_false : @when_true).execute vm
     end
@@ -13,6 +17,7 @@ module Nydp
     def inspect
       "when_true:#{@when_true.inspect}:when_false:#{@when_false.inspect}"
     end
+
     def to_s
       "#{@when_true.to_s} #{@when_false.to_s}"
     end
@@ -27,6 +32,10 @@ module Nydp
       @condition, @conditional = cond, cons(ExecuteConditionalInstruction.new(when_true, when_false))
     end
 
+    def lexical_reach n
+      [@condition.lexical_reach(n), @conditional.car.lexical_reach(n)].max
+    end
+
     def execute vm
       vm.push_ctx_instructions conditional
       condition.execute vm
@@ -35,6 +44,7 @@ module Nydp
     def inspect
       "cond:#{condition.inspect}:#{conditional.inspect}"
     end
+
     def to_s
       "(cond #{condition.to_s} #{conditional.to_s})"
     end
@@ -57,7 +67,7 @@ module Nydp
           new(cond, when_true, when_false)
         end
       else
-        raise "can't compile Cond: #{expr.inspect}"
+        raise "can't compile Cond: #{expressions.inspect}"
       end
     end
   end
@@ -70,6 +80,10 @@ module Nydp
       @condition, @when_true, @when_false = cond, when_true, when_false
     end
 
+    def lexical_reach n
+      [@condition.lexical_reach(n), @when_true.lexical_reach(n), @when_false.lexical_reach(n)].max
+    end
+
     def inspect ; "cond:#{@condition.inspect}:#{@when_true.inspect}:#{@when_false.inspect}" ; end
     def to_s    ; "(cond #{@condition.to_s} #{@when_true.to_s} #{@when_false.to_s})" ; end
   end
@@ -78,6 +92,14 @@ module Nydp
     def execute vm
       truth = !Nydp::NIL.is?(@condition.value vm.current_context)
       vm.push_ctx_instructions (truth ? @when_true : @when_false)
+    end
+
+    def lexical_reach n
+      cr = @condition.lexical_reach(n)
+      ct = @when_true.car.lexical_reach(n)
+      cf = @when_false.car.lexical_reach(n)
+
+      [cr, ct, cf].max
     end
 
     def self.build cond, when_true, when_false

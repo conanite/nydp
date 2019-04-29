@@ -8,6 +8,8 @@ module Nydp
 
     def execute vm
       @name.assign vm.peek_arg, vm.current_context
+    rescue
+      raise "assigning #{@name.inspect}"
     end
 
     def to_s
@@ -26,9 +28,12 @@ module Nydp
     end
 
     def initialize name, value, value_src
-      @value_src = value_src
-      n = AssignmentInstruction.new name
-      @instructions = cons(value, cons(n))
+      @name, @value, @value_src = name, value, value_src
+      @instructions = cons(value, cons(AssignmentInstruction.new(name)))
+    end
+
+    def lexical_reach n
+      [@name.lexical_reach(n), @value.lexical_reach(n)].max
     end
 
     def to_s
@@ -39,6 +44,8 @@ module Nydp
 
     def execute vm
       vm.push_ctx_instructions @instructions
+    rescue
+      raise "assigning #{@value.inspect} to #{@name.inspect}"
     end
   end
 end

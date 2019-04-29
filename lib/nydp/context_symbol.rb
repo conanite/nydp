@@ -25,12 +25,18 @@ module Nydp
                   end
 
       code = <<-KLASS
-        def initialize name
-          @name = name
+        def initialize name, lexical_depth
+          @name, @lexical_depth = name, lexical_depth
+        end
+
+        def lexical_reach n
+          @lexical_depth + n
         end
 
         def value ctx
           ctx#{getctx}.#{at_index} || Nydp::NIL
+        rescue
+          raise "failed looking up \#{@name.inspect} (\#{@name.class.name})"
         end
 
         def assign value, ctx
@@ -45,16 +51,18 @@ module Nydp
 
         def depth   ; #{depth}                               ; end
         def inspect ; to_s                                   ; end
-        def to_s    ; "[#{depth}##{binding_index}]\#{@name}" ; end
+        def to_s    ; "[#{depth}##{binding_index}#\#{@lexical_depth}]\#{@name}" ; end
       KLASS
 
       const_set name, Class.new(Nydp::ContextSymbol) {
-        eval code
+        eval code, binding, name.to_s, 0
       }
     end
 
-    def self.build depth, name, binding_index
-      const_get(:"ContextSymbol_#{depth}_#{binding_index}").new(name)
+    def self.build effective_depth, name, binding_index, lexical_depth
+      const_get(:"ContextSymbol_#{effective_depth}_#{binding_index}").new(name, lexical_depth)
+    rescue
+      raise "building ContextSymbol #{[effective_depth, name, binding_index, lexical_depth].inspect}"
     end
   end
 end

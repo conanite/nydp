@@ -13,9 +13,8 @@ module Nydp
 
     class Base
       include Helper
-      def initialize source_expression, sig=nil
-        @source_expression = source_expression
-        @sig = sig
+      def initialize expr, source, sig=nil
+        @expr, @source, @sig = expr, source, sig
       end
 
       def handle e, f, invoker, *args
@@ -35,9 +34,14 @@ module Nydp
         end
       end
 
-      def inspect ; source.inspect     ; end
-      def source  ; @source_expression ; end
-      def to_s    ; source.to_s        ; end
+      # TODO: speed up compilation by writing custom #lexical_reach for sig-based subclasses (when you know which elements of #expr are lexical symbols)
+      def lexical_reach n
+        @expr.map { |x| x.lexical_reach n}.max
+      end
+
+      def inspect ; @expr.map { |x| x.inspect }.join ' '  ; end
+      def source  ; @source       ; end
+      def to_s    ; source.to_s   ; end
     end
 
     class Invocation_1 < Invocation::Base
@@ -87,8 +91,8 @@ module Nydp
     end
 
     class Invocation_N < Invocation::Base
-      def initialize arg_count, source_expression
-        super source_expression
+      def initialize arg_count, expr, source
+        super expr, source
         @arg_count = arg_count
       end
 
@@ -107,7 +111,7 @@ module Nydp
     class Invocation_LEX < Invocation::Base
       SIGS << self.name
       def initialize expr, src
-        super src
+        super expr, src
         @sym = expr.car
       end
 
@@ -122,7 +126,7 @@ module Nydp
     class Invocation_SYM < Invocation::Base
       SIGS << self.name
       def initialize expr, src
-        super src
+        super expr, src
         @sym = expr.car
       end
 
@@ -137,7 +141,7 @@ module Nydp
     class Invocation_LEX_LEX < Invocation::Base
       SIGS << self.name
       def initialize expr, src
-        super src
+        super expr, src
         @lex0 = expr.car
         @lex1 = expr.cdr.car
       end
@@ -155,7 +159,7 @@ module Nydp
     class Invocation_SYM_LEX < Invocation::Base
       SIGS << self.name
       def initialize expr, src
-        super src
+        super expr, src
         @sym = expr.car
         @lex = expr.cdr.car
       end
@@ -172,7 +176,7 @@ module Nydp
     class Invocation_SYM_LIT < Invocation::Base
       SIGS << self.name
       def initialize expr, src
-        super src
+        super expr, src
         @sym = expr.car
         @lit = expr.cdr.car.expression
       end
@@ -188,7 +192,7 @@ module Nydp
     class Invocation_LEX_LEX_LEX < Invocation::Base
       SIGS << self.name
       def initialize expr, src
-        super src
+        super expr, src
         @lex_0 = expr.car
         @lex_1 = expr.cdr.car
         @lex_2 = expr.cdr.cdr.car
@@ -208,7 +212,7 @@ module Nydp
     class Invocation_SYM_LEX_LEX < Invocation::Base
       SIGS << self.name
       def initialize expr, src
-        super src
+        super expr, src
         @sym = expr.car
         @lex_0 = expr.cdr.car
         @lex_1 = expr.cdr.cdr.car
@@ -227,7 +231,7 @@ module Nydp
     class Invocation_SYM_LEX_LEX_LEX < Invocation::Base
       SIGS << self.name
       def initialize expr, src
-        super src
+        super expr, src
         @sym = expr.car
         @lex_0 = expr.cdr.car
         @lex_1 = expr.cdr.cdr.car
@@ -248,7 +252,7 @@ module Nydp
     class Invocation_SYM_LEX_LIT_LEX < Invocation::Base
       SIGS << self.name
       def initialize expr, src
-        super src
+        super expr, src
         @sym = expr.car
         @lex_0 = expr.cdr.car
         @lit_1 = expr.cdr.cdr.car.expression
@@ -268,7 +272,7 @@ module Nydp
     class Invocation_SYM_LIT_LEX < Invocation::Base
       SIGS << self.name
       def initialize expr, src
-        super src
+        super expr, src
         @sym = expr.car
         @lit_0 = expr.cdr.car.expression
         @lex_1 = expr.cdr.cdr.car
@@ -288,6 +292,10 @@ module Nydp
     extend Helper
     attr_accessor :function_instruction, :argument_instructions
 
+    def lexical_reach n
+      function_instruction.car.lexical_reach(n)
+    end
+
     def self.build expression, bindings
       compiled   = Compiler.compile_each(expression, bindings)
       invocation_sig = compiled.map { |x| sig x }.join("_")
@@ -303,15 +311,15 @@ module Nydp
 
       invocation = cons case expression.size
                         when 1
-                          Invocation::Invocation_1.new(expression)
+                          Invocation::Invocation_1.new(compiled, expression)
                         when 2
-                          Invocation::Invocation_2.new(expression)
+                          Invocation::Invocation_2.new(compiled, expression)
                         when 3
-                          Invocation::Invocation_3.new(expression)
+                          Invocation::Invocation_3.new(compiled, expression)
                         when 4
-                          Invocation::Invocation_4.new(expression)
+                          Invocation::Invocation_4.new(compiled, expression)
                         else
-                          Invocation::Invocation_N.new(expression.size, expression)
+                          Invocation::Invocation_N.new(expression.size, compiled, expression)
                         end
       new invocation, compiled, expression, cname
     end
@@ -327,7 +335,7 @@ module Nydp
       vm.push_ctx_instructions argument_instructions
     end
 
-    def inspect ; @source.inspect ; end
-    def to_s    ; @source.to_s    ; end
+    def inspect ; @function_instruction.inspect ; end
+    def to_s    ; @source.to_s                  ; end
   end
 end
