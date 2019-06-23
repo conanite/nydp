@@ -5,6 +5,12 @@
        (f "world" 37 5)))
    "hello world, 37 + 5 is 42, thank you!"))
 
+(examples-for string/eval-with-args
+  ("evals a user-supplied string"
+   (let s "hello \~|u|, \~x + \~y is \~(+ x y), thank heavens!"
+     (string/eval-with-args s '(u x y) "world" 36 6))
+   "hello world, 36 + 6 is 42, thank heavens!"))
+
 (examples-for string/pad-left
   ("does not change a string whose length is greater than the given length"
    (string/pad-left "Toronto" 3 "X")

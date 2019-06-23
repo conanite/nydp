@@ -39,3 +39,14 @@
 (defmemo string-eval-fn (str args)
   (eval `(fn ,args
              ,(parse-in-string str))))
+
+;; assigns 'args respectively to 'arg-names and evals 'str in that context.
+;; Assumes 'str contains interpolations which reference 'arg-names.
+;; Useful for evaluating user-supplied strings ; dangerous for the same reason.
+;;
+;; example: (string/eval-with-args "\~x + \~y is \~(+ x y)" '(x y) 2 3)
+;; returns "2 + 3 is 5"
+;;
+(def string/eval-with-args (str arg-names . args)
+  (apply (string-eval-fn str arg-names)
+         args))
