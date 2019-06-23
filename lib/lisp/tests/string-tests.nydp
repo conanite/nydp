@@ -1,7 +1,7 @@
 (examples-for string-eval-fn
   ("returns a function to eval a user-supplied string"
    (let s "hello \~|u|, \~x + \~y is \~(+ x y), thank you!"
-     (let f (string-eval-fn s 'u 'x 'y)
+     (let f (string-eval-fn s '(u x y))
        (f "world" 37 5)))
    "hello world, 37 + 5 is 42, thank you!"))
 

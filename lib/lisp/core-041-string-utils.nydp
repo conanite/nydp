@@ -36,6 +36,6 @@
 ;;
 ;; example: (string-eval-fn "hello \~u.firstname" 'u)
 ;; returns (fn (u) (string-pieces "hello " u.firstname))
-(defmemo string-eval-fn (str . args)
-  (eval `(fn (,@args)
+(defmemo string-eval-fn (str args)
+  (eval `(fn ,args
              ,(parse-in-string str))))
