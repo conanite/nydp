@@ -30,3 +30,12 @@
 ; return the first 'length chars of string 'str
 (def string-truncate (str length)
   (string-replace "(.{~|length|}).*" "\\1" str))
+
+;; returns a function with args 'args whose body is 'str. 'str should be a string,
+;; 'args should correspond to interpolations within 'str
+;;
+;; example: (string-eval-fn "hello \~u.firstname" 'u)
+;; returns (fn (u) (string-pieces "hello " u.firstname))
+(defmemo string-eval-fn (str . args)
+  (eval `(fn (,@args)
+             ,(parse-in-string str))))
