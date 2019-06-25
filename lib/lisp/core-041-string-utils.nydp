@@ -48,5 +48,9 @@
 ;; returns "2 + 3 is 5"
 ;;
 (def string/eval-with-args (str arg-names . args)
-  (apply (string-eval-fn str arg-names)
-         args))
+  (on-err
+   (error (j "error evaluating "  (inspect str)
+             "\nwith arg names "  (inspect arg-names)
+             "\nand args "        (inspect args)))
+   (apply (string-eval-fn str arg-names)
+          args)))

@@ -9,7 +9,16 @@
   ("evals a user-supplied string"
    (let s "hello \~|u|, \~x + \~y is \~(+ x y), thank heavens!"
      (string/eval-with-args s '(u x y) "world" 36 6))
-   "hello world, 36 + 6 is 42, thank heavens!"))
+   "hello world, 36 + 6 is 42, thank heavens!")
+
+  ("reports errors"
+   (on-err errors
+           (let s "hello \~|u|, \~x + \~y is \~(+ x y), thank heavens!"
+             (string/eval-with-args s '(a b c) "world" 36 6)))
+   ("error evaluating \"hello \~|u|, \~x + \~y is \~(+ x y), thank heavens!\"
+with arg names (a b c)
+and args (\"world\" 36 6)"
+    "unbound symbol: y")))
 
 (examples-for string/pad-left
   ("does not change a string whose length is greater than the given length"
