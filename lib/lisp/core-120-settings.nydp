@@ -5,9 +5,12 @@
 
 ; convert expr to a function that returns the expr, unless expr is a symbol in which case we assume it already refers to a fn
 (def settings/fn (expr)
-  (if (sym? expr) expr
+  (if (sym? expr)                 expr
       (or (atom? expr) (no expr)) `(k ,expr)
-      `(fn (_) ,expr)))
+      (hash? expr)                `(k ',expr)
+      (caris 'quote expr)         `(k ,expr)
+      (caris 'brace-list expr)    `(k ,expr)
+                                  `(fn (_) ,expr)))
 
 ; update value of setting 'name
 (mac set-setting (name value)
