@@ -30,8 +30,9 @@
 (def map (f things)
   (map-helper-1 f things (cons)))
 
+;; push 'v onto the value for 'k in 'h
+;; the hash-values of h will all be lists, in reverse order of consing
 (def hash-cons (h k v)
-  ; push 'v onto the value for 'k in 'h
   (hash-set h k (cons v (hash-get h k))))
 
 (def rev (things last-cdr)
