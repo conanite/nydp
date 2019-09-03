@@ -1,0 +1,14 @@
+(examples-for 'case
+  ("expands to an if-expression"
+   (do (reset-uniq-counter)
+       (explain-mac 1
+                    `(case eq? person.name
+                           "conan" (greet person)
+                           "egg"   (delete person)
+                           "bach"  (play person)
+                           else    (interrogate person))))
+   (let caseval-1 (dot-syntax person name)
+     (if (eq? caseval-1 "conan") (greet person)
+         (eq? caseval-1 "egg")   (delete person)
+         (eq? caseval-1 "bach")  (play person)
+         (interrogate person)))))

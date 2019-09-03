@@ -188,3 +188,30 @@
 ;; recursively seeks forms in 'form whose car is 'symbol
 (def list/seek-cars (symbol form)
   (list/grep λf(caris symbol f) form))
+
+;; helper function for 'case macro
+(def case/make-conds (test varname conds acc)
+  (if conds
+      (let (cnd expr) (car conds)
+        (if (eq? cnd 'else)
+            (acc expr)
+            (do (acc `(,test ,varname ,cnd))
+                (acc expr)
+                (case/make-conds test
+                                 varname
+                                 (cdr conds)
+                                 acc))))))
+
+;; usage: (case eq? person.name
+;;              "conan" (greet person)
+;;              "egg"   (delete person)
+;;              "bach"  (play person)
+;;              else    (interrogate person))
+(mac case (test what . conditions)
+  (w/uniq caseval
+    `(let ,caseval ,what
+       (if ,@(accum a
+                    (case/make-conds test
+                                     caseval
+                                     (pairs conditions)
+                                     a))))))
