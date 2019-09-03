@@ -356,12 +356,12 @@ scoping, assignment, anonymous functions and more...")
       (if (hash-get macs args)
           (warnings/new 'arg-shadows-macro "arg " args " shadows macro " args " in arg list " orig " and body " body))))
 
+;; build a 'fn form, changing 'args and 'body to
+;; properly handle any destructuring args if present
 (mac fun (args . body)
-  ; build a 'fn form, changing 'args and 'body to
-  ; properly handle any destructuring args if present
   (fun/approve-arg-names args args body)
   (destructure/build args nil body))
 
-; assign (f place) to place
+;; assign (f place) to place
 (mac zap (f place . args)
   `(= ,place (,f ,place ,@args)))
