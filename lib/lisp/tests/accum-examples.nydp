@@ -15,3 +15,20 @@
        (list 'watcher watcher 'accumulated accumulated)))
    (watcher     (3 2 1)
     accumulated (1 2 3))))
+
+(examples-for accum-hash
+  ("accumulate the values passed to a given function under the given key, return the resulting hash"
+   (let h
+     (accum-hash hi
+                 (hi 'a 1)
+                 (hi 'a 2)
+                 (hi 'b 42)
+                 (hi 'b 43)
+                 (hi 'a 3)
+                 (hi 'b 44)
+                 (hi 'c 'x)
+                 (hi 'a 4)
+                 (hi 'c 'y)
+                 (hi 'c 'z))
+     (list h.a h.b h.c))
+   ((4 3 2 1) (44 43 42) (z y x))))
