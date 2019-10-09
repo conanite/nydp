@@ -15,6 +15,18 @@
   (map-with-index λki(f k (hash-get h k) i)
                   ((or pre x1) (hash-keys h))))
 
+;; returns a new hash with the same keys as the given hash, with each value transformed by
+;; the given function 'f
+;; 'f takes three arguments:
+;; k, the key
+;; v, the value
+;; i, the index
+;;
+(def hash-transform-values (f h pre)
+  (returnlet newh {}
+    (map-hash λkvi(hash-set newh k (f k v i)))))
+
+
 ;; Return a new hash where keys are (map f things) and values are the corresponding things.
 ;; No attempt is made to avoid clobbering items. Use 'group-by if there are duplicate keys.
 (def hashify (f things)
@@ -28,3 +40,14 @@
   (returnlet newh {}
     (each k (hash-keys hsh)
       (hash-set newh (f k) (hash-get hsh k)))))
+
+;; repeatedly assigns an element of hash-keys of 'things to 'kvar,
+;; assign the corresponding value to 'vvar
+;; and executes 'body for each key-value pair
+;; return value of form is whatever the last line of 'body returns
+(mac hash-each (kvar vvar things . body)
+  (w/uniq xs
+    `(let ,xs ,things
+       (each ,kvar (hash-keys ,xs)
+         (let ,vvar (hash-get ,xs ,kvar)
+           ,@body)))))
