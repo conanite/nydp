@@ -46,15 +46,15 @@ module Nydp
     def day                y, m, d, w ; d ; end
     def week_day           y, m, d, w ; w ; end
 
-    def last_year          y, m, d, w ; build(y - 1, m, d)           ; end
+    def last_year          y, m, d, w ; ruby_date.prev_year          ; end
     def next_year          y, m, d, w ; ruby_date.next_year          ; end
     def beginning_of_year  y, m, d, w ; build(y, 1, 1)               ; end
     def end_of_year        y, m, d, w ; build(y, 12, 31)             ; end
 
-    def last_month         y, m, d, w ; build(y, m - 1, d)           ; end
+    def last_month         y, m, d, w ; ruby_date.prev_month         ; end
     def next_month         y, m, d, w ; ruby_date.next_month         ; end
     def beginning_of_month y, m, d, w ; build(y, m, 1)               ; end
-    def end_of_month       y, m, d, w ; build(y, m, 31)              ; end
+    def end_of_month       y, m, d, w ; build(y, m + 1, 1) - 1       ; end
 
     def last_week          y, m, d, w ; ruby_date - 7                ; end
     def next_week          y, m, d, w ; ruby_date + 7                ; end

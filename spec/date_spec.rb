@@ -138,6 +138,24 @@ describe Nydp::Date do
     expect(nd._nydp_get(:"end-of-month").to_s).        to eq "2015-06-30"
   end
 
+  it "manages leap years" do
+    rd = Date.parse "2020-02-08"
+    nd = Nydp.r2n rd
+
+    expect(nd._nydp_get(:"last-month").to_s).          to eq "2020-01-08"
+    expect(nd._nydp_get(:"next-month").to_s).          to eq "2020-03-08"
+    expect(nd._nydp_get(:"beginning-of-month").to_s).  to eq "2020-02-01"
+    expect(nd._nydp_get(:"end-of-month").to_s).        to eq "2020-02-29"
+
+    rd = Date.parse "2020-02-28"
+    nd = Nydp.r2n rd
+    expect(nd._nydp_get(:"tomorrow").to_s).            to eq "2020-02-29"
+
+    rd = Date.parse "2020-03-01"
+    nd = Nydp.r2n rd
+    expect(nd._nydp_get(:"yesterday").to_s).           to eq "2020-02-29"
+  end
+
   it "returns relative dates by week" do
     rd = Date.parse "2015-03-12"
     nd = Nydp.r2n rd
