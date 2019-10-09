@@ -1,0 +1,24 @@
+(examples-for dp
+  ("returns nil for nil"
+   (dp)
+   nil)
+
+  ("returns nil when everything is empty"
+   (dp "" nil {} ())
+   nil)
+
+  ("returns the first item if not empty"
+   (dp 'a "" {} ())
+   a)
+
+  ("returns the second item if not empty"
+   (dp "" 'b "" {} ())
+   b)
+
+  ("returns the third item if not empty"
+   (dp "" {} 'c "" {} ())
+   c)
+
+  ("returns the last item if not empty"
+   (dp "" {} () 'd)
+   d))

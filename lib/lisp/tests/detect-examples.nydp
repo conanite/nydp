@@ -26,6 +26,18 @@
            "zz")
    nil)
 
+  ("empty list"
+   (detect present? nil)
+   nil)
+
+  ("present? for list of empty things"
+   (detect present? (list "" nil {} ()))
+   nil)
+
+  ("present? for mostly empty things"
+   (detect present? (list "" nil 42 {} ()))
+   42)
+
   ("nil for nil"
    (detect nil nil)
    nil)

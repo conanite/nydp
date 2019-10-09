@@ -18,7 +18,7 @@
   ("nonzero"       (present? "foo-bar")  t)
   ("zero"          (present? "")         nil)
   ("blank"         (present? "  ")       t)
-  ("nil is t"      (present? nil)        nil)
+  ("nil is nil"    (present? nil)        nil)
   ("sym is t"      (present? 'abc)       t)
   ("number is t"   (present? 234)        t)
 
