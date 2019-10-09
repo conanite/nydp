@@ -138,6 +138,22 @@ describe Nydp::Date do
     expect(nd._nydp_get(:"end-of-month").to_s).        to eq "2015-06-30"
   end
 
+  it "calculates end-of-month all year around" do
+    expect(Nydp.r2n(Date.parse("2015-01-08"))._nydp_get(:"end-of-month").to_s).to eq "2015-01-31"
+    expect(Nydp.r2n(Date.parse("2015-02-08"))._nydp_get(:"end-of-month").to_s).to eq "2015-02-28"
+    expect(Nydp.r2n(Date.parse("2016-02-08"))._nydp_get(:"end-of-month").to_s).to eq "2016-02-29"
+    expect(Nydp.r2n(Date.parse("2015-03-08"))._nydp_get(:"end-of-month").to_s).to eq "2015-03-31"
+    expect(Nydp.r2n(Date.parse("2015-04-08"))._nydp_get(:"end-of-month").to_s).to eq "2015-04-30"
+    expect(Nydp.r2n(Date.parse("2015-05-08"))._nydp_get(:"end-of-month").to_s).to eq "2015-05-31"
+    expect(Nydp.r2n(Date.parse("2015-06-08"))._nydp_get(:"end-of-month").to_s).to eq "2015-06-30"
+    expect(Nydp.r2n(Date.parse("2015-07-08"))._nydp_get(:"end-of-month").to_s).to eq "2015-07-31"
+    expect(Nydp.r2n(Date.parse("2015-08-08"))._nydp_get(:"end-of-month").to_s).to eq "2015-08-31"
+    expect(Nydp.r2n(Date.parse("2015-09-08"))._nydp_get(:"end-of-month").to_s).to eq "2015-09-30"
+    expect(Nydp.r2n(Date.parse("2015-10-08"))._nydp_get(:"end-of-month").to_s).to eq "2015-10-31"
+    expect(Nydp.r2n(Date.parse("2015-11-08"))._nydp_get(:"end-of-month").to_s).to eq "2015-11-30"
+    expect(Nydp.r2n(Date.parse("2015-12-08"))._nydp_get(:"end-of-month").to_s).to eq "2015-12-31"
+  end
+
   it "manages leap years" do
     rd = Date.parse "2020-02-08"
     nd = Nydp.r2n rd

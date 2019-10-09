@@ -54,7 +54,7 @@ module Nydp
     def last_month         y, m, d, w ; ruby_date.prev_month         ; end
     def next_month         y, m, d, w ; ruby_date.next_month         ; end
     def beginning_of_month y, m, d, w ; build(y, m, 1)               ; end
-    def end_of_month       y, m, d, w ; build(y, m + 1, 1) - 1       ; end
+    def end_of_month       y, m, d, w ; beginning_of_month(*splat(ruby_date.next_month)) - 1 ; end
 
     def last_week          y, m, d, w ; ruby_date - 7                ; end
     def next_week          y, m, d, w ; ruby_date + 7                ; end
@@ -78,14 +78,8 @@ module Nydp
     def _nydp_keys               ; @@keys.to_a                                            ; end
     def dispatch key, y, m, d, w ; self.send(key, y, m, d, w) if _nydp_keys.include?(key) ; end
 
-    def _nydp_get key
-      key = key.to_s.gsub(/-/, '_').to_sym
-      y = ruby_date.year
-      m = ruby_date.month
-      d = ruby_date.day
-      w = ruby_date.wday
-
-      r2n(dispatch(key, y, m, d, w))
-    end
+    def splat       date ; [date.year, date.month, date.day, date.wday]                ; end
+    def lookup key, date ; r2n(dispatch(key.to_s.gsub(/-/, '_').to_sym, *splat(date))) ; end
+    def _nydp_get    key ; lookup key, ruby_date                                       ; end
   end
 end
