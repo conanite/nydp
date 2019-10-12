@@ -138,21 +138,20 @@
       (detect (curry eq? f)
               things)))
 
+;; split things into a list of lists each n long
 (def tuples (n things)
-  ;; split things into a list of lists each n long
   (rfnwith _ (list things)
            (if (no list)
                nil
                (cons (firstn n list) (_ (nthcdr n list))))))
 
-(def best (f things)
-  (if (no things)
-      nil
-      (let winner (car things)
-        (each thing (cdr things)
-              (if (f thing winner)
-                  (= winner thing)))
-        winner)))
+;; iterates through 'things pairwise (a,b then b,c then c,d etc), returns whichever is preferred by 'better-p
+;; example (best > '(3 1 4 1 5 9 2)) returns 9
+;; "better-p" -> takes two args a and b, return t if a is "better" than b, nil otherwise
+(def best (better-p things)
+  (reduce (fn (a b)
+              (if (better-p a b) a b))
+          things))
 
 (def min things (best < things))
 (def max things (best > things))
