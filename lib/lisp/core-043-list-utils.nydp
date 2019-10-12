@@ -75,12 +75,11 @@
                        (,c (cdr ,xs)))))))
 
 (def reduce (f things)
-  ((rfn rd (acc list)
-        (if (pair? list)
-            (rd (f acc (car list))
-                (cdr list))
-            acc))
-   (car things) (cdr things)))
+  (rfnwith rd (acc (car things) list (cdr things))
+           (if (pair? list)
+               (rd (f acc (car list))
+                   (cdr list))
+               acc)))
 
 ;; t if this is a proper list (last cdr is nil)
 ;; nil otherwise (last cdr is neither cons nor nil)
