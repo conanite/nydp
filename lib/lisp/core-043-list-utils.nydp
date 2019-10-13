@@ -155,6 +155,14 @@
 (def min things (best < things))
 (def max things (best > things))
 
+;; returns a function taking two args a and b, that compares attributes of two objects
+;; 'map-f takes one arg a returning a1
+;; 'compare-p takes two args a1 and b1, returns t if a1 is "better" than b1
+;;
+;; useful in conjunction with 'best : (best (map-compare-f > &size) (list { size 1 } { size 7 } { size 3 })) returns { size 7 }
+(def map-compare-f (compare-p map-f)
+  (fn (a b) (compare-p (map-f a) (map-f b))))
+
 ;; iterate over 'things, calling 'on-atom for each non-list element, and calling
 ;; 'on-list for each list element.
 ;; 'on-atom takes one parameter, the element in question;
