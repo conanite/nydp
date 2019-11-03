@@ -103,8 +103,10 @@
      (def dox-types () (hash-keys types))
      (def dox-items-by-type (type) (hash-get types type))
 
-     (def dox-items-by-type-and-chapter (type chapter)
-       (hash-get types-chapters (cons type chapter)))
+     (def get-types-chapters () types-chapters)
+
+     (def dox-items-by-type-and-chapter (dox-type chapter)
+       (hash-get types-chapters (cons dox-type chapter)))
 
      (def dox-get-attr (name attr)
        (cond (dox? name)
