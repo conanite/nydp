@@ -34,6 +34,14 @@
              (each thing things
                    (hash-set hsh (f thing) thing))))
 
+;; like 'group-by, except 'f returns multiple items, each of which
+;; is used to key the thing in question
+(def subgroup-by (f things)
+  (returnlet hsh {}
+    (each thing things
+          (each k (f thing)
+                (hash-cons hsh k thing)))))
+
 ;; return a new hash containing all the values of the given
 ;; hash, but with each corresponding key 'k replaced by (f k)
 (def hash-replace-keys (f hsh)
