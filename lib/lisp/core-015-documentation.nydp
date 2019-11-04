@@ -88,7 +88,7 @@
      (def dox-add-to-chapters (item type chapters)
        (cond chapters
              (do (chapter-add-item    item (car chapters))
-                 (hash-cons types-chapters (cons type (car chapters)) item)
+                 (hash-cons types-chapters (inspect (cons type (car chapters))) item)
                  (dox-add-to-chapters item type (cdr chapters)))
              item))
 
@@ -106,7 +106,7 @@
      (def get-types-chapters () types-chapters)
 
      (def dox-items-by-type-and-chapter (dox-type chapter)
-       (hash-get types-chapters (cons dox-type chapter)))
+       (hash-get types-chapters (inspect (cons dox-type chapter))))
 
      (def dox-get-attr (name attr)
        (cond (dox? name)

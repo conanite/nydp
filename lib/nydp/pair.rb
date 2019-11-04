@@ -16,7 +16,8 @@ class Nydp::Pair
   def cddr       ; cdr.cdr                                    ; end
   def car= thing ; @car = thing ; @_hash = nil                ; end
   def cdr= thing ; @cdr = thing ; @_hash = nil                ; end
-  def hash       ; @_hash ||= (car.hash + cdr.hash)           ; end
+  # def hash       ; @_hash ||= (car.hash + cdr.hash)           ; end
+  def hash       ; (car.hash + cdr.hash)                      ; end # can't cache hash of symbol, breaks when unmarshalling
   def eql? other ; self == other                              ; end
   def copy       ; cons(car, cdr.copy)                        ; end
   def +    other ; copy.append other                          ; end
