@@ -40,12 +40,21 @@
        (loop (assign ,v ,gi) (< ,v ,gm) (assign ,v (+ ,v 1))
          ,@body))))
 
-(mac curry (func . args1)
-  ; return a new function which is the original function with
-  ; the given args1 already applied
-  ; arguments to the new function are whatever arguments remain
-  ; for the old function
-  `(fn args (apply ,func ,@args1 args)))
+;; return a new function which is the original function with
+;; the given args1 already applied
+;; arguments to the new function are whatever arguments remain
+;; for the old function
+;; Could be (mac curry things `(fn args (apply ,@things args))) but less readable
+(mac curry (f . args0)
+  `(fn args
+       (apply ,f ,@args0 args)))
+
+;; like curry, but the returned function takes only a single arg (assumes all
+;; args but one are provided here)
+;; Could be (mac curry1 things `(fn (arg) (,@things arg))) but less readable
+(mac curry1 (f . args)
+  `(fn (arg)
+       (,f ,@args arg)))
 
 (mac cache-get (hsh key val)
   ; if ,key is already in ,hsh - return the associated value.

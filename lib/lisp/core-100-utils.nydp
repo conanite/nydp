@@ -21,6 +21,12 @@
 (def safe-sort-by (f instead things)
   (sort-by λi(or (f i) instead) things))
 
+;; takes a function f, returns a new function that takes a list and sorts the list by 'f
+(def sort-by-f (f) (curry1 sort-by f))
+
+;; takes a function f, returns a new function that takes a list and sorts the list by 'f
+(def safe-sort-by-f (f instead) (curry1 safe-sort-by f instead))
+
 (def mapreduce (fmap freduce things)
   ; same as (reduce freduce (map fmap things))
   ; returns the resulting list
