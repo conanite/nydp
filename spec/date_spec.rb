@@ -195,4 +195,49 @@ describe Nydp::Date do
     allow(::Date).to receive_messages(today: Date.parse("2016-06-21"))
     expect(nd._nydp_get(:age)).to eq({ years: -78, months: -5 })
   end
+
+  describe "#change" do
+    let(:nd) { Nydp::Date.new(Date.parse("1965-06-08")) }
+
+    it "advances by weeks" do
+      expect((nd.change  1, :week).to_s).to eq "1965-06-15"
+      expect((nd.change -1, :week).to_s).to eq "1965-06-01"
+      expect((nd.change -2, :week).to_s).to eq "1965-05-25"
+      expect((nd.change  2, :week).to_s).to eq "1965-06-22"
+    end
+
+    it "advances by days" do
+      expect((nd.change  1, :day).to_s).to eq "1965-06-09"
+      expect((nd.change -1, :day).to_s).to eq "1965-06-07"
+      expect((nd.change -2, :day).to_s).to eq "1965-06-06"
+      expect((nd.change  2, :day).to_s).to eq "1965-06-10"
+    end
+
+    it "advances by months" do
+      expect((nd.change  1, :month).to_s).to eq "1965-07-08"
+      expect((nd.change -1, :month).to_s).to eq "1965-05-08"
+      expect((nd.change -2, :month).to_s).to eq "1965-04-08"
+      expect((nd.change  2, :month).to_s).to eq "1965-08-08"
+    end
+
+    it "advances by years" do
+      expect((nd.change  1, :year).to_s).to eq "1966-06-08"
+      expect((nd.change -1, :year).to_s).to eq "1964-06-08"
+      expect((nd.change -2, :year).to_s).to eq "1963-06-08"
+      expect((nd.change  2, :year).to_s).to eq "1967-06-08"
+    end
+
+    it "handles leap years and small months" do
+      d = Nydp::Date.new(Date.parse("2019-12-31"))
+
+      expect(d.change( 2, :month).to_s).to eq "2020-02-29"
+      expect(d.change(12, :month).to_s).to eq "2020-12-31"
+      expect(d.change(14, :month).to_s).to eq "2021-02-28"
+      expect(d.change( 6, :month).to_s).to eq "2020-06-30"
+      expect(d.change( 7, :month).to_s).to eq "2020-07-31"
+
+      d = Nydp::Date.new(Date.parse("2020-02-29"))
+      expect(d.change(12, :month).to_s).to eq "2021-02-28"
+    end
+  end
 end

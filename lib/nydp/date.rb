@@ -22,15 +22,15 @@ module Nydp
     def to_ruby   ; ruby_date                                        ; end
     def inspect   ; ruby_date.inspect                                ; end
     def nydp_type ; :date                                            ; end
-    def +     int ; r2n(ruby_date + int)                             ; end
     def >   other ; is_date?(other) && ruby_date > other.ruby_date   ; end
     def <   other ; is_date?(other) && ruby_date < other.ruby_date   ; end
     def ==  other ; is_date?(other) && ruby_date == other.ruby_date  ; end
     def <=> other ; is_date?(other) && ruby_date <=> other.ruby_date ; end
     def eql?    d ; self == d                                        ; end
     def hash      ; ruby_date.hash                                   ; end
-    def is_date? other ; other.is_a? Nydp::Date                                       ; end
-    def -        other ; r2n(ruby_date - (is_date?(other) ? other.ruby_date : other)) ; end
+    def is_date? other ; other.is_a? Nydp::Date                                               ; end
+    def -        other ; r2n(ruby_date - (is_date?(other) ? other.ruby_date : other))         ; end
+    def +          int ; int.is_a?(Fixnum) ? r2n(ruby_date + int) : r2n(change(*int.to_ruby)) ; end
 
     @@pass_through = %i{ monday? tuesday? wednesday? thursday? friday? saturday? sunday? }
     @@keys = Set.new %i{
@@ -75,11 +75,17 @@ module Nydp
       class_eval "def #{n} * ; ruby_date.#{n} ; end"
     end
 
-    def _nydp_keys               ; @@keys.to_a                                            ; end
-    def dispatch key, y, m, d, w ; self.send(key, y, m, d, w) if _nydp_keys.include?(key) ; end
-
-    def splat       date ; [date.year, date.month, date.day, date.wday]                ; end
-    def lookup key, date ; r2n(dispatch(key.to_s.gsub(/-/, '_').to_sym, *splat(date))) ; end
-    def _nydp_get    key ; lookup key, ruby_date                                       ; end
+    def _nydp_keys                ; @@keys.to_a                                                              ; end
+    def dispatch  key, y, m, d, w ; self.send(key, y, m, d, w) if _nydp_keys.include?(key)                   ; end
+    def splat                date ; [date.year, date.month, date.day, date.wday]                             ; end
+    def lookup          key, date ; r2n(dispatch(key.to_s.gsub(/-/, '_').to_sym, *splat(date)))              ; end
+    def _nydp_get             key ; lookup key, ruby_date                                                    ; end
+    def change       amount, attr
+      if    attr == :day   ; (ruby_date + amount)
+      elsif attr == :week  ; (ruby_date + (7 * amount))
+      elsif attr == :month ; (ruby_date >> amount)
+      elsif attr == :year  ; (ruby_date >> (12 * amount))
+      end
+    end
   end
 end

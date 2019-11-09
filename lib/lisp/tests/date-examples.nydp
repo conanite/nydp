@@ -52,6 +52,38 @@
  ("subtracts a day"       (let d (date 2015 11 18) (to-string (- d  1))) "2015-11-17")
  ("subtracts more days"   (let d (date 2015 11 18) (to-string (- d  5))) "2015-11-13")
 
+ ("advances by -2 weeks"   (let d (date 1965  6  8) (to-string (+ d '(-2 week)))) "1965-05-25")
+ ("advances by -1 week"    (let d (date 1965  6  8) (to-string (+ d '(-1 week)))) "1965-06-01")
+ ("advances by  1 week"    (let d (date 1965  6  8) (to-string (+ d '( 1 week)))) "1965-06-15")
+ ("advances by  2 weeks"   (let d (date 1965  6  8) (to-string (+ d '( 2 week)))) "1965-06-22")
+
+ ("advances by -2 weeks"   (let d (date 1965  6  8) (to-string (+   d '(-2 week)))) "1965-05-25")
+ ("advances by -1 week"    (let d (date 1965  6  8) (to-string (+   d '(-1 week)))) "1965-06-01")
+ ("advances by  1 week"    (let d (date 1965  6  8) (to-string (+   d '( 1 week)))) "1965-06-15")
+ ("advances by  2 weeks"   (let d (date 1965  6  8) (to-string (+   d '( 2 week)))) "1965-06-22")
+
+ ("advances by -2 days"    (let d (date 1965  6  8) (to-string (+   d '(-2 day)))) "1965-06-06")
+ ("advances by -1 day"     (let d (date 1965  6  8) (to-string (+   d '(-1 day)))) "1965-06-07")
+ ("advances by  1 day"     (let d (date 1965  6  8) (to-string (+   d '( 1 day)))) "1965-06-09")
+ ("advances by  2 days"    (let d (date 1965  6  8) (to-string (+   d '( 2 day)))) "1965-06-10")
+
+ ("advances by -2 months"  (let d (date 1965  6  8) (to-string (+   d '(-2 month)))) "1965-04-08")
+ ("advances by -1 month"   (let d (date 1965  6  8) (to-string (+   d '(-1 month)))) "1965-05-08")
+ ("advances by  1 month"   (let d (date 1965  6  8) (to-string (+   d '( 1 month)))) "1965-07-08")
+ ("advances by  2 months"  (let d (date 1965  6  8) (to-string (+   d '( 2 month)))) "1965-08-08")
+
+ ("advances by -2 years"   (let d (date 1965  6  8) (to-string (+   d '(-2 year)))) "1963-06-08")
+ ("advances by -1 year"    (let d (date 1965  6  8) (to-string (+   d '(-1 year)))) "1964-06-08")
+ ("advances by  1 year"    (let d (date 1965  6  8) (to-string (+   d '( 1 year)))) "1966-06-08")
+ ("advances by  2 years"   (let d (date 1965  6  8) (to-string (+   d '( 2 year)))) "1967-06-08")
+
+ ("adapts for leap years"         (let d (date 2019 12 31) (to-string (+   d '( 2 month)))) "2020-02-29")
+ ("jumps one year"                (let d (date 2019 12 31) (to-string (+   d '( 1 year) ))) "2020-12-31")
+ ("jumps to 28 feb a year later"  (let d (date 2019 12 31) (to-string (+   d '(14 month)))) "2021-02-28")
+ ("jumps to end of june"          (let d (date 2019 12 31) (to-string (+   d '( 6 month)))) "2020-06-30")
+ ("jumps to end of july"          (let d (date 2019 12 31) (to-string (+   d '( 7 month)))) "2020-07-31")
+ ("jumps from end feb to end feb" (let d (date 2020 02 29) (to-string (+   d '(12 month)))) "2021-02-28")
+
  ("finds anniversary before a given date in previous year"
   (to-string (anniversary/previous (date 2019 6 21) (date 1949 10 3)))
   "2018-10-03")
@@ -63,6 +95,7 @@
  ("finds anniversary after a given date in same year"
   (to-string (anniversary/next (date 2019 6 21) (date 1949 10 3)))
   "2019-10-03")
+
 
  ("finds anniversary after a given date in following year"
   (to-string (anniversary/next (date 2019 11 20) (date 1949 10 3)))
