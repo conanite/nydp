@@ -23,28 +23,26 @@
              (intersperse inbetween (cdr things)))
       things))
 
+;; expects 'things a list of lists, joins the lists
+;; returns (a b X c d X e f)
+;; placing 'inbetween in between each list.
+;; For example (intersperse-splicing 'X '((a b) (c d) (e f)))
 (def intersperse-splicing (inbetween things)
-  ; expects 'things a list of lists, joins the lists
-  ; placing 'inbetween in between each list.
-  ; For example (intersperse-splicing 'X '((a b) (c d) (e f)))
-  ; returns (a b X c d X e f)
   (apply joinlists (intersperse (list inbetween) things)))
 
-(def collect (f things)
-  ; if 'things is a list, return all the items in the list for which 'f returns non-nil
-  ; otherwise, return 'things if (f things) is non-nil
-  ; otherwise, nil
-  ; note that this preserves improper lists and may return only the lastcdr if all else fails...
-  (rfnwith collector (items things)
-           (if (no items)
-               nil
-               (pair? items)
-               (if (f (car items))
-                   (cons (car items)
-                         (collector (cdr items)))
-                   (collector (cdr items)))
-               (f items)
-               items)))
+;; if 'things is a list, return all the items in the list for which 'f returns non-nil
+;; otherwise, return 'things if (f things) is non-nil
+;; otherwise, nil
+;; note that this preserves improper lists and may return only the lastcdr if all else fails...
+(def collect (f items)
+  (if (pair? items)
+      (if (f (car items))
+          (cons (car items)
+                (collect f (cdr items)))
+          (collect f (cdr items)))
+      items
+      (if (f items)
+          items)))
 
 (assign select collect)
 
