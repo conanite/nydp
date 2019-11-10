@@ -138,9 +138,9 @@
                     (cond (eq? event 'script-end)
                           (script-end name))))))
 
+;; if the car of 'form is a key of 'hsh, add the cdr of 'form to the value of the key in 'hsh
+;; otherwise add the form to the list whose key is nil
 (def filter-form (hsh form)
-  ; if the car of 'form is a key of 'hsh, add the cdr of 'form to the value of the key in 'hsh
-  ; otherwise add the form to the list whose key is nil
   (cond (cond (pair? form)
               (hash-key? hsh (car form)))
       (hash-cons hsh (car form) (cdr form))
@@ -159,9 +159,9 @@
 (def rev-values (hsh)
   (rev-value-keys (hash-keys hsh) hsh (hash)))
 
+;; group forms by their first element, if the first element
+;; is already a key in hsh, collect all other elements under key nil
 (def filter-forms (hsh forms)
-  ; group forms by their first element, if the first element
-  ; is already a key in hsh, collect all other elements under key nil
   (cond forms
         (filter-forms (filter-form hsh (car forms)) (cdr forms))
         (rev-values hsh)))
@@ -171,8 +171,8 @@
   (hash-set hsh 'chapter nil)
   hsh)
 
+;; used internally by 'mac
 (def define-mac-expr (name args body-forms)
-  ; used internally by 'mac
   `(do (hash-set macs ',name (fun ,args ,@(hash-get body-forms nil)))
        (dox-add-doc ',name
                     'mac
@@ -201,8 +201,8 @@
 
 (mac def-assign args `(assign ,@args))
 
+;; used internally by 'def
 (def define-def-expr (name args body-forms)
-  ; used internally by 'def
   `(do (def-assign ,name (fun ,args ,@(filter-comments (hash-get body-forms nil))))
        (dox-add-doc ',name
                     'def
@@ -211,8 +211,8 @@
                     '(def ,name ,args ,@(hash-get body-forms nil))
                     ',(map car (hash-get body-forms 'chapter)))))
 
+;; define a new function in the global namespace
 (mac def (name args . body)
-  ; define a new function in the global namespace
   (chapter nydp-core)
   (define-def-expr name args (filter-forms (build-def-hash (hash)) body)))
 
