@@ -19,6 +19,10 @@
                                  acc)))
       form))
 
+(hash-set macs 'do
+          (fn forms
+              `((fn nil ,@forms))))
+
 ((fn (this-chapter-name chapters chapter-new chapter-build chapter-add-to-chapter)
      (assign chapters (hash))
 

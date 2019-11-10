@@ -10,7 +10,11 @@
   ("dislikes no-prefix"
    (on-err (joinstr "\n" errors)
            (pre-compile '(:foo 1 2 3)))
-   "Irregular ': syntax: got (|| foo) : not prefix-syntax : in :foo"))
+   "expanding
+(colon-syntax || foo)
+with
+(fn names ((orf (hash-get colon-syntax-overrides car [0#0#0]names) default-colon-syntax) [0#0#0]names))
+Irregular ': syntax: got (|| foo) : not prefix-syntax : in :foo"))
 
 (examples-for prefix-list
   ("one argument"

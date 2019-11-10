@@ -1,8 +1,11 @@
 (assign mac-expand
         (fn (names macfn expr)
             (cond macfn
-                  (pre-compile-with names
-                                    (apply macfn (cdr expr)))
+                  (handle-error
+                   (fn (errors)
+                       (error "expanding" (inspect expr) "with" (inspect macfn)))
+                   (fn ()
+                       (pre-compile-with names (apply macfn (cdr expr)))))
                   expr)))
 
 (assign macs (hash))
@@ -134,7 +137,3 @@
 
 (hash-set macs 'quasiquote
           (fn (arg) (qq-quasiquote arg 0)))
-
-(hash-set macs 'do
-          (fn args
-              `((fn nil ,@args))))
