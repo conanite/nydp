@@ -176,7 +176,7 @@
   `(do (hash-set macs ',name (fun ,args ,@(hash-get body-forms nil)))
        (dox-add-doc ',name
                     'mac
-                    ',(map car (hash-get body-forms 'comment))
+                    ',(+ (fetch-and-clear-comments) (map car (hash-get body-forms 'comment)))
                     ',args
                     '(mac ,name ,args ,@(hash-get body-forms nil))
                     ',(map car (hash-get body-forms 'chapter)))))
