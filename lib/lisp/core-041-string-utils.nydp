@@ -2,7 +2,7 @@
 
 ; return a new string with leading and trailing whitespace removed
 (def string-strip (txt)
-  (string-replace "(^\\s+|\\s+$)" "" txt))
+  (string-replace "(\\A\\s+|\\s+\\z)" "" txt))
 
 (def joinstr (txt . things)
   ; flatten 'things into a single list (ie unnest lists)

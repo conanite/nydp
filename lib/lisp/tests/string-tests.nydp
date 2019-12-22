@@ -138,4 +138,7 @@ and args (\"world\" 36 6)"
 (examples-for string-strip
   ("removes leading whitespace"               (string-strip "    hello!")  "hello!" )
   ("removes trailing whitespace"              (string-strip "(world)   ") "(world)" )
-  ("removes leading and trailing whitespace"  (string-strip "\n\nme\n\n") "me"      ))
+  ("removes leading and trailing whitespace"  (string-strip "\n\nme\n\n") "me"      )
+  ("ignores leading and trailing whitespace for intenal lines"
+   (string-strip "\n\n  me  \n\n  you  \n\n\t them \t\n\n")
+   "me  \n\n  you  \n\n\t them"      ))
