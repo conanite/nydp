@@ -1,3 +1,6 @@
+(def-setting "testing.reset.string" "hello world")
+(def-setting "testing.reset.fn"     to-string)
+
 (examples-for settings/fn
   ("returns arg if it is a sym"
    (settings/fn 'foobar)
@@ -22,3 +25,16 @@
   ("wraps arg in a fn expression if it is a complex expression"
    (settings/fn '(let foo this that (rfnwith (complex stuff) (%td.tricky#syntax))))
    (fn (_) (let foo this that (rfnwith (complex stuff) ((percent-syntax || (dot-syntax td tricky#syntax))))))))
+
+(examples-for reset-setting
+  ("restores a setting to its original value"
+   (do (set-setting "testing.reset.string" "goodbye, dear life")
+       (reset-setting "testing.reset.string")
+       (setting "testing.reset.string"))
+   "hello world")
+
+  ("restores a setting to its original function value"
+   (do (set-setting "testing.reset.fn" "goodbye, dear life")
+       (reset-setting "testing.reset.fn")
+       (setting "testing.reset.fn"))
+   "testing.reset.fn"))
