@@ -35,21 +35,21 @@
 (dox-add-doc 'pair?     'def '("t if arg is a cons cell or (equivalently) the start of a list")                                                                  '(arg)                nil '(nydp-core))
 (dox-add-doc 'hash?     'def '("t if arg is a hash")                                                                                                             '(arg)                nil '(nydp-core))
 (dox-add-doc 'sym?      'def '("t if arg is a symbol, nil otherwise")                                                                                            '(arg)                nil '(nydp-core))
-(dox-add-doc 'ensuring  'def '("execute 'tricky-f, then 'ensure-f afterwards"
-                               "'ensure-f will always be executed, even if there is an error in 'tricky-f"
-                               "returns the return value of 'tricky-f")                                                                                          '(ensure-f tricky-f)  nil '(flow-control))
+(dox-add-doc 'ensuring  'def '("execute 'try-f, then 'ensure-f afterwards"
+                               "'ensure-f will always be executed, even if there is an error in 'try-f"
+                               "returns the return value of 'try-f. Similar to try/finally in java, or begin/ensure in ruby.")                                   '(ensure-f try-f)  nil '(flow-control))
 (dox-add-doc 'inspect   'def '("return a string representing 'arg, potentially (but not always) in a way that can be parsed back in to get the original object") '(arg)                nil '(nydp-core))
 (dox-add-doc 'comment   'def '("does nothing at all." "Intercepted inside 'def and 'mac and used for documentation")                                             '(arg)                nil '(nydp-core))
 (dox-add-doc 'parse-in-string 'def '("parse the given string assuming a string-open delimiter has already been encountered")                                     '(str)                nil '(nydp-core))
 (dox-add-doc 'rand            'def '("return a random number ; with no args, between 0 and 1"
                                      "with 1 arg, an integer less than arg"
-                                     "with two args, an integer >= arg 0 and < arg 1")                                                                           'args                 nil '(math))
-(dox-add-doc 'random-string   'def '("return a random string of length 'len (default 10)")                                                                       '(len)                nil '(string-manipulation))
-(dox-add-doc 'to-string       'def '("return a human-readable string representation of 'arg")                                                                    '(arg)                nil '(string-manipulation))
-(dox-add-doc 'string-length   'def '("return the length of 'arg")                                                                                                '(arg)                nil '(string-manipulation))
-(dox-add-doc 'string-replace  'def '("replace 'pattern with 'insert in 'str")                                                                                    '(pattern insert str) nil '(string-manipulation))
-(dox-add-doc 'string-split    'def '("split 'str delimited by 'delim")                                                                                           '(str delim)          nil '(string-manipulation))
-(dox-add-doc 'string-match    'def '("if 'str matches 'pattern, return hash with keys 'match and 'captures ; otherwise nil")                                     '(str pattern)        nil '(string-manipulation))
+                                     "with two args, an integer >= arg 0 and < arg 1")                                                                           'args                      nil '(math))
+(dox-add-doc 'random-string   'def '("return a random string of length 'len (default 10)")                                                                       '(len)                     nil '(string-manipulation))
+(dox-add-doc 'to-string       'def '("return a human-readable string representation of 'arg")                                                                    '(arg)                     nil '(string-manipulation))
+(dox-add-doc 'string-length   'def '("return the length of 'arg")                                                                                                '(arg)                     nil '(string-manipulation))
+(dox-add-doc 'string-replace  'def '("replace 'pattern with 'replacement in 'str")                                                                               '(pattern replacement str) nil '(string-manipulation))
+(dox-add-doc 'string-split    'def '("split 'str delimited by 'delim")                                                                                           '(str delim)               nil '(string-manipulation))
+(dox-add-doc 'string-match    'def '("if 'str matches 'pattern, return hash with keys 'match and 'captures ; otherwise nil")                                     '(str pattern)             nil '(string-manipulation))
 (dox-add-doc 'time            'def '("with no args, return the current time."
                                      "With one arg, if 'arg-0 is a number, return the current time plus 'arg-0 seconds."
                                      "With one arg, if 'arg-0 is a date, return the time at the beginning of the given date."
@@ -57,9 +57,9 @@
                                      "With two args, 'arg-0 must be a time."
                                      "If 'arg-1 is a number, return 'arg-0 plus 'arg-1 seconds as a time object."
                                      "If 'arg-1 is a time, return the number of seconds between the two (- 'arg-0 arg-1)."
-                                     "Otherwise, expect 3, 4, 5, or 6 args, to construct a time from"
+                                     "Otherwise, expect 3 or more args, to construct a time from"
                                      "year, month, date, hours, minutes, seconds, milliseconds, reading arguments in that order,"
-                                     "where hours, minutes, seconds, and milliseconds are optional")                                                             'args                 nil '(date-time))
+                                     "where hours, minutes, seconds, and milliseconds are optional")                                                               'args                 nil '(date-time))
 (dox-add-doc 'thread-locals     'def '("return a hash bound to the current thread")                                                                                nil                   nil '(nydp-core))
 (dox-add-doc 'type-of           'def '("return a symbol for the type of 'arg")                                                                                     '(arg)                nil '(nydp-core))
 (dox-add-doc 'eq?               'def '("return 't if 'arg-0 and 'arg-1 are equal, nil otherwise")                                                                  '(arg-0 arg-1)        nil '(nydp-core))
