@@ -83,17 +83,20 @@
      (def dox-new (item)
        (hash-cons dox (hash-get item 'name) item)
        (hash-cons types (hash-get item 'what) item)
-       (dox-add-to-chapters item (hash-get item 'what) (hash-get item 'chapters)))
+       (dox-add-to-chapters item (hash-get item 'what) (hash-get item 'chapters) (hash)))
 
      (def dox-add-doc (name what texts args src chapters more)
        (cond (no (privately))
              (dox-new (dox-build (if more more (hash)) name what texts args src chapters))))
 
-     (def dox-add-to-chapters (item type chapters)
+     (def dox-add-to-chapters (item type chapters already)
        (cond chapters
-             (do (chapter-add-item    item (car chapters))
-                 (hash-cons types-chapters (inspect (cons type (car chapters))) item)
-                 (dox-add-to-chapters item type (cdr chapters)))
+         (cond (no (hash-get already (car chapters)))
+           (do (hash-set            already        (car chapters)                       t)
+               (chapter-add-item    item           (car chapters))
+               (hash-cons           types-chapters (inspect (cons type (car chapters))) item)
+               (dox-add-to-chapters item           type (cdr chapters) already))
+           item)
              item))
 
      (def dox-add-examples (name example-exprs)
