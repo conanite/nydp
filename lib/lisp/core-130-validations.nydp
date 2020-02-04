@@ -1,0 +1,51 @@
+(chapter-start 'validations "utilities to record and run validation routines")
+
+(let validations {}
+  (def validate/reset ()
+    (= validations {}))
+  (def validate/fns (thing context)
+    (hash-get validations (list (type-of thing) context)))
+  (def validate/fn+ (type context f)
+    (hash-cons validations (list type context) f)))
+
+;;
+;; returns a hash of error-name to list of error messages
+;;
+;; An empty return value signifies an error-free 'thing
+;;
+(def validate (thing context)
+  (returnlet msgs {}
+    (let msgf λem(hash-cons msgs e m)
+      (eachl λv(v thing context msgf)
+             (validate/fns thing context)))))
+
+;; declare a validation routine for type 'type in context 'context
+;;
+;; 'type must be a symbol
+;; 'context must be a symbol
+;; 'body is one or more nydp expressions.
+;;
+;; 'body will be embedded in a function with access to the following variables :
+;;
+;; * the value of the 'type argument
+;; * ctx
+;; * mf
+;;
+;; 'mf ("message function") is a function that takes two arguments and is used to store
+;; the validation error message
+;; example: (mf "Last name" "Last name must not be empty")
+;;
+;; example usage:
+;;
+;; (validate/def invoice issue
+;;   (if (no invoice.account)
+;;       (mf "Account" "Account must be a client account"))
+;;   (if (!> invoice.total 0)
+;;       (mf "Amount"  "Amount must be greater than zero"))
+;;   (if (any? !&group invoice.invoice-items)
+;;       (mf "Group"   "Each line must be assigned to a group")))
+;;
+;; if your routine makes no call to 'mf then 'validate will return an empty hash, which should be
+;; interpreted as signifying that the object in question is error free in the given context.
+(mac validate/def (type context . body)
+  `(validate/fn+ ',type ',context (fn (,type ctx mf) ,@body)))

@@ -151,7 +151,35 @@ nydp > (map &lastname german-composers)   ; ampersand-syntax creates a function 
 
 As with all other syntax, you can of course override the `ampersand-syntax` macro to handle your special needs.
 
+You can combine special syntaxes ("%td" comes from nydp-html gem)
+
+```lisp
+
+nydp > (map %td:&lastname german-composers)
+
+"<td>Bach</td><td>Beethoven</td><td>Wagner</td><td>Mozart</td>"
+
+```
+
+So, @%td@ expands to @(percent-syntax || td)@, @&lastname@ to @(ampersand-syntax || lastname)@, and the whole @%td:&lastname@
+to @(colon-syntax (percent-syntax || td) (ampersand-syntax || lastname))@. Luckily for you, there's a fine @colon-syntax@ macro
+that knows how to build a function out of these bits and pieces.
+
+
 Look for `SYMBOL_OPERATORS` in [parser.rb](lib/nydp/parser.rb) to see which syntax is recognised and in which order. The order of these definitions defines special-syntax-operator precedence.
+
+Any character that is not special syntax will be recognised as part of a symbol. At time of writing, this includes the plus sign, hyphen, and slash.
+
+```lisp
+
+;; nonsense code illustrating the use of certain
+;; characters as function and variable names
+(def //-+ (x y z)
+  (let -*- (x y)
+    (if z (//-+ x y -*-) -*-)))
+
+```
+
 
 #### 3. Special list syntax
 

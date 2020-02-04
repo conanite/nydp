@@ -1,0 +1,15 @@
+(validate/def string test-0 (if (< (len string)  6) (mf "length" "should be more than 6")))
+(validate/def string test-0 (if (> (len string) 10) (mf "length" "should be less than 10")))
+
+(examples-for validate
+  ("returns a message about a string being too short"
+   (to-string:validate "foo" 'test-0)
+   "{\"length\"=>(\"should be more than 6\")}")
+
+("returns a message about a string being too long"
+   (to-string:validate "foo bar toto titi" 'test-0)
+   "{\"length\"=>(\"should be less than 10\")}")
+
+("returns an empty hash"
+   (to-string:validate "foo bar" 'test-0)
+   "{}"))
