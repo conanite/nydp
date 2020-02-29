@@ -112,4 +112,16 @@ describe Nydp do
       expect(run code).to eq 17
     end
   end
+
+  describe "proc from ruby object" do
+    it "invokes a proc like a builtin function" do
+      Nydp::Symbol.mk(:tt, ns).assign(TestThing.new(42, 720, 9699690))
+
+      one_thing = run "((hash-get tt 'one_thing) 24)"
+      expect(one_thing).to eq(42 + 24)
+
+      two_things = run "((hash-get tt 'two_things) 60 2)"
+      expect(two_things).to eq(60 + (2 * 720))
+    end
+  end
 end

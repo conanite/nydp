@@ -6,6 +6,15 @@ class Object
   def lexical_reach n ; n    ; end
 end
 
+class Method
+  include Nydp::Converter
+  def invoke_1 vm             ; vm.push_arg call._nydp_wrapper                            ; end
+  def invoke_2 vm, a0         ; vm.push_arg call(n2r(a0))._nydp_wrapper                   ; end
+  def invoke_3 vm, a0, a1     ; vm.push_arg call(n2r(a0), n2r(a1))._nydp_wrapper          ; end
+  def invoke_4 vm, a0, a1, a2 ; vm.push_arg call(n2r(a0), n2r(a1), n2r(a2))._nydp_wrapper ; end
+  def invoke   vm, args       ; vm.push_arg call(*(args.map { |a| n2r a}))._nydp_wrapper  ; end
+end
+
 class NilClass
   def _nydp_wrapper ; Nydp::NIL ; end
 end

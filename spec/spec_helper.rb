@@ -37,8 +37,17 @@ class TestThing
     "(TestThing #{a.inspect} #{b.inspect})"
   end
 
+  def one_thing x
+    x + a
+  end
+
+  def two_things x, y
+    x + (y * b)
+  end
+
   def _nydp_get name
     name = name.to_s.to_sym
-    send(name) if name == :a || name == :b
+    return send(name) if name == :a || name == :b
+    return method(name) if name == :one_thing || name == :two_things
   end
 end
