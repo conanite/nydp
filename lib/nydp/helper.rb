@@ -4,7 +4,7 @@ module Nydp
     # #_nydp_whitelist should return a list of methods which are safe for nydp to invoke
     def _nydp_wrapper                 ; self                                     ; end
     def _nydp_ok?              method ; _nydp_whitelist.include? method          ; end
-    def _nydp_procify?         method ; false                                    ; end # override to allow returning Method instances for given method name
+    def _nydp_procify?         method ; _nydp_procs.include? method              ; end # override to allow returning Method instances for given method name
     def _nydp_get                 key ; _nydp_safe_send(key.to_s.as_method_name) ; end
     def to_ruby                       ; self                                     ; end
     def _nydp_safe_send meth, *args
@@ -16,6 +16,7 @@ module Nydp
   class Struct < ::Struct
     include AutoWrap
     def _nydp_whitelist ; members ; end
+    def _nydp_procs     ; []      ; end
   end
 
   module Converter
