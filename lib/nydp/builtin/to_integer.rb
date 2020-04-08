@@ -1,6 +1,5 @@
 module Nydp::Builtin
   class ToInteger
-    @@epoch = Date.new(1970,1,1)
     include Nydp::Builtin::Base, Singleton
 
     def builtin_invoke_2 vm, arg
