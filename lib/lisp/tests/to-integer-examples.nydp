@@ -1,0 +1,16 @@
+(examples-for to-integer
+  ("converts a string"
+   (to-integer "1234")
+   1234)
+
+  ("converts a date"
+   (to-integer (date 2004 3 12))
+   1079046000)
+
+  ("converts a time"
+   (to-integer (time 2004 3 12 18 45))
+   1079113500)
+
+  ("returns nonsense for non-integer"
+   (to-integer { foo 'bar })
+   0))
