@@ -60,14 +60,3 @@
 ; a 'key, returns vx from 'al where kx is equal to 'key
 ; #attribution: lifted almost directly from arc.arc
 (def alref (key al) (cadr (assoc key al)))
-
-;; returns the first non-empty item in 'args
-;; mac equivalent of (detect present? args)
-(mac dp args
-  (if args
-      (w/uniq nearg
-        `(let ,nearg ,(car args)
-           (if (empty? ,nearg)
-               (dp ,@(cdr args))
-               ,nearg)))
-      nil))

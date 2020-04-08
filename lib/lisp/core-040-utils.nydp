@@ -90,3 +90,14 @@
   (chapter string-manipulation)
   (chapter hash-manipulation)
   (!empty? thing))
+
+;; returns the first non-empty item in 'args
+;; mac equivalent of (detect present? args)
+(mac dp args
+  (if args
+      (w/uniq nearg
+        `(let ,nearg ,(car args)
+           (if (empty? ,nearg)
+               (dp ,@(cdr args))
+               ,nearg)))
+      nil))
