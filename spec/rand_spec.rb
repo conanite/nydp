@@ -15,7 +15,7 @@ describe Nydp::Builtin::Rand do
       numbers = (0..100).map { |i| get_rand }
       expect(numbers.all? { |n| n >= 0 && n < 1 })
       avg = numbers.reduce &:+
-      expect(avg).to be_between 40, 60
+      expect(avg).to be_between 40, 60 # with high probability
       distinct = Set.new numbers
       expect(distinct.count).to be > 90
     end
@@ -26,7 +26,7 @@ describe Nydp::Builtin::Rand do
       numbers = (0..200).map { |i| get_rand 10 }
       expect(numbers.all? { |n| n >= 0 && n < 10 })
       avg = numbers.reduce &:+
-      expect(avg).to be_between 800, 1200
+      expect(avg).to be_between 800, 1200 # with high probability
       distinct = Set.new numbers
       expect(distinct.count).to eq 10
     end
@@ -37,7 +37,7 @@ describe Nydp::Builtin::Rand do
       numbers = (0..200).map { |i| get_rand 10, 20 }
       expect(numbers.all? { |n| n >= 10 && n < 20 })
       avg = numbers.reduce &:+
-      expect(avg).to be_between 2800, 3200
+      expect(avg).to be_between 2800, 3200 # with high probability
       distinct = Set.new numbers
       expect(distinct.count).to eq 10
     end
