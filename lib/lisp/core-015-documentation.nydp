@@ -174,10 +174,12 @@
   (hash-set hsh 'chapter nil)
   hsh)
 
+(def dox-build-def-name (name) name)
+
 ;; used internally by 'mac
 (def define-mac-expr (name args body-forms)
   `(do (hash-set macs ',name (fun ,args ,@(hash-get body-forms nil)))
-       (dox-add-doc ',name
+       (dox-add-doc ',(dox-build-def-name name)
                     'mac
                     ',(+ (fetch-and-clear-comments) (map car (hash-get body-forms 'comment)))
                     ',args
@@ -207,7 +209,7 @@
 ;; used internally by 'def
 (def define-def-expr (name args body-forms)
   `(do (def-assign ,name (fun ,args ,@(filter-comments (hash-get body-forms nil))))
-       (dox-add-doc ',name
+       (dox-add-doc ',(dox-build-def-name name)
                     'def
                     ',(+ (fetch-and-clear-comments) (map car (hash-get body-forms 'comment)))
                     ',args

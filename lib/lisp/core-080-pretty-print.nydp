@@ -199,3 +199,8 @@
 ;; use the pretty-printer to elegantly display the given source code
 (def dox-show-src (src)
   (pp src))
+
+;; use 'pp/unsyntax to convert 'def and 'mac names back to a symbol
+;; so (mac dsl.foo (a1 a2) ...) will be documented as "dsl.foo"
+(def dox-build-def-name (name)
+  (pp/unsyntax name))
