@@ -15,7 +15,8 @@ class Nydp::Builtin::RubyWrap
       when 2 ; ", a0, a1"
       when 3 ; ", a0, a1, a2"
       when 4 ; ", a0, a1, a2, a3"
-      else   ; raise "maximum 4 arguments!"
+      when 5 ; ", a0, a1, a2, a3, a4"
+      else   ; raise "maximum 5 arguments!"
       end
     end
 
@@ -24,7 +25,8 @@ class Nydp::Builtin::RubyWrap
                        gsub(/a0/, "args.car").
                        gsub(/a1/, "args.cdr.car").
                        gsub(/a2/, "args.cdr.cdr.car").
-                       gsub(/a3/, "args.cdr.cdr.cdr.car")
+                       gsub(/a3/, "args.cdr.cdr.cdr.car").
+                       gsub(/a4/, "args.cdr.cdr.cdr.cdr.car")
       <<CODE
 class #{name}
   include Nydp::Builtin::Base, Singleton#{helpers}
