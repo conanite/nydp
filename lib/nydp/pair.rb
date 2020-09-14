@@ -39,9 +39,14 @@ class Nydp::Pair
   end
 
   # returns Array of elements after calling #n2r on each element
-  def to_ruby list=[]
-    list << n2r(car)
-    cdr.is_a?(Nydp::Pair) ? cdr.to_ruby(list) : list
+  def to_ruby list=[], pair=self
+    list << n2r(pair.car)
+    while(pair.cdr.is_a?(Nydp::Pair))
+      pair = pair.cdr
+      list << n2r(pair.car)
+    end
+
+    list
   end
 
   # returns Array of elements as they are
