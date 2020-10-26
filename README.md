@@ -55,6 +55,22 @@ answer = Nydp.apply_function ns, :question, :life, ["The Universe", and_also(eve
 
 You can maintain multiple `ns` instances without mutual interference. In other words, assigning global variables while one `ns` is in scope will not affect the values of variables in any other `ns` (unless you've specifically arranged it to be so by duplicating namespaces or some such sorcery).
 
+
+#### Facing the Truth
+
+In conditional statements, nil is false, anything else is true
+
+```lisp
+(if)           ;; same as (if nil)
+(if a)         ;; same as a
+(if a b)       ;; same as (if a b nil)
+(if a b c)     ;; if a is nil, return c, otherwise return b
+(if a b c d)   ;; same as (if a b (if c d))
+(if a b c d e) ;; same as (if a b (if c d e))
+
+;; and so on
+```
+
 ## Different from Arc :
 
 #### 1. Macro-expansion runs in lisp
