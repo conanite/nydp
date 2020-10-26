@@ -18,6 +18,7 @@ module Nydp
 
     def initialize ruby_date ; @ruby_date = ruby_date ; end
 
+    def to_date   ; ruby_date                                        ; end
     def to_s      ; ruby_date.to_s                                   ; end
     def to_ruby   ; ruby_date                                        ; end
     def inspect   ; ruby_date.inspect                                ; end
