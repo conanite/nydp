@@ -94,6 +94,8 @@ scoping, assignment, anonymous functions and more...")
       (cons (list (car things) (cadr things))
             (pairs (cddr things)))))
 
+;; like 'let, but creates and assigns multiple local variables.
+;; for example, "(with (a 1 b 2) (+ a b))" returns 3
 (mac with (parms . body)
      `((fun ,(map car (pairs parms))
             ,@body)
@@ -217,15 +219,15 @@ scoping, assignment, anonymous functions and more...")
   (and (pair? name)
        (caris 'ampersand-syntax (car name))))
 
+;; (= (&key (expr)) (val))
+;; (= ((ampersand-syntax key) (expr)) (val))
+;; 'place is ((ampersand-syntax || key) (expr))
+;; we need (hash-set (expr) 'key (val))
+;; however,
+;; (= (&key.subkey (expr)) (val))
+;; 'place is ((ampersand-syntax || (dot-syntax key subkey)) (expr))
+;; we need (hash-set (hash-get (expr) 'key) 'subkey (val))
 (def ampersand-expression-assignment (place value)
-  ; (= (&key (expr)) (val))
-  ; (= ((ampersand-syntax key) (expr)) (val))
-  ; 'place is ((ampersand-syntax || key) (expr))
-  ; we need (hash-set (expr) 'key (val))
-  ; however,
-  ; (= (&key.subkey (expr)) (val))
-  ; 'place is ((ampersand-syntax || (dot-syntax key subkey)) (expr))
-  ; we need (hash-set (hash-get (expr) 'key) 'subkey (val))
   (with (k   (cadr:cdar place)
          hsh (cadr place))
     (if (caris 'dot-syntax k)
