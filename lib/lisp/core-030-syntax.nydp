@@ -234,14 +234,8 @@ scoping, assignment, anonymous functions and more...")
         (dot-syntax-assignment (cons hsh (cdr k)) value)
         `(hash-set ,hsh ',k ,value))))
 
-(mac = (name value)
-  ; generic assignment which unlike builtin 'assign, knows how to assign
-  ; to hash keys
-  ; (= (hash-get (expr) 'key) (val) => (hash-set (expr) 'key (val))
-  ; (= h.k (val))                   => (hash-set h 'k (val))
-  ; (= h.j.k (val))                 => (hash-set (hash-get h 'j) 'k (val))
-  ; (= (&key (expr)) (val))         => (hash-set (expr) 'key (val))
-  ; (= (&j.k (expr)) (val))         => (hash-set (hash-get (expr) 'j) 'k (val))
+;; used internally by '= macro
+(def assign-expr (name value)
   (if (isa 'symbol name)
       `(assign ,name ,value)
       (caris 'dot-syntax name)
@@ -253,6 +247,18 @@ scoping, assignment, anonymous functions and more...")
       (caris 'at-syntax name)
       `(hash-set @ ',(caddr name) ,value)
       (error "unknown assignment to place: ~(inspect name)")))
+
+;; generic assignment which unlike builtin 'assign, knows how to assign
+;; to hash keys
+;; (= (hash-get (expr) 'key) (val) => (hash-set (expr) 'key (val))
+;; (= h.k (val))                   => (hash-set h 'k (val))
+;; (= h.j.k (val))                 => (hash-set (hash-get h 'j) 'k (val))
+;; (= (&key (expr)) (val))         => (hash-set (expr) 'key (val))
+;; (= (&j.k (expr)) (val))         => (hash-set (hash-get (expr) 'j) 'k (val))
+(mac = (name value . more)
+  (if more
+      `(do ,(assign-expr name value) (= ,@more))
+      (assign-expr name value)))
 
 ;; quiet assignment ; like =, but expression returns nil
 (mac #= (name value)

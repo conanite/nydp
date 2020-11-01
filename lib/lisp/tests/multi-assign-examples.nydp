@@ -1,0 +1,6 @@
+(examples-for ampersand-syntax
+  ("assigns multiple values at once ; value of expr is last assigned value"
+   (with (a 1 b { foo 2 } c { d { e 3 } })
+         (let res (= a 10 b.foo 20 (&d.e c) 30)
+           (list a b.foo c.d.e res)))
+   (10 20 30 30)))
