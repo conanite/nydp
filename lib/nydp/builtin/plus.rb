@@ -10,11 +10,19 @@ class Nydp::Builtin::Plus
     vm.push_arg case args.car
                 when Nydp::Pair
                   sum(args, Nydp::NIL)
-                when String, Nydp::StringAtom
-                  sum(args, Nydp::StringAtom.new(""))
+                when String
+                  string_concat("", args)
                 else
                   sum(args.cdr, args.car)
                 end
+  end
+
+  def string_concat init, others
+    while others && !Nydp::NIL.is?(others)
+      init << others.car.to_s
+      others = others.cdr
+    end
+    init
   end
 
   def sum args, accum

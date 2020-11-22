@@ -9,7 +9,7 @@ describe Nydp::Hash do
     describe "hash set" do
       it "returns a new Nydp hash" do
         k    = Nydp::Symbol.mk "keysym", ns
-        v    = Nydp::StringAtom.new "foobar"
+        v    = "foobar"
         args = pair_list [ahash, k, v]
         Nydp::Builtin::HashSet.instance.invoke vm, args
 
@@ -29,7 +29,7 @@ describe Nydp::Hash do
 
         Nydp::Builtin::HashGet.instance.invoke vm, pair_list(args)
 
-        expect(vm.args.pop).to eq Nydp::StringAtom.new("avalue")
+        expect(vm.args.pop).to eq "avalue"
       end
 
       it "converts ruby nil to nydp value" do

@@ -34,8 +34,7 @@ module Nydp
       when /^(.*),@$/
         prefix_list $1, Pair.from_list([sym(:"unquote-splicing"), list])
       else
-        pfx = Nydp::StringAtom.new prefix
-        Pair.from_list([sym(:"prefix-list"), pfx, list])
+        Pair.from_list([sym(:"prefix-list"), prefix, list])
       end
     end
 
@@ -111,7 +110,7 @@ module Nydp
       when :symbol
         parse_symbol token.last
       when :comment
-        Pair.from_list [sym(:comment), Nydp::StringAtom.new(token.last)]
+        Pair.from_list [sym(:comment), token.last]
       else
         token.last
       end
@@ -132,11 +131,11 @@ module Nydp
       fragments = [sym(:"string-pieces")]
       string_token = token_stream.next_string_fragment(open_delimiter, close_delimiter, INTERPOLATION_SIGN, INTERPOLATION_ESCAPES)
       raise "unterminated string" if string_token.nil?
-      fragments << Nydp::StringAtom.new(string_token.string)
+      fragments << string_token.string
       while !(string_token.is_a? StringFragmentCloseToken)
         fragments << expression(token_stream)
         string_token = token_stream.next_string_fragment('', close_delimiter, INTERPOLATION_SIGN, INTERPOLATION_ESCAPES)
-        fragments << Nydp::StringAtom.new(string_token.string)
+        fragments << string_token.string
       end
 
       if fragments.size == 2

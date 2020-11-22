@@ -22,7 +22,7 @@ describe Nydp do
   end
 
   it "should add strings" do
-    expect(run '(+ "hello" " " "world")').to eq Nydp::StringAtom.new("hello world")
+    expect(run '(+ "hello" " " "world")').to eq "hello world"
   end
 
   it "should add Pairs" do
@@ -46,7 +46,7 @@ describe Nydp do
   end
 
   it "should convert items to strings" do
-    expect(run "(to-string 3.1415)").to eq Nydp::StringAtom.new("3.1415")
+    expect(run "(to-string 3.1415)").to eq "3.1415"
   end
 
   it "should compare integers" do

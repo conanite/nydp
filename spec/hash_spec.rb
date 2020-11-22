@@ -16,7 +16,7 @@ describe Nydp::Hash do
 
     it "converts ruby string key to nydp string key" do
       hash = Nydp::Hash.new
-      hash[Nydp::StringAtom.new "boo"] = 42
+      hash["boo"] = 42
 
       rhash = hash.to_ruby
       expect(rhash["boo"]).to eq 42
@@ -123,7 +123,7 @@ describe Nydp::Hash do
     describe "hash set" do
       it "does nothing, returns its value" do
         k    = Nydp::Symbol.mk "keysym", ns
-        v    = Nydp::StringAtom.new "foobar"
+        v    = "foobar"
         args = pair_list [ahash, k, v]
         Nydp::Builtin::HashSet.instance.invoke vm, args
 

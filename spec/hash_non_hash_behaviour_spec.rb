@@ -20,15 +20,15 @@ describe Nydp::Hash do
         args   = [ ahash, k ]
 
         Nydp::Builtin::HashGet.instance.invoke vm, pair_list(args)
-        expect(vm.args.pop).to eq Nydp::StringAtom.new("hello there")
+        expect(vm.args.pop).to eq "hello there"
       end
 
       it "converts string keys to method names" do
-        k      = Nydp::StringAtom.new "b"
+        k      = "b"
         args   = [ ahash, k ]
 
         Nydp::Builtin::HashGet.instance.invoke vm, pair_list(args)
-        expect(vm.args.pop).to eq Nydp::StringAtom.new("hello there")
+        expect(vm.args.pop).to eq "hello there"
       end
 
       it "returns nil for unavailable methods" do
@@ -42,7 +42,7 @@ describe Nydp::Hash do
   end
 
   describe "unfriendly non-hash" do
-    let(:ahash) { Nydp::StringAtom.new "this here ain't no hash, hombre" }
+    let(:ahash) { "this here ain't no hash, hombre" }
 
     def cleanup_err_msg txt
       txt.gsub(/at \/.*:in `builtin_invoke'/, '<error info>')
@@ -51,7 +51,7 @@ describe Nydp::Hash do
     describe "hash set" do
       it "does nothing, returns its value" do
         k    = Nydp::Symbol.mk "keysym", ns
-        v    = Nydp::StringAtom.new "foobar"
+        v    = "foobar"
         args = pair_list [ahash, k, v]
 
         begin
@@ -66,7 +66,7 @@ with args
   keysym
   \"foobar\""
 
-        expect(cleanup_err_msg error.cause.message).to eq "_nydp_get : not settable: keysym on Nydp::StringAtom"
+        expect(cleanup_err_msg error.cause.message).to eq "_nydp_get : not settable: keysym on String"
       end
     end
 
@@ -86,7 +86,7 @@ with args
   \"this here ain't no hash, hombre\"
   keysym"
 
-        expect(cleanup_err_msg error.cause.message).to eq "_nydp_get : not gettable: keysym on Nydp::StringAtom"
+        expect(cleanup_err_msg error.cause.message).to eq "_nydp_get : not gettable: keysym on String"
       end
     end
   end

@@ -16,7 +16,12 @@ class Nydp::Builtin::Date
 
   # it's a Time object (or any object that responds to #to_date)
   def builtin_invoke_2 vm, arg
-    vm.push_arg(Nydp::Date.new arg.to_date)
+    arg = if arg.respond_to?(:to_date)
+            arg.to_date
+          elsif arg.is_a?(String)
+            ::Date.parse(arg)
+          end
+    vm.push_arg(Nydp::Date.new arg)
   end
 
   def builtin_invoke_3 vm, a0, a1

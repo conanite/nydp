@@ -10,8 +10,8 @@ class Nydp::Builtin::StringMatch
 
     if match
       result             = Nydp::Hash.new
-      result[kmatch]     = Nydp::StringAtom.new match.to_s
-      result[kcaptures]  = Nydp::Pair.from_list match.captures.map { |cap| Nydp::StringAtom.new cap.to_s }
+      result[kmatch]     = match.to_s
+      result[kcaptures]  = Nydp::Pair.from_list match.captures.map { |cap| cap.to_s }
     else
       result             = Nydp::NIL
     end

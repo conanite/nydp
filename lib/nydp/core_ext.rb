@@ -40,8 +40,9 @@ class ::Array
 end
 
 class ::String
-  def _nydp_wrapper  ; Nydp::StringAtom.new self  ; end
+  # def _nydp_wrapper  ; Nydp::StringAtom.new self  ; end
   def as_method_name ; self.gsub(/-/, '_').to_sym ; end
+  def nydp_type      ; :string                    ; end
 end
 
 class ::Hash

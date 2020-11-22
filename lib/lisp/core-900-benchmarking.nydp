@@ -201,6 +201,63 @@
 
 
 
+;; ================================================
+;; Benchmark: string concatenation     - 10 runs of 20000 iterations each
+;;   took: 0.702480166 ms, 3.51240083e-05 ms per iteration
+;;   took: 0.71368384 ms, 3.5684192e-05 ms per iteration
+;;   took: 0.722608668 ms, 3.61304334e-05 ms per iteration
+;;   took: 0.716350427 ms, 3.5817521349999995e-05 ms per iteration
+;;   took: 0.72145049 ms, 3.60725245e-05 ms per iteration
+;;   took: 0.745082221 ms, 3.725411105e-05 ms per iteration
+;;   took: 0.722694129 ms, 3.613470645e-05 ms per iteration
+;;   took: 0.71999777 ms, 3.59998885e-05 ms per iteration
+;;   took: 0.727236822 ms, 3.63618411e-05 ms per iteration
+;;   took: 0.73657519 ms, 3.68287595e-05 ms per iteration
+;; total 7.228159722999999, average 0.7228159722999999 per run
+;; ================================================
+;;    string concatenation     : total 7.228159722999999, average 0.7228159722999999 per run
+(def bm-string-concat ()
+  (+
+     (+ "this" "that" "another")
+     (+ "this" "that" "another")
+     (+ "this" "that" "another")
+     (+ "this" "that" "another")
+     (+ "this" "that" "another")
+     (+ "this" "that" "another")
+     (+ "this" "that" "another")
+     (+ "this" "that" "another")
+     (+ "this" "that" "another")
+     (+ "this" "that" "another")))
+
+
+;; ================================================
+;; Benchmark: random string     - 10 runs of 20000 iterations each
+;;   took: 0.693267608 ms, 3.4663380399999996e-05 ms per iteration
+;;   took: 0.763436112 ms, 3.8171805599999996e-05 ms per iteration
+;;   took: 0.682000681 ms, 3.410003405e-05 ms per iteration
+;;   took: 0.687733846 ms, 3.43866923e-05 ms per iteration
+;;   took: 0.686838878 ms, 3.43419439e-05 ms per iteration
+;;   took: 0.681588034 ms, 3.40794017e-05 ms per iteration
+;;   took: 0.689589352 ms, 3.44794676e-05 ms per iteration
+;;   took: 0.690437907 ms, 3.4521895349999996e-05 ms per iteration
+;;   took: 0.683199842 ms, 3.4159992099999995e-05 ms per iteration
+;;   took: 0.696863126 ms, 3.48431563e-05 ms per iteration
+;; total 6.954955385999999, average 0.6954955385999999 per run
+;; ================================================
+;;    random string     : total 6.954955385999999, average 0.6954955385999999 per run
+
+(def bm-random-string ()
+  (list (random-string)
+        (random-string)
+        (random-string)
+        (random-string)
+        (random-string)
+        (random-string)
+        (random-string)
+        (random-string)
+        (random-string)
+        (random-string)))
+
 (def bm-repeat (f n)
   ; used in benchmarking
   (for b 1 n (f)))
@@ -223,7 +280,8 @@
 
 (def rbs (name)
   (let summary nil
-    (push (bm "no-closures    "   bm-no-closures             10  20000) summary)
+    (push (bm "random string    "   bm-random-string             10  20000) summary)
+    ;; (push (bm "string concatenation    "   bm-string-concat             10  20000) summary)
     ;; (push (bm "type-of    "   bm-type-of             10  20000) summary)
     ;; (push (bm "accum    "   bm-acc             10  500) summary)
     ;; (push (bm "accum    "   bm-facc            10  500) summary)

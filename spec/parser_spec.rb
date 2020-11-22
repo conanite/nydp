@@ -75,7 +75,7 @@ describe Nydp::Parser do
     s2 = Nydp::StringFragmentCloseToken.new "hello there", '"hello there"'
 
     x1 = 1
-    x2 = Nydp::StringAtom.new "hello there"
+    x2 = "hello there"
     x3 = 3
 
     expected = pair_list [x1, x2, x3]
@@ -85,7 +85,7 @@ describe Nydp::Parser do
 
   it "should parse a string" do
     x1 = sym 'join'
-    x2 = Nydp::StringAtom.new " - "
+    x2 = " - "
     x3 = 1
     x4 = 2
     x5 = 3
@@ -99,7 +99,7 @@ describe Nydp::Parser do
     s2 = Nydp::StringFragmentCloseToken.new "hello (1 2 3) there", '"hello (1 2 3) there"'
 
     x1 = 1
-    x2 = Nydp::StringAtom.new "hello (1 2 3) there"
+    x2 = "hello (1 2 3) there"
     x3 = 3
 
     expected = pair_list [x1, x2, x3]
@@ -111,7 +111,7 @@ describe Nydp::Parser do
     s2 = Nydp::StringFragmentCloseToken.new "hello there \"jimmy\"", '"hello there \"jimmy\""'
 
     x1 = 1
-    x2 = Nydp::StringAtom.new "hello there \"jimmy\""
+    x2 = "hello there \"jimmy\""
     x3 = 3
 
     expected = pair_list [x1, x2, x3]
@@ -120,7 +120,7 @@ describe Nydp::Parser do
   end
 
   it "should handle escaped tabs and newlines inside a string" do
-    expected = Nydp::StringAtom.new "hello\tworld\nnice day"
+    expected = "hello\tworld\nnice day"
     parsed = parse "\"hello\\tworld\\nnice day\""
     expect(parsed).to eq expected
   end
@@ -215,7 +215,7 @@ describe Nydp::Parser do
   end
 
   it "retains otherwise unidentified list prefixes" do
-    expect(parse "%wong(bar)").to eq pair_list([prefix_list, Nydp::StringAtom.new("%wong"), pair_list([bar])])
+    expect(parse "%wong(bar)").to eq pair_list([prefix_list, "%wong", pair_list([bar])])
   end
 
   it "should do some complicated unquote stuff with lists" do
@@ -257,24 +257,24 @@ describe Nydp::Parser do
   end
 
   it "parses a simple string" do
-    expect(parse '"foo"').to eq Nydp::StringAtom.new("foo")
+    expect(parse '"foo"').to eq "foo"
   end
 
   it "parses a string with a simple interpolation" do
-    str = Nydp::StringAtom.new("foo ")
-    empty = Nydp::StringAtom.new("")
+    str = "foo "
+    empty = ""
     expect(parse '"foo ~foo"').to eq pair_list([string_pieces, str, foo, empty])
   end
 
   it "parses a string with a more complex interpolation" do
-    strf = Nydp::StringAtom.new("foo ")
-    strb = Nydp::StringAtom.new(" bar")
+    strf = "foo "
+    strb = " bar"
     expect(parse '"foo ~(foo bar) bar"').to eq pair_list([string_pieces, strf, pair_list([foo, bar]), strb])
   end
 
   it "parses a string with an interpolation containing a nested interpolation" do
-    strf = Nydp::StringAtom.new("foo ")
-    strb = Nydp::StringAtom.new(" bar")
+    strf = "foo "
+    strb = " bar"
 
     nested = pair_list [string_pieces, strf, foo, strb]
     expr   = pair_list [foo, nested, bar]
@@ -283,7 +283,7 @@ describe Nydp::Parser do
   end
 
   it "parses a string with only an interpolation" do
-    empty = Nydp::StringAtom.new("")
+    empty = ""
     expect(parse '"~foo"').to eq pair_list([string_pieces, empty, foo, empty])
   end
 
@@ -292,7 +292,7 @@ describe Nydp::Parser do
   ; here's a comment
   (zab))
 "
-    c1 = pair_list([comment, Nydp::StringAtom.new("here's a comment")])
+    c1 = pair_list([comment, "here's a comment"])
     fbar = pair_list([bar])
     fzab = pair_list([Nydp::Symbol.mk(:zab, ns)])
     fdef = Nydp::Symbol.mk(:def, ns)
@@ -322,7 +322,7 @@ NYDP
     expect(args[1]).to eq sym("args")
     expect(args[2]).to be_nil
     expect(parsed[2].cdr.cdr).to eq sym("body")
-    expect(parsed[3].to_a).to eq [sym("comment"), Nydp::StringAtom.new("define a new function in the global namespace")]
+    expect(parsed[3].to_a).to eq [sym("comment"), "define a new function in the global namespace"]
     expect(parsed[4].to_a).to eq [sym("chapter"), sym("nydp-core")]
   end
 end

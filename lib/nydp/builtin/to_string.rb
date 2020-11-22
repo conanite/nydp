@@ -3,14 +3,7 @@ module Nydp::Builtin
     include Nydp::Builtin::Base, Singleton
 
     def builtin_invoke vm, args
-      arg = args.car
-      val = case arg.class
-            when Nydp::StringAtom
-              arg
-            else
-              Nydp::StringAtom.new arg.to_s
-            end
-      vm.push_arg val
+      vm.push_arg args.car.to_s
     end
   end
 
@@ -20,7 +13,7 @@ module Nydp::Builtin
     def builtin_invoke vm, args
       arg = args.car
       val = case arg
-            when Nydp::StringAtom
+            when String
               arg.length
             else
               0
