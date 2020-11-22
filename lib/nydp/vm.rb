@@ -116,6 +116,13 @@ module Nydp
       end
       msg << "\n"
       msg << "\n"
+      msg << "\nargs stack"
+      msg << "\n================="
+      args.each_with_index do |args, ix|
+        msg << "\args##{ix} :\n#{args}"
+      end
+      msg << "\n"
+      msg << "\n"
       msg
     end
   end
