@@ -216,18 +216,18 @@
 ;; total 7.228159722999999, average 0.7228159722999999 per run
 ;; ================================================
 ;;    string concatenation     : total 7.228159722999999, average 0.7228159722999999 per run
-(def bm-string-concat ()
-  (+
-     (+ "this" "that" "another")
-     (+ "this" "that" "another")
-     (+ "this" "that" "another")
-     (+ "this" "that" "another")
-     (+ "this" "that" "another")
-     (+ "this" "that" "another")
-     (+ "this" "that" "another")
-     (+ "this" "that" "another")
-     (+ "this" "that" "another")
-     (+ "this" "that" "another")))
+;; (def bm-string-concat ()
+;;   (+
+;;      (+ "this" "that" "another")
+;;      (+ "this" "that" "another")
+;;      (+ "this" "that" "another")
+;;      (+ "this" "that" "another")
+;;      (+ "this" "that" "another")
+;;      (+ "this" "that" "another")
+;;      (+ "this" "that" "another")
+;;      (+ "this" "that" "another")
+;;      (+ "this" "that" "another")
+;;      (+ "this" "that" "another")))
 
 
 ;; ================================================
@@ -246,17 +246,17 @@
 ;; ================================================
 ;;    random string     : total 6.954955385999999, average 0.6954955385999999 per run
 
-(def bm-random-string ()
-  (list (random-string)
-        (random-string)
-        (random-string)
-        (random-string)
-        (random-string)
-        (random-string)
-        (random-string)
-        (random-string)
-        (random-string)
-        (random-string)))
+;; (def bm-random-string ()
+;;   (list (random-string)
+;;         (random-string)
+;;         (random-string)
+;;         (random-string)
+;;         (random-string)
+;;         (random-string)
+;;         (random-string)
+;;         (random-string)
+;;         (random-string)
+;;         (random-string)))
 
 (def bm-repeat (f n)
   ; used in benchmarking
@@ -280,7 +280,7 @@
 
 (def rbs (name)
   (let summary nil
-    (push (bm "random string    "   bm-random-string             10  20000) summary)
+    ;; (push (bm "random string    "   bm-random-string             10  20000) summary)
     ;; (push (bm "string concatenation    "   bm-string-concat             10  20000) summary)
     ;; (push (bm "type-of    "   bm-type-of             10  20000) summary)
     ;; (push (bm "accum    "   bm-acc             10  500) summary)
