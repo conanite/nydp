@@ -2,6 +2,10 @@ require 'date'
 require 'set'
 
 module Nydp
+  class << self
+    attr_accessor :logger # not used by this gem but very useful in your app
+  end
+
   class Namespace < Hash
   end
 

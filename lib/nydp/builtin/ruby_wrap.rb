@@ -65,7 +65,8 @@ CODE
   end
 
   core_builder = builder ""
-  core_builder.build(:Cons, 2, %{ Nydp::Pair.new(a0, a1) })
-  core_builder.build(:Car , 1, %{ a0.car })
-  core_builder.build(:Cdr , 1, %{ a0.cdr })
+  core_builder.build(:Cons, 2, %{ Nydp::Pair.new(a0, a1) }        )
+  core_builder.build(:Car , 1, %{ a0.car }                        )
+  core_builder.build(:Cdr , 1, %{ a0.cdr }                        )
+  core_builder.build(:Log , 1, %{ r2n Nydp.logger.info(a0.to_s) } )
 end
