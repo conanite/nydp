@@ -1,7 +1,24 @@
 module Nydp
   module AutoWrap
     # include this and be sure to either override #_nydp_ok? or #_nydp_whitelist
-    # #_nydp_whitelist should return a list of methods which are safe for nydp to invoke
+    # #_nydp_whitelist should return a list of accessor (zero-arg) methods which are safe for nydp to invoke
+    # #_nydp_procify should return a list of methods that can be exposed to script code.
+    #
+    # class Blub
+    #   _nydp_procs << :blubme
+    #   def blubme where, when
+    #     puts "blubme #{where}, #{when}"
+    #   end
+    # end
+    #
+    # in nydp, if blub is an instance of Blub:
+    #
+    # (blub.blubme "here" "now")
+    #
+    # prints
+    #
+    # blubme here, now
+    #
     def _nydp_wrapper                 ; self                                     ; end
     def _nydp_ok?              method ; _nydp_whitelist.include? method          ; end
     def _nydp_procify?         method ; _nydp_procs.include? method              ; end # override to allow returning Method instances for given method name
