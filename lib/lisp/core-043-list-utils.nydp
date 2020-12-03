@@ -198,8 +198,8 @@
                list))
 
 (def all? (f things)
-  ; if 'things is a list, true when all items are non-nil
-  ; if 'things is an atom, true when non-nil
+  ; if 'things is a list, true when f(thing) is non-nil for each thing in things
+  ; if 'things is an atom, true when f(things) is non-nil
   (if (pair? things)
       (and (f:car things)
            (or (no:cdr things)
@@ -207,8 +207,8 @@
       (f things)))
 
 (def any? (f things)
-  ; if 'things is a list, true when at least one item is non-nil
-  ; if 'things is an atom, true when non-nil
+  ; if 'things is a list, true when f(thing) is non-nil for at least one thing in things
+  ; if 'things is an atom, true when f(thing) is non-nil
   (if (pair? things)
       (or (f:car things)
           (and (cdr things)
@@ -216,8 +216,8 @@
       (f things)))
 
 (def none? (f things)
-  ; if 'things is a list, true when all items are nil
-  ; if 'things is an atom, true when nil
+  ; if 'things is a list, true when f(thing) is nil for each thing in things
+  ; if 'things is an atom, true when f(things) is nil
   (if (pair? things)
       (and (no:f:car things)
            (none? f (cdr things)))
