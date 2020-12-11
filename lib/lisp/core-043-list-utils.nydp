@@ -63,14 +63,21 @@
       (car things)
       (nth (- n 1) (cdr things))))
 
+(def each/build-expression (var things body othervars otherparams)
+  (w/uniq (xs c)
+          `(rfnwith ,c (,xs ,things ,@othervars)
+               (if (pair? ,xs)
+                   (let ,var (car ,xs)
+                     ,@body
+                     (,c (cdr ,xs) ,@otherparams))))))
+
 ;; repeatedly assigns an element of 'things to 'var,
 ;; and executes 'body each time
 (mac each (var things . body)
-  (w/uniq (xs c)
-          `(rfnwith ,c (,xs ,things)
-               (if (pair? ,xs)
-                   (do (let ,var (car ,xs) ,@body)
-                       (,c (cdr ,xs)))))))
+  (each/build-expression var things body))
+
+(mac each-with-index (ivar var things . body)
+  (each/build-expression var things body `(,ivar 0) `((+ ,ivar 1))))
 
 (def reduce (f things)
   (rfnwith rd (acc (car things) list (cdr things))

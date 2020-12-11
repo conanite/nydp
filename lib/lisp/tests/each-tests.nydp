@@ -2,3 +2,8 @@
   ("iterates over each item in list"
    (let acc 0 (each x '(1 2 3 4) (assign acc (+ x acc))) acc)
    10))
+
+(examples-for each-with-index
+  ("iterates over each item in list"
+   (returnlet acc nil (each-with-index i x '(a b c d) (push (list i x) acc)))
+   ( (3 d) (2 c) (1 b) (0 a) )))
