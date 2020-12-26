@@ -39,7 +39,7 @@ module Nydp
         @expr.map { |x| x.lexical_reach n}.max
       end
 
-      def inspect ; @expr.map { |x| x.inspect }.join ' '  ; end
+      def inspect ; @expr.map { |x| x.inspect }.join(' ') ; end
       def source  ; @source       ; end
       def to_s    ; source.to_s   ; end
     end

@@ -334,6 +334,12 @@ scoping, assignment, anonymous functions and more...")
 (mac aif (expr . body)
   `(ifv it ,expr ,@body))
 
+;; returns the n-th item in the list 'things
+(def nth (n things)
+  (if (eq? n 0)
+      (car things)
+      (nth (- n 1) (cdr things))))
+
 (def destructure/with (var args n)
   ; provides the argument expression to 'with when
   ; destructuring arguments are present in a 'fun definition
@@ -342,20 +348,7 @@ scoping, assignment, anonymous functions and more...")
       args
       `(,args (nthcdr ,n ,var))))
 
-(def destructure/build (given-args new-args body)
-  ; used internally by 'fun
-  (if (pair? given-args)
-      (if (sym? (car given-args))
-          (destructure/build (cdr given-args)
-                             (cons (car given-args) new-args)
-                             body)
-          (w/uniq destructure
-                  (destructure/build (cdr given-args)
-                                     (cons destructure new-args)
-                                     `((with ,(destructure/with destructure (car given-args) 0) ,@body)))))
-      `(fn ,(rev new-args given-args) ,@body)))
-
-
+;; issue a warning if any arg name is the name of a macro
 (def fun/approve-arg-names (orig args body)
   (if (pair? args)
       (do (fun/approve-arg-names orig (car args) body)
@@ -364,11 +357,42 @@ scoping, assignment, anonymous functions and more...")
       (if (hash-get macs args)
           (warnings/new 'arg-shadows-macro "arg " args " shadows macro " args " in arg list " orig " and body " body))))
 
+;; used internally by 'fun
+(def destructure/build (given-args new-args body next)
+  (if (pair? given-args)
+      (if (sym? (car given-args))
+          (destructure/build (cdr given-args)
+                             (cons (car given-args) new-args)
+                             body
+                             next)
+          (w/uniq destructure
+                  (destructure/build (cdr given-args)
+                                     (cons destructure new-args)
+                                     `((with ,(destructure/with destructure (car given-args) 0) ,@body))
+                                     next)))
+      (next (rev new-args given-args) body)))
+
+(def fun/destructuring-args (args body next)
+  (fun/approve-arg-names args args body)
+  (destructure/build args nil body next))
+
+(assign fun/expanders
+        (list
+         (cons 'destructuring-args fun/destructuring-args)
+         (cons 'core-builder       (fn (args body next) `(fn ,args ,@body)))))
+
+(def fun/expand (args body expanders)
+  (if expanders
+      ((cdar expanders)
+       args
+       body
+       (fn (a b)
+           (fun/expand a b (cdr expanders))))))
+
 ;; build a 'fn form, changing 'args and 'body to
 ;; properly handle any destructuring args if present
 (mac fun (args . body)
-  (fun/approve-arg-names args args body)
-  (destructure/build args nil body))
+  (fun/expand args body fun/expanders))
 
 ;; assign (f place) to place
 (mac zap (f place . args)

@@ -20,25 +20,25 @@
 
 (examples-for destructure/build
   ("with no args"
-   (destructure/build nil nil '(x))
+   (destructure/build nil nil '(x) (fn (a b) `(fn ,a ,@b)))
    (fn nil x))
 
   ("with one arg"
-   (destructure/build '(a) nil '(x))
+   (destructure/build '(a) nil '(x) (fn (a b) `(fn ,a ,@b)))
    (fn (a) x))
 
   ("with one rest-arg"
-   (destructure/build 'args nil '(x))
+   (destructure/build 'args nil '(x) (fn (a b) `(fn ,a ,@b)))
    (fn args x))
 
   ("with one destructuring arg"
    (do (reset-uniq-counter)
-        (destructure/build '((a b)) nil '(x)))
+        (destructure/build '((a b)) nil '(x) (fn (a b) `(fn ,a ,@b))))
    (fn (destructure-1) (with (a (nth 0 destructure-1) b (nth 1 destructure-1)) x)))
 
   ("with complex args"
    (do (reset-uniq-counter)
-       (destructure/build '(a (b c) (d (e f)) g . h) nil '(x)))
+       (destructure/build '(a (b c) (d (e f)) g . h) nil '(x) (fn (a b) `(fn ,a ,@b))))
    (fn (a destructure-1 destructure-2 g . h)
        (with (d     (nth 0 destructure-2)
               (e f) (nth 1 destructure-2))

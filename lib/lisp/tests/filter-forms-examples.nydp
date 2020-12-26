@@ -1,3 +1,18 @@
+(examples-for filter-remove
+  ("removes (memoise) from a list of forms"
+   (filter-remove 'memoise '((trace)
+                             ;; this is a comment
+                             (memoise)
+                             (let x a
+                               (+ x b)
+                               (bingo dingbat))))
+   (((memoise))
+    ((trace)
+     (comment "this is a comment")
+     (let x a
+       (+ x b)
+       (bingo dingbat))))))
+
 (examples-for filter-forms
   ("groups forms by their 'car if the 'car is a key in the given hash"
    (let ff (filter-forms { car nil comment nil mac nil }

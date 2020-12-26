@@ -169,10 +169,20 @@
         (filter-forms (filter-form hsh (car forms)) (cdr forms))
         (rev-values hsh)))
 
-(def build-def-hash (hsh)
-  (hash-set hsh 'comment nil)
-  (hash-set hsh 'chapter nil)
-  hsh)
+(def filter-remove (key forms keyforms otherforms)
+  (cond forms
+        (cond (cond (pair? forms) (cond (pair? (car forms)) (eq? key (caar forms))))
+              (filter-remove key (cdr forms) (cons (car forms) keyforms) otherforms)
+              (filter-remove key (cdr forms) keyforms (cons (car forms) otherforms)))
+        (list (rev keyforms) (rev otherforms))))
+
+(assign DEF-FORMS '(comment chapter))
+
+(def build-def-hash ()
+  ((fn (h)
+       (map (fn (k) (hash-set h k nil)) DEF-FORMS)
+       h)
+   (hash)))
 
 (def dox-build-def-name (name) name)
 
@@ -188,7 +198,7 @@
 
 (hash-set macs 'mac
           (fn (name args . body)
-              (define-mac-expr name args (filter-forms (build-def-hash (hash)) body))))
+              (define-mac-expr name args (filter-forms (build-def-hash) body))))
 
 (dox-add-doc 'mac
              'mac
@@ -204,11 +214,15 @@
              '`((fn nil ,@args))
              '(nydp-core))
 
+;; override later to use '= instead of 'assign, giving us hash-assignment and other goodies for free
 (mac def-assign args `(assign ,@args))
 
 ;; used internally by 'def
 (def define-def-expr (name args body-forms)
-  `(do (def-assign ,name (fun ,args ,@(filter-comments (hash-get body-forms nil))))
+  `(do (def-assign ,name
+         ((fn (self-name)
+              (fun ,args ,@(filter-comments (hash-get body-forms nil))))
+          ',name))
        (dox-add-doc ',(dox-build-def-name name)
                     'def
                     ',(+ (fetch-and-clear-comments) (map car (hash-get body-forms 'comment)))
@@ -219,8 +233,27 @@
 ;; define a new function in the global namespace
 (mac def (name args . body)
   (chapter nydp-core)
-  (define-def-expr name args (filter-forms (build-def-hash (hash)) body)))
+  (define-def-expr name args (filter-forms (build-def-hash) body)))
 
 (mac comment (txt)
   (assign comments (cons txt comments))
   nil)
+
+
+
+(def foobar (x y) (memoise) (+ x y))
+
+((fn nil
+     (assign foobar
+             ((fn (self-name)
+                  (fn (x y)
+                      (memoise)
+                      (+ x y)))
+              (quote foobar)))
+     (dox-add-doc
+      (quote foobar)
+      (quote def)
+      (quote nil)
+      (quote (x y))
+      (quote (def foobar (x y) (memoise) (+ x y)))
+      (quote nil))))

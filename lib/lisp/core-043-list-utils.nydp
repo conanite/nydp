@@ -57,12 +57,6 @@
 (def reject (f things)
   (collect !f things))
 
-;; returns the n-th item in the list 'things
-(def nth (n things)
-  (if (eq? n 0)
-      (car things)
-      (nth (- n 1) (cdr things))))
-
 (def each/build-expression (var things body othervars otherparams)
   (w/uniq (xs c)
           `(rfnwith ,c (,xs ,things ,@othervars)

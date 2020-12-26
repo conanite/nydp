@@ -65,13 +65,31 @@
                  (let ,v (hash-get ,h ,k)
                    (or ,v (returnlet ,v ,val (hash-set ,h ,k ,v)))))))
 
+;; same as 'def, but caches the result, keyed on args, so for a given set of args the result
+;; is only ever calculated once
+;;
+;; WARNING: in current incarnation, won't work with destructuring args
 (mac defmemo (name args . body)
-  ; same as 'def, but caches the result, keyed on args, so for a given set of args the result
-  ; is only ever calculated once
-  (let forms (filter-forms (build-def-hash (hash)) body)
+  (let forms (filter-forms (build-def-hash) body)
     (w/uniq h
             `(let ,h (hash)
                (def ,name ,args
                  ,@(map (fn (c) (cons 'comment c)) forms.comment)
                  ,@(map (fn (c) (cons 'chapter c)) forms.chapter)
                  (cache-get ,h (list ,@args) (do ,@(hash-get forms nil))))))))
+
+;; memoises a function expression
+;; args: the function arguments
+;; body: a list of function body expressions
+;; next: a function to assemble a function expression from 'args and 'body
+;; returns whatever 'next returns, where 'body is memoised based on the value of 'args
+(def memoise (args body next)
+  (let (memo newbody) (filter-remove '#memoise body)
+    (if memo
+        (w/uniq h
+                `(let ,h (hash) ,(next args `((cache-get ,h (list ,@args) (do ,@newbody))))))
+        (next args body))))
+
+(assign fun/expanders
+        (cons
+         (cons 'memoise memoise) fun/expanders))
