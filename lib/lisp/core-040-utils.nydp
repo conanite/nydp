@@ -101,3 +101,13 @@
                (dp ,@(cdr args))
                ,nearg)))
       nil))
+
+;; returns a function that returns a number sequence. Example:
+;; (let c (counter)
+;;   (p (c))           ;;=> 0
+;;   (p (c))           ;;=> 1
+;;   (p (c)))          ;;=> 2
+;;
+(def counter ()
+  (let i -1
+    (fn () (++ i))))
