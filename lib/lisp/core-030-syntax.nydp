@@ -119,12 +119,12 @@ scoping, assignment, anonymous functions and more...")
   ; same as 'rfn, but using the name 'self
   `(rfn self ,parms ,@body))
 
+;; a mix of rfn and with; creates a locally-scoped named function with
+;; the given parameter names, and invokes it with the given parameter
+;; values. It is possible to reference the function by its name from
+;; within the function (to pass as an argument or for recursive
+;; invocation)
 (mac rfnwith (name params . body)
-  ; a mix of rfn and with; creates a locally-scoped named function with
-  ; the given parameter names, and invokes it with the given parameter
-  ; values. It is possible to reference the function by its name from
-  ; within the function (to pass as an argument or for recursive
-  ; invocation)
   (let ppairs (pairs params)
     `(let ,name nil
        (assign ,name (fun ,(map car ppairs) ,@body))
@@ -148,9 +148,9 @@ scoping, assignment, anonymous functions and more...")
   (def reset-uniq-counter ()
     (assign uniq-counter 0)))
 
+;; creates a lexical scope with a unique symbol assigned to
+;; each variable in 'vars ; executes the 'body.
 (mac w/uniq (vars . body)
-  ; creates a lexical scope with a unique symbol assigned to
-  ; each variable in 'vars ; executes the 'body.
   (if (pair? vars)
       `(with ,(apply + (map (fn (n) `(,n (uniq ',n))) vars))
              ,@body)
