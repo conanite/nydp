@@ -13,9 +13,9 @@
   `(ensuring (fn () ,protection)
              (fn ()    ,@body)))
 
+;; tests 'test, as long as 'test is non-nil,
+;; repeatedly executes 'body
 (mac while (test . body)
-  ; tests 'test, as long as 'test is non-nil,
-  ; repeatedly executes 'body
   (w/uniq (rfname pred)
     `(rfnwith ,rfname (,pred ,test)
         (when ,pred

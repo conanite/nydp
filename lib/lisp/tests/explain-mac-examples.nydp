@@ -13,7 +13,7 @@
 
   ("expands thrice for n = 3"
    (explain-mac 3 '(afn (a) (let b (+ 2 a) (* b b))))
-   (with (self nil) (assign self (fn (a) (let b (+ 2 a) (* b b))))))
+   ((fun (self) (assign self (fn (a) (let b (+ 2 a) (* b b))))) nil))
 
   ("expands four times for n = 4"
    (explain-mac 4 '(afn (a) (let b (+ 2 a) (* b b))))

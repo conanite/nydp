@@ -49,12 +49,23 @@
 (examples-for fun
   ("complete expansion, handles recursive destructures"
    (do (reset-uniq-counter)
-       (pre-compile '(fun ((a (b c)) d . e) x)))
+       (pre-compile '(fun ((a (b c)) d . e) (do-the-thing a b c d e))))
    (fn (destructure-1 d . e)
        ((fn (a destructure-2)
-            ((fn (b c) x)
-             (nth 0 destructure-2)
-             (nth 1 destructure-2))) (nth 0 destructure-1) (nth 1 destructure-1))))
+            ((fn (b c)
+                 ((fn nil
+                      (assign b (nth 0 destructure-2))
+                      (assign c (nth 1 destructure-2))))
+                 ((fn nil
+                      (assign a (nth 0 destructure-1))
+                      ((fn (destructuring-assign-3)
+                           (assign b (car destructuring-assign-3))
+                           (assign c (car (cdr destructuring-assign-3))))
+                       (nth 1 destructure-1))))
+                 (do-the-thing a b c d e))
+             nil))
+        nil)))
+
 
   ("nested improper arguments"
    (let (a (b c . d) e) (list "A" (list "B" "C" "D0" "D1" "D2") "E")
@@ -79,3 +90,24 @@
           (let (g (h (i j) k)) (list "w" (list "o" (list "r" "l") "d"))
             (string-pieces a b c d e f g h i j k)))
    "hello world"))
+
+(examples-for =
+  ("destructures LHS"
+   (let a 1
+     (let b 2
+       (let c 3
+         (let d 4
+           (let e 5
+             (= (a (b e) c . d) (list 'this '(that those) 'another 11 22 33))
+             (list a b c d e))))))
+   (this that another (11 22 33) those)))
+
+(examples-for with
+  ("destructures its args, also allows references to earlier args"
+   (with ((a (b . c) d . e) '(1 (2 3 4 5) 6 7 8 9)
+          x         a
+          y         c
+          z         (fn (n) (if (eq? n 1) 1 (* n (z (- n 1)))))
+          g         (z 6))
+         (list a b c d e x y g))
+   (1 2 (3 4 5) 6 (7 8 9) 1 (3 4 5) 720)))

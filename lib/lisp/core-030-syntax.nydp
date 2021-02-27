@@ -97,14 +97,14 @@ scoping, assignment, anonymous functions and more...")
 ;; like 'let, but creates and assigns multiple local variables.
 ;; for example, "(with (a 1 b 2) (+ a b))" returns 3
 (mac with (parms . body)
-     `((fun ,(map car (pairs parms))
-            ,@body)
-       ,@(map cadr (pairs parms))))
+  `((fun ,(map car (pairs parms))
+         ,@body)
+    ,@(map cadr (pairs parms))))
 
-;; same as ( (fn (var) body) val ) -> ie create a lexical scope
+;; create a lexical scope
 ;; where val is assigned to var, execute 'body in that scope
 (mac let (var val . body)
-  `(with (,var ,val) ,@body))
+  `((fun (,var) ,@body) ,val))
 
 (mac rfn (name parms . body)
   ; creates a named, locally-scoped function
@@ -228,25 +228,46 @@ scoping, assignment, anonymous functions and more...")
 ;; 'place is ((ampersand-syntax || (dot-syntax key subkey)) (expr))
 ;; we need (hash-set (hash-get (expr) 'key) 'subkey (val))
 (def ampersand-expression-assignment (place value)
-  (with (k   (cadr:cdar place)
-         hsh (cadr place))
-    (if (caris 'dot-syntax k)
-        (dot-syntax-assignment (cons hsh (cdr k)) value)
-        `(hash-set ,hsh ',k ,value))))
+  (let k (cadr:cdar place)
+    (let hsh (cadr place)
+      (if (caris 'dot-syntax k)
+          (dot-syntax-assignment (cons hsh (cdr k)) value)
+          `(hash-set ,hsh ',k ,value)))))
+
+;; used internally by 'destructuring-assign
+(def destructuring-assigns (names values acc)
+  (if names
+      (if (pair? names)
+          (destructuring-assigns
+            (cdr names)
+            `(cdr ,values)
+            (cons `(= ,(car names) (car ,values)) acc))
+          (cons `(= ,names ,values) acc))
+      (rev acc)))
+
+;; used internally by 'assign-expr
+(def destructuring-assign (name value)
+  (w/uniq destructuring-assign
+          `(let ,destructuring-assign ,value
+             ,@(destructuring-assigns name destructuring-assign))))
 
 ;; used internally by '= macro
-(def assign-expr (name value)
-  (if (isa 'symbol name)
-      `(assign ,name ,value)
-      (caris 'dot-syntax name)
-      (dot-syntax-assignment (cdr name) value)
-      (caris 'hash-get name)
-      (hash-get-assignment (cdr name) value)
-      (ampersand-expression? name)
-      (ampersand-expression-assignment name value)
-      (caris 'at-syntax name)
-      `(hash-set @ ',(caddr name) ,value)
-      (error "unknown assignment to place: ~(inspect name)")))
+(def assign-expr (nv)
+  (let name  (car nv)
+    (let value (cadr nv)
+      (if (isa 'symbol name)
+          `(assign ,name ,value)
+          (caris 'dot-syntax name)
+          (dot-syntax-assignment (cdr name) value)
+          (caris 'hash-get name)
+          (hash-get-assignment (cdr name) value)
+          (ampersand-expression? name)
+          (ampersand-expression-assignment name value)
+          (caris 'at-syntax name)
+          `(hash-set @ ',(caddr name) ,value)
+          (pair? name)
+          (destructuring-assign name value)
+          (error "unknown assignment to place: " (inspect name))))))
 
 ;; generic assignment which unlike builtin 'assign, knows how to assign
 ;; to hash keys
@@ -255,10 +276,18 @@ scoping, assignment, anonymous functions and more...")
 ;; (= h.j.k (val))                 => (hash-set (hash-get h 'j) 'k (val))
 ;; (= (&key (expr)) (val))         => (hash-set (expr) 'key (val))
 ;; (= (&j.k (expr)) (val))         => (hash-set (hash-get (expr) 'j) 'k (val))
-(mac = (name value . more)
-  (if more
-      `(do ,(assign-expr name value) (= ,@more))
-      (assign-expr name value)))
+(mac = assignments
+  `(do ,@(map assign-expr (pairs assignments))))
+
+;; like 'let, but creates and assigns multiple local variables.
+;; for example, "(with (a 1 b 2) (+ a b))" returns 3
+;;
+;; later variables can references earlier ones:
+;; (with (a 1 b 2 c (+ a b)) (list a b c)) ;; returns (1 2 3)
+(mac with (assignments . body)
+  `((fun ,(map car (pairs assignments))
+     (= ,@assignments)
+     ,@body) nil))
 
 ;; quiet assignment ; like =, but expression returns nil
 (mac #= (name value)
