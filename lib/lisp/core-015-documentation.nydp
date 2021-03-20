@@ -240,22 +240,3 @@
 (mac comment (txt)
   (assign comments (cons txt comments))
   nil)
-
-
-
-(def foobar (x y) (memoise) (+ x y))
-
-((fn nil
-     (assign foobar
-             ((fn (self-name)
-                  (fn (x y)
-                      (memoise)
-                      (+ x y)))
-              (quote foobar)))
-     (dox-add-doc
-      (quote foobar)
-      (quote def)
-      (quote nil)
-      (quote (x y))
-      (quote (def foobar (x y) (memoise) (+ x y)))
-      (quote nil))))
