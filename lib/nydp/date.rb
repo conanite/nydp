@@ -29,9 +29,9 @@ module Nydp
     def <=> other ; is_date?(other) && ruby_date <=> other.ruby_date ; end
     def eql?    d ; self == d                                        ; end
     def hash      ; ruby_date.hash                                   ; end
-    def is_date? other ; other.is_a? Nydp::Date                                               ; end
-    def -        other ; r2n(ruby_date - (is_date?(other) ? other.ruby_date : other))         ; end
-    def +          int ; int.is_a?(Fixnum) ? r2n(ruby_date + int) : r2n(change(*int.to_ruby)) ; end
+    def is_date? other ; other.is_a? Nydp::Date                                                ; end
+    def -        other ; r2n(ruby_date - (is_date?(other) ? other.ruby_date : other))          ; end
+    def +          int ; int.is_a?(Integer) ? r2n(ruby_date + int) : r2n(change(*int.to_ruby)) ; end
 
     @@pass_through = %i{ monday? tuesday? wednesday? thursday? friday? saturday? sunday? }
     @@keys = Set.new %i{

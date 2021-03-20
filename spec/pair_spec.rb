@@ -18,7 +18,9 @@ describe Nydp::Pair do
 
   describe :== do
     it "should be true for two empty lists" do
-      expect(Nydp::Pair.new(NIL, NIL)).to eq Nydp::Pair.new(NIL, NIL)
+      expect(Nydp::Pair.new(Nydp::NIL, Nydp::NIL)).to eq Nydp::Pair.new(Nydp::NIL, Nydp::NIL)
+
+      expect(Nydp::Pair.new(nil, nil)).to eq Nydp::Pair.new(nil, nil)
     end
 
     it "there is no empty list, only NIL" do

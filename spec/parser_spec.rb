@@ -141,8 +141,8 @@ describe Nydp::Parser do
     parsed = parse("foo.2:3:4")
     expect(parsed.inspect).to eq "(colon-syntax (dot-syntax foo 2) 3 4)"
 
-    expect(parsed.map &:class).to eq [Nydp::Symbol, Nydp::Pair, Fixnum, Fixnum]
-    expect(parsed.cdr.car.map &:class).to eq [Nydp::Symbol, Nydp::Symbol, Fixnum]
+    expect(parsed.map &:class).to eq [Nydp::Symbol, Nydp::Pair, Integer, Integer]
+    expect(parsed.cdr.car.map &:class).to eq [Nydp::Symbol, Nydp::Symbol, Integer]
   end
 
   it "should handle prefix and postfix syntax also" do
