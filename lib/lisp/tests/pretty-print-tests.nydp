@@ -279,7 +279,7 @@ toto")
 
   ("special syntax"
    (pp '(string-pieces "hello " (bang-syntax || (dot-syntax x y (ampersand-syntax foo bar))) " and welcome to " (prefix-list "%%" (a b c d)) " and friends!"))
-   "\"hello ~~!x.y.foo&bar and welcome to ~~%%(a b c d) and friends!\"")
+   "\"hello ~~|!x.y.foo&bar| and welcome to ~~%%(a b c d) and friends!\"")
 
   ("percent-syntax"
    (pp '(percent-syntax || (dot-syntax x y)))

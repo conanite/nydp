@@ -43,6 +43,8 @@
   (fn (thing)
       (if (isa 'string thing)
           (pp/esc-str-literal thing)
+          (isa 'symbol thing)
+          "\~|~(just thing)|"
           "\~~(pp thing)")))
 
 (def pp/string-pieces (pp things) "\"~(joinstr "" (map (pp/string-piece pp) things))\"")
