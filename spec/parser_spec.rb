@@ -263,7 +263,7 @@ describe Nydp::Parser do
   it "parses a string with a simple interpolation" do
     str = "foo "
     empty = ""
-    expect(parse '"foo ~foo"').to eq pair_list([string_pieces, str, foo, empty])
+    expect(parse '"foo ~foo"').to eq pair_list([string_pieces, str, foo])
   end
 
   it "parses a string with a more complex interpolation" do
@@ -284,7 +284,7 @@ describe Nydp::Parser do
 
   it "parses a string with only an interpolation" do
     empty = ""
-    expect(parse '"~foo"').to eq pair_list([string_pieces, empty, foo, empty])
+    expect(parse '"~foo"').to eq foo
   end
 
   it "should even parse comments" do

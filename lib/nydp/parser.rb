@@ -131,14 +131,16 @@ module Nydp
       fragments = [sym(:"string-pieces")]
       string_token = token_stream.next_string_fragment(open_delimiter, close_delimiter, INTERPOLATION_SIGN, INTERPOLATION_ESCAPES)
       raise "unterminated string" if string_token.nil?
-      fragments << string_token.string
+      fragments << string_token.string if string_token.string != ""
       while !(string_token.is_a? StringFragmentCloseToken)
         fragments << expression(token_stream)
         string_token = token_stream.next_string_fragment('', close_delimiter, INTERPOLATION_SIGN, INTERPOLATION_ESCAPES)
-        fragments << string_token.string
+        fragments << string_token.string if string_token.string != ""
       end
 
-      if fragments.size == 2
+      if fragments.size == 1
+        return ""
+      elsif fragments.size == 2
         return fragments[1]
       else
         return Pair.from_list fragments
