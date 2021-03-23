@@ -59,6 +59,7 @@ module Nydp
       Symbol.mk("handle-error"     , ns).assign(Nydp::Builtin::HandleError.instance)
       Symbol.mk("parse-in-string"  , ns).assign(Nydp::Builtin::ParseInString.instance)
       Symbol.mk("random-string"    , ns).assign(Nydp::Builtin::RandomString.instance)
+      Symbol.mk("regexp"           , ns).assign(Nydp::Builtin::Regexp.instance)
       Symbol.mk("to-string"        , ns).assign(Nydp::Builtin::ToString.instance)
       Symbol.mk("to-integer"       , ns).assign(Nydp::Builtin::ToInteger.instance)
       Symbol.mk("string-length"    , ns).assign(Nydp::Builtin::StringLength.instance)

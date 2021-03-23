@@ -55,6 +55,10 @@ and args (\"world\" 36 6)"
    (collect !empty? (string-split "word"))
    ("w" "o" "r" "d"))
 
+  ("splits on regexp"
+   (string-split "hello, darkness ; my old friend\nI've come : to talk - with you again..." (regexp "\[\\n;:\\-,\]"))
+   ("hello" " darkness " " my old friend" "I've come " " to talk " " with you again..."))
+
   ("returns empty leading, internal, and trailing segments"
    (string-split "and" "and")
    ("" ""))

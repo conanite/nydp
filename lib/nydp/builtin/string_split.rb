@@ -3,7 +3,9 @@ class Nydp::Builtin::StringSplit
 
   def builtin_invoke vm, args
     target    = args.car.to_s
-    separator = args.cdr.car.to_s
+    separator = args.cdr.car
+    separator = separator.to_s unless separator.is_a? Regexp
+
     result    = target.split separator, -1
 
     vm.push_arg Nydp::Pair.from_list result

@@ -70,6 +70,10 @@
    (parse-in-string (joinstr "" (list "hello, " '~ "(world), take me to your " '~ "dealer please")))
    (string-pieces "hello, " (world) ", take me to your " dealer " please"))
 
+  ("parses a plain string whose entire content is a single interpolation"
+   (parse-in-string (joinstr "" (list '~ "(hello world)")))
+   (hello world))
+
   ("parses a plain string of html text with interpolations"
    (parse-in-string "<div id='content_item_~~{id}'><label>~~{data-name-1}</label> ~~{data-text-1}</div>")
    (string-pieces "<div id='content_item_" (brace-list id) "'><label>" (brace-list data-name-1) "</label> " (brace-list data-text-1) "</div>"))

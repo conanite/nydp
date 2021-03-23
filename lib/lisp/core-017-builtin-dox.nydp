@@ -46,6 +46,7 @@
                                      "with 1 arg, an integer less than arg"
                                      "with two args, an integer >= arg 0 and < arg 1")                                                                           'args                      nil '(math))
 (dox-add-doc 'random-string   'def '("return a random string of length 'len (default 10)")                                                                       '(len)                     nil '(string-manipulation))
+(dox-add-doc 'regexp          'def '("return a regular expression compiled from the given string")                                                               '(str)                     nil '(string-manipulation))
 (dox-add-doc 'to-string       'def '("return a human-readable string representation of 'arg")                                                                    '(arg)                     nil '(string-manipulation))
 (dox-add-doc 'string-length   'def '("return the length of 'arg")                                                                                                '(arg)                     nil '(string-manipulation))
 (dox-add-doc 'string-replace  'def '("replace 'pattern with 'replacement in 'str")                                                                               '(pattern replacement str) nil '(string-manipulation))
