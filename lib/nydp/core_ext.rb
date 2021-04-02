@@ -39,11 +39,14 @@ class ::Array
   def _nydp_wrapper ; Nydp::Pair.from_list map &:_nydp_wrapper ; end
 end
 
+class ::Object
+  def to_ruby        ; self                       ; end
+end
+
 class ::String
   # def _nydp_wrapper  ; Nydp::StringAtom.new self  ; end
   def as_method_name ; self.gsub(/-/, '_').to_sym ; end
   def nydp_type      ; :string                    ; end
-  def to_ruby        ; self                       ; end
 end
 
 class ::Hash

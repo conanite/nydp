@@ -72,8 +72,22 @@ and args (\"world\" 36 6)"
    (string-replace "and" "or" "a and b and c and d")
    "a or b or c or d")
 
+  ("replaces with hash lookup"
+   (string-replace
+     "['<>&\"]"
+     { "'" "&#39;"
+       "<" "&lt;"
+       ">" "&gt;"
+       "\"" "&quot;" }
+     "it's >such< a \"lovely\" day")
+   "it&#39;s &gt;such&lt; a &quot;lovely&quot; day")
+
   ("replace with regexp"
    (string-replace "and|or" "x" "a and b or c and d")
+   "a x b x c x d")
+
+  ("replace with literal regexp"
+   (string-replace (regexp "and|or") "x" "a and b or c and d")
    "a x b x c x d"))
 
 (examples-for string-truncate
