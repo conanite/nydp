@@ -33,6 +33,10 @@ module Nydp
           @lexical_depth + n
         end
 
+        def compile_to_ruby
+          "_arg_\#{@name.to_s._nydp_name_to_rb_name}"
+        end
+
         def value ctx
           ctx#{getctx}.#{at_index} || Nydp::NIL
         rescue

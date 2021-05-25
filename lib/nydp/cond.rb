@@ -170,6 +170,10 @@ module Nydp
       falsity = Nydp::NIL.is?(@condition.value vm.current_context)
       vm.push_arg(falsity ? @when_false : @when_true)
     end
+
+    def compile_to_ruby
+      "(Nydp::NIL.is?(#{@condition.compile_to_ruby})) ? #{@when_false.compile_to_ruby} : #{@when_true.compile_to_ruby}"
+    end
   end
 
   class Cond_LEX_LEX_LIT < CondBase

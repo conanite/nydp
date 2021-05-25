@@ -38,6 +38,16 @@ class #{name}
   def builtin_invoke vm, args
     vm.push_arg(#{generic_code})
   end
+
+  # return the ruby equivalent of this code if it was inlined inside another builtin
+  def inline_code arg_expressions
+    #{code.inspect}.
+      gsub(/a0/, arg_expressions[0]).
+      gsub(/a1/, arg_expressions[1]).
+      gsub(/a2/, arg_expressions[2]).
+      gsub(/a3/, arg_expressions[3]).
+      gsub(/a4/, arg_expressions[4])
+  end
 end
 CODE
     end

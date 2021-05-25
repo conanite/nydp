@@ -11,6 +11,8 @@ module Nydp
     def to_ruby    ; true        ; end
     def _nydp_get    a ; Nydp::T ; end
     def _nydp_set a, v ; Nydp::T ; end
+
+    def compile_to_ruby ; "Nydp::T" ; end
   end
 
   class Nil
@@ -34,6 +36,7 @@ module Nydp
     def each           ;                  ; end # nil behaves like an empty list
     def &        other ; self             ; end
     def |        other ; other            ; end
+    def compile_to_ruby ; "Nydp::NIL"     ; end
   end
 
   NIL = Nil.instance

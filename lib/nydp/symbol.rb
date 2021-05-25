@@ -24,6 +24,10 @@ class Nydp::Symbol
     @value
   end
 
+  def compile_to_ruby
+    "@#{name.to_s.as_ruby_name}"
+  end
+
   def self.special name
     return Nydp::NIL if name == :nil
     return Nydp::T   if name == :t

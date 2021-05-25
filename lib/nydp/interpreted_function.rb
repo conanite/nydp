@@ -20,6 +20,29 @@ module Nydp
       body.map { |b| b.lexical_reach(n - 1)  }.max
     end
 
+    def compile_to_ruby
+      rubyargs = ["vm"]
+      an = arg_names
+      while (pair? an)
+        rubyargs << "_arg_#{an.car.to_s._nydp_name_to_rb_name}=nil"
+        an = an.cdr
+      end
+
+      if Nydp::NIL.isnt?(an)
+        rubyargs << "_arg_#{an.to_s._nydp_name_to_rb_name}=nil"
+      end
+
+      code = "  def call (#{rubyargs.join ","})\n"
+      body.each { |instr|
+        if instr.respond_to? :compile_to_ruby
+          code << "    " << instr.compile_to_ruby << "\n"
+        else
+          code << "    # NOCOMPILE : #{instr.inspect} (#{instr.class})"
+        end
+      }
+      code << "  end"
+    end
+
     def self.build arg_list, body, bindings
       my_params = { }
       index_parameters arg_list, my_params
