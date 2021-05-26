@@ -43,15 +43,17 @@ module Nydp
       @name       = name
       @vm         = vm
       @ns         = ns
-      @precompile = Symbol.mk(:"pre-compile", ns)
-      @quote      = Symbol.mk(:quote, ns)
+      # @precompile = Symbol.mk(:"pre-compile", ns)
+      # @quote      = Symbol.mk(:quote, ns)
+      @precompile = :"pre-compile"
+      @quote      = :quote
     end
 
     def compile_and_eval expr
       begin
-        vm.thread_with_expr Pair.new(Compiler.compile(expr, Nydp::NIL), Nydp::NIL)
+        vm.thread_with_expr Pair.new(Compiler.compile(expr, Nydp::NIL, ns), Nydp::NIL)
       rescue StandardError => e
-        raise Nydp::Error, "failed to eval #{expr.inspect}"
+        raise Nydp::Error, "failed to eval #{expr._nydp_inspect}"
       end
     end
 
@@ -73,7 +75,7 @@ module Nydp
     end
 
     def print val
-      @printer.puts val.inspect if @printer
+      @printer.puts val._nydp_inspect if @printer
     end
 
     def run

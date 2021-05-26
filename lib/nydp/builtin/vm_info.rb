@@ -2,9 +2,12 @@ class Nydp::Builtin::VmInfo
   include Nydp::Builtin::Base, Singleton
 
   VMINFO_NS    = { }
-  CONTEXTS     = Nydp::Symbol.mk :contexts,     VMINFO_NS
-  INSTRUCTIONS = Nydp::Symbol.mk :instructions, VMINFO_NS
-  ARGS         = Nydp::Symbol.mk :args,         VMINFO_NS
+  # CONTEXTS     = Nydp::Symbol.mk :contexts,     VMINFO_NS
+  # INSTRUCTIONS = Nydp::Symbol.mk :instructions, VMINFO_NS
+  # ARGS         = Nydp::Symbol.mk :args,         VMINFO_NS
+  CONTEXTS     = :contexts
+  INSTRUCTIONS = :instructions
+  ARGS         = :args
 
   def builtin_invoke vm, args
     context_count     = Nydp::Pair.new CONTEXTS,     vm.contexts.size

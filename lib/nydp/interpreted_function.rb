@@ -37,16 +37,16 @@ module Nydp
         if instr.respond_to? :compile_to_ruby
           code << "    " << instr.compile_to_ruby << "\n"
         else
-          code << "    # NOCOMPILE : #{instr.inspect} (#{instr.class})"
+          code << "    # NOCOMPILE : #{instr._nydp_inspect} (#{instr.class})"
         end
       }
       code << "  end"
     end
 
-    def self.build arg_list, body, bindings
+    def self.build arg_list, body, bindings, ns
       my_params = { }
       index_parameters arg_list, my_params
-      body = compile_body body, cons(my_params, bindings), []
+      body = compile_body body, cons(my_params, bindings), [], ns
       reach = body.map { |b| b.lexical_reach(-1)  }.max
 
       ifn_klass     = reach >= 0 ? InterpretedFunctionWithClosure : InterpretedFunctionWithoutClosure
@@ -58,8 +58,8 @@ module Nydp
       ifn
     end
 
-    def self.compile_body body_forms, bindings, instructions
-      instructions << Nydp::Compiler.compile(body_forms.car, bindings)
+    def self.compile_body body_forms, bindings, instructions, ns
+      instructions << Nydp::Compiler.compile(body_forms.car, bindings, ns)
 
       rest = body_forms.cdr
       if Nydp::NIL.is? rest
@@ -71,7 +71,7 @@ module Nydp
         # Each expression at some executes vm.push_arg(thing)
         # TODO find a more intelligent way to do this, eg change the meaning of vm or of push_arg in the expression vm.push_arg(thing)
         instructions << PopArg
-        compile_body rest, bindings, instructions
+        compile_body rest, bindings, instructions, ns
       end
     end
 
@@ -87,7 +87,7 @@ module Nydp
     def nydp_type ; "fn" ; end
     def inspect   ; to_s ; end
     def to_s
-      "(fn #{arg_names.inspect} #{body.map { |b| b.inspect}.join(' ')})"
+      "(fn #{arg_names._nydp_inspect} #{body.map { |b| b._nydp_inspect}.join(' ')})"
     end
   end
 

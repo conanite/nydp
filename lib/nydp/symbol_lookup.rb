@@ -11,7 +11,7 @@ module Nydp
       bindings
     end
 
-    def self.build name, original_bindings
+    def self.build name, original_bindings, ns
       effective_bindings = skip_empty original_bindings
       depth    = 0
       while NIL != effective_bindings
@@ -24,7 +24,9 @@ module Nydp
           effective_bindings = skip_empty effective_bindings.cdr
         end
       end
-      name
+
+      Nydp::Symbol.mk name, ns
+      # name
     end
   end
 end

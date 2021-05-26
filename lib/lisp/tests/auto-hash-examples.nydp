@@ -2,4 +2,4 @@
   ("builds a hash from the existing lexical context"
    (with (a 1 b 2 c 3)
          (to-string (auto-hash a b c)))
-   "{a=>1, b=>2, c=>3}"))
+   "{:a=>1, :b=>2, :c=>3}"))

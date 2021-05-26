@@ -81,31 +81,36 @@ class Nydp::Pair
   end
 
   def to_s
-    if car.is_a?(Nydp::Symbol) && car.is?(:quote)
+    # if car.is_a?(Nydp::Symbol) && car.is?(:quote)
+    if car.is_a?(::Symbol) && (car == :quote)
       if Nydp::NIL.is? cdr.cdr
         "'#{cdr.car.to_s}"
       else
         "'#{cdr.to_s}"
       end
-    elsif car.is_a?(Nydp::Symbol) && car.is?(:"brace-list")
+    # elsif car.is_a?(Nydp::Symbol) && car.is?(:"brace-list")
+    elsif car.is_a?(Symbol) && (car == :"brace-list")
       if Nydp::NIL.is? cdr
         "{}"
       else
         "{ #{cdr.to_s_rest} }"
       end
-    elsif car.is_a?(Nydp::Symbol) && car.is?(:quasiquote)
+    # elsif car.is_a?(Nydp::Symbol) && car.is?(:quasiquote)
+    elsif car.is_a?(Symbol) && (car == :quasiquote)
       if Nydp::NIL.is? cdr.cdr
         "`#{cdr.car.to_s}"
       else
         "`#{cdr.to_s}"
       end
-    elsif car.is_a?(Nydp::Symbol) && car.is?(:unquote)
+    # elsif car.is_a?(Nydp::Symbol) && car.is?(:unquote)
+    elsif car.is_a?(Symbol) && (car == :unquote)
       if Nydp::NIL.is? cdr.cdr
         ",#{cdr.car.to_s}"
       else
         ",#{cdr.to_s}"
       end
-    elsif car.is_a?(Nydp::Symbol) && car.is?(:"unquote-splicing")
+    # elsif car.is_a?(Nydp::Symbol) && car.is?(:"unquote-splicing")
+    elsif car.is_a?(Symbol) && (car == :"unquote-splicing")
       if Nydp::NIL.is? cdr.cdr
         ",@#{cdr.car.to_s}"
       else
@@ -129,15 +134,15 @@ class Nydp::Pair
   end
 
   def inspect_rest
-    res = [car.inspect]
+    res = [car._nydp_inspect]
     it = cdr
     while it && it != Nydp::NIL
       if it.is_a?(self.class)
-        res << it.car.inspect
+        res << it.car._nydp_inspect
         it = it.cdr
       else
         res << "."
-        res << it.inspect
+        res << it._nydp_inspect
         it = nil
       end
     end
@@ -150,7 +155,7 @@ class Nydp::Pair
     elsif pair? self.cdr
       self.cdr.append thing
     else
-      raise "can't append #{thing} to list #{self} : cdr is #{self.cdr.inspect}"
+      raise "can't append #{thing} to list #{self} : cdr is #{self.cdr._nydp_inspect}"
     end
     self
   end

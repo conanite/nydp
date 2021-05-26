@@ -7,32 +7,39 @@ describe Nydp::Symbol do
 
   describe "#inspect" do
     it "wraps itself in pipe chars if empty" do
-      sym = Nydp::Symbol.mk "", ns
-      expect(sym.inspect).to eq "||"
+      # sym = Nydp::Symbol.mk "", ns
+      sym = :""
+      expect(sym._nydp_inspect).to eq "||"
     end
     it "wraps itself in pipe chars if nil" do
-      sym = Nydp::Symbol.mk nil, ns
-      expect(sym.inspect).to eq "||"
+      # sym = Nydp::Symbol.mk nil, ns
+      sym = nil.to_s.to_sym
+      expect(sym._nydp_inspect).to eq "||"
     end
     it "wraps itself in pipe chars if it has spaces" do
-      sym = Nydp::Symbol.mk "hello world", ns
-      expect(sym.inspect).to eq "|hello world|"
+      # sym = Nydp::Symbol.mk "hello world", ns
+      sym = :"hello world"
+      expect(sym._nydp_inspect).to eq "|hello world|"
     end
     it "wraps itself in pipe chars if it has pipe chars" do
-      sym = Nydp::Symbol.mk "hello|world", ns
-      expect(sym.inspect).to eq '|hello\|world|'
+      # sym = Nydp::Symbol.mk "hello|world", ns
+      sym = :"hello|world"
+      expect(sym._nydp_inspect).to eq '|hello\|world|'
     end
     it "wraps itself in pipe chars if it contains quote chars" do
-      sym = Nydp::Symbol.mk "hello 'world'", ns
-      expect(sym.inspect).to eq "|hello 'world'|"
+      # sym = Nydp::Symbol.mk "hello 'world'", ns
+      sym = :"hello 'world'"
+      expect(sym._nydp_inspect).to eq "|hello 'world'|"
     end
     it "wraps itself in pipe chars if it contains doublequote chars" do
-      sym = Nydp::Symbol.mk 'hello "world"', ns
-      expect(sym.inspect).to eq '|hello "world"|'
+      # sym = Nydp::Symbol.mk 'hello "world"', ns
+      sym = :'hello "world"'
+      expect(sym._nydp_inspect).to eq '|hello "world"|'
     end
     it "wraps itself in pipe chars if it has other punctuation" do
-      sym = Nydp::Symbol.mk 'hello,(world)', ns
-      expect(sym.inspect).to eq '|hello,(world)|'
+      # sym = Nydp::Symbol.mk 'hello,(world)', ns
+      sym = :'hello,(world)'
+      expect(sym._nydp_inspect).to eq '|hello,(world)|'
     end
   end
 

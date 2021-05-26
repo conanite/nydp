@@ -1,12 +1,19 @@
 require "spec_helper"
 
 describe Nydp::Pair do
-  let(:a)                { Nydp::Symbol.mk :a,                  ns }
-  let(:b)                { Nydp::Symbol.mk :b,                  ns }
-  let(:c)                { Nydp::Symbol.mk :c,                  ns }
-  let(:d)                { Nydp::Symbol.mk :d,                  ns }
-  let(:foo)              { Nydp::Symbol.mk :foo,                ns }
-  let(:dot)              { Nydp::Symbol.mk ".".to_sym,          ns }
+  # let(:a)                { Nydp::Symbol.mk :a,                  ns }
+  # let(:b)                { Nydp::Symbol.mk :b,                  ns }
+  # let(:c)                { Nydp::Symbol.mk :c,                  ns }
+  # let(:d)                { Nydp::Symbol.mk :d,                  ns }
+  # let(:foo)              { Nydp::Symbol.mk :foo,                ns }
+  # let(:dot)              { Nydp::Symbol.mk ".".to_sym,          ns }
+
+  let(:a)                { :a                  }
+  let(:b)                { :b                  }
+  let(:c)                { :c                  }
+  let(:d)                { :d                  }
+  let(:foo)              { :foo                }
+  let(:dot)              { ".".to_sym          }
 
   describe "#map" do
     it "behaves like ruby #map" do

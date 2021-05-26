@@ -62,7 +62,8 @@ module Nydp
     end
 
     def sym? expr, name
-      expr.is_a?(Nydp::Symbol) && (expr.is? name)
+      # expr.is_a?(Nydp::Symbol) && (expr.is? name)
+      expr.is_a?(::Symbol) && (expr == name.to_sym)
     end
 
     def pair? expr
@@ -78,12 +79,13 @@ module Nydp
     end
 
     def sym name, ns
-      Nydp::Symbol.mk name, ns
+      # Nydp::Symbol.mk name, ns
+      name.to_s.to_sym
     end
 
     def literal? expr
       case expr
-      when String, Float, Integer, Integer, Nydp::Symbol, Nydp::Truth, Nydp::Nil
+      when String, Float, Integer, Integer, Symbol, Nydp::Truth, Nydp::Nil
         true
       else
         false

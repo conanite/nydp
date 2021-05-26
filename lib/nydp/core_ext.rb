@@ -1,9 +1,10 @@
 class Object
-  def _nydp_get     a ; raise "_nydp_get : not gettable: #{a.inspect} on #{self.class.name}" ; end
-  def _nydp_set  a, v ; raise "_nydp_get : not settable: #{a.inspect} on #{self.class.name}" ; end
-  def _nydp_keys      ; []   ; end
-  def _nydp_wrapper   ; self ; end
-  def lexical_reach n ; n    ; end
+  def _nydp_get     a ; raise "_nydp_get : not gettable: #{a._nydp_inspect} on #{self.class.name}" ; end
+  def _nydp_set  a, v ; raise "_nydp_get : not settable: #{a._nydp_inspect} on #{self.class.name}" ; end
+  def _nydp_keys      ; []      ; end
+  def _nydp_wrapper   ; self    ; end
+  def _nydp_inspect   ; inspect ; end
+  def lexical_reach n ; n       ; end
 end
 
 class Method
@@ -28,7 +29,20 @@ class TrueClass
 end
 
 class ::Symbol
-  def _nydp_wrapper ; Nydp::FrozenSymbol.mk(self) ; end
+  # def _nydp_wrapper ; Nydp::FrozenSymbol.mk(self) ; end
+  def _nydp_inspect
+    _ins = to_s
+    _nydp_untidy?(_ins) ? "|#{_ins.gsub(/\|/, '\|')}|" : _ins
+  end
+
+  def nydp_type  ; :symbol          ; end
+  def execute vm ; vm.push_arg self ; end
+
+  private
+
+  def _nydp_untidy? s
+    (s == "") || (s == nil) || (s =~ /[\s\|,\(\)"]/)
+  end
 end
 
 class ::Date

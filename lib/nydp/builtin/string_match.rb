@@ -2,8 +2,11 @@ class Nydp::Builtin::StringMatch
   include Nydp::Builtin::Base, Singleton
 
   def builtin_invoke vm, args
-    kmatch            = Nydp::Symbol.mk :match   , vm.ns
-    kcaptures         = Nydp::Symbol.mk :captures, vm.ns
+    # kmatch            = Nydp::Symbol.mk :match   , vm.ns
+    # kcaptures         = Nydp::Symbol.mk :captures, vm.ns
+    kmatch            = :match
+    kcaptures         = :captures
+
     target            = args.car.to_s
     pattern           = Regexp.new(args.cdr.car.to_s)
     match             = pattern.match target

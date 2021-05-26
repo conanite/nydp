@@ -25,7 +25,8 @@ module Nydp
   def self.eval_with runner, ns, src_txt, name ; runner.new(VM.new(ns), ns, reader(src_txt), nil, name).run ; end
   def self.ms                           t1, t0 ; ((t1 - t0) * 1000).to_i                                    ; end
   def self.new_tokeniser                reader ; Nydp::Tokeniser.new reader                                 ; end
-  def self.new_parser                       ns ; Nydp::Parser.new(ns)                                       ; end
+  # def self.new_parser                       ns ; Nydp::Parser.new(ns)                                       ; end
+  def self.new_parser                       ns ; Nydp::Parser.new                                           ; end
 
   def self.indent_message indent, msg
     msg.split(/\n/).map { |line| "#{indent}#{line}" }.join("\n")

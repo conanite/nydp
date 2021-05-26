@@ -15,7 +15,7 @@ module Nydp
     end
 
     def inspect
-      "when_true:#{@when_true.inspect}:when_false:#{@when_false.inspect}"
+      "when_true:#{@when_true._nydp_inspect}:when_false:#{@when_false._nydp_inspect}"
     end
 
     def to_s
@@ -42,18 +42,18 @@ module Nydp
     end
 
     def inspect
-      "cond:#{condition.inspect}:#{conditional.inspect}"
+      "cond:#{condition._nydp_inspect}:#{conditional._nydp_inspect}"
     end
 
     def to_s
       "(cond #{condition.to_s} #{conditional.to_s})"
     end
 
-    def self.build expressions, bindings
+    def self.build expressions, bindings, ns
       if expressions.is_a? Nydp::Pair
-        cond       = Compiler.compile expressions.car, bindings
-        when_true  = Compiler.compile expressions.cdr.car, bindings
-        when_false = Compiler.compile expressions.cdr.cdr.car, bindings
+        cond       = Compiler.compile expressions.car, bindings, ns
+        when_true  = Compiler.compile expressions.cdr.car, bindings, ns
+        when_false = Compiler.compile expressions.cdr.cdr.car, bindings, ns
         csig       = sig(cond)
         # puts cond_sig
         # TODO : handle literal nil explicitly (if x y) -> #when_false is literal nil, we can hardcode that
@@ -67,7 +67,7 @@ module Nydp
           new(cond, when_true, when_false)
         end
       else
-        raise "can't compile Cond: #{expressions.inspect}"
+        raise "can't compile Cond: #{expressions._nydp_inspect}"
       end
     end
   end
@@ -84,7 +84,7 @@ module Nydp
       [@condition.lexical_reach(n), @when_true.lexical_reach(n), @when_false.lexical_reach(n)].max
     end
 
-    def inspect ; "cond:#{@condition.inspect}:#{@when_true.inspect}:#{@when_false.inspect}" ; end
+    def inspect ; "cond:#{@condition._nydp_inspect}:#{@when_true._nydp_inspect}:#{@when_false._nydp_inspect}" ; end
     def to_s    ; "(cond #{@condition.to_s} #{@when_true.to_s} #{@when_false.to_s})" ; end
   end
 

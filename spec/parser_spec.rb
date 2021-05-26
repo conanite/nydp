@@ -1,28 +1,51 @@
 require 'spec_helper'
 
 describe Nydp::Parser do
-  let(:empty)            { Nydp::Symbol.mk :"",                   ns }
-  let(:aa)               { Nydp::Symbol.mk :aa,                   ns }
-  let(:a)                { Nydp::Symbol.mk :a,                    ns }
-  let(:b)                { Nydp::Symbol.mk :b,                    ns }
-  let(:c)                { Nydp::Symbol.mk :c,                    ns }
-  let(:d)                { Nydp::Symbol.mk :d,                    ns }
-  let(:zz)               { Nydp::Symbol.mk :zz,                   ns }
-  let(:foo)              { Nydp::Symbol.mk :foo,                  ns }
-  let(:bar)              { Nydp::Symbol.mk :bar,                  ns }
-  let(:foobar)           { Nydp::Symbol.mk :foobar,               ns }
-  let(:zab)              { Nydp::Symbol.mk :zab,                  ns }
-  let(:quote)            { Nydp::Symbol.mk :quote,                ns }
-  let(:quasiquote)       { Nydp::Symbol.mk :quasiquote,           ns }
-  let(:unquote)          { Nydp::Symbol.mk :unquote,              ns }
-  let(:prefix_list)      { Nydp::Symbol.mk :"prefix-list",        ns }
-  let(:unquote_splicing) { Nydp::Symbol.mk :"unquote-splicing",   ns }
-  let(:comment)          { Nydp::Symbol.mk :comment,              ns }
-  let(:dotsyn)           { Nydp::Symbol.mk :"dot-syntax",         ns }
-  let(:cocosyn)          { Nydp::Symbol.mk :"colon-colon-syntax", ns }
-  let(:colosyn)          { Nydp::Symbol.mk :"colon-syntax",       ns }
-  let(:atsyn)            { Nydp::Symbol.mk :"at-syntax",          ns }
-  let(:string_pieces)    { Nydp::Symbol.mk :"string-pieces",      ns }
+  # let(:empty)            { Nydp::Symbol.mk :"",                   ns }
+  # let(:aa)               { Nydp::Symbol.mk :aa,                   ns }
+  # let(:a)                { Nydp::Symbol.mk :a,                    ns }
+  # let(:b)                { Nydp::Symbol.mk :b,                    ns }
+  # let(:c)                { Nydp::Symbol.mk :c,                    ns }
+  # let(:d)                { Nydp::Symbol.mk :d,                    ns }
+  # let(:zz)               { Nydp::Symbol.mk :zz,                   ns }
+  # let(:foo)              { Nydp::Symbol.mk :foo,                  ns }
+  # let(:bar)              { Nydp::Symbol.mk :bar,                  ns }
+  # let(:foobar)           { Nydp::Symbol.mk :foobar,               ns }
+  # let(:zab)              { Nydp::Symbol.mk :zab,                  ns }
+  # let(:quote)            { Nydp::Symbol.mk :quote,                ns }
+  # let(:quasiquote)       { Nydp::Symbol.mk :quasiquote,           ns }
+  # let(:unquote)          { Nydp::Symbol.mk :unquote,              ns }
+  # let(:prefix_list)      { Nydp::Symbol.mk :"prefix-list",        ns }
+  # let(:unquote_splicing) { Nydp::Symbol.mk :"unquote-splicing",   ns }
+  # let(:comment)          { Nydp::Symbol.mk :comment,              ns }
+  # let(:dotsyn)           { Nydp::Symbol.mk :"dot-syntax",         ns }
+  # let(:cocosyn)          { Nydp::Symbol.mk :"colon-colon-syntax", ns }
+  # let(:colosyn)          { Nydp::Symbol.mk :"colon-syntax",       ns }
+  # let(:atsyn)            { Nydp::Symbol.mk :"at-syntax",          ns }
+  # let(:string_pieces)    { Nydp::Symbol.mk :"string-pieces",      ns }
+
+  let(:empty)            { :""                   }
+  let(:aa)               { :aa                   }
+  let(:a)                { :a                    }
+  let(:b)                { :b                    }
+  let(:c)                { :c                    }
+  let(:d)                { :d                    }
+  let(:zz)               { :zz                   }
+  let(:foo)              { :foo                  }
+  let(:bar)              { :bar                  }
+  let(:foobar)           { :foobar               }
+  let(:zab)              { :zab                  }
+  let(:quote)            { :quote                }
+  let(:quasiquote)       { :quasiquote           }
+  let(:unquote)          { :unquote              }
+  let(:prefix_list)      { :"prefix-list"        }
+  let(:unquote_splicing) { :"unquote-splicing"   }
+  let(:comment)          { :comment              }
+  let(:dotsyn)           { :"dot-syntax"         }
+  let(:cocosyn)          { :"colon-colon-syntax" }
+  let(:colosyn)          { :"colon-syntax"       }
+  let(:atsyn)            { :"at-syntax"          }
+  let(:string_pieces)    { :"string-pieces"      }
 
   it "should return a stream of tokens" do
     reader = Nydp::StringReader.new ""
@@ -139,15 +162,15 @@ describe Nydp::Parser do
 
   it "should spot numbers hiding in special syntax" do
     parsed = parse("foo.2:3:4")
-    expect(parsed.inspect).to eq "(colon-syntax (dot-syntax foo 2) 3 4)"
+    expect(parsed._nydp_inspect).to eq "(colon-syntax (dot-syntax foo 2) 3 4)"
 
-    expect(parsed.map &:class).to eq [Nydp::Symbol, Nydp::Pair, Integer, Integer]
-    expect(parsed.cdr.car.map &:class).to eq [Nydp::Symbol, Nydp::Symbol, Integer]
+    expect(parsed.map &:class).to eq [::Symbol, Nydp::Pair, Integer, Integer]
+    expect(parsed.cdr.car.map &:class).to eq [::Symbol, ::Symbol, Integer]
   end
 
   it "should handle prefix and postfix syntax also" do
     parsed = parse(".foo123:")
-    expect(parsed.inspect).to eq "(colon-syntax (dot-syntax || foo123) ||)"
+    expect(parsed._nydp_inspect).to eq "(colon-syntax (dot-syntax || foo123) ||)"
   end
 
   it "should parse a dotted symbol" do
@@ -199,7 +222,7 @@ describe Nydp::Parser do
   end
 
   it "should unquote-unquote_splicing symbols" do
-    expect(parse(",,@foo").inspect).to eq "(unquote (unquote-splicing foo))"
+    expect(parse(",,@foo")._nydp_inspect).to eq "(unquote (unquote-splicing foo))"
   end
 
   it "should quote lists" do
@@ -219,21 +242,21 @@ describe Nydp::Parser do
   end
 
   it "should do some complicated unquote stuff with lists" do
-    expect(parse("`(a b `(c d ,(+ 1 2) ,,(+ 3 4)))").inspect).to eq "(quasiquote (a b (quasiquote (c d (unquote (+ 1 2)) (unquote (unquote (+ 3 4)))))))"
+    expect(parse("`(a b `(c d ,(+ 1 2) ,,(+ 3 4)))")._nydp_inspect).to eq "(quasiquote (a b (quasiquote (c d (unquote (+ 1 2)) (unquote (unquote (+ 3 4)))))))"
   end
 
   it "should do some complicated unquote stuff with mixed lists and symbols" do
-    expect(parse("`(a b `(c d ,,@foo e f))").inspect).to eq "(quasiquote (a b (quasiquote (c d (unquote (unquote-splicing foo)) e f))))"
-    expect(parse("`(a b `(c d ,@,foo e f))").inspect).to eq "(quasiquote (a b (quasiquote (c d (unquote-splicing (unquote foo)) e f))))"
-    expect(parse("`(a b `(c d ,',foo e f))").inspect).to eq "(quasiquote (a b (quasiquote (c d (unquote (quote (unquote foo))) e f))))"
+    expect(parse("`(a b `(c d ,,@foo e f))")._nydp_inspect).to eq "(quasiquote (a b (quasiquote (c d (unquote (unquote-splicing foo)) e f))))"
+    expect(parse("`(a b `(c d ,@,foo e f))")._nydp_inspect).to eq "(quasiquote (a b (quasiquote (c d (unquote-splicing (unquote foo)) e f))))"
+    expect(parse("`(a b `(c d ,',foo e f))")._nydp_inspect).to eq "(quasiquote (a b (quasiquote (c d (unquote (quote (unquote foo))) e f))))"
   end
 
   it "should do some complicated unquote stuff with lists" do
-    expect(parse("`(a b `(c d ,(+ 1 2) ,,@(list 3 4)))").inspect).to eq "(quasiquote (a b (quasiquote (c d (unquote (+ 1 2)) (unquote (unquote-splicing (list 3 4)))))))"
+    expect(parse("`(a b `(c d ,(+ 1 2) ,,@(list 3 4)))")._nydp_inspect).to eq "(quasiquote (a b (quasiquote (c d (unquote (+ 1 2)) (unquote (unquote-splicing (list 3 4)))))))"
   end
 
   it "should do some complicated unquote stuff with symbols" do
-    expect(parse("`(a b `(c d ,(+ 1 2) ,,x))").inspect).to eq "(quasiquote (a b (quasiquote (c d (unquote (+ 1 2)) (unquote (unquote x))))))"
+    expect(parse("`(a b `(c d ,(+ 1 2) ,,x))")._nydp_inspect).to eq "(quasiquote (a b (quasiquote (c d (unquote (+ 1 2)) (unquote (unquote x))))))"
   end
 
   it "should unquote-splicing atoms" do
@@ -294,8 +317,8 @@ describe Nydp::Parser do
 "
     c1 = pair_list([comment, "here's a comment"])
     fbar = pair_list([bar])
-    fzab = pair_list([Nydp::Symbol.mk(:zab, ns)])
-    fdef = Nydp::Symbol.mk(:def, ns)
+    fzab = pair_list([:zab])
+    fdef = :def
     expr = pair_list([fdef, foo, fbar, c1, fzab])
     expect(parse txt).to eq expr
   end
@@ -304,7 +327,7 @@ describe Nydp::Parser do
     txt = <<NYDP
 (def plugin-end   (name) (assign this-plugin nil ) (chapter-end))
 NYDP
-    expect(parse(txt).to_a.inspect).to eq "[def, plugin-end, (name), (assign this-plugin nil), (chapter-end)]"
+    expect(parse(txt).to_a._nydp_inspect).to eq "[:def, :\"plugin-end\", (name), (assign this-plugin nil), (chapter-end)]"
   end
 
   it "parses a more complete expression" do

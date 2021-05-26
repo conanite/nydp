@@ -44,8 +44,8 @@ module Nydp::Builtin
       when Nydp::Error
         raise e
       else
-        arg_msg = args.map { |a| "  #{a.inspect}"}.join("\n")
-        new_msg = "Called #{self.inspect}\nwith args\n#{arg_msg}"
+        arg_msg = args.map { |a| "  #{a._nydp_inspect}"}.join("\n")
+        new_msg = "Called #{self._nydp_inspect}\nwith args\n#{arg_msg}"
         raise new_msg
       end
     end

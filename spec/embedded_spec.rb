@@ -1,23 +1,41 @@
 require 'spec_helper'
 
 describe Nydp::Parser do
-  let(:aa)               { Nydp::Symbol.mk :aa,                   ns }
-  let(:a)                { Nydp::Symbol.mk :a,                    ns }
-  let(:b)                { Nydp::Symbol.mk :b,                    ns }
-  let(:c)                { Nydp::Symbol.mk :c,                    ns }
-  let(:d)                { Nydp::Symbol.mk :d,                    ns }
-  let(:zz)               { Nydp::Symbol.mk :zz,                   ns }
-  let(:foo)              { Nydp::Symbol.mk :foo,                  ns }
-  let(:bar)              { Nydp::Symbol.mk :bar,                  ns }
-  let(:zab)              { Nydp::Symbol.mk :zab,                  ns }
-  let(:quote)            { Nydp::Symbol.mk :quote,                ns }
-  let(:quasiquote)       { Nydp::Symbol.mk :quasiquote,           ns }
-  let(:unquote)          { Nydp::Symbol.mk :unquote,              ns }
-  let(:unquote_splicing) { Nydp::Symbol.mk :"unquote-splicing",   ns }
-  let(:comment)          { Nydp::Symbol.mk :comment,              ns }
-  let(:dotsyn)           { Nydp::Symbol.mk :"dot-syntax",         ns }
-  let(:cocosyn)          { Nydp::Symbol.mk :"colon-colon-syntax", ns }
-  let(:colosyn)          { Nydp::Symbol.mk :"colon-syntax",       ns }
+  # let(:aa)               { Nydp::Symbol.mk :aa,                   ns }
+  # let(:a)                { Nydp::Symbol.mk :a,                    ns }
+  # let(:b)                { Nydp::Symbol.mk :b,                    ns }
+  # let(:c)                { Nydp::Symbol.mk :c,                    ns }
+  # let(:d)                { Nydp::Symbol.mk :d,                    ns }
+  # let(:zz)               { Nydp::Symbol.mk :zz,                   ns }
+  # let(:foo)              { Nydp::Symbol.mk :foo,                  ns }
+  # let(:bar)              { Nydp::Symbol.mk :bar,                  ns }
+  # let(:zab)              { Nydp::Symbol.mk :zab,                  ns }
+  # let(:quote)            { Nydp::Symbol.mk :quote,                ns }
+  # let(:quasiquote)       { Nydp::Symbol.mk :quasiquote,           ns }
+  # let(:unquote)          { Nydp::Symbol.mk :unquote,              ns }
+  # let(:unquote_splicing) { Nydp::Symbol.mk :"unquote-splicing",   ns }
+  # let(:comment)          { Nydp::Symbol.mk :comment,              ns }
+  # let(:dotsyn)           { Nydp::Symbol.mk :"dot-syntax",         ns }
+  # let(:cocosyn)          { Nydp::Symbol.mk :"colon-colon-syntax", ns }
+  # let(:colosyn)          { Nydp::Symbol.mk :"colon-syntax",       ns }
+
+  let(:aa)               { :aa                    }
+  let(:a)                { :a                     }
+  let(:b)                { :b                     }
+  let(:c)                { :c                     }
+  let(:d)                { :d                     }
+  let(:zz)               { :zz                    }
+  let(:foo)              { :foo                   }
+  let(:bar)              { :bar                   }
+  let(:zab)              { :zab                   }
+  let(:quote)            { :quote                 }
+  let(:quasiquote)       { :quasiquote            }
+  let(:unquote)          { :unquote               }
+  let(:unquote_splicing) { :"unquote-splicing"    }
+  let(:comment)          { :comment               }
+  let(:dotsyn)           { :"dot-syntax"          }
+  let(:cocosyn)          { :"colon-colon-syntax"  }
+  let(:colosyn)          { :"colon-syntax"        }
 
   def parse_string txt
     reader = Nydp::StringReader.new txt
@@ -33,14 +51,14 @@ describe Nydp::Parser do
   it "should parse external text" do
     actual   = parse_string "a fluffy bunny!"
     expect(actual)        .to eq "a fluffy bunny!"
-    expect(actual.inspect).to eq '"a fluffy bunny!"'
+    expect(actual._nydp_inspect).to eq '"a fluffy bunny!"'
   end
 
   it "should parse a string delimited by eof" do
     expected = pair_list([sym('string-pieces'), Nydp::StringFragmentCloseToken.new('a fluffy bunny!','a fluffy bunny!')])
     actual   = parse_string "a fluffy bunny!"
     expect(actual)        .to eq "a fluffy bunny!"
-    expect(actual.inspect).to eq '"a fluffy bunny!"'
+    expect(actual._nydp_inspect).to eq '"a fluffy bunny!"'
   end
 
   it "should parse a string with embedded code, delimited by eof" do
@@ -104,6 +122,6 @@ describe Nydp::Parser do
 
   it "parses a string that looks like html with little bits of embedded code in it" do
     parsed = parse_string "<div id='item_~{id}'><label>~{data-label-1}</label> ~{data-content-1}</div>"
-    expect(parsed.inspect).to eq '(string-pieces "<div id=\'item_" (brace-list id) "\'><label>" (brace-list data-label-1) "</label> " (brace-list data-content-1) "</div>")'
+    expect(parsed._nydp_inspect).to eq '(string-pieces "<div id=\'item_" (brace-list id) "\'><label>" (brace-list data-label-1) "</label> " (brace-list data-content-1) "</div>")'
   end
 end

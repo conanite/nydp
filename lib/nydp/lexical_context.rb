@@ -52,7 +52,7 @@ module Nydp
       values = []
       n = 0
       while at_index n
-        values << at_index(n).inspect
+        values << at_index(n)._nydp_inspect
         n += 1
       end
       parent_s = parent ? " parent #{parent.to_s}" : ""

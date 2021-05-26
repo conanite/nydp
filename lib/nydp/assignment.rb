@@ -9,7 +9,7 @@ module Nydp
     def execute vm
       @name.assign vm.peek_arg, vm.current_context
     rescue
-      raise "assigning #{@name.inspect}"
+      raise "assigning #{@name._nydp_inspect}"
     end
 
     def to_s
@@ -20,11 +20,11 @@ module Nydp
   class Assignment
     include Helper
 
-    def self.build args, bindings
-      name = Compiler.compile args.car, bindings
-      raise "can't assign to #{name.inspect} : expression was #{args}" unless name.respond_to?(:assign)
+    def self.build args, bindings, ns
+      name = Compiler.compile args.car, bindings, ns
+      raise "can't assign to #{name._nydp_inspect} : expression was #{args}" unless name.respond_to?(:assign)
       value_expr = args.cdr.car
-      Assignment.new name, Compiler.compile(value_expr, bindings), value_expr
+      Assignment.new name, Compiler.compile(value_expr, bindings, ns), value_expr
     end
 
     def initialize name, value, value_src
@@ -37,7 +37,7 @@ module Nydp
     end
 
     def to_s
-      "(assign #{@instructions.cdr.car.name} #{@value_src.inspect})"
+      "(assign #{@instructions.cdr.car.name} #{@value_src._nydp_inspect})"
     end
 
     def inspect; to_s ; end
@@ -45,7 +45,7 @@ module Nydp
     def execute vm
       vm.push_ctx_instructions @instructions
     rescue
-      raise "assigning #{@value.inspect} to #{@name.inspect}"
+      raise "assigning #{@value._nydp_inspect} to #{@name._nydp_inspect}"
     end
   end
 end

@@ -4,10 +4,13 @@ class Nydp::Builtin::Sym
   def builtin_invoke vm, args
     arg = args.car
     val = case arg.class
-          when Nydp::Symbol
+          when ::Symbol
             arg
+          # when Nydp::Symbol
+          #   arg
           else
-            Nydp::Symbol.mk arg.to_s.to_sym, vm.ns
+            arg.to_s.to_sym
+            # Nydp::Symbol.mk arg.to_s.to_sym, vm.ns
           end
     vm.push_arg val
   end

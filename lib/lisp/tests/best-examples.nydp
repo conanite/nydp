@@ -26,7 +26,7 @@
                     { i 2 size 7 }
                     { i 3 size 4 }
                     { i 4 size 5 }))
-   "{i=>2, size=>7}")
+   "{:i=>2, :size=>7}")
 
   ("finds maximum of list of numbers"
    (best > '(3 5 4 7 8 2))

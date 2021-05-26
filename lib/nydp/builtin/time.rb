@@ -19,7 +19,7 @@ class Nydp::Builtin::Time
     when ::Time
       vm.push_arg ::Time.now - arg
     else
-      raise Nydp::Error.new "time : expected a number or a date or a time, got #{arg.inspect}"
+      raise Nydp::Error.new "time : expected a number or a date or a time, got #{arg._nydp_inspect}"
     end
   end
 
@@ -33,7 +33,7 @@ class Nydp::Builtin::Time
     when ::Time
       vm.push_arg a0 - a1
     else
-      raise Nydp::Error.new "time : expected a number or a date, got #{a1.inspect}"
+      raise Nydp::Error.new "time : expected a number or a date, got #{a1._nydp_inspect}"
     end
   end
 

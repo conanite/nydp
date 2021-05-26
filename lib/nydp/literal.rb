@@ -7,7 +7,7 @@ module Nydp
       @expression = expression
     end
 
-    def self.build expression, bindings
+    def self.build expression, bindings, ns
       new expression
     end
 

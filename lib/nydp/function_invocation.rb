@@ -32,12 +32,12 @@ module Nydp
           raise
         else
           if e.is_a?(NoMethodError) && !f.respond_to?(invoker)
-            raise InvocationFailed.new("#{f.inspect} is not a function: args were #{args.inspect} in #{source.inspect}")
+            raise InvocationFailed.new("#{f._nydp_inspect} is not a function: args were #{args._nydp_inspect} in #{source._nydp_inspect}")
           else
-            msg  = args.map { |a| "  #{a.inspect}"}.join("\n")
-            msg  =  "failed to execute invocation #{f.inspect}\n#{msg}"
-            msg +=  "\nsource was #{source.inspect}"
-            msg +=  "\nfunction name was #{source.car.inspect}"
+            msg  = args.map { |a| "  #{a._nydp_inspect}"}.join("\n")
+            msg  =  "failed to execute invocation #{f._nydp_inspect}\n#{msg}"
+            msg +=  "\nsource was #{source._nydp_inspect}"
+            msg +=  "\nfunction name was #{source.car._nydp_inspect}"
             raise InvocationFailed.new msg
           end
         end
@@ -48,7 +48,7 @@ module Nydp
         @expr.map { |x| x.lexical_reach n}.max
       end
 
-      def inspect ; @expr.map { |x| x.inspect }.join(' ') ; end
+      def inspect ; @expr.map { |x| x._nydp_inspect }.join(' ') ; end
       def source  ; @source       ; end
       def to_s    ; source.to_s   ; end
     end
@@ -314,13 +314,13 @@ module Nydp
       "#{ra.shift}.call(#{ra.join(", ")})"
     end
 
-    def self.build expression, bindings
-      compiled   = Compiler.compile_each(expression, bindings)
+    def self.build expression, bindings, ns
+      compiled   = Compiler.compile_each(expression, bindings, ns)
       invocation_sig = compiled.map { |x| sig x }.join("_")
 
       cname  = "Invocation_#{invocation_sig}"
 
-      # puts expression.inspect if cname == "Invocation_SYM_LEX_LIT_LEX"
+      # puts expression._nydp_inspect if cname == "Invocation_SYM_LEX_LIT_LEX"
 
       exists = Invocation::SIGS.include? "Nydp::Invocation::#{cname}"
       if exists
@@ -353,7 +353,7 @@ module Nydp
       vm.push_ctx_instructions argument_instructions
     end
 
-    def inspect ; @function_instruction.inspect ; end
-    def to_s    ; @source.to_s                  ; end
+    def inspect ; @function_instruction._nydp_inspect ; end
+    def to_s    ; @source.to_s                        ; end
   end
 end

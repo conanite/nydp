@@ -7,19 +7,22 @@ module Nydp
   class Compiler
     extend Helper
 
-    def self.compile expression, bindings
-      compile_expr expression, bindings
+    def self.compile expression, bindings, ns
+      compile_expr expression, bindings, ns
     rescue StandardError => e
-      raise Nydp::Error.new "failed to compile expression:\n#{expression.inspect}\n#{e.message}"
+      raise Nydp::Error.new "failed to compile expression:\n#{expression._nydp_inspect}\n#{e.message}"
     end
 
-    def self.compile_expr expression, bindings
-      if expression.is_a? Nydp::Symbol
-        SymbolLookup.build expression, bindings
+    def self.compile_expr expression, bindings, ns
+      # if expression.is_a? Nydp::Symbol
+      if expression.is_a? ::Symbol
+        SymbolLookup.build expression, bindings, ns
       elsif literal? expression
-        Literal.build expression, bindings
+        Literal.build expression, bindings, ns
       elsif expression.is_a? Nydp::Pair
-        compile_pair expression, bindings
+        compile_pair expression, bindings, ns
+      else
+        raise Nydp::Error.new "failed to compile unrecognised expression:\n#{expression._nydp_inspect}\nwhich is a #{expression.class}"
       end
     end
 
@@ -27,28 +30,28 @@ module Nydp
       Nydp::NIL.is?(a) ? b : cons(a, b)
     end
 
-    def self.compile_each expr, bindings
+    def self.compile_each expr, bindings, ns
       if Nydp::NIL.is?(expr)
         expr
       elsif pair?(expr)
-        maybe_cons compile(expr.car, bindings), compile_each(expr.cdr, bindings)
+        maybe_cons compile(expr.car, bindings, ns), compile_each(expr.cdr, bindings, ns)
       else
-        compile(expr, bindings)
+        compile(expr, bindings, ns)
       end
     end
 
-    def self.compile_pair expression, bindings
+    def self.compile_pair expression, bindings, ns
       key = expression.car
       if sym?(key, :cond)
-        Cond.build expression.cdr, bindings # todo: replace with function? (cond x (fn () iftrue) (fn () iffalse)) -->> performance issues, creating two closures for every cond invocation
+        Cond.build expression.cdr, bindings, ns # todo: replace with function? (cond x (fn () iftrue) (fn () iffalse)) -->> performance issues, creating two closures for every cond invocation
       elsif sym?(key, :quote)
-        Literal.build expression.cadr, bindings
+        Literal.build expression.cadr, bindings, ns
       elsif sym?(key, :assign)
-        Assignment.build expression.cdr, bindings
+        Assignment.build expression.cdr, bindings, ns
       elsif sym?(key, :fn)
-        InterpretedFunction.build expression.cadr, expression.cddr, bindings
+        InterpretedFunction.build expression.cadr, expression.cddr, bindings, ns
       else
-        FunctionInvocation.build expression, bindings
+        FunctionInvocation.build expression, bindings, ns
       end
     end
   end

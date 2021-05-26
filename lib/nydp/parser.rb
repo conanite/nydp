@@ -1,16 +1,24 @@
 module Nydp
   class Parser
-    attr_accessor :ns
+    # attr_accessor :ns
 
-    def initialize ns
-      @ns = ns
+    # def initialize ns
+      # @ns = ns
       # TODO pre-initialize all the hard-coded syms used here, eg
       # @quote = sym(:quote)
       # @quasiquote = sym(:quasiquote)
-    end
+    # end
 
     def sym name
-      Nydp::Symbol.mk name.to_sym, ns
+      # Nydp::Symbol.mk name.to_sym, ns
+      n = name.to_s.to_sym
+      if n == :nil
+        Nydp::NIL
+      elsif n == :t
+        Nydp::T
+      else
+        name.to_s.to_sym
+      end
     end
 
     def read_list token_stream, termination_token, list=[]
@@ -102,7 +110,7 @@ module Nydp
       when :string_open_delim
         string token_stream, token.last, close_delimiter_for(token.last)
       when :sym_open_delim
-        sym token_stream.next_string_fragment(token.last, /\|/, nil)
+        sym token_stream.next_string_fragment(token.last, /\|/, nil).string
       when :left_paren
         prefix_list token[1], read_list(token_stream, :right_paren)
       when :left_brace

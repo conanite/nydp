@@ -16,8 +16,8 @@
    (let hh (list { a 1 b 2 } { a 7 b 9 } { a 3 b 1 } { a 2 b 8 })
      (pp (sort-by &a hh)))
    "({ a 1 b 2 } { a 2 b 8 }
-              { a 3 b 1 }
-              { a 7 b 9 })")
+                { a 3 b 1 }
+                { a 7 b 9 })")
 
   ("sorts a list of strings according to their length"
    (sort-by len
@@ -30,9 +30,9 @@
    ("max" "min" "sport" "short" "very song" "very long")))
 
 (examples-for safe-sort-by
-  ("sorts a list of hashes by a specified key"
+  ("sorts a list of hashes by a specified key function, with default sort value if key function returns nil"
    (let hh (list { a 1 b 2 } { b 9 } { a 3 b 1 } { a nil b 8 })
      (pp (safe-sort-by &a 99 hh)))
    "({ a 1 b 2 } { a 3 b 1 }
-              { a nil b 8 }
-              { b 9 })"))
+                { a nil b 8 }
+                { b 9 })"))

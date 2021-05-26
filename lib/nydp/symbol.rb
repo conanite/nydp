@@ -20,7 +20,7 @@ class Nydp::Symbol
   end
 
   def value context=nil
-    raise Unbound.new("unbound symbol: #{self.inspect}") if @value == nil
+    raise Unbound.new("unbound symbol: #{self._nydp_inspect}") if @value == nil
     @value
   end
 
@@ -60,19 +60,19 @@ class Nydp::Symbol
   alias eql? ==
 end
 
-class Nydp::FrozenSymbol < Nydp::Symbol
-  @@frozen = { }
+# class Nydp::FrozenSymbol < Nydp::Symbol
+#   @@frozen = { }
 
-  def self.mk name
-    name = name.to_s.to_sym
-    @@frozen[name] ||= new(name)
-  end
+#   def self.mk name
+#     name = name.to_s.to_sym
+#     @@frozen[name] ||= new(name)
+#   end
 
-  def value _=nil
-    raise Unbound.new("frozen symbol: #{self.inspect}")
-  end
+#   def value _=nil
+#     raise Unbound.new("frozen symbol: #{self._nydp_inspect}")
+#   end
 
-  def assign v, _=nil
-    raise "can't assign to frozen: #{self.inspect}"
-  end
-end
+#   def assign v, _=nil
+#     raise "can't assign to frozen: #{self._nydp_inspect}"
+#   end
+# end

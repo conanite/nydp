@@ -2,7 +2,9 @@ class Nydp::Builtin::TypeOf
   include Nydp::Builtin::Base, Singleton
 
   def builtin_invoke_1 vm, a0
-    typename = if a0.respond_to?(:nydp_type)
+    typename = if Nydp::NIL.is?(a0)
+                 a0
+               elsif a0.respond_to?(:nydp_type)
                  a0.nydp_type.to_sym
                elsif a0.is_a? Numeric
                  :number
@@ -10,7 +12,8 @@ class Nydp::Builtin::TypeOf
                  "ruby/#{a0.class.name}".to_sym
                end
 
-    type = Nydp::Symbol.mk(typename, vm.ns)
+    # type = Nydp::Symbol.mk(typename, vm.ns)
+    type = typename
 
     vm.push_arg(type || Nydp::NIL)
   end

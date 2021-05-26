@@ -40,7 +40,7 @@ module Nydp
         def value ctx
           ctx#{getctx}.#{at_index} || Nydp::NIL
         rescue
-          raise "failed looking up \#{@name.inspect} (\#{@name.class.name})"
+          raise "failed looking up \#{@name._nydp_inspect} (\#{@name.class.name})"
         end
 
         def assign value, ctx
@@ -66,7 +66,7 @@ module Nydp
     def self.build effective_depth, name, binding_index, lexical_depth
       const_get(:"ContextSymbol_#{effective_depth}_#{binding_index}").new(name, lexical_depth)
     rescue
-      raise "building ContextSymbol #{[effective_depth, name, binding_index, lexical_depth].inspect}"
+      raise "building ContextSymbol #{[effective_depth, name, binding_index, lexical_depth]._nydp_inspect}"
     end
   end
 end
