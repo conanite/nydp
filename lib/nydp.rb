@@ -17,7 +17,7 @@ module Nydp
     vm.thread
   rescue StandardError => e
     friendly_args = args.map { |a| a.respond_to?(:_nydp_compact_inspect) ? a._nydp_compact_inspect : a }
-    raise Nydp::Error.new("Invoking #{function_name}\nwith args #{friendly_args.inspect}")
+    raise Nydp::Error.new("Invoking #{function_name}\nwith args #{friendly_args._nydp_inspect}")
   end
 
   def self.reader                          txt ; Nydp::StringReader.new txt                                 ; end
