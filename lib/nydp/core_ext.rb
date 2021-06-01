@@ -50,7 +50,12 @@ class ::Date
 end
 
 class ::Array
-  def _nydp_wrapper ; Nydp::Pair.from_list map &:_nydp_wrapper ; end
+  def _nydp_wrapper ; Nydp::Pair.from_list map &:_nydp_wrapper   ; end
+  def _nydp_inspect ; "[" + map(&:_nydp_inspect).join(" ") + "]" ; end
+end
+
+class ::Hash
+  def _nydp_inspect ; "{" + map { |k,v| [k._nydp_inspect, v._nydp_inspect].join(" ")}.join(" ") + "}" ; end
 end
 
 class ::Object
@@ -59,9 +64,13 @@ end
 
 class ::String
   # def _nydp_wrapper  ; Nydp::StringAtom.new self  ; end
-  def _nydp_name_to_rb_name ; self.gsub(/-/, '_').to_sym ; end
+  def _nydp_name_to_rb_name ; self.gsub(/[-_\+\[\]\?\!\*\.\|#@\$%\^\&\(\)=\{\}\"\'\:\;~`<>\/\,\<\>]/) { |chr| "_#{chr.hex_ord}"}.to_sym ; end
   def as_method_name ; self.gsub(/-/, '_').to_sym ; end
   def nydp_type      ; :string                    ; end
+
+  private
+
+  def hex_ord ; ord.to_s(16).rjust(2, '0') ; end
 end
 
 class ::Hash

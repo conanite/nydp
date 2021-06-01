@@ -327,7 +327,7 @@ describe Nydp::Parser do
     txt = <<NYDP
 (def plugin-end   (name) (assign this-plugin nil ) (chapter-end))
 NYDP
-    expect(parse(txt).to_a._nydp_inspect).to eq "[:def, :\"plugin-end\", (name), (assign this-plugin nil), (chapter-end)]"
+    expect(parse(txt).to_a._nydp_inspect).to eq "[def plugin-end (name) (assign this-plugin nil) (chapter-end)]"
   end
 
   it "parses a more complete expression" do

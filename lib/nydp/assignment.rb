@@ -40,6 +40,10 @@ module Nydp
       "(assign #{@instructions.cdr.car.name} #{@value_src._nydp_inspect})"
     end
 
+    def compile_to_ruby
+      "(#{@name.compile_to_ruby} = #{@value.compile_to_ruby})"
+    end
+
     def inspect; to_s ; end
 
     def execute vm

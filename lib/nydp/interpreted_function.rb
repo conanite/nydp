@@ -32,7 +32,7 @@ module Nydp
         rubyargs << "_arg_#{an.to_s._nydp_name_to_rb_name}=nil"
       end
 
-      code = "  def call (#{rubyargs.join ","})\n"
+      code = "  ->(#{rubyargs.join ","}) {\n"
       body.each { |instr|
         if instr.respond_to? :compile_to_ruby
           code << "    " << instr.compile_to_ruby << "\n"
@@ -40,7 +40,7 @@ module Nydp
           code << "    # NOCOMPILE : #{instr._nydp_inspect} (#{instr.class})"
         end
       }
-      code << "  end"
+      code << "  }"
     end
 
     def self.build arg_list, body, bindings, ns

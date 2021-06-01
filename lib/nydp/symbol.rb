@@ -25,7 +25,7 @@ class Nydp::Symbol
   end
 
   def compile_to_ruby
-    "@#{name.to_s.as_ruby_name}"
+    "@ns_#{name.to_s._nydp_name_to_rb_name}"
   end
 
   def self.special name
