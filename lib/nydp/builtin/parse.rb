@@ -7,7 +7,7 @@ class Nydp::Builtin::Parse
     exprs  = []
     while !tokens.finished
       expr = parser.expression(tokens)
-      exprs << expr unless expr == nil
+      exprs << expr unless expr == nil && tokens.finished
     end
     vm.push_arg Nydp::Pair.from_list exprs
   end

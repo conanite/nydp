@@ -9,7 +9,7 @@
 
   ("dislikes no-prefix"
    (on-err (joinstr "\n" errors)
-           (pre-compile '(:foo 1 2 3)))
+           (pre-compile (car (parse "(:foo 1 2 3)"))))
    "expanding
 (colon-syntax || foo)
 with

@@ -85,7 +85,8 @@ module Nydp
 
     def literal? expr
       case expr
-      when String, Float, Integer, Integer, Symbol, Nydp::Truth, Nydp::Nil
+      # when String, Float, Integer, Integer, Symbol, Nydp::Truth, Nydp::Nil
+      when String, Float, Integer, Integer, Symbol, Nydp::Truth, NilClass
         true
       else
         false

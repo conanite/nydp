@@ -13,12 +13,21 @@
 
   ("reports errors"
    (on-err errors
-           (let s "hello \~|u|, \~x + \~y is \~(+ x y), thank heavens!"
+           (let s "hello \~|u|, \~x + \~y is \~(+ 2 y), thank heavens!"
              (string/eval-with-args s '(a b c) "world" 36 6)))
-   ("error evaluating \"hello \~|u|, \~x + \~y is \~(+ x y), thank heavens!\"
+   ("error evaluating \"hello \~|u|, \~x + \~y is \~(+ 2 y), thank heavens!\"
 with arg names (a b c)
 and args (\"world\" 36 6)"
-    "unbound symbol: y")))
+ "failed to execute invocation builtin/+
+  2
+  nil
+source was (+ 2 y)
+function name was +"
+ "Called builtin/+
+with args
+  2
+  nil"
+ "nil can't be coerced into Integer")))
 
 (examples-for string/pad-left
   ("does not change a string whose length is greater than the given length"

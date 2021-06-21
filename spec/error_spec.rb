@@ -13,16 +13,20 @@ describe Nydp::VM do
     it "raises a helpful error" do
       error = nil
       begin
-        run "dflkjdgjeirgjeoi"
+        run "(/ 10 0)"
       rescue StandardError => e
         error = e
       end
 
       expect(error).to be_a Nydp::Error
-      expect(error.message).to eq "failed to eval dflkjdgjeirgjeoi"
+      expect(error.message).to eq "failed to eval (/ 10 0)"
 
-      expect(error.cause).to be_a Nydp::Symbol::Unbound
-      expect(error.cause.message).to eq "unbound symbol: dflkjdgjeirgjeoi"
+      expect(error.cause).to be_a Nydp::InvocationFailed
+      expect(error.cause.message).to eq "failed to execute invocation builtin//
+  10
+  0
+source was (/ 10 0)
+function name was /"
 
       expect(vm.unhandled_error).to eq nil
     end

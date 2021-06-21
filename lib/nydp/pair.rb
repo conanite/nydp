@@ -23,9 +23,9 @@ class Nydp::Pair
   def +    other ; copy.append other                          ; end
   def size       ; 1 + (cdr.is_a?(Nydp::Pair) ? cdr.size : 0) ; end
   def inspect    ; "(#{inspect_rest})"                        ; end
-  def &    other ; self.class.from_list((Set.new(self) & other).to_a)           ; end
-  def |    other ; self.class.from_list((Set.new(self) | other).to_a)           ; end
-  def -    other ; self.class.from_list((Set.new(self) - other).to_a)           ; end
+  def &    other ; self.class.from_list((Set.new(self) & Array(other)).to_a)    ; end
+  def |    other ; self.class.from_list((Set.new(self) | Array(other)).to_a)    ; end
+  def -    other ; self.class.from_list((Set.new(self) - Array(other)).to_a)    ; end
   def proper?    ; Nydp::NIL.is?(cdr) || (cdr.is_a?(Nydp::Pair) && cdr.proper?) ; end
 
   def index_of x

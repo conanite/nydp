@@ -20,7 +20,7 @@ class Nydp::Symbol
   end
 
   def value context=nil
-    raise Unbound.new("unbound symbol: #{self._nydp_inspect}") if @value == nil
+    # raise Unbound.new("unbound symbol: #{self._nydp_inspect}") if @value == nil
     @value
   end
 

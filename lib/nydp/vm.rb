@@ -26,7 +26,7 @@ module Nydp
     end
 
     def push_ctx_instructions ii
-      if @current_instructions && NIL != @current_instructions
+      if @current_instructions
         @instructions.push @current_instructions
         @contexts.push @current_context
       end
@@ -42,17 +42,17 @@ module Nydp
     def thread
       while @current_instructions
         begin
-          if NIL == @current_instructions
-            @current_instructions = @instructions.pop
-            @current_context      = @contexts.pop
-          else
-            now = @current_instructions.car
-            @current_instructions = @current_instructions.cdr
-            now.execute(self)
-          end
+          now = @current_instructions.car
+          @current_instructions = @current_instructions.cdr
+          now.execute(self)
 
         rescue StandardError => e
           handle_error e
+        end
+
+        unless @current_instructions
+          @current_instructions = @instructions.pop
+          @current_context      = @contexts.pop
         end
       end
 

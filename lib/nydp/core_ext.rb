@@ -5,6 +5,7 @@ class Object
   def _nydp_wrapper   ; self    ; end
   def _nydp_inspect   ; inspect ; end
   def lexical_reach n ; n       ; end
+  def to_ruby         ; self    ; end
 end
 
 class Method
@@ -17,7 +18,23 @@ class Method
 end
 
 class NilClass
-  def _nydp_wrapper ; Nydp::NIL ; end
+  def _nydp_wrapper ; self ; end
+  def car         ; self          ; end
+  def cdr         ; self          ; end
+  def size        ; 0             ; end
+  def is?   other ; self.equal? other  ; end
+  def isnt? other ; !self.equal? other ; end
+  def + other     ; other         ; end
+  def copy        ; self          ; end
+  def assign *_   ; self          ; end
+  def nydp_type   ; :nil          ; end
+  def execute     vm ; vm.push_arg self ; end
+  def _nydp_get    a ; self        ; end
+  def _nydp_set a, v ; self        ; end
+  # def each           ;                  ; end # nil behaves like an empty list
+  def &        other ; self             ; end
+  def |        other ; other            ; end
+  def compile_to_ruby ; "nil"     ; end
 end
 
 class FalseClass

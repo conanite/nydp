@@ -348,7 +348,7 @@ module Nydp
     end
 
     def execute vm
-##      Invocation.sig @sig
+      ##      Invocation.sig @sig
       vm.push_ctx_instructions function_instruction
       vm.push_ctx_instructions argument_instructions
     end
