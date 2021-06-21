@@ -1,16 +1,14 @@
 # `'nydp`
 
-`'nydp` is a new LISP dialect, much inspired by [Arc](http://arclanguage.org/), and hence indirectly by all of `'arc`'s ancestors,
-and implemented in Ruby.
+`'nydp` is a new LISP dialect, much inspired by [Arc](http://arclanguage.org/), and hence indirectly by all of `'arc`'s ancestors, and implemented in Ruby.
 
-`'nydp` is "Not Your Daddy's Parentheses", a reference to [Xkcd 297](http://xkcd.com/297/) (itself a reference
-to Star Wars), as well as to the meme [Not Your Daddy's Q](http://tvtropes.org/pmwiki/pmwiki.php/Main/NotYourDaddysX), where Q is a
-modern, improved Q quite unlike the Q your daddy used. `'nydp` also shamelessly piggypacks on the
-catchiness and popularity of the [NYPD](https://en.wikipedia.org/wiki/NYPD_Blue) abbreviation ("New York Police Department",
-for those who have no interest in popular US politics or TV).
+`'nydp` is "Not Your Daddy's Parentheses", a reference to [Xkcd 297](http://xkcd.com/297/) (itself a reference to Star Wars), as well as to the meme [Not Your Daddy's Q](http://tvtropes.org/pmwiki/pmwiki.php/Main/NotYourDaddysX), where Q is a modern, improved Q quite unlike the Q your daddy used. `'nydp` also shamelessly piggypacks on the catchiness and popularity of the [NYPD](https://en.wikipedia.org/wiki/NYPD_Blue) abbreviation ("New York Police Department").
 
-We do not wish to suggest by "Not Your Daddy's Parentheses" that Common Lisp, Scheme, Racket, Arc, Clojure or your favourite
-other lisp are somehow old-fashioned, inferior, or in need of improvement in any way.
+We do not wish to suggest by "Not Your Daddy's Parentheses" that Common Lisp, Scheme, Racket, Arc, Clojure or your favourite other lisp are somehow old-fashioned, inferior, or in need of improvement in any way.
+
+Further, we deplore and lament the gender bias and the age bias implicit in the use of the word "Daddy". We hereby declare that `'nydp` is also not your mommy's parentheses, and, in fact, is not the parentheses of any other family member, including gender-neutral and nonbinary members, deceased ancestors and as-yet unconceived descendants. `'nydp` is equivalently and unequivocally not their parentheses either, and neither more or less so than the parentheses of any male or masculine or father-role family member. It is possible that in due course this project may be renamed "Not Your Parents' Parentheses" even if `'nypp` doesn't have quite the same ring to it and the 6-tuple "Parent" appears twice in the name.
+
+Yet more deplorable and lamentable is the fact that "Daddy" appears to suggest that the age-gender axis is the only relevant axis under consideration. We hereby assert and declare that `'nydp` is also not any parentheses you may obtain (in any manner legal or otherwise) from any race, religion, nationality, sexual orientation, or choice of text editor.
 
 The goal of `'nydp` is to allow untrusted users run sandboxed server-side scripts. By default, `'nydp` provides no system access :
 
@@ -23,8 +21,7 @@ The goal of `'nydp` is to allow untrusted users run sandboxed server-side script
 
 [Peruse `'nydp`'s features here](lib/lisp/tests) in the `tests` directory.
 
-Pronunciation guide: there is no fixed canonical pronunciation of `'nydp`. Just keep in mind that if you find yourself
-wading _knee-deep_ through raw sewage, it's still better than working on a java project in a bank.
+Pronunciation guide: there is no fixed canonical pronunciation of `'nydp`. Just keep in mind that if you find yourself wading _knee-deep_ through raw sewage, it's still better than working on a java or C# project in a bank. Or insurance company, if that's your thing.
 
 ## Running
 
@@ -37,7 +34,7 @@ welcome to nydp
 nydp >
 ```
 
-The REPL uses the readline library so you can use up- and down-arrows to navigate history.
+The REPL uses the readline library so you can use up- and down-arrows to navigate history. IRB also uses readline and command history may get a little bit mixed-up if you start nydp inside an irb session.
 
 #### Invoking from Ruby
 
@@ -53,8 +50,7 @@ answer = Nydp.apply_function ns, :question, :life, ["The Universe", and_also(eve
 
 `ns` is just a plain old ruby hash, mapping ruby symbols to nydp symbols for quick lookup at nydp compile-time. The nydp symbols maintain the values of global variables, including all builtin functions and any other functions defined using `def`.
 
-You can maintain multiple `ns` instances without mutual interference. In other words, assigning global variables while one `ns` is in scope will not affect the values of variables in any other `ns` (unless you've specifically arranged it to be so by duplicating namespaces or some such sorcery).
-
+You can maintain multiple `ns` instances without mutual interference. In other words, assigning global variables while one `ns` is in scope will not affect the values of variables in any other `ns` (unless you've specifically arranged it to be so by duplicating namespaces or some such sorcery). This allows you exploit `'nydp` in a multi-tenant architectural scenario, where one client's custom scripts cannot interfere with those of another client.
 
 #### Facing the Truth
 
@@ -77,7 +73,7 @@ In conditional statements, nil is false, anything else is true
 
 After parsing its input, `'nydp` passes the result as an argument to the `pre-compile` function. This is where things get a little bit circular: initially, `pre-compile` is a builtin function that just returns its argument. `pre-compile` bootstraps itself into existence in [core-010-precompile.nydp](lib/lisp/core-010-precompile.nydp).
 
-You can override `pre-compile` to transform the expression in any way you wish. By default, the `core-010-precompile.nydp` implementation of `pre-compile` performs macro-expansion.
+You can override `pre-compile` to transform the expression in any way you wish. By default, the `core-010-precompile.nydp` implementation of `pre-compile` performs macro-expansion by searching for keywords in the `macs` global variable and applying the corresponding function to the given expression if a function is found.
 
 
 ```lisp
@@ -177,10 +173,7 @@ nydp > (map %td:&lastname german-composers)
 
 ```
 
-So, @%td@ expands to @(percent-syntax || td)@, @&lastname@ to @(ampersand-syntax || lastname)@, and the whole @%td:&lastname@
-to @(colon-syntax (percent-syntax || td) (ampersand-syntax || lastname))@. Luckily for you, there's a fine @colon-syntax@ macro
-that knows how to build a function out of these bits and pieces.
-
+So, @%td@ expands to @(percent-syntax || td)@, @&lastname@ to @(ampersand-syntax || lastname)@, and the whole @%td:&lastname@ to @(colon-syntax (percent-syntax || td) (ampersand-syntax || lastname))@. Luckily for you, there's a fine @colon-syntax@ macro that knows how to build a function out of these bits and pieces.
 
 Look for `SYMBOL_OPERATORS` in [parser.rb](lib/nydp/parser.rb) to see which syntax is recognised and in which order. The order of these definitions defines special-syntax-operator precedence.
 
@@ -208,7 +201,7 @@ nydp > (parse "{ a 1 b 2 }")
 
 ```
 
-`brace-list` is a macro that expands to create a hash literal. It assumes every item 0 is a literal symbol key, item 1 is the corresponding value which is evaluated at run time, and so on for each following item-pair.
+`brace-list` is a macro that expands to create a hash literal. It assumes every item 0 is a literal key (symbol, string or number), item 1 is the corresponding value which is evaluated at run time, and so on for each following item-pair.
 
 ```lisp
 
@@ -233,9 +226,9 @@ nydp > (let bar "Mister Nice Guy" "hello, ~bar")
 
 ; this is a more tricky example because we need to make a string with an interpolation token in it
 
-nydp > (let s (joinstr "" "\"hello, " '~ "world\"") (parse s))
+nydp > (let s "\"hello, \~world\"" (parse s))
 
-==> (string-pieces "hello, " world "") ; "hello, ", followed by the interpolation 'world, followed by the empty string after 'world
+==> (string-pieces "hello, " world) ; "hello, ", followed by the interpolation @world@
 
 ; It is possible to nest interpolations. Note that as with many popular language features, just because you can do something, does not mean you should:
 
@@ -250,11 +243,7 @@ nydp > (with (a 1 b 2)
 ==> AND ALSO, Consider 3, the third (and final) thing
 ```
 
-By default, `string-pieces` is a function that just concatenates the string value of its arguments. You can redefine it as a macro to
-perform more fun stuff, or you can detect it within another macro to do extra-special stuff with it. The 'nydp-html gem detects
-'string-pieces and gives it special treatment in order to render haml and textile efficiently, and also to capture and report errors
-inside interpolations and report them correctly.
-
+By default, `string-pieces` is a function that just concatenates the string value of its arguments. You can redefine it as a macro to perform more fun stuff, or you can detect it within another macro to do extra-special stuff with it. The 'nydp-html gem detects 'string-pieces and gives it special powers in order to render haml and textile efficiently, and also to capture and report errors inside interpolations and report them correctly.
 
 #### 5. No continuations.
 
@@ -355,8 +344,7 @@ nydp > (parse "%w(a b c)")
 ==> (prefix-list "%w" (a b c))
 ```
 
-This allows for preprocessing lists in a way not possible for macros. nydp uses this feature to implement shortcut oneline
-functions, as in
+This allows for preprocessing lists in a way not possible for macros. nydp uses this feature to implement shortcut monoexpression functions with single-letter arguments, as in
 
 ```lisp
 nydp > (parse "λx(len x)")
@@ -379,6 +367,13 @@ nydp > (pre-compile '(prefix-list "λxy" (* x y)))
 
 ==> (fn (x y) (* x y))
 ```
+
+Example:
+
+```lisp
+nydp > (map λx(* x x) '(1 2 3 4))
+
+==> (1 4 9 16)
 
 Use 'define-prefix-list-macro to define a new handler for a prefix-list. Here's the code for the 'λ shortcut:
 
