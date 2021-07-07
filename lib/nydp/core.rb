@@ -46,12 +46,12 @@ module Nydp
       Symbol.mk(:parse, ns).assign(Nydp::Builtin::Parse.instance)
       Symbol.mk(:p,     ns).assign(Nydp::Builtin::Puts.instance)
       Symbol.mk(:PI,    ns).assign 3.1415
-      Symbol.mk(:nil,   ns).assign Nydp::NIL
+      # Symbol.mk(:nil,   ns).assign Nydp::NIL
       Symbol.mk(:rand,  ns).assign Nydp::Builtin::Rand.instance
       Symbol.mk(:sort,  ns).assign Nydp::Builtin::Sort.instance
       Symbol.mk(:abs,   ns).assign Nydp::Builtin::Abs.instance
       Symbol.mk(:sqrt,  ns).assign Nydp::Builtin::Sqrt.instance
-      Symbol.mk(:t,     ns).assign Nydp::T
+      # Symbol.mk(:t,     ns).assign Nydp::T
       Symbol.mk(:sym,   ns).assign Nydp::Builtin::Sym.instance
       Symbol.mk(:ensuring          , ns).assign(Nydp::Builtin::Ensuring.instance)
       Symbol.mk(:inspect           , ns).assign(Nydp::Builtin::Inspect.instance)

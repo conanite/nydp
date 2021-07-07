@@ -1,19 +1,19 @@
 require 'singleton'
 
 module Nydp
-  class Truth
-    include Singleton
-    def init_with *; Nydp::T     ; end
-    def to_s       ; 't'         ; end
-    def inspect    ; 't'         ; end
-    def assign  *_ ; self        ; end
-    def nydp_type  ; :truth      ; end
-    def to_ruby    ; true        ; end
-    def _nydp_get    a ; Nydp::T ; end
-    def _nydp_set a, v ; Nydp::T ; end
+  # class Truth
+  #   include Singleton
+  #   def init_with *; Nydp::T     ; end
+  #   def to_s       ; 't'         ; end
+  #   def inspect    ; 't'         ; end
+  #   def assign  *_ ; self        ; end
+  #   def nydp_type  ; :truth      ; end
+  #   def to_ruby    ; true        ; end
+  #   def _nydp_get    a ; Nydp::T ; end
+  #   def _nydp_set a, v ; Nydp::T ; end
 
-    def compile_to_ruby ; "Nydp::T" ; end
-  end
+  #   def compile_to_ruby ; "Nydp::T" ; end
+  # end
 
   # class Nil
   #   include Singleton, Enumerable
@@ -41,5 +41,6 @@ module Nydp
 
   # NIL = Nil.instance
   NIL = nil
-  T   = Truth.instance
+  # T   = Truth.instance
+  T   = true
 end

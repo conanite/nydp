@@ -72,6 +72,10 @@ describe Nydp::Parser do
     expect(parse "(|foo bar| || |\" hello, there, silly billy!\"|)").to eq pair_list([s0, s1, s2])
   end
 
+  it "returns ruby nil for token nil" do
+    expect(parse "(nil nil nil)").to eq pair_list([nil, nil, nil])
+  end
+
   it "should parse untidy symbols with special syntax" do
     quote_foo_bar = parse "'|foo bar|"
     expect(quote_foo_bar).to eq pair_list([quote, sym("foo bar")])

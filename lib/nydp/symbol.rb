@@ -10,6 +10,7 @@ class Nydp::Symbol
   def initialize name
     name = name.to_s
     @name = name.to_sym
+    raise "cannot be symbol : #{name.inspect}" if @name == :nil || @name == :t
     @inspection = "|#{name.gsub(/\|/, '\|')}|" if untidy(name)
   end
 

@@ -17,6 +17,15 @@ class Method
   def invoke   vm, args       ; vm.push_arg call(*(args.map { |a| n2r a}))._nydp_wrapper  ; end
 end
 
+class TrueClass
+  def _nydp_inspect   ; 't'    ; end
+  def assign       *_ ; self   ; end
+  def nydp_type       ; :truth ; end
+  def _nydp_get     a ; self   ; end
+  def _nydp_set  a, v ; self   ; end
+  def compile_to_ruby ; "true" ; end
+end
+
 class NilClass
   def _nydp_wrapper ; self ; end
   def car         ; self          ; end
@@ -41,9 +50,9 @@ class FalseClass
   def _nydp_wrapper ; Nydp::NIL ; end
 end
 
-class TrueClass
-  def _nydp_wrapper ; Nydp::T ; end
-end
+# class TrueClass
+#   def _nydp_wrapper ; Nydp::T ; end
+# end
 
 class ::Symbol
   # def _nydp_wrapper ; Nydp::FrozenSymbol.mk(self) ; end
