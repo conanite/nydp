@@ -180,11 +180,14 @@
 
 (assign DEF-FORMS '(comment chapter))
 
+(def hash-init (h keys v)
+  (if keys
+      (do (hash-set h (car keys) v)
+          (hash-init h (cdr keys) v)))
+  h)
+
 (def build-def-hash ()
-  ((fn (h)
-       (map (fn (k) (hash-set h k nil)) DEF-FORMS)
-       h)
-   (hash)))
+  (hash-init (hash) DEF-FORMS nil))
 
 (def dox-build-def-name (name) name)
 
