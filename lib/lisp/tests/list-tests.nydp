@@ -242,5 +242,5 @@
    z)
 
   ("returns nil if it's the last item in the list"
-   (list/last '(x y z nil))
+   (list/last '(x nil y z nil))
    nil))
