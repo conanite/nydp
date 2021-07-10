@@ -320,8 +320,6 @@ module Nydp
 
       cname  = "Invocation_#{invocation_sig}"
 
-      # puts expression._nydp_inspect if cname == "Invocation_SYM_LEX_LIT_LEX"
-
       exists = Invocation::SIGS.include? "Nydp::Invocation::#{cname}"
       if exists
         return Nydp::Invocation.const_get(cname).new(compiled, expression)
