@@ -16,28 +16,21 @@
 ;; tests 'test, as long as 'test is non-nil,
 ;; repeatedly executes 'body
 (mac while (test . body)
-  (w/uniq (rfname pred)
-    `(rfnwith ,rfname (,pred ,test)
-        (when ,pred
-          ,@body
-          (,rfname ,test)))))
+  `(loop ,test (do ,@body)))
 
-(mac loop (start test update . body)
-  ; execute 'start, then for as long as 'test returns non-nil,
-  ; execute 'body and 'update
-  (w/uniq (gfn gparm)
-    `(do ,start
-         ((rfn ,gfn (,gparm)
-            (if ,gparm
-                (do ,@body ,update (,gfn ,test))))
-          ,test))))
+;; execute 'start, then for as long as 'test returns non-nil,
+;; execute 'body and 'update
+(mac looping (start test update . body)
+  `(do
+     ,start
+     (while ,test ,@body ,update)))
 
 ;; assign 'init to 'v, then execute 'body 'max times,
 ;; incrementing 'v at each iteration
 (mac for (v init max . body)
   (w/uniq (gi gm)
     `(with (,v nil ,gi ,init ,gm (+ ,max 1))
-       (loop (assign ,v ,gi) (< ,v ,gm) (assign ,v (+ ,v 1))
+       (looping (assign ,v ,gi) (< ,v ,gm) (assign ,v (+ ,v 1))
          ,@body))))
 
 ;; return a new function which is the original function with
