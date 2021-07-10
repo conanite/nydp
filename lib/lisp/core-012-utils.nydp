@@ -9,9 +9,11 @@
                              nil)))
 
 (def map-helper-0 (f things lc)
-  (if (pair? things)
-      (map-helper-0 f (cdr things) (cdr-set lc (cons (f (car things)))))
-      things
+  (loop (pair? things)
+        ((fn nil
+             (assign lc (cdr-set lc (cons (f (car things)))))
+             (assign things (cdr things)))))
+  (if things
       (cdr-set lc (f things))))
 
 (def map-helper-1 (f things acc)
