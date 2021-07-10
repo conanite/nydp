@@ -7,9 +7,9 @@
   `(handle-error (fn (errors) ,handler)
                  (fn ()       ,@body)))
 
+;; executes 'body. Afterwards, executes 'protection.
+;; 'protection is always executed even if there is an error.
 (mac ensure (protection . body)
-  ; executes 'body. Afterwards, executes 'protection.
-  ; 'protection is always executed even if there is an error.
   `(ensuring (fn () ,protection)
              (fn ()    ,@body)))
 
@@ -32,9 +32,9 @@
                 (do ,@body ,update (,gfn ,test))))
           ,test))))
 
+;; assign 'init to 'v, then execute 'body 'max times,
+;; incrementing 'v at each iteration
 (mac for (v init max . body)
-  ; assign 'init to 'v, then execute 'body 'max times,
-  ; incrementing 'v at each iteration
   (w/uniq (gi gm)
     `(with (,v nil ,gi ,init ,gm (+ ,max 1))
        (loop (assign ,v ,gi) (< ,v ,gm) (assign ,v (+ ,v 1))

@@ -27,9 +27,9 @@
 ;; takes a function f, returns a new function that takes a list and sorts the list by 'f
 (def safe-sort-by-f (f instead) (curry1 safe-sort-by f instead))
 
+;; same as (reduce freduce (map fmap things))
+;; returns the resulting list
 (def mapreduce (fmap freduce things)
-  ; same as (reduce freduce (map fmap things))
-  ; returns the resulting list
   (if (pair? things)
       (freduce (fmap (car things))
                (mapreduce fmap freduce (cdr things)))
@@ -37,16 +37,16 @@
       (freduce (map fmap things))
       (freduce)))
 
-; map 'f over 'things and sum the resulting list
+;; map 'f over 'things and sum the resulting list
 (def mapsum (f things) (mapreduce f + things))
 
+;; returns a new function f which takes a parameter x
+;; for each call to f with any value Z for x
+;; f returns true if this f has previously seen Z
+;; f returns nil otherwise.
+;; Note that each call to 'seen? returns a new function with
+;; its own history independent of previous calls to 'seen?
 (def seen? ()
-  ; returns a new function f which takes a parameter x
-  ; for each call to f with any value Z for x
-  ; f returns true if this f has previously seen Z
-  ; f returns nil otherwise.
-  ; Note that each call to 'seen? returns a new function with
-  ; its own history independent of previous calls to 'seen?
   (let seen (hash)
     λx(returning seen.,x (= seen.,x t))))
 
@@ -105,8 +105,10 @@
            (if (< n stop)
                (r (+ (acc n) 1))))))
 
-; return a function that returns 'start on first invocation,
-; and 'start + n * 'incr for each nth invocation
+;; return a function that returns 'start on first invocation,
+;; and 'start + n * 'incr for each nth invocation
+;;
+;; see also 'counter which does almost exactly the same thing
 (def seqf (start incr)
   (let i (or incr 1)
     (fn () (returning start (++ start i)))))

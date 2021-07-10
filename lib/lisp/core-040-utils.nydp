@@ -59,16 +59,16 @@
 (mac in-private body
   `(w/privately t ,@body))
 
+;; a macro wrapper for 'map
+;; 'things is a list, 'x is the name of a variable, and 'expr
+;; is evaluated and collected for each 'x in 'things
+;; usage: (mapx items v (to-string v)) equivalent to (map to-string items)
 (mac mapx (things x expr)
-  ; a macro wrapper for 'map
-  ; 'things is a list, 'x is the name of a variable, and 'expr
-  ; is evaluated and collected for each 'x in 'things
-  ; usage: (mapx items v (to-string v)) equivalent to (map to-string items)
   (chapter list-manipulation)
   `(map (fun (,x) ,expr) ,things))
 
+;; 't if 'thing is not nil or a list or a hash
 (def atom? (thing)
-  ; 't if 'thing is not a list or a hash
   (chapter nydp-core)
   (and thing
        (!pair? thing)
@@ -93,6 +93,8 @@
 
 ;; returns the first non-empty item in 'args
 ;; mac equivalent of (detect present? args)
+;; useful to obtain a non-blank value from a set of variables, for example
+;; (%span.name (dp {first} {last} {email} "unknown"))
 (mac dp args
   (if args
       (w/uniq nearg
@@ -108,6 +110,7 @@
 ;;   (p (c))           ;;=> 1
 ;;   (p (c)))          ;;=> 2
 ;;
+;; see also 'seqf which does almost exactly the same thing
 (def counter ()
   (let i -1
     (fn () (++ i))))

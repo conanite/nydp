@@ -35,9 +35,9 @@
 (def hash-cons (h k v)
   (hash-set h k (cons v (hash-get h k))))
 
+;; 'things - the list to be reversed
+;; 'last-cdr - (normally nil) - an item (atom, list, nil, anything) to be consed to the end of the reversed list.
 (def rev (things last-cdr)
-  ; 'things - the list to be reversed
-  ; 'last-cdr - (normally nil) - an item (atom, list, nil, anything) to be consed to the end of the reversed list.
   (if (pair? things)
       (rev (cdr things) (cons (car things) last-cdr))
       last-cdr))

@@ -6,8 +6,8 @@
 
 (warnings/clear)
 
+;; apply f to each stored warning. For example, (warnings p) to print warnings to console
 (def warnings (f)
-  ; apply f to each stored warning. For example, (warnings p) to print warnings to console
   (mapply f warnings))
 
 (def warnings/new (kind . info)
