@@ -1,4 +1,5 @@
 require 'nydp/cond'
+require 'nydp/loop'
 require 'nydp/function_invocation'
 require 'nydp/interpreted_function'
 require 'nydp/literal'
@@ -44,6 +45,8 @@ module Nydp
       key = expression.car
       if sym?(key, :cond)
         Cond.build expression.cdr, bindings, ns # todo: replace with function? (cond x (fn () iftrue) (fn () iffalse)) -->> performance issues, creating two closures for every cond invocation
+      elsif sym?(key, :loop)
+        Loop.build expression.cdr, bindings, ns
       elsif sym?(key, :quote)
         Literal.build expression.cadr, bindings, ns
       elsif sym?(key, :assign)
