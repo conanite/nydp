@@ -57,21 +57,27 @@
 (def reject (f things)
   (collect !f things))
 
-(def each/build-expression (var things body othervars otherparams)
-  (w/uniq (xs c)
-          `(rfnwith ,c (,xs ,things ,@othervars)
-               (if (pair? ,xs)
-                   (let ,var (car ,xs)
-                     ,@body
-                     (,c (cdr ,xs) ,@otherparams))))))
-
 ;; repeatedly assigns an element of 'things to 'var,
 ;; and executes 'body each time
 (mac each (var things . body)
-  (each/build-expression var things body))
+  (w/uniq xs
+    `(let ,xs ,things
+       (loop ,xs
+         (let ,var (car ,xs)
+           ,@body
+           (= ,xs (cdr ,xs)))))))
 
+;; repeatedly assigns an element of 'things to 'var, increments 'ivar,
+;; and executes 'body each time
 (mac each-with-index (ivar var things . body)
-  (each/build-expression var things body `(,ivar 0) `((+ ,ivar 1))))
+  (w/uniq xs
+    `(with (,xs ,things ,ivar 0)
+       (loop ,xs
+         (let ,var (car ,xs)
+           ,@body
+           (++ ,ivar)
+           (= ,xs (cdr ,xs)))))))
+
 
 (def reduce (f things)
   (rfnwith rd (acc (car things) list (cdr things))
