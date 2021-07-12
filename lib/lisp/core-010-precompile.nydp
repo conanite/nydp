@@ -81,28 +81,33 @@
                  (qq-quasiquote rest level))
            arg))
 
+(def qq-build-cons (a b)
+  (cond b
+        (list 'cons a b)
+        (list 'cons a)))
+
 (def qq-skip-unquote-splicing (arg rest level)
-     (list 'cons
+     (qq-build-cons
            (list 'list ''unquote-splicing (qq-quasiquote arg (- level 1)))
            (qq-quasiquote rest level)))
 
 (def qq-handle-quasiquote (arg rest level)
-     (list 'cons
+     (qq-build-cons
            (list 'list ''quasiquote (qq-quasiquote arg (+ level 1)))
            (qq-quasiquote rest level)))
 
 (def qq-handle-unquote (arg rest level)
-     (list 'cons
+     (qq-build-cons
            (qq-maybe-unquote arg level)
            (qq-quasiquote rest level)))
 
 (def qq-unquote-recurse (arg rest level)
-        (list 'cons
+        (qq-build-cons
               (qq-quasiquote arg level)
               (qq-quasiquote rest level)))
 
 (def qq-handle-plain (arg rest level)
-     (list 'cons
+     (qq-build-cons
            (list 'quote arg)
            (qq-quasiquote rest level)))
 
