@@ -11,8 +11,9 @@ module Nydp
 
   # TODO: write VM #apply_function so we have fewer calls to VM.new
   def self.apply_function ns, function_name, *args
-    vm       = VM.new(ns)
-    function = Symbol.mk(function_name.to_sym, ns).value
+    vm         = VM.new(ns)
+    function   = Symbol.mk(function_name.to_sym, ns).value if function_name.is_a?(String) || function_name.is_a?(::Symbol)
+    function ||= function_name if function_name.respond_to?(:invoke)
     function.invoke vm, r2n(args)
     vm.thread
   rescue StandardError => e
