@@ -106,11 +106,11 @@
       (nthcdr (- n 1) (cdr things))
       things))
 
+;; return a new list which is the concatenation of all the given lists
+;; 'things is a list
+;; 'more-thingses is a list of lists
+;; call like this: (joinlists '(a b c) '(x y z) '(1 2 3))
 (def joinlists (things . more-thingses)
-  ; return a new list which is the concatenation of all the given lists
-  ; 'things is a list
-  ; 'more-thingses is a list of lists
-  ; call like this: (joinlists '(a b c) '(x y z) '(1 2 3))
   (if things
       (cons (car things)
             (apply joinlists

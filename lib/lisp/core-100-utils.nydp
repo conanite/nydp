@@ -1,13 +1,13 @@
 (chapter-start 'list-manipulation)
 
+;; alias for 'detect
+;; true if thing is in things, nil otherwise
 (def include? (thing things)
-  ; alias for 'detect
-  ; true if thing is in things, nil otherwise
   (detect thing things))
 
+;; sort 'things according to the value
+;; returned by 'f for each thing in 'things
 (def sort-by (f things)
-  ; sort 'things according to the value
-  ; returned by 'f for each thing in 'things
   (let tmp (hash)
     (each thing things
           (hash-cons tmp
@@ -17,7 +17,7 @@
            (map λx(hash-get tmp x)
                 (sort:hash-keys tmp)))))
 
-; like 'sort-by, except when 'f returns nil, use 'instead as the sort key instead
+;; like 'sort-by, except when 'f returns nil, use 'instead as the sort key instead
 (def safe-sort-by (f instead things)
   (sort-by λi(or (f i) instead) things))
 
