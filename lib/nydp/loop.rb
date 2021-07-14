@@ -36,16 +36,17 @@ module Nydp
     attr_reader :condition, :loop_body
 
     def initialize cond, loop_body
-      @condition, @loop_body = cond, cons(LoopBodyInstruction.new(loop_body, self))
+      @condition, @loop_body = cond, loop_body
     end
 
     def lexical_reach n
-      [condition.lexical_reach(n), loop_body.car.lexical_reach(n)].max
+      [condition.lexical_reach(n), loop_body.lexical_reach(n)].max
     end
 
     def execute vm
-      vm.push_ctx_instructions loop_body
-      condition.execute vm
+      while(condition.execute vm)
+        loop_body.execute(vm)
+      end
     end
 
     def inspect

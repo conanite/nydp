@@ -4,9 +4,11 @@ require 'nydp/closure'
 
 module Nydp
   class PopArg
-    def self.execute vm ; vm.args.pop ; end
+    # def self.execute vm ; vm.args.pop ; end
+    def self.execute vm ; nil ; end
     def self.to_s       ; ""          ; end
     def self.inspect    ; "#pop_arg"  ; end
+    def compile_to_ruby ; ""          ; end
   end
 
   class InterpretedFunction
@@ -32,7 +34,7 @@ module Nydp
         rubyargs << "_arg_#{an.to_s._nydp_name_to_rb_name}=nil"
       end
 
-      code = "  ->(#{rubyargs.join ","}) {\n"
+      code = "  (->(#{rubyargs.join ","}) {\n"
       body.each { |instr|
         if instr.respond_to? :compile_to_ruby
           code << "    " << instr.compile_to_ruby << "\n"
@@ -40,7 +42,7 @@ module Nydp
           code << "    # NOCOMPILE : #{instr._nydp_inspect} (#{instr.class})"
         end
       }
-      code << "  }"
+      code << "  })"
     end
 
     def self.build arg_list, body, bindings, ns
@@ -89,57 +91,115 @@ module Nydp
     def to_s
       "(fn #{arg_names._nydp_inspect} #{body.map { |b| b._nydp_inspect}.join(' ')})"
     end
+
+    def run_body vm
+      res = nil
+      self.body.each { |x| res = x.execute(vm) }
+      res
+    end
   end
 
   class InterpretedFunctionWithClosure < InterpretedFunction
     def invoke_1 vm, ctx
-      vm.push_instructions self.body, set_args_0(ctx)
+      cc                 = vm.current_context
+      vm.current_context = set_args_0(ctx)
+      res                = run_body(vm)
+      vm.current_context = cc
+      res
+      # vm.push_instructions self.body, set_args_0(ctx)
     end
 
     def invoke_2 vm, ctx, arg
-      vm.push_instructions self.body, set_args_1(ctx, arg)
+      cc                 = vm.current_context
+      vm.current_context = set_args_1(ctx, arg)
+      res                = run_body(vm)
+      vm.current_context = cc
+      res
+      # vm.push_instructions self.body, set_args_1(ctx, arg)
     end
 
     def invoke_3 vm, ctx, arg_0, arg_1
-      vm.push_instructions self.body, set_args_2(ctx, arg_0, arg_1)
+      cc                 = vm.current_context
+      vm.current_context = set_args_2(ctx, arg_0, arg_1)
+      res                = run_body(vm)
+      vm.current_context = cc
+      res
+      # vm.push_instructions self.body, set_args_2(ctx, arg_0, arg_1)
     end
 
     def invoke_4 vm, ctx, arg_0, arg_1, arg_2
-      vm.push_instructions self.body, set_args_3(ctx, arg_0, arg_1, arg_2)
+      cc                 = vm.current_context
+      vm.current_context = set_args_3(ctx, arg_0, arg_1, arg_2)
+      res                = run_body(vm)
+      vm.current_context = cc
+      res
+      # vm.push_instructions self.body, set_args_3(ctx, arg_0, arg_1, arg_2)
     end
 
     def invoke vm, ctx, arg_values
-      vm.push_instructions self.body, set_args(ctx, arg_values)
+      cc                 = vm.current_context
+      vm.current_context = set_args(ctx, arg_values)
+      res                = run_body(vm)
+      vm.current_context = cc
+      res
+      # vm.push_instructions self.body, set_args(ctx, arg_values)
     end
 
     def execute vm
-      vm.push_arg Closure.new(self, vm.current_context)
+      Closure.new(self, vm.current_context)
+      # vm.push_arg Closure.new(self, vm.current_context)
     end
   end
 
   class InterpretedFunctionWithoutClosure < InterpretedFunction
     def invoke_1 vm
-      vm.push_instructions self.body, set_args_0(vm.current_context)
+      cc                 = vm.current_context
+      vm.current_context = set_args_0(vm.current_context)
+      res                = run_body(vm)
+      vm.current_context = cc
+      res
+      # vm.push_instructions self.body, set_args_0(vm.current_context)
     end
 
     def invoke_2 vm, arg
-      vm.push_instructions self.body, set_args_1(vm.current_context, arg)
+      cc                 = vm.current_context
+      vm.current_context = set_args_1(vm.current_context, arg)
+      res                = run_body(vm)
+      vm.current_context = cc
+      res
+      # vm.push_instructions self.body, set_args_1(vm.current_context, arg)
     end
 
     def invoke_3 vm, arg_0, arg_1
-      vm.push_instructions self.body, set_args_2(vm.current_context, arg_0, arg_1)
+      cc                 = vm.current_context
+      vm.current_context = set_args_2(vm.current_context, arg_0, arg_1)
+      res                = run_body(vm)
+      vm.current_context = cc
+      res
+      # vm.push_instructions self.body, set_args_2(vm.current_context, arg_0, arg_1)
     end
 
     def invoke_4 vm, arg_0, arg_1, arg_2
-      vm.push_instructions self.body, set_args_3(vm.current_context, arg_0, arg_1, arg_2)
+      cc                 = vm.current_context
+      vm.current_context = set_args_3(vm.current_context, arg_0, arg_1, arg_2)
+      res                = run_body(vm)
+      vm.current_context = cc
+      res
+      # vm.push_instructions self.body, set_args_3(vm.current_context, arg_0, arg_1, arg_2)
     end
 
     def invoke vm, arg_values
-      vm.push_instructions self.body, set_args(vm.current_context, arg_values)
+      cc                 = vm.current_context
+      vm.current_context = set_args(vm.current_context, arg_values)
+      res                = run_body(vm)
+      vm.current_context = cc
+      res
+      # vm.push_instructions self.body, set_args(vm.current_context, arg_values)
     end
 
     def execute vm
-      vm.push_arg self
+      # vm.push_arg self
+      self
     end
   end
 end

@@ -20,7 +20,7 @@ module Nydp
       def compile_to_ruby
         ra = begin
                @expr.map &:compile_to_ruby
-             rescue Exception => e
+             rescue e
                ["\n# can't compile argument_instructions #{@expr} (#{@expr.class}) #{e.message}"]
              end
         "#{ra.shift}.call(#{ra.join(", ")})"
@@ -48,16 +48,15 @@ module Nydp
         @expr.map { |x| x.lexical_reach n}.max
       end
 
-      def inspect ; @expr.map { |x| x._nydp_inspect }.join(' ') ; end
+      def inspect ; "(" + @expr.map { |x| x._nydp_inspect }.join(' ') + ")" ; end
       def source  ; @source       ; end
       def to_s    ; source.to_s   ; end
     end
 
     class Invocation_1 < Invocation::Base
       def execute vm
-#        Invocation.sig @sig
-        f = vm.args.pop
-        f.invoke_1 vm
+        #        Invocation.sig @sig
+        @expr.car.execute(vm).invoke_1 vm
       rescue StandardError => e
         handle e, f, :invoke_1
       end
@@ -65,37 +64,49 @@ module Nydp
 
     class Invocation_2 < Invocation::Base
       def execute vm
+        f = @expr.car.execute(vm)
+        a = @expr.cadr.execute(vm)
+        f.invoke_2 vm, a
 #        Invocation.sig @sig
-        arg = vm.args.pop
-        f = vm.args.pop
-        f.invoke_2 vm, arg
+        # arg = vm.args.pop
+        # f = vm.args.pop
+        # f.invoke_2 vm, arg
       rescue StandardError => e
-        handle e, f, :invoke_2, arg
+        handle e, f, :invoke_2, a
       end
     end
 
     class Invocation_3 < Invocation::Base
       def execute vm
+        f = @expr.car.execute(vm)
+        a0 = @expr.cadr.execute(vm)
+        a1 = @expr.nth(2).execute(vm)
+        f.invoke_3 vm, a0, a1
 #        Invocation.sig @sig
-        arg_1 = vm.args.pop
-        arg_0 = vm.args.pop
-        f   = vm.args.pop
-        f.invoke_3 vm, arg_0, arg_1
+        # arg_1 = vm.args.pop
+        # arg_0 = vm.args.pop
+        # f   = vm.args.pop
+        # f.invoke_3 vm, arg_0, arg_1
       rescue StandardError => e
-        handle e, f, :invoke_3, arg_0, arg_1
+        handle e, f, :invoke_3, a0, a1
       end
     end
 
     class Invocation_4 < Invocation::Base
       def execute vm
+        f = @expr.car.execute(vm)
+        a0 = @expr.cadr.execute(vm)
+        a1 = @expr.nth(2).execute(vm)
+        a2 = @expr.nth(3).execute(vm)
+        f.invoke_4 vm, a0, a1, a2
         # Invocation.sig @sig
-        arg_2 = vm.args.pop
-        arg_1 = vm.args.pop
-        arg_0 = vm.args.pop
-        f   = vm.args.pop
-        f.invoke_4 vm, arg_0, arg_1, arg_2
+        # arg_2 = vm.args.pop
+        # arg_1 = vm.args.pop
+        # arg_0 = vm.args.pop
+        # f   = vm.args.pop
+        # f.invoke_4 vm, arg_0, arg_1, arg_2
       rescue StandardError => e
-        handle e, f, :invoke_4, arg_0, arg_1, arg_2
+        handle e, f, :invoke_4, a0, a1, a2
       end
     end
 
@@ -106,11 +117,14 @@ module Nydp
       end
 
       def execute vm
+        i = @expr.cons_map { |x| x.execute(vm)}
+        i.car.invoke vm, i.cdr
+
 #        Invocation.sig @sig
-        args = vm.pop_args @arg_count
-        args.car.invoke vm, args.cdr
+        # args = vm.pop_args @arg_count
+        # args.car.invoke vm, args.cdr
       rescue StandardError => e
-        handle e, args.car, :invoke, args.cdr
+        handle e, i.car, :invoke, i.cdr
       end
     end
 
@@ -308,7 +322,7 @@ module Nydp
     def compile_to_ruby
         ra = begin
                argument_instructions.map &:compile_to_ruby
-             rescue Exception => e
+             rescue e
                ["\n# can't compile argument_instructions #{argument_instructions} (#{argument_instructions.class}) #{e.message}"]
              end
       "#{ra.shift}.call(#{ra.join(", ")})"
@@ -320,12 +334,13 @@ module Nydp
 
       cname  = "Invocation_#{invocation_sig}"
 
-      exists = Invocation::SIGS.include? "Nydp::Invocation::#{cname}"
-      if exists
-        return Nydp::Invocation.const_get(cname).new(compiled, expression)
-      end
+      # exists = Invocation::SIGS.include? "Nydp::Invocation::#{cname}"
+      # if exists
+      #   return Nydp::Invocation.const_get(cname).new(compiled, expression)
+      # end
 
-      invocation = cons case expression.size
+      # invocation = cons case expression.size
+      invocation = case expression.size
                         when 1
                           Invocation::Invocation_1.new(compiled, expression)
                         when 2
@@ -337,7 +352,9 @@ module Nydp
                         else
                           Invocation::Invocation_N.new(expression.size, compiled, expression)
                         end
-      new invocation, compiled, expression, cname
+
+      invocation
+      # new invocation, compiled, expression, cname
     end
 
     def initialize function_instruction, argument_instructions, source, sig=nil

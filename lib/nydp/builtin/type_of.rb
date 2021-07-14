@@ -15,7 +15,7 @@ class Nydp::Builtin::TypeOf
     # type = Nydp::Symbol.mk(typename, vm.ns)
     type = typename
 
-    vm.push_arg(type || Nydp::NIL)
+    (type || Nydp::NIL)
   end
 
   def builtin_invoke vm, args

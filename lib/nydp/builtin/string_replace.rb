@@ -7,6 +7,6 @@ class Nydp::Builtin::StringReplace
     target    = args.cdr.cdr.car.to_s
     result    = target.to_s.gsub to_remove, to_insert
 
-    vm.push_arg result
+    result
   end
 end

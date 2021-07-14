@@ -8,7 +8,8 @@ class Nydp::Builtin::Puts
       s = args.map { |a| a.to_s }
       puts s.join ' '
     end
-    vm.push_arg args.car
+    # vm.push_arg args.car
+    args.car
   end
 
   def name ; "p" ; end

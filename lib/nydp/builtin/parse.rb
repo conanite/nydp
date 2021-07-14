@@ -9,6 +9,7 @@ class Nydp::Builtin::Parse
       expr = parser.expression(tokens)
       exprs << expr unless expr == nil && tokens.finished
     end
-    vm.push_arg Nydp::Pair.from_list exprs
+    # vm.push_arg Nydp::Pair.from_list exprs
+    Nydp::Pair.from_list exprs
   end
 end

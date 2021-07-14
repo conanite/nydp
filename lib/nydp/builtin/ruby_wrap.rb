@@ -32,11 +32,11 @@ class #{name}
   include Nydp::Builtin::Base, Singleton#{helpers}
 
   def builtin_invoke_#{msize} vm#{ arg_mapper }
-    vm.push_arg(#{code})
+    (#{code})
   end
 
   def builtin_invoke vm, args
-    vm.push_arg(#{generic_code})
+    (#{generic_code})
   end
 
   # return the ruby equivalent of this code if it was inlined inside another builtin

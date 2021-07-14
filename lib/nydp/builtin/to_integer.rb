@@ -13,7 +13,6 @@ module Nydp::Builtin
             arg.to_s.to_i
           end
 
-      vm.push_arg r2n i
     end
 
     def builtin_invoke vm, args

@@ -6,7 +6,8 @@ class Nydp::Builtin::ParseInString
     parsable = args.car.to_s
     tokens = Nydp.new_tokeniser Nydp::StringReader.new parsable
     expr = parser.embedded(tokens)
-    vm.push_arg expr
+    # vm.push_arg expr
+    expr
   rescue StandardError => e
     new_msg = "parse error: #{e.message._nydp_inspect} in\n#{Nydp.indent_text parsable}"
     raise Nydp::Error.new new_msg

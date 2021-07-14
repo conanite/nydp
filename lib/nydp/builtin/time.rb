@@ -3,7 +3,7 @@ class Nydp::Builtin::Time
   include Nydp::Helper, Nydp::Builtin::Base, Singleton
 
   def builtin_invoke_1 vm
-    vm.push_arg ::Time.now
+    ::Time.now
   end
 
   # either an offset in seconds from now, or a Date to convert to a time, or a Time to subtract and return offset in seconds from now
@@ -13,11 +13,11 @@ class Nydp::Builtin::Time
   def builtin_invoke_2 vm, arg
     case arg
     when Numeric # relative time in seconds
-      vm.push_arg(Time.now + arg)
+      (Time.now + arg)
     when Nydp::Date
-      vm.push_arg arg.to_ruby.to_time
+      arg.to_ruby.to_time
     when ::Time
-      vm.push_arg ::Time.now - arg
+      ::Time.now - arg
     else
       raise Nydp::Error.new "time : expected a number or a date or a time, got #{arg._nydp_inspect}"
     end
@@ -29,9 +29,9 @@ class Nydp::Builtin::Time
   def builtin_invoke_3 vm, a0, a1
     case a1
     when Numeric # relative time in seconds
-      vm.push_arg(a0 + a1)
+      (a0 + a1)
     when ::Time
-      vm.push_arg a0 - a1
+       a0 - a1
     else
       raise Nydp::Error.new "time : expected a number or a date, got #{a1._nydp_inspect}"
     end
@@ -47,6 +47,6 @@ class Nydp::Builtin::Time
     s  = args.cdr.cdr.cdr.cdr.cdr.car     if args.size > 5
     ms = args.cdr.cdr.cdr.cdr.cdr.cdr.car if args.size > 6
 
-    vm.push_arg(Time.new(y,mo,d,h,mi,s,ms))
+    (Time.new(y,mo,d,h,mi,s,ms))
   end
 end

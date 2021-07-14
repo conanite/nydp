@@ -12,7 +12,8 @@ module Nydp
     end
 
     def execute vm
-      vm.push_arg expression
+      # vm.push_arg expression
+      expression
     end
 
     def compile_to_ruby ; expression.inspect ; end
@@ -21,10 +22,6 @@ module Nydp
     def inspect   ; @expression.inspect ; end
     def to_s      ; @expression.to_s    ; end
     def to_ruby   ; n2r @expression     ; end
-
-    def coerce _
-      [_, expression]
-    end
 
     def > other
       other < expression

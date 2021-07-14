@@ -1,27 +1,27 @@
 module Nydp
-  class ExecuteConditionalInstruction
-    extend Helper
+  # class ExecuteConditionalInstruction
+  #   extend Helper
 
-    def initialize when_true, when_false
-      @when_true, @when_false = when_true, when_false
-    end
+  #   def initialize when_true, when_false
+  #     @when_true, @when_false = when_true, when_false
+  #   end
 
-    def lexical_reach n
-      [@when_true.lexical_reach(n), @when_false.lexical_reach(n)].max
-    end
+  #   def lexical_reach n
+  #     [@when_true.lexical_reach(n), @when_false.lexical_reach(n)].max
+  #   end
 
-    def execute vm
-      (Nydp::NIL.is?(vm.args.pop) ? @when_false : @when_true).execute vm
-    end
+  #   def execute vm
+  #     (Nydp::NIL.is?(vm.args.pop) ? @when_false : @when_true).execute vm
+  #   end
 
-    def inspect
-      "when_true:#{@when_true._nydp_inspect}:when_false:#{@when_false._nydp_inspect}"
-    end
+  #   def inspect
+  #     "when_true:#{@when_true._nydp_inspect}:when_false:#{@when_false._nydp_inspect}"
+  #   end
 
-    def to_s
-      "#{@when_true.to_s} #{@when_false.to_s}"
-    end
-  end
+  #   def to_s
+  #     "#{@when_true.to_s} #{@when_false.to_s}"
+  #   end
+  # end
 
   class Cond
     extend Helper
@@ -29,24 +29,29 @@ module Nydp
     attr_reader :condition, :conditional
 
     def initialize cond, when_true, when_false
-      @condition, @conditional = cond, cons(ExecuteConditionalInstruction.new(when_true, when_false))
+      @condition, @when_true, @when_false = cond, when_true, when_false
+      # @condition, @conditional = cond, cons(ExecuteConditionalInstruction.new(when_true, when_false))
     end
 
     def lexical_reach n
-      [@condition.lexical_reach(n), @conditional.car.lexical_reach(n)].max
+      # [@condition.lexical_reach(n), @conditional.car.lexical_reach(n)].max
+      [@condition.lexical_reach(n), @when_true.lexical_reach(n), @when_false.lexical_reach(n)].max
     end
 
     def execute vm
-      vm.push_ctx_instructions conditional
-      condition.execute vm
+      if (@condition.execute(vm))
+        @when_true.execute(vm)
+      else
+        @when_false.execute(vm)
+      end
     end
 
     def inspect
-      "cond:#{condition._nydp_inspect}:#{conditional._nydp_inspect}"
+      "(cond #{condition._nydp_inspect} #{@when_true._nydp_inspect}} #{@when_false._nydp_inspect})"
     end
 
     def to_s
-      "(cond #{condition.to_s} #{conditional.to_s})"
+      "(cond #{condition.to_s} #{@when_true.to_s} #{@when_false.to_s})"
     end
 
     def self.build expressions, bindings, ns
@@ -58,14 +63,15 @@ module Nydp
         # puts cond_sig
         # TODO : handle literal nil explicitly (if x y) -> #when_false is literal nil, we can hardcode that
         # todo : handle "OR" explicitly -> (if x x y) -> when #cond equals #when_true, hardcode this case
-        case csig
-        when "LEX"
-          Cond_LEX.build(cond, when_true, when_false)
-        when "SYM"
-          Cond_SYM.new(cond, cons(when_true), cons(when_false))
-        else
-          new(cond, when_true, when_false)
-        end
+        # case csig
+        # when "LEX"
+        #   Cond_LEX.build(cond, when_true, when_false)
+        # when "SYM"
+        #   Cond_SYM.new(cond, cons(when_true), cons(when_false))
+        # else
+        #   new(cond, when_true, when_false)
+        # end
+        new(cond, when_true, when_false)
       else
         raise "can't compile Cond: #{expressions._nydp_inspect}"
       end
@@ -132,14 +138,14 @@ module Nydp
   class OR_LEX_LIT < CondBase
     def execute vm
       value = @condition.value vm.current_context
-      vm.push_arg(!Nydp::NIL.is?(value) ? value : @when_false)
+      (!Nydp::NIL.is?(value) ? value : @when_false)
     end
   end
 
   class OR_LEX_LEX < CondBase
     def execute vm
       value = @condition.value vm.current_context
-      vm.push_arg(!Nydp::NIL.is?(value) ? value : (@when_false.value vm.current_context))
+      (!Nydp::NIL.is?(value) ? value : (@when_false.value vm.current_context))
     end
   end
 
@@ -168,7 +174,7 @@ module Nydp
   class Cond_LEX_LIT_LIT < CondBase # (def no (arg) (cond arg nil t))
     def execute vm
       falsity = Nydp::NIL.is?(@condition.value vm.current_context)
-      vm.push_arg(falsity ? @when_false : @when_true)
+      (falsity ? @when_false : @when_true)
     end
 
     def compile_to_ruby
@@ -179,14 +185,14 @@ module Nydp
   class Cond_LEX_LEX_LIT < CondBase
     def execute vm
       falsity = Nydp::NIL.is?(@condition.value vm.current_context)
-      vm.push_arg(falsity ? @when_false : (@when_true.value vm.current_context))
+      (falsity ? @when_false : (@when_true.value vm.current_context))
     end
   end
 
   class Cond_LEX_CND_LIT < CondBase
     def execute vm
       if Nydp::NIL.is?(@condition.value vm.current_context)
-        vm.push_arg @when_false
+         @when_false
       else
         @when_true.execute vm
       end

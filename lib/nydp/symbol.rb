@@ -52,7 +52,8 @@ class Nydp::Symbol
   def <             other ; self.name < other.name   ; end
   def <=>           other ; self.name <=> other.name ; end
   def assign value, _=nil ; @value = value           ; end
-  def execute          vm ; vm.push_arg self.value   ; end
+  # def execute          vm ; vm.push_arg self.value   ; end
+  def execute          vm ; self.value   ; end
 
   def == other
     other.is_a?(Nydp::Symbol) && (self.name == other.name)

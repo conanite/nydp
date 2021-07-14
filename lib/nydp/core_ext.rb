@@ -10,11 +10,11 @@ end
 
 class Method
   include Nydp::Converter
-  def invoke_1 vm             ; vm.push_arg call._nydp_wrapper                            ; end
-  def invoke_2 vm, a0         ; vm.push_arg call(n2r(a0))._nydp_wrapper                   ; end
-  def invoke_3 vm, a0, a1     ; vm.push_arg call(n2r(a0), n2r(a1))._nydp_wrapper          ; end
-  def invoke_4 vm, a0, a1, a2 ; vm.push_arg call(n2r(a0), n2r(a1), n2r(a2))._nydp_wrapper ; end
-  def invoke   vm, args       ; vm.push_arg call(*(args.map { |a| n2r a}))._nydp_wrapper  ; end
+  def invoke_1 vm             ; call._nydp_wrapper                            ; end
+  def invoke_2 vm, a0         ; call(n2r(a0))._nydp_wrapper                   ; end
+  def invoke_3 vm, a0, a1     ; call(n2r(a0), n2r(a1))._nydp_wrapper          ; end
+  def invoke_4 vm, a0, a1, a2 ; call(n2r(a0), n2r(a1), n2r(a2))._nydp_wrapper ; end
+  def invoke   vm, args       ; call(*(args.map { |a| n2r a}))._nydp_wrapper  ; end
 end
 
 class TrueClass
@@ -37,9 +37,9 @@ class NilClass
   def copy        ; self          ; end
   def assign *_   ; self          ; end
   def nydp_type   ; :nil          ; end
-  def execute     vm ; vm.push_arg self ; end
-  def _nydp_get    a ; self        ; end
-  def _nydp_set a, v ; self        ; end
+  def execute     vm ; self       ; end
+  def _nydp_get    a ; self       ; end
+  def _nydp_set a, v ; self       ; end
   # def each           ;                  ; end # nil behaves like an empty list
   def &        other ; self             ; end
   def |        other ; other            ; end
@@ -61,8 +61,8 @@ class ::Symbol
     _nydp_untidy?(_ins) ? "|#{_ins.gsub(/\|/, '\|')}|" : _ins
   end
 
-  def nydp_type  ; :symbol          ; end
-  def execute vm ; vm.push_arg self ; end
+  def nydp_type  ; :symbol ; end
+  def execute vm ; self    ; end
 
   private
 

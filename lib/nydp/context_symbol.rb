@@ -24,6 +24,7 @@ module Nydp
                     "set_index(#{binding_index}, value)"
                   end
 
+      line = __LINE__ + 2
       code = <<-KLASS
         def initialize name, lexical_depth
           @name, @lexical_depth = name, lexical_depth
@@ -40,7 +41,7 @@ module Nydp
         def value ctx
           ctx#{getctx}.#{at_index} || Nydp::NIL
         rescue
-          raise "failed looking up \#{@name._nydp_inspect} (\#{@name.class.name})"
+          raise "failed looking up \#{@name._nydp_inspect} (\#{@name.class.name}) : lookup expression was ctx#{getctx}.#{at_index}"
         end
 
         def assign value, ctx
@@ -50,7 +51,7 @@ module Nydp
         end
 
         def execute vm
-          vm.push_arg value vm.current_context
+          value vm.current_context
         end
 
         def depth   ; #{depth}                               ; end
@@ -59,7 +60,7 @@ module Nydp
       KLASS
 
       const_set name, Class.new(Nydp::ContextSymbol) {
-        eval code, binding, name.to_s, 0
+        eval code, binding, "#{name.to_s} : #{__FILE__}", line
       }
     end
 

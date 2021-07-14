@@ -3,7 +3,7 @@ module Nydp::Builtin
     include Nydp::Builtin::Base, Singleton
 
     def builtin_invoke vm, args
-      vm.push_arg args.car.to_s
+      args.car.to_s
     end
   end
 
@@ -18,7 +18,6 @@ module Nydp::Builtin
             else
               0
             end
-      vm.push_arg val
     end
   end
 end

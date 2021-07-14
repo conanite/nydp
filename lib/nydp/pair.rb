@@ -28,6 +28,25 @@ class Nydp::Pair
   def -    other ; self.class.from_list((Set.new(self) - Array(other)).to_a)    ; end
   def proper?    ; Nydp::NIL.is?(cdr) || (cdr.is_a?(Nydp::Pair) && cdr.proper?) ; end
 
+  def cons_map
+    a    = cons
+    last = a
+    x    = self
+    while x
+      last = last.cdr = cons(yield x.car)
+      x    = x.cdr
+    end
+
+    a.cdr
+  end
+
+  def nth n
+    xs = self
+    while n > 0
+      xs, n = xs.cdr, n-1
+    end
+    xs.car
+  end
   def index_of x
     if x == car
       0
@@ -76,8 +95,12 @@ class Nydp::Pair
   end
 
   def each &block
-    yield car
-    cdr.each(&block) unless Nydp::NIL.is?(cdr)
+    xs = self
+    while xs
+      yield xs.car
+      xs = xs.cdr
+      # cdr.each(&block) unless Nydp::NIL.is?(cdr)
+    end
   end
 
   def to_s

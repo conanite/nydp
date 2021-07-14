@@ -2,7 +2,8 @@ class Nydp::Builtin::LessThan
   include Nydp::Builtin::Base, Singleton
 
   def builtin_invoke vm, args
-    vm.push_arg(less_than(args.car, args.cdr) || Nydp::NIL)
+    # vm.push_arg(less_than(args.car, args.cdr) || Nydp::NIL)
+    less_than(args.car, args.cdr) || Nydp::NIL
   end
 
   def less_than arg, args

@@ -11,13 +11,13 @@ describe Nydp::Hash do
         k    = Nydp::Symbol.mk "keysym", ns
         v    = "foobar"
         args = pair_list [ahash, k, v]
-        Nydp::Builtin::HashSet.instance.invoke vm, args
+        a    = Nydp::Builtin::HashSet.instance.invoke vm, args
 
         expect(ahash[:keysym]).      to eq "foobar"
         expect(ahash[:keysym].class).to eq String
         expect(ahash.keys).          to eq [:keysym]
 
-        expect(vm.args.pop).to eq v
+        expect(a).to eq v
       end
     end
 
@@ -27,18 +27,18 @@ describe Nydp::Hash do
         k              = sym("keysym")
         args           = [ ahash, k ]
 
-        Nydp::Builtin::HashGet.instance.invoke vm, pair_list(args)
+        a = Nydp::Builtin::HashGet.instance.invoke vm, pair_list(args)
 
-        expect(vm.args.pop).to eq "avalue"
+        expect(a).to eq "avalue"
       end
 
       it "converts ruby nil to nydp value" do
         k              = sym("keysym")
         args           = [ ahash, k ]
 
-        Nydp::Builtin::HashGet.instance.invoke vm, pair_list(args)
+        a = Nydp::Builtin::HashGet.instance.invoke vm, pair_list(args)
 
-        expect(vm.args.pop).to eq Nydp::NIL
+        expect(a).to eq Nydp::NIL
       end
 
       it "converts ruby true to nydp value" do
@@ -46,9 +46,9 @@ describe Nydp::Hash do
         k              = sym("keysym")
         args           = [ ahash, k ]
 
-        Nydp::Builtin::HashGet.instance.invoke vm, pair_list(args)
+        a = Nydp::Builtin::HashGet.instance.invoke vm, pair_list(args)
 
-        expect(vm.args.pop).to eq Nydp::T
+        expect(a).to eq Nydp::T
       end
     end
 
@@ -58,18 +58,18 @@ describe Nydp::Hash do
         k             = sym("simon")
         args          = [ ahash, k ]
 
-        Nydp::Builtin::HashKeyPresent.instance.invoke vm, pair_list(args)
+        a = Nydp::Builtin::HashKeyPresent.instance.invoke vm, pair_list(args)
 
-        expect(vm.args.pop).to eq Nydp::T
+        expect(a).to eq Nydp::T
       end
 
       it "returns nil when key is absent" do
         k             = sym("simon")
         args          = [ ahash, k ]
 
-        Nydp::Builtin::HashKeyPresent.instance.invoke vm, pair_list(args)
+        a = Nydp::Builtin::HashKeyPresent.instance.invoke vm, pair_list(args)
 
-        expect(vm.args.pop).to eq Nydp::NIL
+        expect(a).to eq Nydp::NIL
       end
     end
 
@@ -79,9 +79,9 @@ describe Nydp::Hash do
         ahash[:k1] = 84
         args       = [ahash]
 
-        Nydp::Builtin::HashKeys.instance.invoke vm, pair_list(args)
+        a = Nydp::Builtin::HashKeys.instance.invoke vm, pair_list(args)
 
-        expect(vm.args.pop).to eq pair_list [sym("k0"), sym("k1")]
+        expect(a).to eq pair_list [sym("k0"), sym("k1")]
       end
     end
 
@@ -91,9 +91,9 @@ describe Nydp::Hash do
         ahash[:k1] = 84
         args       = [ahash, pair_list([sym("k0"), sym("k1")])]
 
-        Nydp::Builtin::HashSlice.instance.invoke vm, pair_list(args)
+        a = Nydp::Builtin::HashSlice.instance.invoke vm, pair_list(args)
 
-        expect(vm.args.pop).to eq({ k0: 42, k1: 84 })
+        expect(a).to eq({ k0: 42, k1: 84 })
       end
     end
   end

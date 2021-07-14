@@ -15,7 +15,7 @@ module Nydp
     function   = Symbol.mk(function_name.to_sym, ns).value if function_name.is_a?(String) || function_name.is_a?(::Symbol)
     function ||= function_name if function_name.respond_to?(:invoke)
     function.invoke vm, r2n(args)
-    vm.thread
+    # vm.thread
   rescue StandardError => e
     friendly_args = args.map { |a| a.respond_to?(:_nydp_compact_inspect) ? a._nydp_compact_inspect : a }
     raise Nydp::Error.new("Invoking #{function_name}\nwith args #{friendly_args._nydp_inspect}")

@@ -11,7 +11,8 @@ class Nydp::Builtin::Date
   end
 
   def builtin_invoke_1 vm
-    vm.push_arg(Nydp::Date.new Date.today)
+    # vm.push_arg(Nydp::Date.new Date.today)
+    Nydp::Date.new Date.today
   end
 
   # it's a Time object (or any object that responds to #to_date)
@@ -21,7 +22,8 @@ class Nydp::Builtin::Date
           elsif arg.is_a?(String)
             ::Date.parse(arg)
           end
-    vm.push_arg(Nydp::Date.new arg)
+    # vm.push_arg(Nydp::Date.new arg)
+    Nydp::Date.new arg
   end
 
   def builtin_invoke_3 vm, a0, a1
@@ -29,6 +31,6 @@ class Nydp::Builtin::Date
   end
 
   def builtin_invoke_4 vm, y, m, d
-    vm.push_arg(Nydp::Date.new Date.new(y,m,d))
+    Nydp::Date.new Date.new(y,m,d)
   end
 end

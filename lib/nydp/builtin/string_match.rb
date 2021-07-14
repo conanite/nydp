@@ -19,6 +19,7 @@ class Nydp::Builtin::StringMatch
       result             = Nydp::NIL
     end
 
-    vm.push_arg result
+    # vm.push_arg result
+    result
   end
 end

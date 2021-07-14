@@ -43,15 +43,14 @@ module Nydp
       @name       = name
       @vm         = vm
       @ns         = ns
-      # @precompile = Symbol.mk(:"pre-compile", ns)
-      # @quote      = Symbol.mk(:quote, ns)
       @precompile = :"pre-compile"
       @quote      = :quote
     end
 
     def compile_and_eval expr
       begin
-        vm.thread_with_expr Pair.new(Compiler.compile(expr, Nydp::NIL, ns), Nydp::NIL)
+        # vm.thread_with_expr Pair.new(Compiler.compile(expr, Nydp::NIL, ns), Nydp::NIL)
+        Compiler.compile(expr, Nydp::NIL, ns).execute(vm)
       rescue StandardError => e
         raise Nydp::Error, "failed to eval #{expr._nydp_inspect}"
       end

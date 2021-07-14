@@ -11,32 +11,32 @@ describe Nydp::Hash do
         k      = Nydp::Symbol.mk "a", ns
         args   = [ ahash, k ]
 
-        Nydp::Builtin::HashGet.instance.invoke vm, pair_list(args)
-        expect(vm.args.pop).to eq 123
+        a = Nydp::Builtin::HashGet.instance.invoke vm, pair_list(args)
+        expect(a).to eq 123
       end
 
       it "converts ruby value to nydp value" do
         k      = Nydp::Symbol.mk "b", ns
         args   = [ ahash, k ]
 
-        Nydp::Builtin::HashGet.instance.invoke vm, pair_list(args)
-        expect(vm.args.pop).to eq "hello there"
+        a = Nydp::Builtin::HashGet.instance.invoke vm, pair_list(args)
+        expect(a).to eq "hello there"
       end
 
       it "converts string keys to method names" do
         k      = "b"
         args   = [ ahash, k ]
 
-        Nydp::Builtin::HashGet.instance.invoke vm, pair_list(args)
-        expect(vm.args.pop).to eq "hello there"
+        a = Nydp::Builtin::HashGet.instance.invoke vm, pair_list(args)
+        expect(a).to eq "hello there"
       end
 
       it "returns nil for unavailable methods" do
         k      = Nydp::Symbol.mk "c", ns
         args   = [ ahash, k ]
 
-        Nydp::Builtin::HashGet.instance.invoke vm, pair_list(args)
-        expect(vm.args.pop).to eq Nydp::NIL
+        a = Nydp::Builtin::HashGet.instance.invoke vm, pair_list(args)
+        expect(a).to eq Nydp::NIL
       end
     end
   end

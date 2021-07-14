@@ -7,7 +7,7 @@ describe Nydp::Builtin::Rand do
 
   def get_rand *args
     randf.invoke vm, pair_list(args)
-    vm.pop_args(1).first
+    # vm.pop_args(1).first
   end
 
   describe "zero args" do

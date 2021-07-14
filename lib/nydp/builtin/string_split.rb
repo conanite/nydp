@@ -8,6 +8,6 @@ class Nydp::Builtin::StringSplit
 
     result    = target.split separator, -1
 
-    vm.push_arg Nydp::Pair.from_list result
+    Nydp::Pair.from_list result
   end
 end

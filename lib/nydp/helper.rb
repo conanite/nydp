@@ -70,7 +70,7 @@ module Nydp
       expr.is_a?(Nydp::Pair)
     end
 
-    def cons a, b=Nydp::NIL
+    def cons a=nil, b=nil
       Nydp::Pair.new a, b
     end
 
