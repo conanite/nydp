@@ -40,7 +40,6 @@ class NilClass
   def execute     vm ; self       ; end
   def _nydp_get    a ; self       ; end
   def _nydp_set a, v ; self       ; end
-  # def each           ;                  ; end # nil behaves like an empty list
   def &        other ; self             ; end
   def |        other ; other            ; end
   def compile_to_ruby ; "nil"     ; end
@@ -49,10 +48,6 @@ end
 class FalseClass
   def _nydp_wrapper ; Nydp::NIL ; end
 end
-
-# class TrueClass
-#   def _nydp_wrapper ; Nydp::T ; end
-# end
 
 class ::Symbol
   # def _nydp_wrapper ; Nydp::FrozenSymbol.mk(self) ; end
