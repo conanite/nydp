@@ -56,7 +56,8 @@ module Nydp
     class Invocation_1 < Invocation::Base
       def execute vm
         #        Invocation.sig @sig
-        @expr.car.execute(vm).invoke_1 vm
+        f = @expr.car.execute(vm)
+        f.invoke_1 vm
       rescue StandardError => e
         handle e, f, :invoke_1
       end
