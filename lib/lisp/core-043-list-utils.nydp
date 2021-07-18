@@ -86,12 +86,21 @@
            (= ,xs (cdr ,xs)))))))
 
 
+;; used internally by 'reduce
+(def reduce-helper (f a things)
+  (loop (pair? things)
+        (= a      (f a (car things))
+           things (cdr things)))
+  (if things
+      (= a (f a things)))
+  a)
+
+;; applies f to each element of 'things and the result of f, returning the result
+;;
+;; for example, (reduce + '(1 2 3)) returns 6
+;;
 (def reduce (f things)
-  (rfnwith rd (acc (car things) list (cdr things))
-           (if (pair? list)
-               (rd (f acc (car list))
-                   (cdr list))
-               acc)))
+  (reduce-helper f (car things) (cdr things)))
 
 ;; t if this is a proper list (last cdr is nil)
 ;; nil otherwise (last cdr is neither cons nor nil)

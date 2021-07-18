@@ -27,15 +27,9 @@
 ;; takes a function f, returns a new function that takes a list and sorts the list by 'f
 (def safe-sort-by-f (f instead) (curry1 safe-sort-by f instead))
 
-;; same as (reduce freduce (map fmap things))
-;; returns the resulting list
+;; basically (reduce freduce (map fmap things))
 (def mapreduce (fmap freduce things)
-  (if (pair? things)
-      (freduce (fmap (car things))
-               (mapreduce fmap freduce (cdr things)))
-      things
-      (freduce (map fmap things))
-      (freduce)))
+  (reduce freduce (map fmap things)))
 
 ;; map 'f over 'things and sum the resulting list
 (def mapsum (f things) (mapreduce f + things))
