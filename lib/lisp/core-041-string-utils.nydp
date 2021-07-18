@@ -4,12 +4,12 @@
 (def string-strip (txt)
   (string-replace "(\\A\\s+|\\s+\\z)" "" txt))
 
+;; flatten 'things into a single list (ie unnest lists)
+;; convert each item to a string
+;; return a single string which is the concatenation of each
+;; stringified item, with given 'txt inserted in between
+;; each item
 (def joinstr (txt . things)
-  ; flatten 'things into a single list (ie unnest lists)
-  ; convert each item to a string
-  ; return a single string which is the concatenation of each
-  ; stringified item, with given 'txt inserted in between
-  ; each item
   (let joinables (flatten things)
     (apply +
            (to-string:car joinables)
