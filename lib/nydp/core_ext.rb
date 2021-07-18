@@ -84,14 +84,11 @@ class ::Object
 end
 
 class ::String
-  # def _nydp_wrapper  ; Nydp::StringAtom.new self  ; end
-  def _nydp_name_to_rb_name ; self.gsub(/[-_\+\[\]\?\!\*\.\|#@\$%\^\&\(\)=\{\}\"\'\:\;~`<>\/\,\<\>]/) { |chr| "_#{chr.hex_ord}"}.to_sym ; end
+  # _hex_ord only works for characters whose #ord is < 256, ie #bytes returns a single-element array
+  def _nydp_name_to_rb_name ; self.gsub(/[-_\+\[\]\?\!\*\.\|#@\$%\^\&\(\)=\{\}\"\'\:\;~`<>\/\,\<\>]/) { |chr| "_#{chr._hex_ord}"}.to_sym ; end
   def as_method_name ; self.gsub(/-/, '_').to_sym ; end
   def nydp_type      ; :string                    ; end
-
-  private
-
-  def hex_ord ; ord.to_s(16).rjust(2, '0') ; end
+  def _hex_ord       ; ord.to_s(16).rjust(2, '0') ; end
 end
 
 class ::Hash
