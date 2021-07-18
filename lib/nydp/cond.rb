@@ -46,6 +46,14 @@ module Nydp
       end
     end
 
+    def compile_to_ruby
+      "if (#{@condition.compile_to_ruby})
+         (#{when_true.compile_to_ruby})
+       else
+         (#{when_false.compile_to_ruby})
+       end"
+    end
+
     def inspect
       "(cond #{condition._nydp_inspect} #{@when_true._nydp_inspect}} #{@when_false._nydp_inspect})"
     end
