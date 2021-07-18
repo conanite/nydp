@@ -3,13 +3,13 @@ require 'nydp/lexical_context_builder'
 require 'nydp/closure'
 
 module Nydp
-  class PopArg
-    # def self.execute vm ; vm.args.pop ; end
-    def self.execute vm ; nil ; end
-    def self.to_s       ; ""          ; end
-    def self.inspect    ; "#pop_arg"  ; end
-    def compile_to_ruby ; ""          ; end
-  end
+  # class PopArg
+  #   # def self.execute vm ; vm.args.pop ; end
+  #   def self.execute vm ; nil ; end
+  #   def self.to_s       ; ""          ; end
+  #   def self.inspect    ; "#pop_arg"  ; end
+  #   def compile_to_ruby ; ""          ; end
+  # end
 
   class InterpretedFunction
     NIL = Nydp::NIL
@@ -72,7 +72,7 @@ module Nydp
         # so we need the following line in order to remove unwanted args from the stack.
         # Each expression at some executes vm.push_arg(thing)
         # TODO find a more intelligent way to do this, eg change the meaning of vm or of push_arg in the expression vm.push_arg(thing)
-        instructions << PopArg
+        # instructions << PopArg
         compile_body rest, bindings, instructions, ns
       end
     end
