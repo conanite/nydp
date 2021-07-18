@@ -49,14 +49,15 @@ module Nydp
     end
 
     def to_s
-      values = []
-      n = 0
-      while at_index n
-        values << at_index(n)._nydp_inspect
-        n += 1
-      end
-      parent_s = parent ? " parent #{parent.to_s}" : ""
-      "(context (#{values.join ' '})#{parent_s})"
+      # values = []
+      # n = 0
+      # while at_index n
+      #   values << at_index(n)._nydp_inspect
+      #   n += 1
+      # end
+      # parent_s = parent ? " parent #{parent.to_s}" : ""
+      # "(context (#{values.join ' '})#{parent_s})"
+      "(NEW context)"
     end
   end
 end
