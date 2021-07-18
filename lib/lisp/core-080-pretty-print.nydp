@@ -76,7 +76,6 @@
                     ',args
                     '(pp/def ,name ,args ,@body))))
 
-
 (pp/def string-pieces    (pp form indent) (pp/string-pieces pp (cdr form)))
 (pp/def quasiquote       (pp form indent) "`~(pp (cadr form) (cons "" indent))" )
 (pp/def quote            (pp form indent) "'~(pp (cadr form) (cons "" indent))" )
@@ -84,7 +83,6 @@
 (pp/def unquote-splicing (pp form indent) ",@~(pp (cadr form) (cons " " indent))")
 (pp/def comment          (pp form indent) "; ~(cadr form)\n")
 (pp/def prefix-list      (pp form indent) "~(cadr form)~(pp (caddr form))")
-
 
 (def pp/brace-list-pair (pp (k v) indent) "~k ~(pp v indent)")
 
