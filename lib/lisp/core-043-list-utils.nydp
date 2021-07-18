@@ -1,9 +1,12 @@
 (chapter-start 'list-manipulation)
 
 (def list-length (things)
-  (if (atom? things) 1
-      things         (+ 1 (list-length (cdr things)))
-      0))
+  (let cc 0
+    (loop (pair? things)
+          (do
+              (++ cc)
+              (= things (cdr things))))
+    (if things (+ cc 1) cc)))
 
 (def list-slices (things slice-size)
      ; slice 'things into a list of lists each with maximum 'slice-size items
@@ -24,9 +27,9 @@
       things))
 
 ;; expects 'things a list of lists, joins the lists
-;; returns (a b X c d X e f)
 ;; placing 'inbetween in between each list.
 ;; For example (intersperse-splicing 'X '((a b) (c d) (e f)))
+;; returns (a b X c d X e f)
 (def intersperse-splicing (inbetween things)
   (apply joinlists (intersperse (list inbetween) things)))
 
@@ -34,15 +37,19 @@
 ;; otherwise, return 'things if (f things) is non-nil
 ;; otherwise, nil
 ;; note that this preserves improper lists and may return only the lastcdr if all else fails...
-(def collect (f items)
-  (if (pair? items)
-      (if (f (car items))
-          (cons (car items)
-                (collect f (cdr items)))
-          (collect f (cdr items)))
-      items
-      (if (f items)
-          items)))
+(def collect-helper (f things res)
+  (loop (pair? things)
+        (do
+            (if (f (car things))
+                (= res (cdr-set res (cons (car things)))))
+            (= things (cdr things))))
+  (if (and things (f things))
+      (= res (cdr-set res things))))
+
+(def collect (f things)
+  (let res (cons)
+    (collect-helper f things res)
+    (cdr res)))
 
 (assign select collect)
 

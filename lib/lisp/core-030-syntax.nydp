@@ -130,17 +130,6 @@ scoping, assignment, anonymous functions and more...")
        (assign ,name (fun ,(map car ppairs) ,@body))
        (,name ,@(map cadr ppairs)))))
 
-;; (andify a b c) is equivalent to
-;; (fn args (and (apply a args) (apply b args) (apply c args)))
-;; or more simply
-;; (fn (x) (and (a x) (b x) (c x)))
-;; note: alias as 'andf ??
-(def andify args
-  (fn args2 (rfnwith self (ands args)
-                     (if ands (if (apply (car ands) args2)
-                                  (self (cdr ands)))
-                         t))))
-
 (let uniq-counter 0
   (def uniq (prefix)
     (assign uniq-counter (+ uniq-counter 1))
@@ -155,6 +144,16 @@ scoping, assignment, anonymous functions and more...")
       `(with ,(apply + (map (fn (n) `(,n (uniq ',n))) vars))
              ,@body)
       `(let ,vars (uniq ',vars) ,@body)))
+
+;; (andify a b c) is equivalent to
+;; (fn args (and (apply a args) (apply b args) (apply c args)))
+;; or more simply
+;; (fn (x) (and (a x) (b x) (c x)))
+;; note: alias as 'andf ??
+(mac andify args
+  (w/uniq a2
+      `(fn ,a2
+           (and ,@(map (fn (a) `(apply ,a ,a2)) args)))))
 
 (mac or args
   ; lazy-evaluates each argument, returns the first
