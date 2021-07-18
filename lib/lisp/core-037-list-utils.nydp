@@ -35,16 +35,7 @@
 ; assign (cons x things) to things
 (mac push (x things) `(= ,things (cons ,x ,things)))
 
-; flatten the given list, transforming each leaf-item, recursively
-(def flatmap (f things)
-     (let acc nil
-          (rfnwith flattenize (x things)
-                   (if (pair? x)
-                       (eachr flattenize x)
-                       x
-                       (push (f x) acc)))
-          acc))
-
+;; used internally by 'flatmap
 (def flatmap-helper (f things res)
   (loop (pair? things)
     (let a (car things)
@@ -60,6 +51,7 @@
       (= res (set-cdr res (f things))))
   res)
 
+;; flatten the given list, transforming each leaf-item, recursively
 (def flatmap (f things)
   (let res (cons)
     (flatmap-helper f things res)
