@@ -14,13 +14,10 @@ class Nydp::Pair
   def cadr       ; cdr.car                                    ; end
   def cdar       ; car.cdr                                    ; end
   def cddr       ; cdr.cdr                                    ; end
-  def car= thing ; @car = thing ; @_hash = nil                ; end
-  def cdr= thing ; @cdr = thing ; @_hash = nil                ; end
-  # def hash       ; @_hash ||= (car.hash + cdr.hash)           ; end
-  def hash       ; (car.hash + cdr.hash)                      ; end # can't cache hash of symbol, breaks when unmarshalling
+  def car= thing ; @car = thing                               ; end
+  def cdr= thing ; @cdr = thing                               ; end
   def eql? other ; self == other                              ; end
-  def copy       ; cons(car, cdr.copy)                        ; end
-  def +    other ; copy.append other                          ; end
+  def +    other ; copy_append other                          ; end
   def size       ; 1 + (cdr.is_a?(Nydp::Pair) ? cdr.size : 0) ; end
   def inspect    ; "(#{inspect_rest})"                        ; end
   def &    other ; self.class.from_list((Set.new(self) & Array(other)).to_a)    ; end
@@ -28,9 +25,44 @@ class Nydp::Pair
   def -    other ; self.class.from_list((Set.new(self) - Array(other)).to_a)    ; end
   def proper?    ; Nydp::NIL.is?(cdr) || (cdr.is_a?(Nydp::Pair) && cdr.proper?) ; end
 
+  # can't cache hash of symbol, breaks when unmarshalling
+  def hash
+    a    = 0
+    x    = self
+    while (x.is_a? Nydp::Pair)
+      a = a + x.car.hash
+      x = x.cdr
+    end
+
+    a + x.hash
+  end
+
+  def copy
+    a    = last = cons
+    x    = self
+    while (x.is_a? Nydp::Pair)
+      last = last.cdr = cons(x.car)
+      x    = x.cdr
+    end
+
+    last.cdr = x
+    a.cdr
+  end
+
+  def copy_append lastcdr
+    a    = last = cons
+    x    = self
+    while (x.is_a? Nydp::Pair)
+      last = last.cdr = cons(x.car)
+      x    = x.cdr
+    end
+
+    last.cdr = lastcdr
+    a.cdr
+  end
+
   def cons_map
-    a    = cons
-    last = a
+    a    = last = cons
     x    = self
     while x
       last = last.cdr = cons(yield x.car)
@@ -172,14 +204,14 @@ class Nydp::Pair
     res.compact.join " "
   end
 
-  def append thing
-    if Nydp::NIL.is? self.cdr
-      self.cdr = thing
-    elsif pair? self.cdr
-      self.cdr.append thing
-    else
-      raise "can't append #{thing} to list #{self} : cdr is #{self.cdr._nydp_inspect}"
-    end
-    self
-  end
+  # def append thing
+  #   if Nydp::NIL.is? self.cdr
+  #     self.cdr = thing
+  #   elsif pair? self.cdr
+  #     self.cdr.append thing
+  #   else
+  #     raise "can't append #{thing} to list #{self} : cdr is #{self.cdr._nydp_inspect}"
+  #   end
+  #   self
+  # end
 end
