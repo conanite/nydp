@@ -233,9 +233,30 @@
    (list/last 42)
    42)
 
+  ("is not tricked when the last item is itself a list"
+   (list/last '(1 2 3 (a b c)))
+   (a b c))
+
+  ;; (1 2 3 . (a b c)) is equivalent to '(1 2 3 a b c)
+  ("is not tricked by tricky syntax"
+   (list/last '(1 2 3 . (a b c)))
+   c)
+
+  ("is not tricked when the last list-item is a list but there is also a last-cdr"
+   (list/last '(1 2 3 (a b c) . foo))
+   foo)
+
   ("returns the cdr if it's not a pair"
    (list/last '(x . y))
    y)
+
+  ("returns the cdr if it's not a pair"
+   (list/last '(x nil . y))
+   y)
+
+  ("dot nil is not real"
+   (list/last '(x q . nil))
+   q)
 
   ("returns the last item in the list"
    (list/last '(x y z))

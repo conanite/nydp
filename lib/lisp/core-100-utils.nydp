@@ -80,11 +80,13 @@
 ;;
 (mac accum (accfn-name . body)
   (w/uniq (things last-cons)
-    `(with (,last-cons (cons) ,things nil)
-       (= ,things ,last-cons)
-       (let ,accfn-name (fn (a) (= ,last-cons (cdr-set ,last-cons (cons a))) a)
+    `(with (,last-cons  (cons)
+            ,things     ,last-cons
+            ,accfn-name (fn (a)
+                            (= ,last-cons (cdr-set ,last-cons (cons a)))
+                            a))
          ,@body
-         (cdr ,things)))))
+         (cdr ,things))))
 
 ;; like 'accum, except 'accfn-name expects 2 args, a key and a value
 ;; value is hash-consed onto key in an internally-maintained hash
