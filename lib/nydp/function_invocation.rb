@@ -60,6 +60,8 @@ module Nydp
         f.invoke_1 vm
       rescue StandardError => e
         handle e, f, :invoke_1
+      rescue SystemStackError => e
+        raise "stack overflow in #{@source}"
       end
     end
 
@@ -74,6 +76,8 @@ module Nydp
         # f.invoke_2 vm, arg
       rescue StandardError => e
         handle e, f, :invoke_2, a
+      rescue SystemStackError => e
+        raise "stack overflow in #{@source}"
       end
     end
 
@@ -90,6 +94,8 @@ module Nydp
         # f.invoke_3 vm, arg_0, arg_1
       rescue StandardError => e
         handle e, f, :invoke_3, a0, a1
+      rescue SystemStackError => e
+        raise "stack overflow in #{@source}"
       end
     end
 
@@ -108,6 +114,8 @@ module Nydp
         # f.invoke_4 vm, arg_0, arg_1, arg_2
       rescue StandardError => e
         handle e, f, :invoke_4, a0, a1, a2
+      rescue SystemStackError => e
+        raise "stack overflow in #{@source}"
       end
     end
 
@@ -126,6 +134,8 @@ module Nydp
         # args.car.invoke vm, args.cdr
       rescue StandardError => e
         handle e, i.car, :invoke, i.cdr
+      rescue SystemStackError => e
+        raise "stack overflow in #{@source}"
       end
     end
 
