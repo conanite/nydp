@@ -31,8 +31,9 @@
 (def mapreduce (fmap freduce things)
   (reduce freduce (map fmap things)))
 
-;; map 'f over 'things and sum the resulting list
-(def mapsum (f things) (mapreduce f + things))
+;; map 'f over 'things and sum the resulting list, excluding nils
+(def mapsum (f things)
+  (apply + (compact:map f things)))
 
 ;; returns a new function f which takes a parameter x
 ;; for each call to f with any value Z for x

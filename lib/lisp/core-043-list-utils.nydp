@@ -100,7 +100,10 @@
 ;; for example, (reduce + '(1 2 3)) returns 6
 ;;
 (def reduce (f things)
-  (reduce-helper f (car things) (cdr things)))
+  (if (pair? things)
+      (reduce-helper f (car things) (cdr things))
+      things
+      (f things)))
 
 ;; t if this is a proper list (last cdr is nil)
 ;; nil otherwise (last cdr is neither cons nor nil)
@@ -170,7 +173,9 @@
 ;; "better-p" -> takes two args a and b, return t if a is "better" than b, nil otherwise
 (def best (better-p things)
   (reduce (fn (a b)
-              (if (better-p a b) a b))
+              (if (no b) a
+                  (no a) b
+                  (better-p a b) a b))
           things))
 
 (def min things (best < things))
