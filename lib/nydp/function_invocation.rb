@@ -190,6 +190,41 @@ module Nydp
       end
     end
 
+    class Invocation_SYM_NVB < Invocation::Base
+      SIGS << self.name
+      def initialize expr, src
+        super expr, src
+        @sym = expr.car
+        @nvb1 = expr.cdr.car
+      end
+
+      def execute vm
+#        Invocation.sig self.class.name
+        fn = @sym.value
+        a0 = @nvb1.execute(vm)
+        fn.invoke_2 vm, a0
+      rescue StandardError => e
+        handle e, fn, :invoke_2, a0
+      end
+    end
+
+    class Invocation_LEX_LIT < Invocation::Base
+      SIGS << self.name
+      def initialize expr, src
+        super expr, src
+        @lex0 = expr.car
+        @lit1 = expr.cdr.car.expression
+      end
+
+      def execute vm
+#        Invocation.sig self.class.name
+        fn = @lex0.value(vm.current_context)
+        fn.invoke_2 vm, @lit1
+      rescue StandardError => e
+        handle e, fn, :invoke_2, a0
+      end
+    end
+
     class Invocation_SYM_LEX < Invocation::Base
       SIGS << self.name
       def initialize expr, src
@@ -262,6 +297,62 @@ module Nydp
       end
     end
 
+    class Invocation_SYM_NVB_LEX < Invocation::Base
+      SIGS << self.name
+      def initialize expr, src
+        super expr, src
+        @sym = expr.car
+        @nvb_0 = expr.cdr.car
+        @lex_1 = expr.cdr.cdr.car
+      end
+
+      def execute vm
+#        Invocation.sig self.class.name
+        a0 = @nvb_0.execute(vm)
+        a1 = @lex_1.value(vm.current_context)
+        @sym.value.invoke_3 vm, a0, a1
+      rescue StandardError => e
+        handle e, @sym.value, :invoke_3, a0, a1
+      end
+    end
+
+    class Invocation_SYM_LEX_NVB < Invocation::Base
+      SIGS << self.name
+      def initialize expr, src
+        super expr, src
+        @sym = expr.car
+        @lex_0 = expr.cdr.car
+        @nvb_1 = expr.cdr.cdr.car
+      end
+
+      def execute vm
+#        Invocation.sig self.class.name
+        a0 = @lex_0.value(vm.current_context)
+        a1 = @nvb_1.execute(vm)
+        @sym.value.invoke_3 vm, a0, a1
+      rescue StandardError => e
+        handle e, @sym.value, :invoke_3, a0, a1
+      end
+    end
+
+    class Invocation_SYM_LEX_LIT < Invocation::Base
+      SIGS << self.name
+      def initialize expr, src
+        super expr, src
+        @sym = expr.car
+        @lex_0 = expr.cdr.car
+        @lit_1 = expr.cdr.cdr.car.expression
+      end
+
+      def execute vm
+#        Invocation.sig self.class.name
+        a0 = @lex_0.value(vm.current_context)
+        @sym.value.invoke_3 vm, a0, @lit_1
+      rescue StandardError => e
+        handle e, @sym.value, :invoke_3, a0, @lit_1
+      end
+    end
+
     class Invocation_SYM_LEX_LEX_LEX < Invocation::Base
       SIGS << self.name
       def initialize expr, src
@@ -320,6 +411,26 @@ module Nydp
         handle e, @sym.value, :invoke_3, @lit_0, a1
       end
     end
+
+    class Invocation_SYM_LIT_LEX_LEX < Invocation::Base
+      SIGS << self.name
+      def initialize expr, src
+        super expr, src
+        @sym = expr.car
+        @lit_0 = expr.cdr.car.expression
+        @lex_1 = expr.cdr.cdr.car
+        @lex_2 = expr.cdr.cdr.cdr.car
+      end
+
+      def execute vm
+#        Invocation.sig self.class.name
+        a1 = @lex_1.value(vm.current_context)
+        a2 = @lex_2.value(vm.current_context)
+        @sym.value.invoke_4 vm, @lit_0, a1, a2
+      rescue StandardError => e
+        handle e, @sym.value, :invoke_4, @lit_0, a1, a2
+      end
+    end
   end
 
   class FunctionInvocation
@@ -339,16 +450,24 @@ module Nydp
       "#{ra.shift}.call(#{ra.join(", ")})"
     end
 
+    @@seen = { }
+
     def self.build expression, bindings, ns
       compiled   = Compiler.compile_each(expression, bindings, ns)
       invocation_sig = compiled.map { |x| sig x }.join("_")
 
       cname  = "Invocation_#{invocation_sig}"
 
-      # exists = Invocation::SIGS.include? "Nydp::Invocation::#{cname}"
-      # if exists
-      #   return Nydp::Invocation.const_get(cname).new(compiled, expression)
-      # end
+      exists = Invocation::SIGS.include? "Nydp::Invocation::#{cname}"
+      if exists
+        return Nydp::Invocation.const_get(cname).new(compiled, expression)
+      # else
+      #   if !@@seen[cname]
+      #     @@seen[cname] = true
+      #     puts cname
+      #     puts expression.inspect
+      #   end
+      end
 
       # invocation = cons case expression.size
       invocation = case expression.size
