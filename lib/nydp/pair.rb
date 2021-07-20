@@ -89,6 +89,7 @@ class Nydp::Pair
     end
     xs.car
   end
+
   def index_of x
     if x == car
       0
