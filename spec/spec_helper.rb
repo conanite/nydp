@@ -16,7 +16,7 @@ module SpecHelper
   end
 
   def self.included base
-    base.let(:ns)  { { } }
+    base.let(:ns)  { Nydp::Namespace.new }
   end
 end
 

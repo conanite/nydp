@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe Nydp::VM do
-  let(:ns) { { } }
   let(:vm) { Nydp::VM.new(ns) }
 
   def run txt

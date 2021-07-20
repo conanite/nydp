@@ -35,7 +35,6 @@ describe Nydp::Hash do
 
   describe "hash merge" do
     it "merges two hashes" do
-      ns = { }
       Nydp.setup(ns)
       hash_0 = { foo: 12, bar: 34}
       hash_1 = { foo: 49, zap: 87}
