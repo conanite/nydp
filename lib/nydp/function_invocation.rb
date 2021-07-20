@@ -458,18 +458,11 @@ module Nydp
 
       cname  = "Invocation_#{invocation_sig}"
 
-      exists = Invocation::SIGS.include? "Nydp::Invocation::#{cname}"
-      if exists
-        return Nydp::Invocation.const_get(cname).new(compiled, expression)
-      # else
-      #   if !@@seen[cname]
-      #     @@seen[cname] = true
-      #     puts cname
-      #     puts expression.inspect
-      #   end
-      end
+      # exists = Invocation::SIGS.include? "Nydp::Invocation::#{cname}"
+      # if exists
+      #   return Nydp::Invocation.const_get(cname).new(compiled, expression)
+      # end
 
-      # invocation = cons case expression.size
       invocation = case expression.size
                         when 1
                           Invocation::Invocation_1.new(compiled, expression)
@@ -484,7 +477,8 @@ module Nydp
                         end
 
       invocation
-      # new invocation, compiled, expression, cname
+
+      new invocation, compiled, expression, cname
     end
 
     def initialize function_instruction, argument_instructions, source, sig=nil
