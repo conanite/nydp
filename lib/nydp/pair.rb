@@ -124,12 +124,13 @@ class Nydp::Pair
     end
   end
 
-  def self.from_list list, last=Nydp::NIL, n=0
-    if n >= list.size
-      last
-    else
-      Nydp::Pair.new list[n], from_list(list, last, n+1)
+  def self.from_list list, last=Nydp::NIL, n=list.size-1
+    while (n >= 0)
+      last = cons(list[n], last)
+      n -= 1
     end
+
+    last
   end
 
   def == other
