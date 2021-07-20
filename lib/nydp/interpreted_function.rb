@@ -3,14 +3,6 @@ require 'nydp/lexical_context_builder'
 require 'nydp/closure'
 
 module Nydp
-  # class PopArg
-  #   # def self.execute vm ; vm.args.pop ; end
-  #   def self.execute vm ; nil ; end
-  #   def self.to_s       ; ""          ; end
-  #   def self.inspect    ; "#pop_arg"  ; end
-  #   def compile_to_ruby ; ""          ; end
-  # end
-
   class InterpretedFunction
     NIL = Nydp::NIL
     include Helper
