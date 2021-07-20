@@ -56,3 +56,28 @@
                 joint
                 (cdr things))
       prefix))
+
+;; returns the 'thing if the 'thing is present? ; otherwise nil
+;; useful for compressing forms like
+;;
+;; (let thing (get-the-thing)
+;;   (if (present? thing)
+;;     (do-thing-stuff thing)))
+;;
+;; down to
+;;
+;; (aif (nb thing) (do-thing-stuff it))
+;;
+;;
+;; or, alternatively, compressing
+;;
+;; (let thing (get-the-thing)
+;;   (if (present? thing)
+;;       thing
+;;       (get-the-other-thing)))
+;;
+;; down to
+;;
+;; (or (nb (get-the-thing)) (get-the-other-thing))
+;;
+(def nb (thing) (if (present? thing) thing nil))
