@@ -1,16 +1,6 @@
 module Nydp
   class Parser
-    # attr_accessor :ns
-
-    # def initialize ns
-      # @ns = ns
-      # TODO pre-initialize all the hard-coded syms used here, eg
-      # @quote = sym(:quote)
-      # @quasiquote = sym(:quasiquote)
-    # end
-
     def sym name
-      # Nydp::Symbol.mk name.to_sym, ns
       n = name.to_s.to_sym
       if n == :nil
         Nydp::NIL
