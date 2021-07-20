@@ -15,7 +15,7 @@ module Nydp
     end
 
     def compile_to_ruby
-      rubyargs = ["vm"]
+      rubyargs = ["ns"]
       an = arg_names
       while (pair? an)
         rubyargs << "_arg_#{an.car.to_s._nydp_name_to_rb_name}=nil"
@@ -23,7 +23,7 @@ module Nydp
       end
 
       if Nydp::NIL.isnt?(an)
-        rubyargs << "_arg_#{an.to_s._nydp_name_to_rb_name}=nil"
+        rubyargs << "*_arg_#{an.to_s._nydp_name_to_rb_name}"
       end
 
       code = "  (->(#{rubyargs.join ","}) {\n"
