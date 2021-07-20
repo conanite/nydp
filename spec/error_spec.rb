@@ -18,7 +18,7 @@ describe Nydp::VM do
       end
 
       expect(error).to be_a Nydp::Error
-      expect(error.message).to eq "failed to eval (/ 10 0)"
+      expect(error.message).to eq "failed to eval (/ 10 0) from src (/ 10 0)"
 
       expect(error.cause).to be_a Nydp::InvocationFailed
       expect(error.cause.message).to eq "failed to execute invocation builtin//
