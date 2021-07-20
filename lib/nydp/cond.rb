@@ -22,9 +22,9 @@ module Nydp
 
     def compile_to_ruby
       "if (#{@condition.compile_to_ruby})
-         (#{when_true.compile_to_ruby})
+         (#{@when_true.compile_to_ruby})
        else
-         (#{when_false.compile_to_ruby})
+         (#{@when_false.compile_to_ruby})
        end"
     end
 
@@ -74,6 +74,9 @@ module Nydp
 
     def inspect ; "cond:#{@condition._nydp_inspect}:#{@when_true._nydp_inspect}:#{@when_false._nydp_inspect}" ; end
     def to_s    ; "(cond #{@condition.to_s} #{@when_true.to_s} #{@when_false.to_s})" ; end
+    def compile_to_ruby
+      "((#{@condition.compile_to_ruby}) ? (#{@when_true.compile_to_ruby}) : (#{@when_false.compile_to_ruby}))"
+    end
   end
 
   class Cond_LEX < CondBase
@@ -145,10 +148,6 @@ module Nydp
   class Cond_LEX_LIT_LIT < CondBase # (def no (arg) (cond arg nil t))
     def execute vm
       (@condition.value vm.current_context) ? @when_true : @when_false
-    end
-
-    def compile_to_ruby
-      "(Nydp::NIL.is?(#{@condition.compile_to_ruby})) ? #{@when_false.compile_to_ruby} : #{@when_true.compile_to_ruby}"
     end
   end
 
