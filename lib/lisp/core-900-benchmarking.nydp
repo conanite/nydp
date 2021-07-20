@@ -1,5 +1,326 @@
 (chapter-start 'core-benchmarking "utils for benchmarking / measuring performance improvements")
 
+
+
+;; 2021-07-18 initial state after ruby-vm (kill Nydp::VM, use loops instead of recursion)
+
+;; ENABLED invocation optimisations, all browsers closed
+;; sig opt 4 : total 4.541110850999999, average 0.4541110850999999 per run
+;; sig opt 3 : total 4.233554706, average 0.42335547059999995 per run
+;; sig opt 2 : total 3.8893162720000003, average 0.3889316272 per run
+;; sig opt 1 : total 4.043861785000001, average 0.4043861785000001 per run
+
+;; DISABLED invocation optimisations, all browsers closed
+;; sig opt 4 : total 5.311701500000002, average 0.5311701500000001 per run
+;; sig opt 3 : total 4.705393086000001, average 0.4705393086000001 per run
+;; sig opt 2 : total 4.874784166000001, average 0.48747841660000013 per run
+;; sig opt 1 : total 5.174885633, average 0.5174885632999999 per run
+
+;; ENABLED cond optimisations, 2nd run, all browsers closed
+;; 2nd run : sig conditionals : total 4.008352403999999, average 0.4008352403999999 per run
+;; 3rd run : sig conditionals : total 4.009742814000001, average 0.4009742814000001 per run
+
+;; NO cond optimisations, all browsers closed
+;; 2nd run : sig conditionals : total 4.159752815, average 0.4159752815 per run
+;; 3rd run : sig conditionals : total 4.0797304279999995, average 0.40797304279999996 per run
+
+;; ENABLED cond optimisations, 2nd run, all browsers closed
+;; ================================================
+;;    sig conditionals : total 4.165200359, average 0.4165200359 per run
+;;    sig opt 4 : total 4.835078564, average 0.4835078564 per run
+;;    sig opt 3 : total 4.428351295, average 0.4428351295 per run
+;;    sig opt 2 : total 3.9052602330000004, average 0.3905260233 per run
+;;    sig opt 1 : total 4.167876979000001, average 0.4167876979000001 per run
+
+
+;; NO cond optimisations, 2nd run, all browsers closed
+;; ================================================
+;;    sig conditionals : total 4.195927696, average 0.4195927696 per run
+;;    sig opt 4 : total 4.932003079, average 0.4932003079 per run
+;;    sig opt 3 : total 4.452767801000001, average 0.4452767801000001 per run
+;;    sig opt 2 : total 3.954285836999999, average 0.3954285836999999 per run
+;;    sig opt 1 : total 4.097334289, average 0.4097334289 per run
+;; nil
+
+
+;; ================================================
+;; Benchmark: sig opt 1 - 10 runs of 100000 iterations each
+;;   took: 0.426503837 ms, 4.26503837e-06 ms per iteration
+;;   took: 0.413642331 ms, 4.13642331e-06 ms per iteration
+;;   took: 0.422597112 ms, 4.22597112e-06 ms per iteration
+;;   took: 0.418587151 ms, 4.18587151e-06 ms per iteration
+;;   took: 0.424305825 ms, 4.24305825e-06 ms per iteration
+;;   took: 0.41488239 ms, 4.1488239e-06 ms per iteration
+;;   took: 0.422100791 ms, 4.22100791e-06 ms per iteration
+;;   took: 0.422288266 ms, 4.22288266e-06 ms per iteration
+;;   took: 0.447425729 ms, 4.4742572899999995e-06 ms per iteration
+;;   took: 0.42137804 ms, 4.2137804e-06 ms per iteration
+;; total 4.2337114719999995, average 0.42337114719999996 per run
+;; ================================================
+
+;; ================================================
+;; Benchmark: sig opt 2 - 10 runs of 100000 iterations each
+;;   took: 0.390394571 ms, 3.90394571e-06 ms per iteration
+;;   took: 0.393454324 ms, 3.93454324e-06 ms per iteration
+;;   took: 0.393321497 ms, 3.933214970000001e-06 ms per iteration
+;;   took: 0.395412523 ms, 3.95412523e-06 ms per iteration
+;;   took: 0.396412323 ms, 3.9641232300000005e-06 ms per iteration
+;;   took: 0.389947137 ms, 3.89947137e-06 ms per iteration
+;;   took: 0.394602936 ms, 3.94602936e-06 ms per iteration
+;;   took: 0.391583985 ms, 3.91583985e-06 ms per iteration
+;;   took: 0.393477322 ms, 3.93477322e-06 ms per iteration
+;;   took: 0.396048008 ms, 3.96048008e-06 ms per iteration
+;; total 3.9346546260000004, average 0.39346546260000004 per run
+;; ================================================
+
+;; ================================================
+;; Benchmark: sig opt 3 - 10 runs of 1000 iterations each
+;;   took: 0.451705754 ms, 0.000451705754 ms per iteration
+;;   took: 0.455307888 ms, 0.000455307888 ms per iteration
+;;   took: 0.449316439 ms, 0.000449316439 ms per iteration
+;;   took: 0.455164749 ms, 0.00045516474899999997 ms per iteration
+;;   took: 0.450765149 ms, 0.000450765149 ms per iteration
+;;   took: 0.452652457 ms, 0.000452652457 ms per iteration
+;;   took: 0.453089724 ms, 0.00045308972400000003 ms per iteration
+;;   took: 0.450432394 ms, 0.000450432394 ms per iteration
+;;   took: 0.457052758 ms, 0.000457052758 ms per iteration
+;;   took: 0.454898091 ms, 0.000454898091 ms per iteration
+;; total 4.530385403, average 0.4530385403 per run
+;; ================================================
+
+;; ================================================
+;; Benchmark: sig opt 4 - 10 runs of 5000 iterations each
+;;   took: 0.495521834 ms, 9.910436679999999e-05 ms per iteration
+;;   took: 0.49755384 ms, 9.951076800000001e-05 ms per iteration
+;;   took: 0.552695865 ms, 0.000110539173 ms per iteration
+;;   took: 0.492433916 ms, 9.84867832e-05 ms per iteration
+;;   took: 0.494145933 ms, 9.882918659999999e-05 ms per iteration
+;;   took: 0.492996487 ms, 9.85992974e-05 ms per iteration
+;;   took: 0.497015332 ms, 9.94030664e-05 ms per iteration
+;;   took: 0.492309001 ms, 9.84618002e-05 ms per iteration
+;;   took: 0.494715669 ms, 9.89431338e-05 ms per iteration
+;;   took: 0.490812481 ms, 9.81624962e-05 ms per iteration
+;; total 5.000200358, average 0.5000200358 per run
+;; ================================================
+
+;; ================================================
+;; Benchmark: sig conditionals - 10 runs of 25000 iterations each
+;;   took: 0.431557899 ms, 1.726231596e-05 ms per iteration
+;;   took: 0.426571858 ms, 1.7062874320000002e-05 ms per iteration
+;;   took: 0.430284569 ms, 1.721138276e-05 ms per iteration
+;;   took: 0.42693517 ms, 1.70774068e-05 ms per iteration
+;;   took: 0.427953987 ms, 1.7118159479999998e-05 ms per iteration
+;;   took: 0.430319221 ms, 1.721276884e-05 ms per iteration
+;;   took: 0.426118186 ms, 1.704472744e-05 ms per iteration
+;;   took: 0.432150037 ms, 1.7286001479999998e-05 ms per iteration
+;;   took: 0.425839283 ms, 1.703357132e-05 ms per iteration
+;;   took: 0.430216539 ms, 1.720866156e-05 ms per iteration
+;; total 4.2879467490000005, average 0.42879467490000006 per run
+;; ================================================
+;;    sig conditionals : total 4.2879467490000005, average 0.42879467490000006 per run
+;;    sig opt 4 : total 5.000200358, average 0.5000200358 per run
+;;    sig opt 3 : total 4.530385403, average 0.4530385403 per run
+;;    sig opt 2 : total 3.9346546260000004, average 0.39346546260000004 per run
+;;    sig opt 1 : total 4.2337114719999995, average 0.42337114719999996 per run
+
+
+
+;; ================================================
+;; Benchmark: sig opt 1 - 10 runs of 100000 iterations each
+;;   took: 0.450890062 ms, 4.5089006199999994e-06 ms per iteration
+;;   took: 0.432765088 ms, 4.32765088e-06 ms per iteration
+;;   took: 0.434230634 ms, 4.3423063400000005e-06 ms per iteration
+;;   took: 0.434357508 ms, 4.34357508e-06 ms per iteration
+;;   took: 0.436309824 ms, 4.36309824e-06 ms per iteration
+;;   took: 0.433316817 ms, 4.33316817e-06 ms per iteration
+;;   took: 0.433160962 ms, 4.33160962e-06 ms per iteration
+;;   took: 0.436266355 ms, 4.36266355e-06 ms per iteration
+;;   took: 0.433903638 ms, 4.33903638e-06 ms per iteration
+;;   took: 0.433309169 ms, 4.33309169e-06 ms per iteration
+;; total 4.358510057, average 0.4358510057 per run
+;; ================================================
+
+;; ================================================
+;; Benchmark: sig opt 2 - 10 runs of 100000 iterations each
+;;   took: 0.406172146 ms, 4.06172146e-06 ms per iteration
+;;   took: 0.410655107 ms, 4.10655107e-06 ms per iteration
+;;   took: 0.429369977 ms, 4.29369977e-06 ms per iteration
+;;   took: 0.411830985 ms, 4.11830985e-06 ms per iteration
+;;   took: 0.408426065 ms, 4.08426065e-06 ms per iteration
+;;   took: 0.406196975 ms, 4.06196975e-06 ms per iteration
+;;   took: 0.408817666 ms, 4.0881766600000006e-06 ms per iteration
+;;   took: 0.405828419 ms, 4.05828419e-06 ms per iteration
+;;   took: 0.405799685 ms, 4.05799685e-06 ms per iteration
+;;   took: 0.409665169 ms, 4.09665169e-06 ms per iteration
+;; total 4.102762193999999, average 0.4102762193999999 per run
+;; ================================================
+
+;; ================================================
+;; Benchmark: sig opt 3 - 10 runs of 1000 iterations each
+;;   took: 0.453698393 ms, 0.000453698393 ms per iteration
+;;   took: 0.455538224 ms, 0.000455538224 ms per iteration
+;;   took: 0.457062157 ms, 0.000457062157 ms per iteration
+;;   took: 0.456968192 ms, 0.00045696819199999997 ms per iteration
+;;   took: 0.458888122 ms, 0.000458888122 ms per iteration
+;;   took: 0.458823928 ms, 0.000458823928 ms per iteration
+;;   took: 0.453924711 ms, 0.000453924711 ms per iteration
+;;   took: 0.471214934 ms, 0.000471214934 ms per iteration
+;;   took: 0.458353467 ms, 0.000458353467 ms per iteration
+;;   took: 0.465602218 ms, 0.000465602218 ms per iteration
+;; total 4.590074346, average 0.4590074346 per run
+;; ================================================
+
+;; ================================================
+;; Benchmark: sig opt 4 - 10 runs of 5000 iterations each
+;;   took: 0.500212815 ms, 0.000100042563 ms per iteration
+;;   took: 0.496506238 ms, 9.93012476e-05 ms per iteration
+;;   took: 0.496074053 ms, 9.921481060000001e-05 ms per iteration
+;;   took: 0.49651661 ms, 9.930332200000001e-05 ms per iteration
+;;   took: 0.497912166 ms, 9.95824332e-05 ms per iteration
+;;   took: 0.578322371 ms, 0.0001156644742 ms per iteration
+;;   took: 0.510024182 ms, 0.0001020048364 ms per iteration
+;;   took: 0.49581022 ms, 9.916204400000001e-05 ms per iteration
+;;   took: 0.49836314 ms, 9.9672628e-05 ms per iteration
+;;   took: 0.495195561 ms, 9.903911220000001e-05 ms per iteration
+;; total 5.064937356000001, average 0.5064937356000001 per run
+;; ================================================
+
+;; ================================================
+;; Benchmark: sig cond and - 10 runs of 800 iterations each
+;;   took: 0.478098974 ms, 0.0005976237175 ms per iteration
+;;   took: 0.477069456 ms, 0.00059633682 ms per iteration
+;;   took: 0.478260275 ms, 0.00059782534375 ms per iteration
+;;   took: 0.47783629 ms, 0.0005972953625 ms per iteration
+;;   took: 0.48105838 ms, 0.0006013229750000001 ms per iteration
+;;   took: 0.476168432 ms, 0.00059521054 ms per iteration
+;;   took: 0.477739359 ms, 0.00059717419875 ms per iteration
+;;   took: 0.484042839 ms, 0.00060505354875 ms per iteration
+;;   took: 0.487843433 ms, 0.00060980429125 ms per iteration
+;;   took: 0.475485017 ms, 0.00059435627125 ms per iteration
+;; total 4.793602455, average 0.4793602455 per run
+;; ================================================
+;;    sig cond and : total 4.793602455, average 0.4793602455 per run
+;;    sig opt 4 : total 5.064937356000001, average 0.5064937356000001 per run
+;;    sig opt 3 : total 4.590074346, average 0.4590074346 per run
+;;    sig opt 2 : total 4.102762193999999, average 0.4102762193999999 per run
+;;    sig opt 1 : total 4.358510057, average 0.4358510057 per run
+
+
+;; ================================================
+;; Benchmark: sig opt 1 - 10 runs of 100000 iterations each
+;;   took: 0.575892683 ms, 5.758926829999999e-06 ms per iteration
+;;   took: 0.537105537 ms, 5.37105537e-06 ms per iteration
+;;   took: 0.538311191 ms, 5.38311191e-06 ms per iteration
+;;   took: 0.543976664 ms, 5.43976664e-06 ms per iteration
+;;   took: 0.53516757 ms, 5.3516757e-06 ms per iteration
+;;   took: 0.539703213 ms, 5.3970321300000005e-06 ms per iteration
+;;   took: 0.547180394 ms, 5.471803939999999e-06 ms per iteration
+;;   took: 0.548641598 ms, 5.4864159800000005e-06 ms per iteration
+;;   took: 0.546513722 ms, 5.46513722e-06 ms per iteration
+;;   took: 0.545944 ms, 5.45944e-06 ms per iteration
+;; total 5.458436572, average 0.5458436572 per run
+;; ================================================
+
+;; ================================================
+;; Benchmark: sig opt 2 - 10 runs of 100000 iterations each
+;;   took: 0.51480253 ms, 5.1480252999999995e-06 ms per iteration
+;;   took: 0.513128265 ms, 5.13128265e-06 ms per iteration
+;;   took: 0.51480177 ms, 5.148017700000001e-06 ms per iteration
+;;   took: 0.51551997 ms, 5.1551997e-06 ms per iteration
+;;   took: 0.509997725 ms, 5.09997725e-06 ms per iteration
+;;   took: 0.545524793 ms, 5.45524793e-06 ms per iteration
+;;   took: 0.521997808 ms, 5.219978079999999e-06 ms per iteration
+;;   took: 0.513020251 ms, 5.1302025100000004e-06 ms per iteration
+;;   took: 0.518397573 ms, 5.18397573e-06 ms per iteration
+;;   took: 0.513850827 ms, 5.13850827e-06 ms per iteration
+;; total 5.181041512, average 0.5181041512 per run
+;; ================================================
+
+;; ================================================
+;; Benchmark: sig opt 3 - 10 runs of 1000 iterations each
+;;   took: 0.498506397 ms, 0.0004985063969999999 ms per iteration
+;;   took: 0.493703647 ms, 0.000493703647 ms per iteration
+;;   took: 0.504859137 ms, 0.000504859137 ms per iteration
+;;   took: 0.49425609 ms, 0.00049425609 ms per iteration
+;;   took: 0.499983229 ms, 0.000499983229 ms per iteration
+;;   took: 0.497676601 ms, 0.000497676601 ms per iteration
+;;   took: 0.50095158 ms, 0.00050095158 ms per iteration
+;;   took: 0.497156536 ms, 0.000497156536 ms per iteration
+;;   took: 0.501644945 ms, 0.000501644945 ms per iteration
+;;   took: 0.49730586 ms, 0.00049730586 ms per iteration
+;; total 4.986044022, average 0.49860440219999996 per run
+;; ================================================
+
+;; ================================================
+;; Benchmark: sig opt 4 - 10 runs of 5000 iterations each
+;;   took: 0.550266175 ms, 0.000110053235 ms per iteration
+;;   took: 0.538462067 ms, 0.0001076924134 ms per iteration
+;;   took: 0.542079009 ms, 0.0001084158018 ms per iteration
+;;   took: 0.53964453 ms, 0.000107928906 ms per iteration
+;;   took: 0.536724566 ms, 0.00010734491319999999 ms per iteration
+;;   took: 0.577451092 ms, 0.0001154902184 ms per iteration
+;;   took: 0.544880157 ms, 0.00010897603140000001 ms per iteration
+;;   took: 0.549302216 ms, 0.0001098604432 ms per iteration
+;;   took: 0.540363939 ms, 0.0001080727878 ms per iteration
+;;   took: 0.545993756 ms, 0.0001091987512 ms per iteration
+;; total 5.465167506999999, average 0.5465167506999999 per run
+;; ================================================
+;;    sig opt 4 : total 5.465167506999999, average 0.5465167506999999 per run
+;;    sig opt 3 : total 4.986044022, average 0.49860440219999996 per run
+;;    sig opt 2 : total 5.181041512, average 0.5181041512 per run
+;;    sig opt 1 : total 5.458436572, average 0.5458436572 per run
+;; nil
+
+
+;; ================================================
+;; Benchmark: sig opt 1 - 10 runs of 100000 iterations each
+;;   took: 0.538973581 ms, 5.38973581e-06 ms per iteration
+;;   took: 0.531348816 ms, 5.3134881599999994e-06 ms per iteration
+;;   took: 0.565600737 ms, 5.65600737e-06 ms per iteration
+;;   took: 0.534819684 ms, 5.34819684e-06 ms per iteration
+;;   took: 0.536657152 ms, 5.36657152e-06 ms per iteration
+;;   took: 0.52856209 ms, 5.2856209e-06 ms per iteration
+;;   took: 0.528734358 ms, 5.28734358e-06 ms per iteration
+;;   took: 0.526918027 ms, 5.26918027e-06 ms per iteration
+;;   took: 0.532292993 ms, 5.32292993e-06 ms per iteration
+;;   took: 0.534837871 ms, 5.34837871e-06 ms per iteration
+;; total 5.358745308999999, average 0.5358745308999999 per run
+;; ================================================
+
+;; ================================================
+;; Benchmark: sig opt 2 - 10 runs of 100000 iterations each
+;;   took: 0.515825533 ms, 5.15825533e-06 ms per iteration
+;;   took: 0.512412581 ms, 5.12412581e-06 ms per iteration
+;;   took: 0.515675872 ms, 5.15675872e-06 ms per iteration
+;;   took: 0.519812429 ms, 5.19812429e-06 ms per iteration
+;;   took: 0.515804433 ms, 5.15804433e-06 ms per iteration
+;;   took: 0.515844402 ms, 5.1584440200000005e-06 ms per iteration
+;;   took: 0.512207609 ms, 5.12207609e-06 ms per iteration
+;;   took: 0.513890528 ms, 5.13890528e-06 ms per iteration
+;;   took: 0.515194419 ms, 5.151944189999999e-06 ms per iteration
+;;   took: 0.513272453 ms, 5.13272453e-06 ms per iteration
+;; total 5.149940259, average 0.5149940259 per run
+;; ================================================
+
+;; ================================================
+;; Benchmark: sig opt 3 - 10 runs of 1000 iterations each
+;;   took: 0.494206291 ms, 0.000494206291 ms per iteration
+;;   took: 0.490103847 ms, 0.000490103847 ms per iteration
+;;   took: 0.551380196 ms, 0.0005513801959999999 ms per iteration
+;;   took: 0.491522228 ms, 0.000491522228 ms per iteration
+;;   took: 0.498186612 ms, 0.000498186612 ms per iteration
+;;   took: 0.490628694 ms, 0.0004906286939999999 ms per iteration
+;;   took: 0.496565118 ms, 0.000496565118 ms per iteration
+;;   took: 0.491208812 ms, 0.000491208812 ms per iteration
+;;   took: 0.494697483 ms, 0.000494697483 ms per iteration
+;;   took: 0.492709838 ms, 0.000492709838 ms per iteration
+;; total 4.991209119, average 0.49912091189999996 per run
+;; ================================================
+;;    sig opt 3 : total 4.991209119, average 0.49912091189999996 per run
+;;    sig opt 2 : total 5.149940259, average 0.5149940259 per run
+;;    sig opt 1 : total 5.358745308999999, average 0.5358745308999999 per run
+
+
 ;; (def bm-cond ()
 ;;   (if (< 3 5) "less" "more"))
 
@@ -147,8 +468,27 @@
 ;;   (for i 1 10
 ;;        (pre-compile (dox-src rbs))))
 
+;; (def bm-map-range () (with (a 1 b 10) (map (fn (n) (apply + (range 0 n))) (range a b))))
+;; (def bm-accum () (accum a (each b (range 1 10) (a b))))
+
 ;; (def bm-sym-lex-lex-lex () (with (a 1 b 2 c 3) (+ a b c)))
 ;; (def bm-sym-lex-lit-lex () (with (a 1 c 3) (+ a 2 c)))
+
+;; (def bm-cond-and ()
+;;   (with (even?   λn(eq? (mod n 2) 0)
+;;          triple? λn(eq? (mod n 3) 0)
+;;          big?    λn(> n 10))
+;;         (select (andify even? triple? big?) (range -10 31))))
+
+;; (def bm-conditionals ()
+;;   (with (a 1 b 2)
+;;         (list
+;;          (if (pair? a) (no a) a)
+;;          (if a (pair? a) t)
+;;          (if (and (pair? a) (no a) a)
+;;              (or a b)
+;;              (or b a))
+;;          (if a (pair? a) b))))
 
 ;; (def bm-hash-fill ()
 ;;   (with (h {} v1 1 v2 2 v3 3 v4 4 v5 5 v6 6)
@@ -216,6 +556,7 @@
 ;; total 7.228159722999999, average 0.7228159722999999 per run
 ;; ================================================
 ;;    string concatenation     : total 7.228159722999999, average 0.7228159722999999 per run
+
 ;; (def bm-string-concat ()
 ;;   (+
 ;;      (+ "this" "that" "another")
@@ -296,6 +637,10 @@
     ;; (push (bm "length of pair "     bm-len-pair                10  10000) summary)
     ;; (push (bm "sig opt 1"           bm-sym-lex-lex-lex         10 100000) summary)
     ;; (push (bm "sig opt 2"           bm-sym-lex-lit-lex         10 100000) summary)
+    ;; (push (bm "sig opt 3"           bm-map-range               10 1000) summary)
+    ;; (push (bm "sig opt 4"           bm-accum                   10 5000) summary)
+    ;; (push (bm "sig cond and"        bm-cond-and                10 800) summary)
+    ;; (push (bm "sig conditionals"    bm-conditionals            10 25000) summary)
     ;; (push (bm "hashing"             bm-hash-fill               10 5000) summary)
     ;; (push (bm "length of hash "     bm-len-hash             10  15000) summary)
     ;; (push (bm "length of uncountable "     bm-len-fn        10  50000) summary)
