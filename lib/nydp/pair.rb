@@ -72,6 +72,16 @@ class Nydp::Pair
     a.cdr
   end
 
+  def compile_to_ruby
+    a,x = [], self
+    while x
+      a << x.car.compile_to_ruby
+      x = x.cdr
+    end
+
+    "Nydp::Pair.from_list([" + a.join(", ") + "])"
+  end
+
   def nth n
     xs = self
     while n > 0
