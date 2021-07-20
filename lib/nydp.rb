@@ -7,6 +7,17 @@ module Nydp
   end
 
   class Namespace < Hash
+    def method_missing name, *args
+      if name.to_s =~ /^ns_/
+        attr = name.to_s.gsub(/=$/, '').to_sym
+        singleton_class.instance_eval do
+          attr_accessor attr
+        end
+        send name, *args
+      else
+        super
+      end
+    end
   end
 
   # TODO: write VM #apply_function so we have fewer calls to VM.new
