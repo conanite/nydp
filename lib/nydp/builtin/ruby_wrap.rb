@@ -79,4 +79,7 @@ CODE
   core_builder.build(:Car , 1, %{ a0.car }                        )
   core_builder.build(:Cdr , 1, %{ a0.cdr }                        )
   core_builder.build(:Log , 1, %{ r2n Nydp.logger.info(a0.to_s) } )
+
+  # TODO this is for exploration purposes only, to be deleted
+  core_builder.build :CompileToRuby, 1, %{ a0.compile_to_ruby }
 end
