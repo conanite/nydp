@@ -40,28 +40,50 @@ module Nydp
     attr_accessor :vm, :ns, :name
 
     def initialize vm, ns, name
-      @name       = name
-      @vm         = vm
-      @ns         = ns
-      @precompile = :"pre-compile"
-      @quote      = :quote
+      @name = name
+      @vm   = vm
+      @ns   = ns
     end
 
-    def compile_and_eval expr
+    def compile_expr expr
       begin
-        # vm.thread_with_expr Pair.new(Compiler.compile(expr, Nydp::NIL, ns), Nydp::NIL)
-        Compiler.compile(expr, Nydp::NIL, ns).execute(vm)
+        Compiler.compile(expr, Nydp::NIL, ns)
       rescue StandardError => e
-        raise Nydp::Error, "failed to eval #{expr._nydp_inspect}"
+        raise Nydp::Error, "failed to compile #{expr._nydp_inspect}"
+      end
+    end
+
+    def eval_compiled compiled_expr, src
+      begin
+        ruby_expr = compiled_expr.compile_to_ruby
+        proc_expr = "->(ns) { #{ruby_expr} }"
+        puts
+        puts "---------------------------------------"
+        puts compiled_expr.class
+        if compiled_expr.class.name == "Nydp::Invocation::Invocation_SYM_LIT"
+          
+        end
+        puts compiled_expr
+        puts proc_expr
+        puts "---------------------------------------"
+        puts
+        eval(proc_expr).call(ns)
+      # compiled_expr.execute(vm)
+
+      rescue Exception => e
+        raise Nydp::Error, "failed to eval #{compiled_expr._nydp_inspect} from src #{src._nydp_inspect}"
       end
     end
 
     def pre_compile expr
-      compile_and_eval(Pair.from_list [@precompile, Pair.from_list([@quote, expr])])
+      precompile = Pair.from_list [:"pre-compile", Pair.from_list([:quote, expr])]
+      compiled   = compile_expr precompile
+      eval_compiled compiled, precompile
     end
 
     def evaluate expr
-      compile_and_eval(pre_compile(expr))
+      compiled = compile_expr pre_compile(expr)
+      eval_compiled compiled, expr
     end
   end
 
