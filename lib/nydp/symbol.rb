@@ -21,12 +21,15 @@ class Nydp::Symbol
   end
 
   def value context=nil
-    # raise Unbound.new("unbound symbol: #{self._nydp_inspect}") if @value == nil
     @value
   end
 
+  def ruby_name
+    "ns_#{name.to_s._nydp_name_to_rb_name}"
+  end
+
   def compile_to_ruby
-    "@ns_#{name.to_s._nydp_name_to_rb_name}"
+    "ns.#{ruby_name}"
   end
 
   def self.special name
@@ -52,9 +55,11 @@ class Nydp::Symbol
   def <             other ; self.name < other.name   ; end
   def <=>           other ; self.name <=> other.name ; end
   def assign value, _=nil ; @value = value           ; end
-  # def execute          vm ; vm.push_arg self.value   ; end
   def execute          vm ; self.value   ; end
 
+  def ns_assign ns, value
+    ns.send(:"#{ruby_name}=", value)
+  end
   def == other
     other.is_a?(Nydp::Symbol) && (self.name == other.name)
   end
