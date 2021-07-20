@@ -76,10 +76,6 @@ class ::Array
   def _nydp_inspect ; "[" + map(&:_nydp_inspect).join(" ") + "]" ; end
 end
 
-class ::Hash
-  def _nydp_inspect ; "{" + map { |k,v| [k._nydp_inspect, v._nydp_inspect].join(" ")}.join(" ") + "}" ; end
-end
-
 class ::String
   # _hex_ord only works for characters whose #ord is < 256, ie #bytes returns a single-element array
   # this should allow for two-way conversion of names containing the characters in the regexp
@@ -92,7 +88,8 @@ end
 
 class ::Hash
   include Nydp::Helper
-  def _nydp_get a    ; self[n2r a]           ; end
-  def _nydp_set a, v ; self[n2r a] = n2r(v)  ; end
-  def _nydp_keys     ; keys                  ; end
+  def _nydp_get a    ; self[n2r a]._nydp_wrapper ; end
+  def _nydp_set a, v ; self[n2r a] = n2r(v)  ; v ; end
+  def _nydp_keys     ; keys                      ; end
+  def _nydp_inspect  ; "{" + map { |k,v| [k._nydp_inspect, v._nydp_inspect].join(" ")}.join(" ") + "}" ; end
 end
