@@ -5,6 +5,10 @@ module Nydp::Builtin
     def builtin_invoke vm, args
       args.car.to_s
     end
+
+    def call ns, arg=nil
+      arg.to_s
+    end
   end
 
   class StringLength

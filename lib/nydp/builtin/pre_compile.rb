@@ -5,4 +5,8 @@ class Nydp::Builtin::PreCompile
     # vm.push_arg args.car
     args.car
   end
+
+  def call ns, *args
+    args.first
+  end
 end

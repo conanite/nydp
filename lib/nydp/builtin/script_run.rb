@@ -5,4 +5,8 @@ class Nydp::Builtin::ScriptRun
     # vm.push_arg args
     args
   end
+
+  def call ns, *args
+    args
+  end
 end

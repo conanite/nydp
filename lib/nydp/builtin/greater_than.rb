@@ -2,8 +2,7 @@ class Nydp::Builtin::GreaterThan
   include Nydp::Builtin::Base, Singleton
 
   def builtin_invoke vm, args
-    # vm.push_arg(greater_than(args.car, args.cdr) || Nydp::NIL)
-    greater_than(args.car, args.cdr) || Nydp::NIL
+    greater_than(args.car, args.cdr) || nil
   end
 
   def greater_than arg, args
@@ -12,4 +11,14 @@ class Nydp::Builtin::GreaterThan
   end
 
   def name ; ">" ; end
+
+  def gt arg, args
+    return arg if args.empty?
+    a2 = args.shift
+    (arg > a2) && gt(a2, args) # recursive, but we don't expect an argument list to be too long?
+  end
+
+  def call ns, *args
+    gt(args.shift, args) || nil
+  end
 end

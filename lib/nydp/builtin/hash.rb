@@ -16,13 +16,21 @@ class Nydp::Builtin::Hash
     h[k] = v
     build_hash h, rest.cdr
   end
+
+  def call ns, *args
+    Hash[*args]
+  end
 end
 
 class Nydp::Builtin::HashGet
   include Nydp::Helper, Nydp::Builtin::Base, Singleton
   def builtin_invoke vm, args
     # vm.push_arg(args.car._nydp_get(args.cdr.car)._nydp_wrapper || Nydp::NIL)
-    args.car._nydp_get(args.cdr.car)._nydp_wrapper || Nydp::NIL
+    args.car._nydp_get(args.cdr.car)._nydp_wrapper
+  end
+
+  def call ns, hsh=nil, k=nil, *args
+    hsh._nydp_get(k)._nydp_wrapper
   end
 end
 
@@ -70,6 +78,10 @@ class Nydp::Builtin::HashMerge
 
     # vm.push_arg hash_0.merge hash_1
     hash_0.merge hash_1
+  end
+
+  def call ns, a0, a1
+    (a0.merge a1)._nydp_wrapper
   end
 end
 

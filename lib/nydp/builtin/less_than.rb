@@ -11,5 +11,9 @@ class Nydp::Builtin::LessThan
     (arg < args.car) && less_than(args.car, args.cdr)
   end
 
+  def call ns, *args
+    raise "hell"
+  end
+
   def name ; "<" ; end
 end

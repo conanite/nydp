@@ -40,4 +40,19 @@ class Nydp::Builtin::Plus
   end
 
   def name ; "+" ; end
+
+  def call ns, *args
+    if args == []
+      0
+    else
+      case args.first
+      when Nydp::Pair
+        args.reduce &:+
+      when String
+        args.each_with_object("") { |str, res| res << str }
+      else
+        args.reduce &:+
+      end
+    end._nydp_wrapper
+  end
 end
