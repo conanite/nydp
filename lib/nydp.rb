@@ -38,7 +38,7 @@ module Nydp
     end
 
     function ||= function_name if function_name.respond_to?(:call)
-    function.call ns, *r2n(args)
+    function.call *r2n(args)
   rescue StandardError => e
     friendly_args = args.map { |a| a.respond_to?(:_nydp_compact_inspect) ? a._nydp_compact_inspect : a }
     raise Nydp::Error.new("Invoking #{function_name}\nwith args #{friendly_args._nydp_inspect}")

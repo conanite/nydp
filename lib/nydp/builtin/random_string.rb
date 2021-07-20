@@ -5,8 +5,10 @@ class Nydp::Builtin::RandomString
 
   def builtin_invoke vm, args
     length = args.car unless Nydp::NIL.is?(args)
-    s = (0...(length || 10)).inject("") {|a,i| a << RANDOM_CHARS[rand(RANDOM_CHARS.size)] }
-    # vm.push_arg s
-    s
+    (0...(length || 10)).inject("") {|a,i| a << RANDOM_CHARS[rand(RANDOM_CHARS.size)] }
+  end
+
+  def call length
+    (0...(length || 10)).inject("") {|a,i| a << RANDOM_CHARS[rand(RANDOM_CHARS.size)] }
   end
 end

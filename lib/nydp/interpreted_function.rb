@@ -15,7 +15,8 @@ module Nydp
     end
 
     def compile_to_ruby
-      rubyargs = ["ns"]
+      # rubyargs = ["ns"]
+      rubyargs = []
       an = arg_names
       while (pair? an)
         rubyargs << "_arg_#{an.car.to_s._nydp_name_to_rb_name}=nil"

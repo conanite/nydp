@@ -6,7 +6,7 @@ module Nydp::Builtin
       args.car.to_s
     end
 
-    def call ns, arg=nil
+    def call arg=nil
       arg.to_s
     end
   end

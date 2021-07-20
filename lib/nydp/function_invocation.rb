@@ -23,7 +23,8 @@ module Nydp
              rescue => e
                ["\n# can't compile argument_instructions #{@expr} (#{@expr.class}) #{e.message}"]
              end
-        "#{ra.shift}.call(#{ra.unshift("ns").join(", ")})"
+        # "#{ra.shift}.call(#{ra.unshift("ns").join(", ")})"
+        "#{ra.shift}.call(#{ra.join(", ")})"
       end
 
       def handle e, f, invoker, *args
@@ -447,7 +448,8 @@ module Nydp
              rescue e
                ["\n# can't compile argument_instructions #{argument_instructions} (#{argument_instructions.class}) #{e.message}"]
              end
-      "#{ra.shift}.call(#{ra.unshift("ns").join(", ")})"
+      # "#{ra.shift}.call(#{ra.unshift("ns").join(", ")})"
+      "#{ra.shift}.call(#{ra.join(", ")})"
     end
 
     @@seen = { }

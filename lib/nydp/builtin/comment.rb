@@ -4,4 +4,8 @@ class Nydp::Builtin::Comment
   def builtin_invoke vm, args
     Nydp::NIL
   end
+
+  def call *args
+    nil
+  end
 end

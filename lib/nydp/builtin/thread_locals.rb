@@ -5,7 +5,7 @@ class Nydp::Builtin::ThreadLocals
     vm.locals
   end
 
-  def call ns, *args
-    Thread[:_nydp_thread_locals] ||= { }
+  def call *args
+    Thread.current[:_nydp_thread_locals] ||= { }
   end
 end

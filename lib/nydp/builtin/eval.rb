@@ -7,7 +7,7 @@ class Nydp::Builtin::Eval
     evaluator.evaluate args.car
   end
 
-  def call ns, *args
+  def call *args
     evaluator = Nydp::Evaluator.new Nydp::VM.new(ns), ns, "<eval>"
     evaluator.evaluate args.first
   end

@@ -17,7 +17,7 @@ class Nydp::Builtin::Hash
     build_hash h, rest.cdr
   end
 
-  def call ns, *args
+  def call *args
     Hash[*args]
   end
 end
@@ -29,7 +29,7 @@ class Nydp::Builtin::HashGet
     args.car._nydp_get(args.cdr.car)._nydp_wrapper
   end
 
-  def call ns, hsh=nil, k=nil, *args
+  def call hsh=nil, k=nil, *args
     hsh._nydp_get(k)._nydp_wrapper
   end
 end
@@ -41,6 +41,11 @@ class Nydp::Builtin::HashSet
     args.car._nydp_set(args.cdr.car, value)
     # vm.push_arg value
     value
+  end
+
+  def call hsh, k, v=nil
+    hsh._nydp_set(k, v)
+    v
   end
 end
 
@@ -80,7 +85,7 @@ class Nydp::Builtin::HashMerge
     hash_0.merge hash_1
   end
 
-  def call ns, a0, a1
+  def call a0, a1
     (a0.merge a1)._nydp_wrapper
   end
 end

@@ -18,7 +18,7 @@ class Nydp::Builtin::GreaterThan
     (arg > a2) && gt(a2, args) # recursive, but we don't expect an argument list to be too long?
   end
 
-  def call ns, *args
+  def call *args
     gt(args.shift, args) || nil
   end
 end

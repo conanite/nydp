@@ -5,7 +5,7 @@ class Nydp::Builtin::Apply
     args.car.invoke vm, apply_args(args.cdr)
   end
 
-  def call ns, arg, *args
+  def call arg, *args
     arg.call(ns, *(args.last == nil) ? args : args.concat(args.pop))
   end
 

@@ -16,7 +16,7 @@ class Nydp::Builtin::Divide
 
   def name ; "/" ; end
 
-  def call ns, *args
+  def call *args
     (args.reduce &:/)._nydp_wrapper
   end
 

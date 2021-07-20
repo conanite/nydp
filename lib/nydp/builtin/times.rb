@@ -25,7 +25,7 @@ class Nydp::Builtin::Times
 
   def name ; "*" ; end
 
-  def call ns, *args
+  def call *args
     (args.reduce &:*)._nydp_wrapper
   end
 end

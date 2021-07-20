@@ -6,7 +6,7 @@ class Nydp::Builtin::ScriptRun
     args
   end
 
-  def call ns, *args
+  def call *args
     args
   end
 end

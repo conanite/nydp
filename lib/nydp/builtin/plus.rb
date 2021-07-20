@@ -41,7 +41,7 @@ class Nydp::Builtin::Plus
 
   def name ; "+" ; end
 
-  def call ns, *args
+  def call *args
     if args == []
       0
     else
