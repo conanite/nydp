@@ -6,6 +6,7 @@ class Object
   def _nydp_inspect   ; inspect ; end
   def lexical_reach n ; n       ; end
   def to_ruby         ; self    ; end
+  def compile_to_ruby ; inspect ; end
 end
 
 class Method
@@ -79,13 +80,11 @@ class ::Hash
   def _nydp_inspect ; "{" + map { |k,v| [k._nydp_inspect, v._nydp_inspect].join(" ")}.join(" ") + "}" ; end
 end
 
-class ::Object
-  def to_ruby        ; self                       ; end
-end
-
 class ::String
   # _hex_ord only works for characters whose #ord is < 256, ie #bytes returns a single-element array
-  def _nydp_name_to_rb_name ; self.gsub(/[-_\+\[\]\?\!\*\.\|#@\$%\^\&\(\)=\{\}\"\'\:\;~`<>\/\,\<\>]/) { |chr| "_#{chr._hex_ord}"}.to_sym ; end
+  # this should allow for two-way conversion of names containing the characters in the regexp
+  # even though we don't use two-way conversion anywhere just yet
+  def _nydp_name_to_rb_name ; self.gsub(/[-_\+\[\]\?\!\*\.\|#@\$%\^\&\(\)=\{\}\"\'\:\;~`<>\/\,\<\> ]/) { |chr| "_#{chr._hex_ord}"}.to_sym ; end
   def as_method_name ; self.gsub(/-/, '_').to_sym ; end
   def nydp_type      ; :string                    ; end
   def _hex_ord       ; ord.to_s(16).rjust(2, '0') ; end
