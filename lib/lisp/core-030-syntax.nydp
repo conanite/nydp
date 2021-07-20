@@ -306,6 +306,8 @@ scoping, assignment, anonymous functions and more...")
       (caris 'unquote k)   (cadr k)
       k))
 
+;; TODO instead expand to: (hash 'k1 v1 'k2 v2 'k3 v3 ...)
+;; TODO builtin-hash function takes care of constructing the hash
 (def brace-list-build-hash (args)
   (w/uniq hash
     (let mappings (pairs args)
