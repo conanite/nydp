@@ -14,7 +14,7 @@ describe Nydp do
   end
 
   it "should make a symbol from a string" do
-    expect(run '(sym "the-family")').to eq sym(:"the-family")
+    expect(run '(sym "the-family")').to eq :"the-family"
   end
 
   it "should sum integers" do
