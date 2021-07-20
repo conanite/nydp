@@ -20,10 +20,10 @@ module Nydp
       def compile_to_ruby
         ra = begin
                @expr.map &:compile_to_ruby
-             rescue e
+             rescue => e
                ["\n# can't compile argument_instructions #{@expr} (#{@expr.class}) #{e.message}"]
              end
-        "#{ra.shift}.call(#{ra.join(", ")})"
+        "#{ra.shift}.call(#{ra.unshift("ns").join(", ")})"
       end
 
       def handle e, f, invoker, *args
@@ -447,7 +447,7 @@ module Nydp
              rescue e
                ["\n# can't compile argument_instructions #{argument_instructions} (#{argument_instructions.class}) #{e.message}"]
              end
-      "#{ra.shift}.call(#{ra.join(", ")})"
+      "#{ra.shift}.call(#{ra.unshift("ns").join(", ")})"
     end
 
     @@seen = { }
