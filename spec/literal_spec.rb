@@ -22,8 +22,9 @@ describe Nydp::Literal do
   describe "false" do
     it "is stored in toplevel namespace" do
       Nydp::Core.new.setup ns
-      nydp_false = Nydp::Symbol.mk :false, ns
-      expect(nydp_false.value).to eq false
+      # nydp_false = Nydp::Symbol.mk :false, ns
+      # expect(nydp_false.value).to eq false
+      expect(ns.ns_false).to eq false
     end
   end
 end
