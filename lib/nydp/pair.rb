@@ -74,12 +74,12 @@ class Nydp::Pair
 
   def compile_to_ruby
     a,x = [], self
-    while x
+    while x.is_a?(Nydp::Pair)
       a << x.car.compile_to_ruby
       x = x.cdr
     end
 
-    "Nydp::Pair.from_list([" + a.join(", ") + "])"
+    "Nydp::Pair.from_list([" + a.join(", ") + "], #{x.compile_to_ruby})"
   end
 
   def nth n
@@ -113,12 +113,16 @@ class Nydp::Pair
 
   # returns Array of elements as they are
   def to_a list=[]
-    list << car
-    cdr.is_a?(Nydp::Pair) ? cdr.to_a(list) : list
+    x = self
+    while x.is_a?(Nydp::Pair)
+      list << x.car
+      x = x.cdr
+    end
+    list
   end
 
   def self.parse_list list
-    if sym? list.slice(-2), "."
+    if list.slice(-2) == :"."
       from_list(list[0...-2], list.slice(-1))
     else
       from_list list
