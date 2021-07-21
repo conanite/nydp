@@ -96,8 +96,9 @@ end
 
 class ::Hash
   include Nydp::Helper
-  def _nydp_get a    ; self[n2r a]._nydp_wrapper ; end
-  def _nydp_set a, v ; self[n2r a] = n2r(v)  ; v ; end
+  def _nydp_get a    ; self[a]._nydp_wrapper     ; end
+  def _nydp_set a, v ; self[a] = v               ; end
   def _nydp_keys     ; keys                      ; end
   def _nydp_inspect  ; "{" + map { |k,v| [k._nydp_inspect, v._nydp_inspect].join(" ")}.join(" ") + "}" ; end
+  def nydp_type      ; :hash                     ; end
 end

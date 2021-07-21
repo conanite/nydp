@@ -8,10 +8,9 @@ describe Nydp::Hash do
 
     describe "hash set" do
       it "returns a new Nydp hash" do
-        k    = Nydp::Symbol.mk "keysym", ns
+        k    = :keysym
         v    = "foobar"
-        args = pair_list [ahash, k, v]
-        a    = Nydp::Builtin::HashSet.instance.invoke vm, args
+        a    = Nydp::Builtin::HashSet.instance.call ahash, k, v
 
         expect(ahash[:keysym]).      to eq "foobar"
         expect(ahash[:keysym].class).to eq String
