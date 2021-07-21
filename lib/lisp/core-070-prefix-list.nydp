@@ -1,4 +1,3 @@
-
 (assign prefix-list-prefixes ())
 
 (def prefix-match-fn (txt)
@@ -6,7 +5,7 @@
 
 (def find-prefix-rule (prefix)
   (cdr:detect (prefix-match-fn prefix)
-        prefix-list-prefixes))
+       prefix-list-prefixes))
 
 ;; looks up a handler in 'prefix-list-prefixes
 ;; whose 'car matches the prefix, and whose 'cdr
