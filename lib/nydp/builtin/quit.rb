@@ -4,4 +4,8 @@ class Nydp::Builtin::Quit
   def builtin_invoke vm, args
     exit
   end
+
+  def builtin_call *args
+    exit
+  end
 end
