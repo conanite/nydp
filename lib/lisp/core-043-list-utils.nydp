@@ -162,28 +162,29 @@
       more-thingses
       (apply joinlists more-thingses)))
 
+(def detect-helper (f things found)
+  (loop (and (no found) (pair? things))
+        (let it (car things)
+          (= found (and (f it) (or it t))
+             things (cdr things))))
+  (if (and (no found) things)
+      (= found (and (f things) things)))
+  found)
+
+
+;; if 'f is a function,
+;;   if 'things is a list, return the first item in the list for which 'f returns non-nil
+;;   otherwise, return 'things if (f things) is non-nil
+;;   otherwise, nil
+;; if 'f is not a function, self-invoke with a function checking for equality with f
+;;
+;; WARNING: if the detected thing is nil, returns t instead. A return value of nil
+;; means the thing was not found ; non-nil means the thing was found, including when
+;; the found thing is itself nil.
 (def detect (f things)
-  ; if 'f is a function,
-  ;   if 'things is a list, return the first item in the list for which 'f returns non-nil
-  ;   otherwise, return 'things if (f things) is non-nil
-  ;   otherwise, nil
-  ; if 'f is not a function, self-invoke with a function checking for equality with f
-  ;
-  ; WARNING: if the detected thing is nil, returns t instead. A return value of nil
-  ; means the thing was not found ; non-nil means the thing was found, including when
-  ; the found thing is itself nil.
   (if (isa 'fn f)
-      (rfnwith d (items things)
-                 (if (pair? items)
-                     (let it (car items)
-                       (or
-                        (and (f it)
-                             (or it t))
-                        (d:cdr items)))
-                     (f items)
-                     items))
-      (detect (curry eq? f)
-              things)))
+      (detect-helper f things nil)
+      (detect-helper (fn (thing) (eq? f thing)) things nil)))
 
 ;; split things into a list of lists each n long
 (def tuples (n things)
