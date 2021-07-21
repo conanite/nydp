@@ -37,17 +37,13 @@
                         (failf))))))
 
 (def execute-tests (desc tests passf failf verbose)
-  (execute-test desc
-                (car tests)
-                passf
-                failf
-                verbose)
-  (if (cdr tests)
-      (execute-tests desc
-                     (cdr tests)
-                     passf
-                     failf
-                     verbose)))
+  (while tests
+    (execute-test desc
+                  (car tests)
+                  passf
+                  failf
+                  verbose)
+    (= tests (cdr tests))))
 
 (mac examples-for (name . examples)
   (let suite-name "examples for ~(pp name)"
