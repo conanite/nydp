@@ -22,7 +22,6 @@
 
 (assign pre-compile-msg
         (fn (src compiled)
-            (p "pre-compile" src "\n  -> " compiled)
             compiled))
 
 (assign pre-compile-raw
