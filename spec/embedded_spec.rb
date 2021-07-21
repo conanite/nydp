@@ -39,7 +39,7 @@ describe Nydp::Parser do
 
   def parse_string txt
     reader = Nydp::StringReader.new txt
-    Nydp.new_parser(ns).embedded(Nydp.new_tokeniser(reader))
+    Nydp.new_parser.embedded(Nydp.new_tokeniser(reader))
   end
 
   it "should parse empty string" do

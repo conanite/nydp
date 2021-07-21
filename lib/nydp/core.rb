@@ -47,7 +47,7 @@ module Nydp
       Symbol.mk(:apply, ns).ns_assign(ns, Nydp::Builtin::Apply.instance)
       Symbol.mk(:date,  ns).ns_assign(ns, Nydp::Builtin::Date.instance)
       Symbol.mk(:error, ns).ns_assign(ns, Nydp::Builtin::Error.instance)
-      Symbol.mk(:parse, ns).ns_assign(ns, Nydp::Builtin::Parse.new(ns))
+      Symbol.mk(:parse, ns).ns_assign(ns, Nydp::Builtin::Parse.instance)
       Symbol.mk(:p,     ns).ns_assign(ns, Nydp::Builtin::Puts.instance)
       Symbol.mk(:PI,    ns).ns_assign ns, 3.1415
       Symbol.mk(:rand,  ns).ns_assign ns, Nydp::Builtin::Rand.instance
@@ -58,7 +58,7 @@ module Nydp
       Symbol.mk(:inspect           , ns).ns_assign(ns, Nydp::Builtin::Inspect.instance)
       Symbol.mk(:comment           , ns).ns_assign(ns, Nydp::Builtin::Comment.instance)
       Symbol.mk("handle-error"     , ns).ns_assign(ns, Nydp::Builtin::HandleError.instance)
-      Symbol.mk("parse-in-string"  , ns).ns_assign(ns, Nydp::Builtin::ParseInString.new(ns))
+      Symbol.mk("parse-in-string"  , ns).ns_assign(ns, Nydp::Builtin::ParseInString.instance)
       Symbol.mk("random-string"    , ns).ns_assign(ns, Nydp::Builtin::RandomString.instance)
       Symbol.mk("to-string"        , ns).ns_assign(ns, Nydp::Builtin::ToString.instance)
       Symbol.mk("to-integer"       , ns).ns_assign(ns, Nydp::Builtin::ToInteger.instance)

@@ -40,8 +40,8 @@ module Nydp
     function ||= function_name if function_name.respond_to?(:call)
     function.call *r2n(args)
   rescue StandardError => e
-    friendly_args = args.map { |a| a.respond_to?(:_nydp_compact_inspect) ? a._nydp_compact_inspect : a }
-    raise Nydp::Error.new("Invoking #{function_name}\nwith args #{friendly_args._nydp_inspect}")
+    friendly_args = args.map { |a| a.respond_to?(:_nydp_compact_inspect) ? a._nydp_compact_inspect : a._nydp_inspect }
+    raise Nydp::Error.new("Invoking #{function_name}\nwith args #{friendly_args.inspect}")
   end
 
   def self.reader                          txt ; Nydp::StringReader.new txt                                 ; end
@@ -49,8 +49,7 @@ module Nydp
   def self.eval_with runner, ns, src_txt, name ; runner.new(VM.new(ns), ns, reader(src_txt), nil, name).run ; end
   def self.ms                           t1, t0 ; ((t1 - t0) * 1000).to_i                                    ; end
   def self.new_tokeniser                reader ; Nydp::Tokeniser.new reader                                 ; end
-  # def self.new_parser                       ns ; Nydp::Parser.new(ns)                                       ; end
-  def self.new_parser                       ns ; Nydp::Parser.new                                           ; end
+  def self.new_parser                          ; Nydp::Parser.new                                           ; end
 
   def self.indent_message indent, msg
     msg.split(/\n/).map { |line| "#{indent}#{line}" }.join("\n")

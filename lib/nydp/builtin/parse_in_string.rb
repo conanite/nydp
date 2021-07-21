@@ -1,13 +1,8 @@
 class Nydp::Builtin::ParseInString
-  include Nydp::Builtin::Base
-
-  def initialize ns
-    @ns = ns
-    super()
-  end
+  include Nydp::Builtin::Base, Singleton
 
   def builtin_invoke vm, args
-    parser = Nydp.new_parser(vm.ns)
+    parser = Nydp.new_parser
     parsable = args.car.to_s
     tokens = Nydp.new_tokeniser Nydp::StringReader.new parsable
     expr = parser.embedded(tokens)
@@ -19,7 +14,7 @@ class Nydp::Builtin::ParseInString
   end
 
   def builtin_call arg
-    parser = Nydp.new_parser(@ns)
+    parser = Nydp.new_parser
     tokens = Nydp.new_tokeniser Nydp::StringReader.new arg.to_s
     parser.embedded(tokens)
   rescue StandardError => e
