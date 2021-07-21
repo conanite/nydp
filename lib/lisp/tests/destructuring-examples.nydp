@@ -76,7 +76,7 @@
   ("warns about arg names shadowing macro names"
    (do (without-hooks 'warnings/new
                       λ(on-err nil
-                               (pre-compile '(fun (aif (and or) . when)
+                               (apply macs.fun '((aif (and or) . when)
                                                   ignore))))
        warnings/list)
    ((arg-shadows-macro "arg " when " shadows macro " when " in arg list " (aif (and or) . when) " and body " (ignore) )
