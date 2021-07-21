@@ -3,6 +3,23 @@ require 'nydp/lexical_context_builder'
 require 'nydp/closure'
 
 module Nydp
+  class ProcWithSource < Proc
+    attr_accessor :src
+    def initialize src, &b
+      super &b
+      @src = src
+    end
+    def to_s
+      src
+    end
+    def inspect
+      "<Proc:#{to_s}>"
+    end
+    def nydp_type
+      :fn
+    end
+  end
+
   class InterpretedFunction
     NIL = Nydp::NIL
     include Helper
@@ -24,10 +41,14 @@ module Nydp
       end
 
       if Nydp::NIL.isnt?(an)
-        rubyargs << "*_arg_#{an.to_s._nydp_name_to_rb_name}"
+        rest_arg = "_arg_#{an.to_s._nydp_name_to_rb_name}"
+        rubyargs << "*#{rest_arg}"
       end
 
-      code = "  (->(#{rubyargs.join ","}) {\n"
+      code = "  (Nydp::ProcWithSource.new(#{to_s.inspect}) {|#{rubyargs.join ","}| (\n"
+      if rest_arg
+        code << "#{rest_arg} = #{rest_arg}._nydp_wrapper\n"
+      end
       body.each { |instr|
         if instr.respond_to? :compile_to_ruby
           code << "    " << instr.compile_to_ruby << "\n"
@@ -35,7 +56,7 @@ module Nydp
           code << "    # NOCOMPILE : #{instr._nydp_inspect} (#{instr.class})"
         end
       }
-      code << "  })"
+      code << " )._nydp_wrapper })"
     end
 
     def self.build arg_list, body, bindings, ns
@@ -82,7 +103,7 @@ module Nydp
     def nydp_type ; "fn" ; end
     def inspect   ; to_s ; end
     def to_s
-      "(fn #{arg_names._nydp_inspect} #{body.map { |b| b._nydp_inspect}.join(' ')})"
+      "(fn #{arg_names._nydp_inspect} #{body.map { |b| b._nydp_inspect}.join('\n')})"
     end
 
     def run_body vm

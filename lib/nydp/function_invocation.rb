@@ -21,10 +21,11 @@ module Nydp
         ra = begin
                @expr.map &:compile_to_ruby
              rescue => e
-               ["\n# can't compile argument_instructions #{@expr} (#{@expr.class}) #{e.message}"]
+               ["\n# #{__FILE__}##{__LINE__} can't compile argument_instructions #{@expr} (#{@expr.class}) #{e.message}"]
              end
-        # "#{ra.shift}.call(#{ra.unshift("ns").join(", ")})"
-        "#{ra.shift}.call(#{ra.join(", ")})"
+        fn = ra.shift
+
+        "#{fn}.call(#{ra.join(", ")})"
       end
 
       def handle e, f, invoker, *args
@@ -439,14 +440,14 @@ module Nydp
     attr_accessor :function_instruction, :argument_instructions
 
     def lexical_reach n
-      function_instruction.car.lexical_reach(n)
+      function_instruction.lexical_reach(n)
     end
 
     def compile_to_ruby
         ra = begin
                argument_instructions.map &:compile_to_ruby
              rescue e
-               ["\n# can't compile argument_instructions #{argument_instructions} (#{argument_instructions.class}) #{e.message}"]
+               ["\n# #{__FILE__}##{__LINE__} can't compile argument_instructions #{argument_instructions} (#{argument_instructions.class}) #{e.message}"]
              end
       # "#{ra.shift}.call(#{ra.unshift("ns").join(", ")})"
       "#{ra.shift}.call(#{ra.join(", ")})"

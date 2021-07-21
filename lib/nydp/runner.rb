@@ -57,19 +57,7 @@ module Nydp
       begin
         ruby_expr = compiled_expr.compile_to_ruby
         proc_expr = "->(ns) { #{ruby_expr} }"
-        puts
-        puts "---------------------------------------"
-        puts compiled_expr.class
-        if compiled_expr.class.name == "Nydp::Invocation::Invocation_SYM_LIT"
-          
-        end
-        puts compiled_expr
-        puts proc_expr
-        puts "---------------------------------------"
-        puts
-        eval(proc_expr).call(ns)
-      # compiled_expr.execute(vm)
-
+        eval(proc_expr, nil, src._nydp_inspect).call(ns)
       rescue Exception => e
         raise Nydp::Error, "failed to eval #{compiled_expr._nydp_inspect} from src #{src._nydp_inspect}"
       end
@@ -82,7 +70,8 @@ module Nydp
     end
 
     def evaluate expr
-      compiled = compile_expr pre_compile(expr)
+      precompiled = pre_compile(expr)
+      compiled    = compile_expr precompiled
       eval_compiled compiled, expr
     end
   end
