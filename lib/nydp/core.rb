@@ -25,10 +25,15 @@ module Nydp
     end
 
     def setup ns
-      Symbol.mk(:cons         , ns).ns_assign(ns, Nydp::Builtin::RubyWrap::Cons.instance)
-      Symbol.mk(:car          , ns).ns_assign(ns, Nydp::Builtin::RubyWrap::Car.instance )
-      Symbol.mk(:cdr          , ns).ns_assign(ns, Nydp::Builtin::RubyWrap::Cdr.instance )
-      Symbol.mk(:log          , ns).ns_assign(ns, Nydp::Builtin::RubyWrap::Log.instance )
+      Symbol.mk(:cons  , ns).ns_assign(ns, Nydp::Builtin::RubyWrap::Cons.instance  )
+      Symbol.mk(:car   , ns).ns_assign(ns, Nydp::Builtin::RubyWrap::Car.instance   )
+      Symbol.mk(:cdr   , ns).ns_assign(ns, Nydp::Builtin::RubyWrap::Cdr.instance   )
+      Symbol.mk(:log   , ns).ns_assign(ns, Nydp::Builtin::RubyWrap::Log.instance   )
+      Symbol.mk(:mod   , ns).ns_assign(ns, Nydp::Builtin::RubyWrap::Modulo.instance)
+      Symbol.mk(:sqrt  , ns).ns_assign(ns, Nydp::Builtin::RubyWrap::Sqrt.instance  )
+      Symbol.mk(:regexp, ns).ns_assign(ns, Nydp::Builtin::RubyWrap::Regexp.instance)
+      Symbol.mk("string/pad-left" , ns).ns_assign(ns, Nydp::Builtin::RubyWrap::StringPadLeft.instance)
+      Symbol.mk("string/pad-right", ns).ns_assign(ns, Nydp::Builtin::RubyWrap::StringPadRight.instance)
 
       Symbol.mk(:+,     ns).ns_assign(ns, Nydp::Builtin::Plus.instance)
       Symbol.mk(:-,     ns).ns_assign(ns, Nydp::Builtin::Minus.instance)
@@ -36,38 +41,31 @@ module Nydp
       Symbol.mk(:/,     ns).ns_assign(ns, Nydp::Builtin::Divide.instance)
       Symbol.mk(:>,     ns).ns_assign(ns, Nydp::Builtin::GreaterThan.instance)
       Symbol.mk(:<,     ns).ns_assign(ns, Nydp::Builtin::LessThan.instance)
-      Symbol.mk(:mod,   ns).ns_assign(ns, Nydp::Builtin::Modulo.instance)
-      Symbol.mk(:eval,  ns).ns_assign(ns, Nydp::Builtin::Eval.instance)
+      Symbol.mk(:eval,  ns).ns_assign(ns, Nydp::Builtin::Eval.new(ns))
       Symbol.mk(:false, ns).ns_assign(ns, false)
       Symbol.mk(:hash,  ns).ns_assign(ns, Nydp::Builtin::Hash.instance)
       Symbol.mk(:apply, ns).ns_assign(ns, Nydp::Builtin::Apply.instance)
       Symbol.mk(:date,  ns).ns_assign(ns, Nydp::Builtin::Date.instance)
       Symbol.mk(:error, ns).ns_assign(ns, Nydp::Builtin::Error.instance)
-      Symbol.mk(:parse, ns).ns_assign(ns, Nydp::Builtin::Parse.instance)
+      Symbol.mk(:parse, ns).ns_assign(ns, Nydp::Builtin::Parse.new(ns))
       Symbol.mk(:p,     ns).ns_assign(ns, Nydp::Builtin::Puts.instance)
-      Symbol.mk(:PI,    ns).assign 3.1415
-      # Symbol.mk(:nil,   ns).assign Nydp::NIL
+      Symbol.mk(:PI,    ns).ns_assign ns, 3.1415
       Symbol.mk(:rand,  ns).ns_assign ns, Nydp::Builtin::Rand.instance
       Symbol.mk(:sort,  ns).ns_assign ns, Nydp::Builtin::Sort.instance
       Symbol.mk(:abs,   ns).ns_assign ns, Nydp::Builtin::Abs.instance
-      Symbol.mk(:sqrt,  ns).ns_assign ns, Nydp::Builtin::Sqrt.instance
-      # Symbol.mk(:t,     ns).assign Nydp::T
-      Symbol.mk(:sym,   ns).assign Nydp::Builtin::Sym.instance
+      Symbol.mk(:sym,   ns).ns_assign ns, Nydp::Builtin::Sym.instance
       Symbol.mk(:ensuring          , ns).ns_assign(ns, Nydp::Builtin::Ensuring.instance)
       Symbol.mk(:inspect           , ns).ns_assign(ns, Nydp::Builtin::Inspect.instance)
       Symbol.mk(:comment           , ns).ns_assign(ns, Nydp::Builtin::Comment.instance)
       Symbol.mk("handle-error"     , ns).ns_assign(ns, Nydp::Builtin::HandleError.instance)
-      Symbol.mk("parse-in-string"  , ns).ns_assign(ns, Nydp::Builtin::ParseInString.instance)
+      Symbol.mk("parse-in-string"  , ns).ns_assign(ns, Nydp::Builtin::ParseInString.new(ns))
       Symbol.mk("random-string"    , ns).ns_assign(ns, Nydp::Builtin::RandomString.instance)
-      Symbol.mk("regexp"           , ns).ns_assign(ns, Nydp::Builtin::Regexp.instance)
       Symbol.mk("to-string"        , ns).ns_assign(ns, Nydp::Builtin::ToString.instance)
       Symbol.mk("to-integer"       , ns).ns_assign(ns, Nydp::Builtin::ToInteger.instance)
       Symbol.mk("string-length"    , ns).ns_assign(ns, Nydp::Builtin::StringLength.instance)
       Symbol.mk("string-replace"   , ns).ns_assign(ns, Nydp::Builtin::StringReplace.instance)
       Symbol.mk("string-match"     , ns).ns_assign(ns, Nydp::Builtin::StringMatch.instance)
       Symbol.mk("string-split"     , ns).ns_assign(ns, Nydp::Builtin::StringSplit.instance)
-      Symbol.mk("string/pad-left"  , ns).ns_assign(ns, Nydp::Builtin::StringPadLeft.instance)
-      Symbol.mk("string/pad-right" , ns).ns_assign(ns, Nydp::Builtin::StringPadRight.instance)
       Symbol.mk("time"             , ns).ns_assign(ns, Nydp::Builtin::Time.instance)
       Symbol.mk("thread-locals"    , ns).ns_assign(ns, Nydp::Builtin::ThreadLocals.instance)
       Symbol.mk("type-of"          , ns).ns_assign(ns, Nydp::Builtin::TypeOf.instance)
