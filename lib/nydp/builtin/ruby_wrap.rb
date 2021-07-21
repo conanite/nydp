@@ -20,6 +20,18 @@ class Nydp::Builtin::RubyWrap
       end
     end
 
+    def arg_mapper_novm
+      case size
+      when 0 ; ""
+      when 1 ; "a0=nil"
+      when 2 ; "a0=nil, a1=nil"
+      when 3 ; "a0=nil, a1=nil, a2=nil"
+      when 4 ; "a0=nil, a1=nil, a2=nil, a3=nil"
+      when 5 ; "a0=nil, a1=nil, a2=nil, a3=nil, a4=nil"
+      else   ; raise "maximum 5 arguments!"
+      end
+    end
+
     def to_ruby
       generic_code = code.
                        gsub(/a0/, "args.car").
@@ -75,10 +87,15 @@ CODE
   end
 
   core_builder = builder ""
-  core_builder.build(:Cons, 2, %{ Nydp::Pair.new(a0, a1) }        )
-  core_builder.build(:Car , 1, %{ a0.car }                        )
-  core_builder.build(:Cdr , 1, %{ a0.cdr }                        )
-  core_builder.build(:Log , 1, %{ r2n Nydp.logger.info(a0.to_s) } )
+  core_builder.build(:Cons          , 2, %{ Nydp::Pair.new(a0, a1) }        )
+  core_builder.build(:Car           , 1, %{ a0.car }                        )
+  core_builder.build(:Cdr           , 1, %{ a0.cdr }                        )
+  core_builder.build(:Log           , 1, %{ r2n Nydp.logger.info(a0.to_s) } )
+  core_builder.build(:Modulo        , 2, %{ a0 % a1 }                       )
+  core_builder.build(:Sqrt          , 1, %{ Math.sqrt a0 }                  )
+  core_builder.build(:Regexp        , 1, %{ ::Regexp.compile(a0) }          )
+  core_builder.build(:StringPadLeft , 3, %{ a0.to_s.rjust(a1, a2.to_s) }    )
+  core_builder.build(:StringPadRight, 3, %{ a0.to_s.ljust(a1, a2.to_s) }    )
 
   # TODO this is for exploration purposes only, to be deleted
   core_builder.build :CompileToRuby, 1, %{ a0.compile_to_ruby }
