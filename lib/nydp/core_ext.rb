@@ -51,7 +51,6 @@ class FalseClass
 end
 
 class ::Symbol
-  # def _nydp_wrapper ; Nydp::FrozenSymbol.mk(self) ; end
   def _nydp_inspect
     _ins = to_s
     _nydp_untidy?(_ins) ? "|#{_ins.gsub(/\|/, '\|')}|" : _ins

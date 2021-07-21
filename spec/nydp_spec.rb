@@ -83,16 +83,17 @@ describe Nydp do
     expect(result).to eq 100
   end
 
-  it "should recurse without consuming extra memory" do
-    program = "(assign f1 (fn (x acc)
-                              (cond (< x 1)
-                                    (vm-info)
-                                    (f1 (- x 1)
-                                        (+ x acc)))))
-               (f1 1000 0)"
-    expected = parse "((contexts . 0) (instructions . 0) (args . 0))"
-    expect(run program).to eq expected
-  end
+  # no longer true or meaningful, nydp stack is implemented on top of ruby stack now, unlimited recursion is no longer available by default
+  # it "should recurse without consuming extra memory" do
+  #   program = "(assign f1 (fn (x acc)
+  #                             (cond (< x 1)
+  #                                   (vm-info)
+  #                                   (f1 (- x 1)
+  #                                       (+ x acc)))))
+  #              (f1 1000 0)"
+  #   expected = parse "((contexts . 0) (instructions . 0) (args . 0))"
+  #   expect(run program).to eq expected
+  # end
 
   describe :cond do
     it "should execute false conditionals" do

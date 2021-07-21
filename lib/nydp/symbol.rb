@@ -66,20 +66,3 @@ class Nydp::Symbol
 
   alias eql? ==
 end
-
-# class Nydp::FrozenSymbol < Nydp::Symbol
-#   @@frozen = { }
-
-#   def self.mk name
-#     name = name.to_s.to_sym
-#     @@frozen[name] ||= new(name)
-#   end
-
-#   def value _=nil
-#     raise Unbound.new("frozen symbol: #{self._nydp_inspect}")
-#   end
-
-#   def assign v, _=nil
-#     raise "can't assign to frozen: #{self._nydp_inspect}"
-#   end
-# end
