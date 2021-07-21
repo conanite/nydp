@@ -320,21 +320,21 @@ scoping, assignment, anonymous functions and more...")
       `(fn (obj) ,(build-hash-lookup-from 'obj (cdr arg)))
       `(fn (obj) ,(build-hash-lookup-from 'obj (list arg)))))
 
+;; parser expands a&b to (ampersand-syntax a b)
 (mac ampersand-syntax (pfx . rest)
-  ; parser expands a&b to (ampersand-syntax a b)
   (if (no (eq? pfx '||))
       (error "Irregular '& syntax: got prefix ~(inspect pfx) in ~(join-str pfx "&" rest)"))
   (if (cdr rest)
       (error "Irregular '& syntax: got suffix ~(inspect (cdr rest)) in ~(join-str pfx "&" rest)")
       (build-ampersand-syntax (car rest))))
 
-; override 'brace-list-mono in order to provide a useful interpretation for "{ x }" syntax
+;; override 'brace-list-mono in order to provide a useful interpretation for "{ x }" syntax
 (mac brace-list-mono (arg) arg)
 
-; interprets "{ }" as new hash
+;; interprets "{ }" as new hash
 (mac brace-list-empty () '(hash))
 
-; parser expands { foo bar } to (brace-list foo bar)
+;; parser expands { foo bar } to (brace-list foo bar)
 (mac brace-list args
   (if (no args)
       `(brace-list-empty)
@@ -342,13 +342,13 @@ scoping, assignment, anonymous functions and more...")
       `(brace-list-mono ,(car args))
       (brace-list-build-hash args)))
 
-; stores ,val in ,var, executes ,@body, returns ,var. Saves a line of code at the end of
-; 'let. If 'body assigns to 'var, the assigned value of 'var will be returned. See also 'returning
+;; stores ,val in ,var, executes ,@body, returns ,var. Saves a line of code at the end of
+;; 'let. If 'body assigns to 'var, the assigned value of 'var will be returned. See also 'returning
 (mac returnlet (var val . body) `(let ,var ,val ,@body ,var))
 
-; stores ,val, executes ,@body, and returns ,val. Assumes 'body is going to do something
-; destructive with 'val, but you want 'val before it gets changed. Note that if 'val is mutated
-; (eg hash), the mutated value will be returned. See also 'returnlet
+;; stores ,val, executes ,@body, and returns ,val. Assumes 'body is going to do something
+;; destructive with 'val, but you want 'val before it gets changed. Note that if 'val is mutated
+;; (eg hash), the mutated value will be returned. See also 'returnlet
 (mac returning (val . body) (w/uniq retval `(returnlet ,retval ,val ,@body)))
 
 (mac ifv (var expr . body)

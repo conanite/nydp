@@ -8,26 +8,26 @@
   (cdr:detect (prefix-match-fn prefix)
         prefix-list-prefixes))
 
+;; looks up a handler in 'prefix-list-prefixes
+;; whose 'car matches the prefix, and whose 'cdr
+;; is a function, which behaves like a macro, in that
+;; it processes the prefix name and the prefixed list,
+;; returning more code
 (mac prefix-list (prefix list)
-  ; looks up a handler in 'prefix-list-prefixes
-  ; whose 'car matches the prefix, and whose 'cdr
-  ; is a function, which behaves like a macro, in that
-  ; it processes the prefix name and the prefixed list,
-  ; returning more code
   (let handler (find-prefix-rule prefix)
     (and handler (handler prefix list))))
 
+;; define a macro to process a prefix-list where the prefix matches the given regex
+;; param: 'regex is the regex which should match the list prefix
+;; param: 'prefix-var is the variable whose value will be the actual matched prefix
+;; param: 'list-var is the variable whose value will be the corresponding list
+;; param: 'body the code which will actually transform the list
 (mac define-prefix-list-macro (regex prefix-var list-var . body)
-  ; define a macro to process a prefix-list where the prefix matches the given regex
-  ; param: 'regex is the regex which should match the list prefix
-  ; param: 'prefix-var is the variable whose value will be the actual matched prefix
-  ; param: 'list-var is the variable whose value will be the corresponding list
-  ; param: 'body the code which will actually transform the list
   `(push (cons ,regex (fn (,prefix-var ,list-var) ,@body))
          prefix-list-prefixes))
 
+;; allows (map λa(upcase a.name) people)
+;; as shortcut for (map (fn (a) (upcase a.name)) people)
 (define-prefix-list-macro "^λ.*" vars expr
-  ;; allows (map λa(upcase a.name) people)
-  ;; as shortcut for (map (fn (a) (upcase a.name)) people)
   (let var-list (map sym (collect !empty? (cdr:string-split vars "")))
     `(fn ,var-list ,expr)))

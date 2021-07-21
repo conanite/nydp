@@ -8,8 +8,8 @@
               (= things (cdr things))))
     (if things (+ cc 1) cc)))
 
+;; slice 'things into a list of lists each with maximum 'slice-size items
 (def list-slices (things slice-size)
-     ; slice 'things into a list of lists each with maximum 'slice-size items
      (chapter pagination)
      (if things
          (if (> slice-size (len things))
