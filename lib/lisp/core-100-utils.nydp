@@ -65,24 +65,6 @@
         (let mi (m2i anchor)
           (map λm(i2m (+ mi m)) mm))))
 
-;; each call to the name 'accfn-name with an arg will append the arg to the end of a list.
-;; This form returns the resulting list.
-;; Example (collect first names from a list of people)
-;;
-;;   (accum a (each person people (a person.firstname)))
-;;
-;; will return (Alice Bob Carol Declan Eliza Fionn)
-;;
-(mac accum (accfn-name . body)
-  (w/uniq (things last-cons)
-    `(with (,last-cons  (cons)
-            ,things     ,last-cons
-            ,accfn-name (fn (a)
-                            (= ,last-cons (cdr-set ,last-cons (cons a)))
-                            a))
-         ,@body
-         (cdr ,things))))
-
 ;; like 'accum, except 'accfn-name expects 2 args, a key and a value
 ;; value is hash-consed onto key in an internally-maintained hash
 ;; the form returns the resulting hash
