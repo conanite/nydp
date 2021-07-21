@@ -40,12 +40,15 @@
                                 slice-size)))
          nil))
 
+;; return a new list with 'inbetween in between every element of 'things
 (def intersperse (inbetween things)
-  ; return a new list with 'inbetween in between every element of 'things
-  (if (and (pair? things) (cdr things))
-      (apply list (car things) inbetween
-             (intersperse inbetween (cdr things)))
-      things))
+  (accum i
+         (while (pair? things)
+           (i (car things))
+           (if (cdr things)
+               (i inbetween))
+           (= things (cdr things)))
+         (if things (accum-end things))))
 
 ;; expects 'things a list of lists, joins the lists
 ;; placing 'inbetween in between each list.
