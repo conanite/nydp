@@ -2,6 +2,16 @@
 
 
 
+;; 2021-07-21 with compile-to-ruby
+;; 2nd run, all browsers closed
+;; sig conditionals : total 1.829855451, average 0.1829855451 per run
+;; sig opt 4 : total 1.6262486520000001, average 0.16262486520000002 per run
+;; sig opt 3 : total 1.620743386, average 0.1620743386 per run
+;; sig opt 2 : total 2.737928596, average 0.2737928596 per run
+;; sig opt 1 : total 2.738305964, average 0.27383059639999996 per run
+;; string concatenation     : total 2.112036525, average 0.2112036525 per run
+;; random string     : total 4.692295929, average 0.4692295929 per run
+
 ;; 2021-07-18 initial state after ruby-vm (kill Nydp::VM, use loops instead of recursion)
 
 ;; ENABLED invocation optimisations, all browsers closed
@@ -468,11 +478,11 @@
 ;;   (for i 1 10
 ;;        (pre-compile (dox-src rbs))))
 
-;; (def bm-map-range () (with (a 1 b 10) (map (fn (n) (apply + (range 0 n))) (range a b))))
-;; (def bm-accum () (accum a (each b (range 1 10) (a b))))
+(def bm-map-range () (with (a 1 b 10) (map (fn (n) (apply + (range 0 n))) (range a b))))
+(def bm-accum () (accum a (each b (range 1 10) (a b))))
 
-;; (def bm-sym-lex-lex-lex () (with (a 1 b 2 c 3) (+ a b c)))
-;; (def bm-sym-lex-lit-lex () (with (a 1 c 3) (+ a 2 c)))
+(def bm-sym-lex-lex-lex () (with (a 1 b 2 c 3) (+ a b c)))
+(def bm-sym-lex-lit-lex () (with (a 1 c 3) (+ a 2 c)))
 
 ;; (def bm-cond-and ()
 ;;   (with (even?   λn(eq? (mod n 2) 0)
@@ -480,15 +490,15 @@
 ;;          big?    λn(> n 10))
 ;;         (select (andify even? triple? big?) (range -10 31))))
 
-;; (def bm-conditionals ()
-;;   (with (a 1 b 2)
-;;         (list
-;;          (if (pair? a) (no a) a)
-;;          (if a (pair? a) t)
-;;          (if (and (pair? a) (no a) a)
-;;              (or a b)
-;;              (or b a))
-;;          (if a (pair? a) b))))
+(def bm-conditionals ()
+  (with (a 1 b 2)
+        (list
+         (if (pair? a) (no a) a)
+         (if a (pair? a) t)
+         (if (and (pair? a) (no a) a)
+             (or a b)
+             (or b a))
+         (if a (pair? a) b))))
 
 ;; (def bm-hash-fill ()
 ;;   (with (h {} v1 1 v2 2 v3 3 v4 4 v5 5 v6 6)
@@ -557,18 +567,18 @@
 ;; ================================================
 ;;    string concatenation     : total 7.228159722999999, average 0.7228159722999999 per run
 
-;; (def bm-string-concat ()
-;;   (+
-;;      (+ "this" "that" "another")
-;;      (+ "this" "that" "another")
-;;      (+ "this" "that" "another")
-;;      (+ "this" "that" "another")
-;;      (+ "this" "that" "another")
-;;      (+ "this" "that" "another")
-;;      (+ "this" "that" "another")
-;;      (+ "this" "that" "another")
-;;      (+ "this" "that" "another")
-;;      (+ "this" "that" "another")))
+(def bm-string-concat ()
+  (+
+     (+ "this" "that" "another")
+     (+ "this" "that" "another")
+     (+ "this" "that" "another")
+     (+ "this" "that" "another")
+     (+ "this" "that" "another")
+     (+ "this" "that" "another")
+     (+ "this" "that" "another")
+     (+ "this" "that" "another")
+     (+ "this" "that" "another")
+     (+ "this" "that" "another")))
 
 
 ;; ================================================
@@ -587,17 +597,17 @@
 ;; ================================================
 ;;    random string     : total 6.954955385999999, average 0.6954955385999999 per run
 
-;; (def bm-random-string ()
-;;   (list (random-string)
-;;         (random-string)
-;;         (random-string)
-;;         (random-string)
-;;         (random-string)
-;;         (random-string)
-;;         (random-string)
-;;         (random-string)
-;;         (random-string)
-;;         (random-string)))
+(def bm-random-string ()
+  (list (random-string)
+        (random-string)
+        (random-string)
+        (random-string)
+        (random-string)
+        (random-string)
+        (random-string)
+        (random-string)
+        (random-string)
+        (random-string)))
 
 
 ;; used in benchmarking
@@ -622,8 +632,8 @@
 
 (def rbs (name)
   (let summary nil
-    ;; (push (bm "random string    "   bm-random-string             10  20000) summary)
-    ;; (push (bm "string concatenation    "   bm-string-concat             10  20000) summary)
+    (push (bm "random string    "   bm-random-string             10  20000) summary)
+    (push (bm "string concatenation    "   bm-string-concat             10  20000) summary)
     ;; (push (bm "type-of    "   bm-type-of             10  20000) summary)
     ;; (push (bm "accum    "   bm-acc             10  500) summary)
     ;; (push (bm "accum    "   bm-facc            10  500) summary)
@@ -636,12 +646,12 @@
     ;; (push (bm "optimise DO forms "   bm-faster-do             10  10000) summary)
     ;; (push (bm "length of string "   bm-len-str              10  40000) summary)
     ;; (push (bm "length of pair "     bm-len-pair                10  10000) summary)
-    ;; (push (bm "sig opt 1"           bm-sym-lex-lex-lex         10 100000) summary)
-    ;; (push (bm "sig opt 2"           bm-sym-lex-lit-lex         10 100000) summary)
-    ;; (push (bm "sig opt 3"           bm-map-range               10 1000) summary)
-    ;; (push (bm "sig opt 4"           bm-accum                   10 5000) summary)
+    (push (bm "sig opt 1"           bm-sym-lex-lex-lex         10 100000) summary)
+    (push (bm "sig opt 2"           bm-sym-lex-lit-lex         10 100000) summary)
+    (push (bm "sig opt 3"           bm-map-range               10 1000) summary)
+    (push (bm "sig opt 4"           bm-accum                   10 5000) summary)
     ;; (push (bm "sig cond and"        bm-cond-and                10 800) summary)
-    ;; (push (bm "sig conditionals"    bm-conditionals            10 25000) summary)
+    (push (bm "sig conditionals"    bm-conditionals            10 25000) summary)
     ;; (push (bm "hashing"             bm-hash-fill               10 5000) summary)
     ;; (push (bm "length of hash "     bm-len-hash             10  15000) summary)
     ;; (push (bm "length of uncountable "     bm-len-fn        10  50000) summary)
