@@ -18,22 +18,10 @@
    ("error evaluating \"hello \~|u|, \~x + \~y is \~(+ 2 y), thank heavens!\"
 with arg names (a b c)\nand args (\"world\" 36 6)"
 
- "failed to execute invocation builtin/apply
-  (fn (a b c) (string-pieces \"hello \" u \", \" x \" + \" y \" is \" (+ 2 y) \", thank heavens!\"))
-  (\"world\" 36 6)
-source was (apply (string-eval-fn str arg-names) args)
-function name was apply"
-
 "Called builtin/apply
 with args
-  (fn (a b c) (string-pieces \"hello \" u \", \" x \" + \" y \" is \" (+ 2 y) \", thank heavens!\"))
+  <Proc:(fn (a b c) (string-pieces \"hello \" u \", \" x \" + \" y \" is \" (+ 2 y) \", thank heavens!\"))>
   (\"world\" 36 6)"
-
-"failed to execute invocation builtin/+
-  2
-  nil
-source was (+ 2 y)
-function name was +"
 
 "Called builtin/+
 with args

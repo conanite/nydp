@@ -1,0 +1,5 @@
+(examples-for empty-arg-list
+  ("empty rest args is really empty"
+   (let f (fn args args)
+     (apply f nil))
+   nil))

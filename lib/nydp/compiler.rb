@@ -21,7 +21,11 @@ module Nydp
       elsif literal? expression
         Literal.build expression, bindings, ns
       elsif expression.is_a? Nydp::Pair
-        compile_pair expression, bindings, ns
+        begin
+          compile_pair expression, bindings, ns
+        rescue => e
+          raise "failed to compile #{expression._nydp_inspect}"
+        end
       else
         raise Nydp::Error.new "failed to compile unrecognised expression:\n#{expression._nydp_inspect}\nwhich is a #{expression.class}"
       end
