@@ -11,8 +11,12 @@ class Nydp::Builtin::LessThan
     (arg < args.car) && less_than(args.car, args.cdr)
   end
 
-  def call *args
-    raise "hell"
+  def builtin_call arg, *args
+    while !args.empty?
+      return nil unless arg < args.first
+      arg = args.shift
+    end
+    return arg
   end
 
   def name ; "<" ; end

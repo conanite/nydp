@@ -3,8 +3,11 @@ module Nydp
     include Builtin::Base, Singleton
 
     def builtin_invoke vm, args
-      # vm.push_arg Pair.from_list to_array(args.car, []).sort
-      Pair.from_list to_array(args.car, []).sort
+      args.car.to_a.sort._nydp_wrapper
+    end
+
+    def builtin_call arg
+      arg.to_a.sort._nydp_wrapper
     end
 
     private

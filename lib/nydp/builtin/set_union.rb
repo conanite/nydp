@@ -10,4 +10,8 @@ class Nydp::Builtin::SetUnion
   def builtin_invoke_3    vm, a, b ; (a | b)          ; end
   def builtin_invoke_4 vm, a, b, c ; (a | b | c)      ; end
   def builtin_invoke      vm, args ;  args.reduce &:| ; end
+
+  def builtin_call *args
+    args.reduce(&:|)._nydp_wrapper
+  end
 end

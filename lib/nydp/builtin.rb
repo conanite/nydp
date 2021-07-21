@@ -50,6 +50,12 @@ module Nydp::Builtin
       end
     end
 
+    def call *args
+      builtin_call *args
+    rescue => e
+      handle_error e, *args
+    end
+
     def name
       cname = self.class.name.split("::").last
       cname = cname.gsub(/([a-z])([A-Z])/) { |m| "#{m[0]}-#{m[1].downcase}" }

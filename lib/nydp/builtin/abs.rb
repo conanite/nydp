@@ -6,4 +6,8 @@ class Nydp::Builtin::Abs
   def builtin_invoke vm, args ; invoke_2 vm, args.car ; end
 
   def name ; "mod" ; end
+
+  def builtin_call arg
+    arg.abs
+  end
 end

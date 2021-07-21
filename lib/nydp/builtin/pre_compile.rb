@@ -6,7 +6,7 @@ class Nydp::Builtin::PreCompile
     args.car
   end
 
-  def call *args
+  def builtin_call *args
     args.first
   end
 end

@@ -41,7 +41,7 @@ class Nydp::Builtin::Plus
 
   def name ; "+" ; end
 
-  def call *args
+  def builtin_call *args
     if args == []
       0
     else
@@ -49,7 +49,7 @@ class Nydp::Builtin::Plus
       when Nydp::Pair
         args.reduce &:+
       when String
-        args.each_with_object("") { |str, res| res << str }
+        args.each_with_object("") { |str, res| res << str.to_s }
       else
         args.reduce &:+
       end

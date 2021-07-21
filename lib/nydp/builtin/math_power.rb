@@ -5,4 +5,8 @@ class Nydp::Builtin::MathPower
     # vm.push_arg(args.car ** args.cdr.car)
     args.car ** args.cdr.car
   end
+
+  def builtin_call a0, a1
+    a0 ** a1
+  end
 end

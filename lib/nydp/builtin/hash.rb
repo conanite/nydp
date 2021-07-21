@@ -17,7 +17,7 @@ class Nydp::Builtin::Hash
     build_hash h, rest.cdr
   end
 
-  def call *args
+  def builtin_call *args
     Hash[*args]
   end
 end
@@ -29,7 +29,7 @@ class Nydp::Builtin::HashGet
     args.car._nydp_get(args.cdr.car)._nydp_wrapper
   end
 
-  def call hsh=nil, k=nil, *args
+  def builtin_call hsh=nil, k=nil, *args
     hsh._nydp_get(k)._nydp_wrapper
   end
 end
@@ -39,11 +39,10 @@ class Nydp::Builtin::HashSet
   def builtin_invoke vm, args
     value = args.cdr.cdr.car
     args.car._nydp_set(args.cdr.car, value)
-    # vm.push_arg value
     value
   end
 
-  def call hsh, k, v=nil
+  def builtin_call hsh, k, v=nil
     hsh._nydp_set(k, v)
     v
   end
@@ -54,6 +53,10 @@ class Nydp::Builtin::HashKeys
   def builtin_invoke vm, args
     # vm.push_arg args.car._nydp_keys._nydp_wrapper
     args.car._nydp_keys._nydp_wrapper
+  end
+
+  def builtin_call h
+    h._nydp_keys._nydp_wrapper
   end
 end
 
@@ -72,6 +75,10 @@ class Nydp::Builtin::HashKeyPresent
     truth ? Nydp::T : Nydp::NIL
   end
   def name ; "hash-key?" ; end
+
+  def builtin_call h, k
+    h.key?(n2r k) || nil
+  end
 end
 
 class Nydp::Builtin::HashMerge
@@ -85,7 +92,7 @@ class Nydp::Builtin::HashMerge
     hash_0.merge hash_1
   end
 
-  def call a0, a1
+  def builtin_call a0, a1
     (a0.merge a1)._nydp_wrapper
   end
 end
@@ -101,5 +108,9 @@ class Nydp::Builtin::HashSlice
     slice.each { |k| h[k] = old[k] if old.key?(k) }
     # vm.push_arg h
     h
+  end
+
+  def builtin_call h, slice
+    h.slice(*slice.to_a)
   end
 end

@@ -30,4 +30,12 @@ class Nydp::Builtin::Ensuring
     end
     res
   end
+
+  def builtin_call ensureme, tricky
+    begin
+      tricky.call
+    ensure
+      ensureme.call
+    end
+  end
 end

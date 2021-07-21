@@ -6,7 +6,7 @@ module Nydp::Builtin
       args.car.to_s
     end
 
-    def call arg=nil
+    def builtin_call arg=nil
       arg.to_s
     end
   end
@@ -22,6 +22,10 @@ module Nydp::Builtin
             else
               0
             end
+    end
+
+    def builtin_call arg
+      arg.to_s.length
     end
   end
 end

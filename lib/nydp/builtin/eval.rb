@@ -1,5 +1,10 @@
 class Nydp::Builtin::Eval
-  include Nydp::Builtin::Base, Singleton
+  include Nydp::Builtin::Base
+
+  def initialize ns
+    @ns = ns
+    super()
+  end
 
   def builtin_invoke vm, args
     evaluator = Nydp::Evaluator.new Nydp::VM.new(vm.ns), vm.ns, "<eval>"
@@ -7,8 +12,8 @@ class Nydp::Builtin::Eval
     evaluator.evaluate args.car
   end
 
-  def call *args
-    evaluator = Nydp::Evaluator.new Nydp::VM.new(ns), ns, "<eval>"
+  def builtin_call *args
+    evaluator = Nydp::Evaluator.new Nydp::VM.new(@ns), @ns, "<eval>"
     evaluator.evaluate args.first
   end
 end

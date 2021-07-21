@@ -6,4 +6,8 @@ class Nydp::Builtin::Error
   def builtin_invoke vm, args
     raise Nydp::Error.new(args.to_a.map(&:to_s).join("\n"), vm.last_error)
   end
+
+  def builtin_call *args
+    raise Nydp::Error.new(args.map(&:to_s).join("\n"))
+  end
 end

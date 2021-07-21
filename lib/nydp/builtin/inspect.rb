@@ -5,4 +5,8 @@ class Nydp::Builtin::Inspect
     # vm.push_arg args.car._nydp_inspect
     args.car._nydp_inspect
   end
+
+  def builtin_call arg
+    arg._nydp_inspect
+  end
 end

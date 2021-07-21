@@ -21,4 +21,8 @@ class Nydp::Builtin::TypeOf
   def builtin_invoke vm, args
     builtin_invoke_1 vm, args.car
   end
+
+  def builtin_call *args
+    builtin_invoke_1 nil, args.first
+  end
 end

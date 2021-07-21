@@ -8,7 +8,7 @@ class Nydp::Builtin::RandomString
     (0...(length || 10)).inject("") {|a,i| a << RANDOM_CHARS[rand(RANDOM_CHARS.size)] }
   end
 
-  def call length
+  def builtin_call length
     (0...(length || 10)).inject("") {|a,i| a << RANDOM_CHARS[rand(RANDOM_CHARS.size)] }
   end
 end

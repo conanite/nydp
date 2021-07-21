@@ -51,6 +51,10 @@ class #{name}
     (#{generic_code})
   end
 
+  def builtin_call #{ arg_mapper_novm }
+    (#{code})
+  end
+
   # return the ruby equivalent of this code if it was inlined inside another builtin
   def inline_code arg_expressions
     #{code.inspect}.

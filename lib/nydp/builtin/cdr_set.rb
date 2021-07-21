@@ -3,4 +3,8 @@ class Nydp::Builtin::CdrSet
 
   # def builtin_invoke vm, args ; vm.push_arg(args.car.cdr = args.cdr.car) ; end
   def builtin_invoke vm, args ; args.car.cdr = args.cdr.car ; end
+
+  def builtin_call a, b
+    a.cdr = b
+  end
 end

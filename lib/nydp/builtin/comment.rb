@@ -5,7 +5,7 @@ class Nydp::Builtin::Comment
     Nydp::NIL
   end
 
-  def call *args
+  def builtin_call *args
     nil
   end
 end

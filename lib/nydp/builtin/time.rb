@@ -49,4 +49,33 @@ class Nydp::Builtin::Time
 
     (Time.new(y,mo,d,h,mi,s,ms))
   end
+
+  def builtin_call y=:unset, mo=:unset, d=:unset, h=nil, mi=nil, s=nil, ms=nil
+    if y == :unset
+      ::Time.now
+    elsif mo == :unseet
+      case y
+      when Numeric # relative time in seconds
+        (Time.now + y)
+      when Nydp::Date
+        y.to_ruby.to_time
+      when ::Time
+        ::Time.now - y
+      else
+        raise Nydp::Error.new "time : expected a number or a date or a time, got #{y._nydp_inspect}"
+      end
+    elsif d == :unset
+      # y is a date or time, mo is a number or time
+      case mo
+      when Numeric # relative time in seconds
+        (y + mo)
+      when ::Time
+        y - mo
+      else
+        raise Nydp::Error.new "time : expected a number or a date, got #{mo._nydp_inspect}"
+      end
+    else
+      Time.new(y,mo,d,h,mi,s,ms)
+    end
+  end
 end

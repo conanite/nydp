@@ -5,4 +5,8 @@ class Nydp::Builtin::MathRound
     # vm.push_arg(args.car.round)
     args.car.round
   end
+
+  def builtin_call arg
+    arg.round
+  end
 end

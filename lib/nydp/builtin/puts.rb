@@ -12,5 +12,10 @@ class Nydp::Builtin::Puts
     args.car
   end
 
+  def builtin_call *args
+    s = args.map { |a| a.to_s }
+    puts s.join ' '
+  end
+
   def name ; "p" ; end
 end

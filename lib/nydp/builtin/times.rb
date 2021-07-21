@@ -25,7 +25,11 @@ class Nydp::Builtin::Times
 
   def name ; "*" ; end
 
-  def call *args
-    (args.reduce &:*)._nydp_wrapper
+  def builtin_call *args
+    if args.empty?
+      1
+    else
+      args.reduce(&:*)
+    end._nydp_wrapper
   end
 end

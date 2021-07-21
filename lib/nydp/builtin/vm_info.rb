@@ -7,4 +7,8 @@ class Nydp::Builtin::VmInfo
     arg_count         = Nydp::Pair.new :args,         vm.args.size
     Nydp::Pair.from_list [context_count, instruction_count, arg_count]
   end
+
+  def builtin_call *args
+    nil
+  end
 end

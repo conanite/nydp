@@ -5,4 +5,8 @@ class Nydp::Builtin::MathCeiling
     # vm.push_arg(args.car.ceil)
     args.car.ceil
   end
+
+  def builtin_call arg
+    arg.ceil
+  end
 end
