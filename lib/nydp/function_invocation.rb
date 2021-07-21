@@ -480,7 +480,7 @@ module Nydp
 
       invocation
 
-      new invocation, compiled, expression, cname
+      # new invocation, compiled, expression, cname
     end
 
     def initialize function_instruction, argument_instructions, source, sig=nil

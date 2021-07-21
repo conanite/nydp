@@ -44,16 +44,16 @@ module Nydp
         csig       = sig(cond)
         xsig       = "#{sig(cond)}_#{sig(when_true)}_#{sig(when_false)}"
 
-        case csig
-        when "LEX"
-          Cond_LEX.build(cond, when_true, when_false)
-        when "SYM"
-          Cond_SYM.new(cond, when_true, when_false)
-        else
-          new(cond, when_true, when_false)
-        end
+        # case csig
+        # when "LEX"
+        #   Cond_LEX.build(cond, when_true, when_false)
+        # when "SYM"
+        #   Cond_SYM.new(cond, when_true, when_false)
+        # else
+        #   new(cond, when_true, when_false)
+        # end
 
-        # new(cond, when_true, when_false)
+        new(cond, when_true, when_false)
       else
         raise "can't compile Cond: #{expressions._nydp_inspect}"
       end
