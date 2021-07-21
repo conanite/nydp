@@ -2,6 +2,16 @@
 
 
 
+;; 2021-07-21 WITHOUT compile-to-ruby (ie ruby-call-stack but nydp AST objects
+;; 2nd run, all browsers closed
+;; sig conditionals : total 3.8646832879999997, average 0.3864683288 per run
+;; sig opt 4 : total 4.566391762, average 0.45663917620000005 per run
+;; sig opt 3 : total 4.203421262, average 0.4203421262 per run
+;; sig opt 2 : total 3.8990449220000003, average 0.3899044922 per run
+;; sig opt 1 : total 4.092550381, average 0.40925503809999997 per run
+;; string concatenation     : total 2.462801678, average 0.2462801678 per run
+;; random string     : total 4.846918843, average 0.4846918843 per run
+
 ;; 2021-07-21 with compile-to-ruby
 ;; 2nd run, all browsers closed
 ;; sig conditionals : total 1.829855451, average 0.1829855451 per run
