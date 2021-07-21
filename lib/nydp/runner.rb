@@ -64,9 +64,7 @@ module Nydp
     end
 
     def pre_compile expr
-      precompile = Pair.from_list [:"pre-compile", Pair.from_list([:quote, expr])]
-      compiled   = compile_expr precompile
-      eval_compiled compiled, precompile
+      Nydp.apply_function ns, :"pre-compile", expr
     end
 
     def evaluate expr
