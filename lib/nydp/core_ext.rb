@@ -59,6 +59,15 @@ class ::Symbol
   def nydp_type  ; :symbol ; end
   def execute vm ; self    ; end
 
+  alias :inspect_before_nydp :inspect
+  def inspect
+    if self == :"#="
+      ':"#="'
+    else
+      inspect_before_nydp
+    end
+  end
+
   private
 
   def _nydp_untidy? s
