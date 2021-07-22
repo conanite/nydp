@@ -13,7 +13,7 @@ class Nydp::Builtin::LessThan
 
   def builtin_call arg, *args
     while !args.empty?
-      return nil unless arg < args.first
+      return nil unless args.first && arg < args.first
       arg = args.shift
     end
     return arg

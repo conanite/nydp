@@ -12,13 +12,11 @@ class Nydp::Builtin::GreaterThan
 
   def name ; ">" ; end
 
-  def gt arg, args
-    return arg if args.empty?
-    a2 = args.shift
-    (arg > a2) && gt(a2, args) # recursive, but we don't expect an argument list to be too long?
-  end
-
-  def builtin_call *args
-    gt(args.shift, args) || nil
+  def builtin_call arg, *args
+    while !args.empty?
+      return nil unless args.first && arg > args.first
+      arg = args.shift
+    end
+    return arg
   end
 end
