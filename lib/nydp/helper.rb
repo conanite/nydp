@@ -37,8 +37,8 @@ module Nydp
   end
 
   module Converter
-    def n2r         o ; o.respond_to?(:to_ruby) ? o.to_ruby : o ; end
-    def r2n o, ns=nil ; o._nydp_wrapper                         ; end
+    def n2r o ; o.respond_to?(:to_ruby) ? o.to_ruby : o ; end
+    def r2n o ; o._nydp_wrapper                         ; end
   end
 
   extend Converter

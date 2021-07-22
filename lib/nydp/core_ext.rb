@@ -28,7 +28,6 @@ class TrueClass
 end
 
 class NilClass
-  def _nydp_wrapper ; self ; end
   def car         ; self          ; end
   def cdr         ; self          ; end
   def size        ; 0             ; end
