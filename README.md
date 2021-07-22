@@ -48,9 +48,9 @@ answer = Nydp.apply_function ns, :question, :life, ["The Universe", and_also(eve
 ==> 42
 ```
 
-`ns` is just a plain old ruby hash, mapping ruby symbols to nydp symbols for quick lookup at nydp compile-time. The nydp symbols maintain the values of global variables, including all builtin functions and any other functions defined using `def`.
+`ns` is a Nydp::Namespace object, mapping ruby symbols to nydp symbols for quick lookup at nydp compile-time. The nydp symbols maintain the values of global variables, including all builtin functions and any other functions defined using `def`.
 
-You can maintain multiple `ns` instances without mutual interference. In other words, assigning global variables while one `ns` is in scope will not affect the values of variables in any other `ns` (unless you've specifically arranged it to be so by duplicating namespaces or some such sorcery). This allows you exploit `'nydp` in a multi-tenant architectural scenario, where one client's custom scripts cannot interfere with those of another client.
+Nydp is designed to operate in a multi-tenant architectural context, so you can instantiate multiple Namespace instances, where each tenant applies their own custom scripts ; such scripts will not interfere with one another (unless you've specifically arranged it to be so by duplicating namespaces or some such sorcery).
 
 #### Facing the Truth
 
@@ -416,14 +416,11 @@ nydp > (dox-lookup 'foo)
 ((foo def ("return the foo of x and y") (x y) (def foo (x y) (* x y))))
 ```
 
-Not as friendly, but more amenable to programmatic manipulation. Each subsequent definition of 'foo (if you override it, define
-it as a macro, or define it again in some other context) will generate a new documentation structure, which will simply be preprended to
-the existing list.
+Not as friendly, but more amenable to programmatic manipulation. Each subsequent definition of 'foo (if you override it, define it as a macro, or define it again in some other context) will generate a new documentation structure, which will simply be preprended to the existing list.
 
 #### 11. Pretty-Printing
 
-'dox above uses the pretty printer to display code source. The pretty-printer is hard-coded to handle some special cases,
-so it will unparse special syntax, prefix-lists, quote, quasiquote, unquote, and unquote-splicing.
+'dox above uses the pretty printer to display code source. The pretty-printer is hard-coded to handle some special cases, so it will unparse special syntax, prefix-lists, quote, quasiquote, unquote, and unquote-splicing.
 
 You can examine its behaviour at the repl:
 
@@ -443,13 +440,11 @@ nydp > (p:pp:dox-src 'pp/find-breaks)
         (list form))))
 ```
 
-The pretty-printer is still rather primitive in that it only indents according to some hard-coded rules, and according to argument-count
-for documented macros. It has no means of wrapping forms that get too long, or that extend beyond a certain predefined margin or column number.
+The pretty-printer is still rather primitive in that it only indents according to some hard-coded rules, and according to argument-count for documented macros. It has no means of wrapping forms that get too long, or that extend beyond a certain predefined margin or column number.
 
 #### 12. DSLs
 
-The `pre-compile` system (described earlier in "Macro-expansion runs in lisp") is available for implementing local, mini-languages. To do this, use `pre-compile-with`
-in a macro. `pre-compile-with` expects a hash with expansion rules, and an expression to expand using these rules. For example, to build a "describe" dsl :
+The `pre-compile` system (described earlier in "Macro-expansion runs in lisp") is available for implementing local, mini-languages. To do this, use `pre-compile-with` in a macro. `pre-compile-with` expects a hash with expansion rules, and an expression to expand using these rules. For example, to build a "describe" dsl :
 
 ```lisp
   (= describe-dsl (hash))
@@ -462,20 +457,27 @@ in a macro. `pre-compile-with` expects a hash with expansion rules, and an expre
        ',outcome))
 ```
 
-In this example, `describe-dsl` establishes rules for expanding `def` and for `p` which will shadow their usual meanings, but only in the context
-of a `describe` form.
+In this example, `describe-dsl` establishes rules for expanding `def` and for `p` which will shadow their usual meanings, but only in the context of a `describe` form.
 
-This technique is useful to avoid cluttering the global macro-namespace with rules that are used only in a specific context. A word of warning:
-if you shadow a popular name, for example `let`, `map` or `do`, you are likely to run into trouble when some non-shadowed macro inside your
-dsl context expands into something you have shadowed; in this case your shadowy definitions will be used to further expand the result.
+This technique is useful to avoid cluttering the global macro-namespace with rules that are used only in a specific context. A word of warning: if you shadow a popular name, for example `let`, `map` or `do`, you are likely to run into trouble when some non-shadowed macro inside your dsl context expands into something you have shadowed; in this case your shadowy definitions will be used to further expand the result.
 
-For example, if you shadow `with`, but not `let`, and then you use a `let` form within a sample of the dsl you are specifying ; the `let`
-form expands into a `with` form, thinking the `with` will expand in the usual way, but in fact no, your private dsl is going to expand
-this `with` in your private special way, possibly in a way that's incompatible with the form produced by `let`.
+For example, if you shadow `with`, but not `let`, and then you use a `let` form within a sample of the dsl you are specifying ; the `let` form expands into a `with` form, thinking the `with` will expand in the usual way, but in fact no, your private dsl is going to expand this `with` in your private special way, possibly in a way that's incompatible with the form produced by `let`.
 
-If, notwithstanding the aforementioned, the outcome works the way you expected it to, then you have the wrong kind of genius and your
-license to program should be revoked.
+If, notwithstanding the aforementioned, you do this anyway and the outcome works the way you expected it to, then you have the wrong kind of genius and your license to program should be revoked.
 
+## Extending NYDP
+
+You can add any object implementing #call (for example, a ruby Proc) to your `ns` instance:
+
+```ruby
+ns.assign(:"send-mail", -> {|props| Net::SMTP.deliver_the_letter(props).the_sooner_the_better }) # imaginary example
+```
+
+In your lisp,
+
+```lisp
+(send-mail { from "myself@example.com" to "yourself@example.com" subject "SPECIAL OFFER" body (mail-body blah-blah) })
+```
 
 ## Installation
 
