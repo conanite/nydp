@@ -8,7 +8,7 @@ describe Nydp::Date do
     rd = Date.parse "2015-06-08"
     nd = Nydp.r2n rd
 
-    expect(nd).        to be_a Nydp::Date
+    expect(nd).        to be_a ::Date
     expect(nd.to_s).   to eq "2015-06-08"
     expect(nd._nydp_inspect).to eq "#<Date: 2015-06-08 ((2457182j,0s,0n),+0s,2299161j)>"
     expect(nd.to_ruby).to eq Date.parse("2015-06-08")
@@ -49,7 +49,7 @@ describe Nydp::Date do
       diff = minus.call d1, d0
       # diff = vm.args.pop
 
-      expect(d0).to be_a Nydp::Date
+      expect(d0).to be_a ::Date
       expect(diff).to eq 6
     end
 
@@ -111,9 +111,9 @@ describe Nydp::Date do
       sum = plus.call d0, 5
       # sum = vm.args.pop
 
-      expect(d0) .to be_a Nydp::Date
-      expect(sum).to be_a Nydp::Date
-      expect(sum.ruby_date).to eq(Date.today + 5)
+      expect(d0) .to be_a ::Date
+      expect(sum).to be_a ::Date
+      expect(sum).to eq(Date.today + 5)
     end
   end
 
