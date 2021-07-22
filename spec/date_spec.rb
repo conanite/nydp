@@ -46,7 +46,7 @@ describe Nydp::Date do
     it "works with builtin minus" do
       minus = Nydp::Builtin::Minus.instance
 
-      diff = minus.invoke vm, pair_list([d1, d0])
+      diff = minus.call d1, d0
       # diff = vm.args.pop
 
       expect(d0).to be_a Nydp::Date
@@ -57,7 +57,7 @@ describe Nydp::Date do
       it "works with builtin greater-than when true" do
         f = Nydp::Builtin::GreaterThan.instance
 
-        a = f.invoke vm, pair_list([d1, d0])
+        a = f.call d1, d0
 
         expect(a).to eq d0
       end
@@ -65,7 +65,7 @@ describe Nydp::Date do
       it "compares with nil" do
         f = Nydp::Builtin::GreaterThan.instance
 
-        a = f.invoke vm, pair_list([d1, Nydp::NIL])
+        a = f.call d1, nil
 
         expect(a).to eq Nydp::NIL
       end
@@ -73,7 +73,7 @@ describe Nydp::Date do
       it "works with builtin greater-than when false" do
         f = Nydp::Builtin::GreaterThan.instance
 
-        a = f.invoke vm, pair_list([d0, d1])
+        a = f.call d0, d1
 
         expect(a).to eq Nydp::NIL
       end
@@ -83,7 +83,7 @@ describe Nydp::Date do
       it "works with builtin less-than when true" do
         f = Nydp::Builtin::LessThan.instance
 
-        a = f.invoke vm, pair_list([d0, d1])
+        a = f.call d0, d1
 
         expect(a).to eq d1
       end
@@ -91,7 +91,7 @@ describe Nydp::Date do
       it "works with builtin less-than when false" do
         f = Nydp::Builtin::LessThan.instance
 
-        a = f.invoke vm, pair_list([d1, d0])
+        a = f.call d1, d0
 
         expect(a).to eq Nydp::NIL
       end
@@ -99,7 +99,7 @@ describe Nydp::Date do
       it "compares with nil" do
         f = Nydp::Builtin::LessThan.instance
 
-        a = f.invoke vm, pair_list([d1, Nydp::NIL])
+        a = f.call d1, nil
 
         expect(a).to eq Nydp::NIL
       end
@@ -108,7 +108,7 @@ describe Nydp::Date do
     it "works with builtin plus" do
       plus = Nydp::Builtin::Plus.instance
 
-      sum = plus.invoke vm, pair_list([d0, 5])
+      sum = plus.call d0, 5
       # sum = vm.args.pop
 
       expect(d0) .to be_a Nydp::Date

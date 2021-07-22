@@ -23,29 +23,22 @@ describe Nydp::Hash do
     describe "hash get" do
       it "converts ruby value to nydp value" do
         ahash[:keysym] = "avalue"
-        k              = sym("keysym")
-        args           = [ ahash, k ]
 
-        a = Nydp::Builtin::HashGet.instance.invoke vm, pair_list(args)
+        a = Nydp::Builtin::HashGet.instance.call ahash, :keysym
 
         expect(a).to eq "avalue"
       end
 
       it "converts ruby nil to nydp value" do
-        k              = sym("keysym")
-        args           = [ ahash, k ]
-
-        a = Nydp::Builtin::HashGet.instance.invoke vm, pair_list(args)
+        a = Nydp::Builtin::HashGet.instance.call ahash, :keysym
 
         expect(a).to eq Nydp::NIL
       end
 
       it "converts ruby true to nydp value" do
         ahash[:keysym] = true
-        k              = sym("keysym")
-        args           = [ ahash, k ]
 
-        a = Nydp::Builtin::HashGet.instance.invoke vm, pair_list(args)
+        a = Nydp::Builtin::HashGet.instance.call ahash, :keysym
 
         expect(a).to eq Nydp::T
       end
@@ -54,19 +47,14 @@ describe Nydp::Hash do
     describe "key?" do
       it "returns t when key is present" do
         ahash[:simon] = 24
-        k             = sym("simon")
-        args          = [ ahash, k ]
 
-        a = Nydp::Builtin::HashKeyPresent.instance.invoke vm, pair_list(args)
+        a = Nydp::Builtin::HashKeyPresent.instance.call ahash, :simon
 
         expect(a).to eq Nydp::T
       end
 
       it "returns nil when key is absent" do
-        k             = sym("simon")
-        args          = [ ahash, k ]
-
-        a = Nydp::Builtin::HashKeyPresent.instance.invoke vm, pair_list(args)
+        a = Nydp::Builtin::HashKeyPresent.instance.call ahash, :simon
 
         expect(a).to eq Nydp::NIL
       end
@@ -76,21 +64,20 @@ describe Nydp::Hash do
       it "returns a list of keys" do
         ahash[:k0] = 42
         ahash[:k1] = 84
-        args       = [ahash]
 
-        a = Nydp::Builtin::HashKeys.instance.invoke vm, pair_list(args)
+        a = Nydp::Builtin::HashKeys.instance.call ahash
 
-        expect(a).to eq pair_list [sym("k0"), sym("k1")]
+        expect(a).to eq pair_list [:k0, :k1]
       end
     end
 
     describe "hash-slice" do
       it "returns a new hash containing only the given keys from the old hash" do
-        ahash[:k0] = 42
-        ahash[:k1] = 84
-        args       = [ahash, pair_list([sym("k0"), sym("k1")])]
+        ahash[:k0] =  42
+        ahash[:k1] =  84
+        ahash[:k2] = 126
 
-        a = Nydp::Builtin::HashSlice.instance.invoke vm, pair_list(args)
+        a = Nydp::Builtin::HashSlice.instance.call ahash, pair_list([:k0, :k1])
 
         expect(a).to eq({ k0: 42, k1: 84 })
       end

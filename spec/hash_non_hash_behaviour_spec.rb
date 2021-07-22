@@ -8,34 +8,22 @@ describe Nydp::Hash do
 
     describe "hash get" do
       it "returns a plain number" do
-        k      = Nydp::Symbol.mk "a", ns
-        args   = [ ahash, k ]
-
-        a = Nydp::Builtin::HashGet.instance.invoke vm, pair_list(args)
+        a = Nydp::Builtin::HashGet.instance.call ahash, :a
         expect(a).to eq 123
       end
 
       it "converts ruby value to nydp value" do
-        k      = Nydp::Symbol.mk "b", ns
-        args   = [ ahash, k ]
-
-        a = Nydp::Builtin::HashGet.instance.invoke vm, pair_list(args)
+        a = Nydp::Builtin::HashGet.instance.call ahash, :b
         expect(a).to eq "hello there"
       end
 
       it "converts string keys to method names" do
-        k      = "b"
-        args   = [ ahash, k ]
-
-        a = Nydp::Builtin::HashGet.instance.invoke vm, pair_list(args)
+        a = Nydp::Builtin::HashGet.instance.call ahash, "b"
         expect(a).to eq "hello there"
       end
 
       it "returns nil for unavailable methods" do
-        k      = Nydp::Symbol.mk "c", ns
-        args   = [ ahash, k ]
-
-        a = Nydp::Builtin::HashGet.instance.invoke vm, pair_list(args)
+        a = Nydp::Builtin::HashGet.instance.call ahash, :c
         expect(a).to eq Nydp::NIL
       end
     end
@@ -52,10 +40,9 @@ describe Nydp::Hash do
       it "does nothing, returns its value" do
         k    = Nydp::Symbol.mk "keysym", ns
         v    = "foobar"
-        args = pair_list [ahash, k, v]
 
         begin
-          Nydp::Builtin::HashSet.instance.invoke vm, args
+          Nydp::Builtin::HashSet.instance.call ahash, k, v
         rescue StandardError => e
           error = e
         end
@@ -72,11 +59,8 @@ with args
 
     describe "hash get" do
       it "converts ruby value to nydp value" do
-        k      = Nydp::Symbol.mk "keysym", ns
-        args   = [ ahash, k ]
-
         begin
-          Nydp::Builtin::HashGet.instance.invoke vm, pair_list(args)
+          Nydp::Builtin::HashGet.instance.call ahash, :keysym
         rescue StandardError => e
           error = e
         end
