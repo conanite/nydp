@@ -75,11 +75,9 @@ class ::Symbol
 end
 
 class ::Date
-  def _nydp_wrapper ; self ; end
-  def _nydp_get key
-    @__nydp_date ||= Nydp::Date.new(self)
-    @__nydp_date.lookup key, self
-  end
+  def _nydp_wrapper ; self                                  ; end
+  def _nydp_get key ;_nydp_date.lookup key, self            ; end
+  def _nydp_date    ; @__nydp_date ||= Nydp::Date.new(self) ; end
 end
 
 class ::Array

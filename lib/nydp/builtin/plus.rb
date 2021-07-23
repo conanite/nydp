@@ -50,6 +50,8 @@ class Nydp::Builtin::Plus
         args.reduce &:+
       when String
         args.each_with_object("") { |str, res| res << str.to_s }
+      when Date
+        args.first._nydp_date + args[1]
       else
         args.reduce &:+
       end

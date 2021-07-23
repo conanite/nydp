@@ -36,16 +36,15 @@ class Nydp::Builtin::Date
 
   def builtin_call y=:unset, m=:unset, d=:unset
     if y == :unset
-      Nydp::Date.new Date.today
+      Date.today
     elsif m == :unset
-      d = if y.respond_to?(:to_date)
-              y.to_date
-            elsif y.is_a?(String)
-              ::Date.parse(y)
-            end
-      Nydp::Date.new d
+      if y.respond_to?(:to_date)
+        y.to_date
+      elsif y.is_a?(String)
+        ::Date.parse(y)
+      end
     else
-      Nydp::Date.new Date.new(y,m,d)
+      Date.new(y,m,d)
     end
   end
 end
