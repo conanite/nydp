@@ -18,18 +18,25 @@ module Nydp
         super
       end
     end
+
+    def assign name, value
+      send "ns_#{name.to_s._nydp_name_to_rb_name}=", value
+    end
+
+    def fetch name
+      send "ns_#{name.to_s._nydp_name_to_rb_name}"
+    end
   end
 
-  # TODO: write VM #apply_function so we have fewer calls to VM.new
-  def self.apply_function ns, function_name, *args
-    vm         = VM.new(ns)
-    function   = Symbol.mk(function_name.to_sym, ns).value if function_name.is_a?(String) || function_name.is_a?(::Symbol)
-    function ||= function_name if function_name.respond_to?(:invoke)
-    function.invoke vm, r2n(args)
-  rescue StandardError => e
-    friendly_args = args.map { |a| a.respond_to?(:_nydp_compact_inspect) ? a._nydp_compact_inspect : a }
-    raise Nydp::Error.new("Invoking #{function_name}\nwith args #{friendly_args._nydp_inspect}")
-  end
+  # def self.apply_function ns, function_name, *args
+  #   vm         = VM.new(ns)
+  #   function   = Symbol.mk(function_name.to_sym, ns).value if function_name.is_a?(String) || function_name.is_a?(::Symbol)
+  #   function ||= function_name if function_name.respond_to?(:invoke)
+  #   function.invoke vm, r2n(args)
+  # rescue StandardError => e
+  #   friendly_args = args.map { |a| a.respond_to?(:_nydp_compact_inspect) ? a._nydp_compact_inspect : a }
+  #   raise Nydp::Error.new("Invoking #{function_name}\nwith args #{friendly_args._nydp_inspect}")
+  # end
 
   def self.apply_function ns, function_name, *args
     if function_name.is_a?(String) || function_name.is_a?(::Symbol)

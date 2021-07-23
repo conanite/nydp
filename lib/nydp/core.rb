@@ -25,74 +25,73 @@ module Nydp
     end
 
     def setup ns
-      Symbol.mk(:cons  , ns).ns_assign(ns, Nydp::Builtin::RubyWrap::Cons.instance  )
-      Symbol.mk(:car   , ns).ns_assign(ns, Nydp::Builtin::RubyWrap::Car.instance   )
-      Symbol.mk(:cdr   , ns).ns_assign(ns, Nydp::Builtin::RubyWrap::Cdr.instance   )
-      Symbol.mk(:log   , ns).ns_assign(ns, Nydp::Builtin::RubyWrap::Log.instance   )
-      Symbol.mk(:mod   , ns).ns_assign(ns, Nydp::Builtin::RubyWrap::Modulo.instance)
-      Symbol.mk(:sqrt  , ns).ns_assign(ns, Nydp::Builtin::RubyWrap::Sqrt.instance  )
-      Symbol.mk(:regexp, ns).ns_assign(ns, Nydp::Builtin::RubyWrap::Regexp.instance)
-      Symbol.mk("string/pad-left" , ns).ns_assign(ns, Nydp::Builtin::RubyWrap::StringPadLeft.instance)
-      Symbol.mk("string/pad-right", ns).ns_assign(ns, Nydp::Builtin::RubyWrap::StringPadRight.instance)
-
-      Symbol.mk(:+,     ns).ns_assign(ns, Nydp::Builtin::Plus.instance)
-      Symbol.mk(:-,     ns).ns_assign(ns, Nydp::Builtin::Minus.instance)
-      Symbol.mk(:*,     ns).ns_assign(ns, Nydp::Builtin::Times.instance)
-      Symbol.mk(:/,     ns).ns_assign(ns, Nydp::Builtin::Divide.instance)
-      Symbol.mk(:>,     ns).ns_assign(ns, Nydp::Builtin::GreaterThan.instance)
-      Symbol.mk(:<,     ns).ns_assign(ns, Nydp::Builtin::LessThan.instance)
-      Symbol.mk(:eval,  ns).ns_assign(ns, Nydp::Builtin::Eval.new(ns))
-      Symbol.mk(:false, ns).ns_assign(ns, false)
-      Symbol.mk(:hash,  ns).ns_assign(ns, Nydp::Builtin::Hash.instance)
-      Symbol.mk(:apply, ns).ns_assign(ns, Nydp::Builtin::Apply.instance)
-      Symbol.mk(:date,  ns).ns_assign(ns, Nydp::Builtin::Date.instance)
-      Symbol.mk(:error, ns).ns_assign(ns, Nydp::Builtin::Error.instance)
-      Symbol.mk(:parse, ns).ns_assign(ns, Nydp::Builtin::Parse.instance)
-      Symbol.mk(:p,     ns).ns_assign(ns, Nydp::Builtin::Puts.instance)
-      Symbol.mk(:PI,    ns).ns_assign ns, 3.1415
-      Symbol.mk(:rand,  ns).ns_assign ns, Nydp::Builtin::Rand.instance
-      Symbol.mk(:sort,  ns).ns_assign ns, Nydp::Builtin::Sort.instance
-      Symbol.mk(:abs,   ns).ns_assign ns, Nydp::Builtin::Abs.instance
-      Symbol.mk(:sym,   ns).ns_assign ns, Nydp::Builtin::Sym.instance
-      Symbol.mk(:ensuring          , ns).ns_assign(ns, Nydp::Builtin::Ensuring.instance)
-      Symbol.mk(:inspect           , ns).ns_assign(ns, Nydp::Builtin::Inspect.instance)
-      Symbol.mk(:comment           , ns).ns_assign(ns, Nydp::Builtin::Comment.instance)
-      Symbol.mk("handle-error"     , ns).ns_assign(ns, Nydp::Builtin::HandleError.instance)
-      Symbol.mk("parse-in-string"  , ns).ns_assign(ns, Nydp::Builtin::ParseInString.instance)
-      Symbol.mk("random-string"    , ns).ns_assign(ns, Nydp::Builtin::RandomString.instance)
-      Symbol.mk("to-string"        , ns).ns_assign(ns, Nydp::Builtin::ToString.instance)
-      Symbol.mk("to-integer"       , ns).ns_assign(ns, Nydp::Builtin::ToInteger.instance)
-      Symbol.mk("string-length"    , ns).ns_assign(ns, Nydp::Builtin::StringLength.instance)
-      Symbol.mk("string-replace"   , ns).ns_assign(ns, Nydp::Builtin::StringReplace.instance)
-      Symbol.mk("string-match"     , ns).ns_assign(ns, Nydp::Builtin::StringMatch.instance)
-      Symbol.mk("string-split"     , ns).ns_assign(ns, Nydp::Builtin::StringSplit.instance)
-      Symbol.mk("time"             , ns).ns_assign(ns, Nydp::Builtin::Time.instance)
-      Symbol.mk("thread-locals"    , ns).ns_assign(ns, Nydp::Builtin::ThreadLocals.instance)
-      Symbol.mk("type-of"          , ns).ns_assign(ns, Nydp::Builtin::TypeOf.instance)
-      Symbol.mk(:"eq?"             , ns).ns_assign(ns, Nydp::Builtin::IsEqual.instance)
-      Symbol.mk(:"cdr-set"         , ns).ns_assign(ns, Nydp::Builtin::CdrSet.instance)
-      Symbol.mk(:"hash-get"        , ns).ns_assign(ns, Nydp::Builtin::HashGet.instance)
-      Symbol.mk(:"hash-set"        , ns).ns_assign(ns, Nydp::Builtin::HashSet.instance)
-      Symbol.mk(:"hash-keys"       , ns).ns_assign(ns, Nydp::Builtin::HashKeys.instance)
-      Symbol.mk(:"hash-key?"       , ns).ns_assign(ns, Nydp::Builtin::HashKeyPresent.instance)
-      Symbol.mk(:"hash-merge"      , ns).ns_assign(ns, Nydp::Builtin::HashMerge.instance)
-      Symbol.mk(:"hash-slice"      , ns).ns_assign(ns, Nydp::Builtin::HashSlice.instance)
-      Symbol.mk(:"vm-info"         , ns).ns_assign ns, Nydp::Builtin::VmInfo.instance
-      Symbol.mk(:"pre-compile"     , ns).ns_assign ns, Nydp::Builtin::PreCompile.instance
-      Symbol.mk(:"script-run"      , ns).ns_assign ns, Nydp::Builtin::ScriptRun.instance
-      Symbol.mk(:"**"              , ns).ns_assign ns, Nydp::Builtin::MathPower.instance
-      Symbol.mk(:"⌊"               , ns).ns_assign ns, Nydp::Builtin::MathFloor.instance
-      Symbol.mk(:"math-floor"      , ns).ns_assign ns, Nydp::Builtin::MathFloor.instance
-      Symbol.mk(:"⌈"               , ns).ns_assign ns, Nydp::Builtin::MathCeiling.instance
-      Symbol.mk(:"math-ceiling"    , ns).ns_assign ns, Nydp::Builtin::MathCeiling.instance
-      Symbol.mk(:"math-round"      , ns).ns_assign ns, Nydp::Builtin::MathRound.instance
-      Symbol.mk(:"⋂"               , ns).ns_assign ns, Nydp::Builtin::SetIntersection.instance
-      Symbol.mk(:"set-intersection", ns).ns_assign ns, Nydp::Builtin::SetIntersection.instance
-      Symbol.mk(:"⋃"               , ns).ns_assign ns, Nydp::Builtin::SetUnion.instance
-      Symbol.mk(:"set-union"       , ns).ns_assign ns, Nydp::Builtin::SetUnion.instance
+      ns.assign(:cons              , Nydp::Builtin::RubyWrap::Cons.instance          )
+      ns.assign(:car               , Nydp::Builtin::RubyWrap::Car.instance           )
+      ns.assign(:cdr               , Nydp::Builtin::RubyWrap::Cdr.instance           )
+      ns.assign(:log               , Nydp::Builtin::RubyWrap::Log.instance           )
+      ns.assign(:mod               , Nydp::Builtin::RubyWrap::Modulo.instance        )
+      ns.assign(:sqrt              , Nydp::Builtin::RubyWrap::Sqrt.instance          )
+      ns.assign(:regexp            , Nydp::Builtin::RubyWrap::Regexp.instance        )
+      ns.assign("string/pad-left"  , Nydp::Builtin::RubyWrap::StringPadLeft.instance )
+      ns.assign("string/pad-right" , Nydp::Builtin::RubyWrap::StringPadRight.instance)
+      ns.assign(:+                 , Nydp::Builtin::Plus.instance                    )
+      ns.assign(:-                 , Nydp::Builtin::Minus.instance                   )
+      ns.assign(:*                 , Nydp::Builtin::Times.instance                   )
+      ns.assign(:/                 , Nydp::Builtin::Divide.instance                  )
+      ns.assign(:>                 , Nydp::Builtin::GreaterThan.instance             )
+      ns.assign(:<                 , Nydp::Builtin::LessThan.instance                )
+      ns.assign(:eval              , Nydp::Builtin::Eval.new(ns)                     )
+      ns.assign(:false             , false                                           )
+      ns.assign(:hash              , Nydp::Builtin::Hash.instance                    )
+      ns.assign(:apply             , Nydp::Builtin::Apply.instance                   )
+      ns.assign(:date              , Nydp::Builtin::Date.instance                    )
+      ns.assign(:error             , Nydp::Builtin::Error.instance                   )
+      ns.assign(:parse             , Nydp::Builtin::Parse.instance                   )
+      ns.assign(:p                 , Nydp::Builtin::Puts.instance                    )
+      ns.assign(:PI                , 3.1415                                          )
+      ns.assign(:rand              , Nydp::Builtin::Rand.instance                    )
+      ns.assign(:sort              , Nydp::Builtin::Sort.instance                    )
+      ns.assign(:abs               , Nydp::Builtin::Abs.instance                     )
+      ns.assign(:sym               , Nydp::Builtin::Sym.instance                     )
+      ns.assign(:ensuring          , Nydp::Builtin::Ensuring.instance                )
+      ns.assign(:inspect           , Nydp::Builtin::Inspect.instance                 )
+      ns.assign(:comment           , Nydp::Builtin::Comment.instance                 )
+      ns.assign("handle-error"     , Nydp::Builtin::HandleError.instance             )
+      ns.assign("parse-in-string"  , Nydp::Builtin::ParseInString.instance           )
+      ns.assign("random-string"    , Nydp::Builtin::RandomString.instance            )
+      ns.assign("to-string"        , Nydp::Builtin::ToString.instance                )
+      ns.assign("to-integer"       , Nydp::Builtin::ToInteger.instance               )
+      ns.assign("string-length"    , Nydp::Builtin::StringLength.instance            )
+      ns.assign("string-replace"   , Nydp::Builtin::StringReplace.instance           )
+      ns.assign("string-match"     , Nydp::Builtin::StringMatch.instance             )
+      ns.assign("string-split"     , Nydp::Builtin::StringSplit.instance             )
+      ns.assign("time"             , Nydp::Builtin::Time.instance                    )
+      ns.assign("thread-locals"    , Nydp::Builtin::ThreadLocals.instance            )
+      ns.assign("type-of"          , Nydp::Builtin::TypeOf.instance                  )
+      ns.assign(:"eq?"             , Nydp::Builtin::IsEqual.instance                 )
+      ns.assign(:"cdr-set"         , Nydp::Builtin::CdrSet.instance                  )
+      ns.assign(:"hash-get"        , Nydp::Builtin::HashGet.instance                 )
+      ns.assign(:"hash-set"        , Nydp::Builtin::HashSet.instance                 )
+      ns.assign(:"hash-keys"       , Nydp::Builtin::HashKeys.instance                )
+      ns.assign(:"hash-key?"       , Nydp::Builtin::HashKeyPresent.instance          )
+      ns.assign(:"hash-merge"      , Nydp::Builtin::HashMerge.instance               )
+      ns.assign(:"hash-slice"      , Nydp::Builtin::HashSlice.instance               )
+      ns.assign(:"vm-info"         , Nydp::Builtin::VmInfo.instance                  )
+      ns.assign(:"pre-compile"     , Nydp::Builtin::PreCompile.instance              )
+      ns.assign(:"script-run"      , Nydp::Builtin::ScriptRun.instance               )
+      ns.assign(:"**"              , Nydp::Builtin::MathPower.instance               )
+      ns.assign(:"⌊"               , Nydp::Builtin::MathFloor.instance               )
+      ns.assign(:"math-floor"      , Nydp::Builtin::MathFloor.instance               )
+      ns.assign(:"⌈"               , Nydp::Builtin::MathCeiling.instance             )
+      ns.assign(:"math-ceiling"    , Nydp::Builtin::MathCeiling.instance             )
+      ns.assign(:"math-round"      , Nydp::Builtin::MathRound.instance               )
+      ns.assign(:"⋂"               , Nydp::Builtin::SetIntersection.instance         )
+      ns.assign(:"set-intersection", Nydp::Builtin::SetIntersection.instance         )
+      ns.assign(:"⋃"               , Nydp::Builtin::SetUnion.instance                )
+      ns.assign(:"set-union"       , Nydp::Builtin::SetUnion.instance                )
 
       # TODO this is for exploration purposes only, to be deleted
-      Symbol.mk("compile-to-ruby"  , ns).ns_assign(ns, Nydp::Builtin::RubyWrap::CompileToRuby.instance)
+      ns.assign("compile-to-ruby"  , Nydp::Builtin::RubyWrap::CompileToRuby.instance )
     end
   end
 end
