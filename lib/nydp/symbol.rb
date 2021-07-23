@@ -60,6 +60,7 @@ class Nydp::Symbol
   def ns_assign ns, value
     ns.send(:"#{ruby_name}=", value)
   end
+
   def == other
     other.is_a?(Nydp::Symbol) && (self.name == other.name)
   end
