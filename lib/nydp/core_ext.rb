@@ -2,11 +2,13 @@ class Object
   def _nydp_get     a ; raise "_nydp_get : not gettable: #{a._nydp_inspect} on #{self.class.name}" ; end
   def _nydp_set  a, v ; raise "_nydp_get : not settable: #{a._nydp_inspect} on #{self.class.name}" ; end
   def _nydp_keys      ; []      ; end
-  def _nydp_wrapper   ; self    ; end
-  def _nydp_inspect   ; inspect ; end
-  def lexical_reach n ; n       ; end
-  def to_ruby         ; self    ; end
-  def compile_to_ruby ; inspect ; end
+  def _nydp_wrapper         ; self          ; end
+  def _nydp_inspect         ; inspect       ; end
+  def _nydp_compact_inspect ; _nydp_inspect ; end
+  def _nydp_call      *args ; call *args    ; end
+  def lexical_reach       n ; n             ; end
+  def to_ruby               ; self          ; end
+  def compile_to_ruby indent, srcs ; "#{indent}#{inspect}" ; end
 end
 
 class Method
@@ -24,7 +26,7 @@ class TrueClass
   def nydp_type       ; :truth ; end
   def _nydp_get     a ; self   ; end
   def _nydp_set  a, v ; self   ; end
-  def compile_to_ruby ; "true" ; end
+  def compile_to_ruby indent, srcs ; "#{indent}true" ; end
 end
 
 class NilClass
@@ -42,7 +44,7 @@ class NilClass
   def _nydp_set a, v ; self       ; end
   def &        other ; self             ; end
   def |        other ; other            ; end
-  def compile_to_ruby ; "nil"     ; end
+  def compile_to_ruby indent, srcs ; "#{indent}nil"     ; end
 end
 
 class FalseClass
@@ -89,7 +91,7 @@ class ::String
   # _hex_ord only works for characters whose #ord is < 256, ie #bytes returns a single-element array
   # this should allow for two-way conversion of names containing the characters in the regexp
   # even though we don't use two-way conversion anywhere just yet
-  def _nydp_name_to_rb_name ; self.gsub(/[-_\+\[\]\?\!\*\.\|#@\$%\^\&\(\)=\{\}\"\'\:\;~`<>\/\,\<\> ]/) { |chr| "_#{chr._hex_ord}"}.to_sym ; end
+  def _nydp_name_to_rb_name ; self.gsub(/[\x00-\x2F\x3A-\x40\x5B-\x60\x7B-\x7F]/) { |chr| "_#{chr._hex_ord}"}.to_sym ; end
   def as_method_name ; self.gsub(/-/, '_').to_sym ; end
   def nydp_type      ; :string                    ; end
   def _hex_ord       ; ord.to_s(16).rjust(2, '0') ; end

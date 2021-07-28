@@ -28,8 +28,8 @@ class Nydp::Symbol
     "ns_#{name.to_s._nydp_name_to_rb_name}"
   end
 
-  def compile_to_ruby
-    "ns.#{ruby_name}"
+  def compile_to_ruby indent, src
+    "#{indent}ns.#{ruby_name}"
   end
 
   def self.special name
@@ -40,7 +40,8 @@ class Nydp::Symbol
 
   def self.mk name, ns
     name = name.to_s.to_sym
-    ns[name] ||= new(name)
+    # ns[name] ||= new(name)
+    new(name)
   end
 
   def self.find name, ns ; ns[name.to_sym] ;  end

@@ -43,6 +43,7 @@ module Nydp
       @name = name
       @vm   = vm
       @ns   = ns
+      @rubydir = FileUtils.mkdir_p "rubycode"
     end
 
     def compile_expr expr
@@ -53,14 +54,69 @@ module Nydp
       end
     end
 
-    def eval_compiled compiled_expr, src
-      begin
-        ruby_expr = compiled_expr.compile_to_ruby
-        proc_expr = "->(ns) { #{ruby_expr} }"
-        eval(proc_expr, nil, src._nydp_inspect).call(ns)
-      rescue Exception => e
-        raise Nydp::Error, "failed to eval #{compiled_expr._nydp_inspect} from src #{src._nydp_inspect}"
-      end
+    def mk_ruby_source src, precompiled, compiled_expr, cname
+      srcs       = []
+      ruby_expr  = compiled_expr.compile_to_ruby "    ", srcs
+      six        = 0
+      srcs       = srcs.map { |s|
+        s = "  @@src_#{six} = #{s.inspect}"
+        six += 1
+        s
+      }
+      class_expr = "class #{cname}
+  attr_accessor :ns
+
+#{srcs.join("\n")}
+
+  def initialize ns
+    @ns = ns
+  end
+
+  def src
+    #{src.inspect.inspect}
+  end
+
+  def precompiled
+    #{precompiled.inspect.inspect}
+  end
+
+  def call
+#{ruby_expr}
+  end
+end
+
+#{cname}
+"
+      File.open("rubycode/#{cname}.rb", "w") { |f| f.write class_expr }
+      class_expr
+    end
+
+    def mk_ruby_class src, precompiled, compiled_expr, cname
+      fname = "rubycode/#{cname}.rb"
+      txt = if File.exists?(fname)
+              File.read(fname)
+            else
+              mk_ruby_source src, precompiled, compiled_expr, cname
+            end
+
+      eval txt, nil, fname
+    end
+
+    def eval_compiled compiled_expr, precompiled, src
+      name    = if src.respond_to? :cadr
+                  src.cadr
+                else
+                  src
+                end.to_s.gsub(/[^a-zA-Z0-9]/, '_').gsub(/_+/, '_').upcase[0,20]
+      digest  = Digest::SHA256.hexdigest(precompiled.inspect)
+      cname   = "NydpGenerated_#{name}_#{digest.upcase}"
+
+      kla     = mk_ruby_class src, precompiled, compiled_expr, cname
+
+      kla.new(ns).call
+
+    rescue Exception => e
+      raise Nydp::Error, "failed to eval #{compiled_expr._nydp_inspect} from src #{src._nydp_inspect}"
     end
 
     def pre_compile expr
@@ -70,7 +126,7 @@ module Nydp
     def evaluate expr
       precompiled = pre_compile(expr)
       compiled    = compile_expr precompiled
-      eval_compiled compiled, expr
+      eval_compiled compiled, precompiled, expr
     end
   end
 

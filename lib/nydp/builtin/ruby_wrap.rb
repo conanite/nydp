@@ -94,5 +94,5 @@ CODE
   core_builder.build(:StringPadRight, 3, %{ a0.to_s.ljust(a1, a2.to_s) }    )
 
   # TODO this is for exploration purposes only, to be deleted
-  core_builder.build :CompileToRuby, 1, %{ a0.compile_to_ruby }
+  core_builder.build :CompileToRuby, 1, %{ a0.compile_to_ruby "", [] }
 end

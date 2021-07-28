@@ -3,7 +3,7 @@ require 'nydp/lexical_context_builder'
 require 'nydp/closure'
 
 module Nydp
-  class ProcWithSource < Proc
+  class Fn < Proc
     attr_accessor :src
     def initialize src, &b
       super &b
@@ -13,7 +13,7 @@ module Nydp
       src
     end
     def inspect
-      "<Proc:#{to_s}>"
+      "<#{self.class.name}@#{source_location.join(":")}:#{src}>"
     end
     def nydp_type
       :fn
@@ -31,32 +31,44 @@ module Nydp
       body.map { |b| b.lexical_reach(n - 1)  }.max
     end
 
-    def compile_to_ruby
-      # rubyargs = ["ns"]
-      rubyargs = []
-      an = arg_names
+    def compile_to_ruby indent, srcs
+      an        = arg_names
+      rubyargs  = []
+      src_index = srcs.length
+
+      srcs << to_s
+
       while (pair? an)
         rubyargs << "_arg_#{an.car.to_s._nydp_name_to_rb_name}=nil"
         an = an.cdr
       end
 
-      if Nydp::NIL.isnt?(an)
+      if an
         rest_arg = "_arg_#{an.to_s._nydp_name_to_rb_name}"
         rubyargs << "*#{rest_arg}"
       end
 
-      code = "  (Nydp::ProcWithSource.new(#{to_s.inspect}) {|#{rubyargs.join ","}| (\n"
-      if rest_arg
-        code << "#{rest_arg} = #{rest_arg}._nydp_wrapper\n"
+      if rubyargs == []
+        rubyargs = ""
+      else
+        rubyargs = "|#{rubyargs.join ","}|"
       end
-      body.each { |instr|
-        if instr.respond_to? :compile_to_ruby
-          code << "    " << instr.compile_to_ruby << "\n"
+
+      code = "#{indent}(Nydp::Fn.new(@@src_#{src_index}) {#{rubyargs}\n"
+      if rest_arg
+        code << "#{indent}  #{rest_arg} = #{rest_arg}._nydp_wrapper\n"
+      end
+      bodycode = body.map { |expr|
+        if expr.respond_to? :compile_to_ruby
+          expr.compile_to_ruby("  ", srcs)
         else
-          code << "    # NOCOMPILE : #{instr._nydp_inspect} (#{instr.class})"
+          raise "can't compile_to_ruby : #{expr._nydp_inspect} (#{expr.class})"
         end
-      }
-      code << " )._nydp_wrapper })"
+      }.to_a
+
+      bodycode.push "#{bodycode.pop}._nydp_wrapper"
+      code << bodycode.join("\n").split(/\n/).map { |e| "#{indent}  #{e}" }.join("\n")
+      code << "\n#{indent}})"
     end
 
     def self.build arg_list, body, bindings, ns

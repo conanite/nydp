@@ -68,10 +68,10 @@ module Nydp
       end
     end
 
-    def compile_to_ruby
-      "while (#{condition.compile_to_ruby}) do
-         #{loop_body.compile_to_ruby}
-end"
+    def compile_to_ruby indent, srcs
+      "#{indent}while (#{condition.compile_to_ruby "", srcs})
+#{loop_body.compile_to_ruby(indent + "  ", srcs)}
+#{indent}end"
     end
   end
 end

@@ -72,14 +72,19 @@ class Nydp::Pair
     a.cdr
   end
 
-  def compile_to_ruby
+  def compile_to_ruby indent, srcs
     a,x = [], self
     while x.is_a?(Nydp::Pair)
-      a << x.car.compile_to_ruby
+      a << x.car.compile_to_ruby("", srcs)
       x = x.cdr
     end
 
-    "Nydp::Pair.from_list([" + a.join(", ") + "], #{x.compile_to_ruby})"
+    if !x || (x.is_a?(Nydp::Literal) && !x.expression)
+      "#{indent}Nydp::Pair.from_list([" + a.join(", ") + "])"
+
+    else
+      "#{indent}Nydp::Pair.from_list([" + a.join(", ") + "], #{x.compile_to_ruby "", srcs})"
+    end
   end
 
   def nth n

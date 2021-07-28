@@ -16,7 +16,7 @@ module Nydp
       expression
     end
 
-    def compile_to_ruby ; expression.compile_to_ruby ; end
+    def compile_to_ruby indent, srcs ; "#{indent}#{expression.compile_to_ruby "", srcs}" ; end
 
     def nydp_type ; :literal            ; end
     def inspect   ; @expression.inspect ; end

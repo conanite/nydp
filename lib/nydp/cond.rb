@@ -20,12 +20,21 @@ module Nydp
       end
     end
 
-    def compile_to_ruby
-      "if (#{@condition.compile_to_ruby})
-         (#{@when_true.compile_to_ruby})
-       else
-         (#{@when_false.compile_to_ruby})
-       end"
+    def compile_to_ruby indent="", srcs
+      # if @when_false.compile_to_ruby("") =~ /nil/
+      #   raise "nil when false in #{@when_false.inspect} #{@when_false.class}"
+      # end
+      if (!@when_false) || (@when_false.is_a?(Nydp::Literal) && !@when_false.expression)
+        "#{indent}if (#{@condition.compile_to_ruby "", srcs})
+#{@when_true.compile_to_ruby(indent + "  ", srcs)}
+#{indent}end"
+      else
+        "#{indent}if (#{@condition.compile_to_ruby "", srcs})
+#{@when_true.compile_to_ruby(indent + "  ", srcs)}
+#{indent}else
+#{@when_false.compile_to_ruby(indent + "  ", srcs)}
+#{indent}end"
+      end
     end
 
     def inspect
@@ -74,8 +83,8 @@ module Nydp
 
     def inspect ; "cond:#{@condition._nydp_inspect}:#{@when_true._nydp_inspect}:#{@when_false._nydp_inspect}" ; end
     def to_s    ; "(cond #{@condition.to_s} #{@when_true.to_s} #{@when_false.to_s})" ; end
-    def compile_to_ruby
-      "((#{@condition.compile_to_ruby}) ? (#{@when_true.compile_to_ruby}) : (#{@when_false.compile_to_ruby}))"
+    def compile_to_ruby indent
+      "((#{@condition.compile_to_ruby "", srcs}) ? (#{@when_true.compile_to_ruby "", srcs}) : (#{@when_false.compile_to_ruby "", srcs}))"
     end
   end
 

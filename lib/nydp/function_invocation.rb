@@ -17,15 +17,17 @@ module Nydp
         @expr, @source, @sig = expr, source, sig
       end
 
-      def compile_to_ruby
-        ra = begin
-               @expr.map &:compile_to_ruby
-             rescue => e
-               ["\n# #{__FILE__}##{__LINE__} can't compile argument_instructions #{@expr} (#{@expr.class}) #{e.message}"]
-             end
+      def compile_to_ruby indent, srcs
+        ra = @expr.map { |e| e.compile_to_ruby "#{indent}  ", srcs}
         fn = ra.shift
 
-        "#{fn}.call(#{ra.join(", ")})"
+        if ra.empty?
+          "#{indent}#{fn}._nydp_call()"
+        else
+          "#{indent}#{fn}._nydp_call(
+#{ra.join(",\n")}
+#{indent})"
+        end
       end
 
       def handle e, f, invoker, *args
@@ -443,14 +445,15 @@ module Nydp
       function_instruction.lexical_reach(n)
     end
 
-    def compile_to_ruby
-        ra = begin
-               argument_instructions.map &:compile_to_ruby
-             rescue e
-               ["\n# #{__FILE__}##{__LINE__} can't compile argument_instructions #{argument_instructions} (#{argument_instructions.class}) #{e.message}"]
-             end
-      # "#{ra.shift}.call(#{ra.unshift("ns").join(", ")})"
-      "#{ra.shift}.call(#{ra.join(", ")})"
+    def compile_to_ruby indent, srcs
+      ra = argument_instructions.map { |e| e.compile_to_ruby "#{indent}  ", srcs }
+      if ra.length == 1
+        "#{indent}#{ra.shift}._nydp_call()"
+      else
+        "#{indent}#{ra.shift}._nydp_call(
+#{ra.join(",\n")}
+#{indent})"
+      end
     end
 
     @@seen = { }

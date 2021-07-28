@@ -34,8 +34,8 @@ module Nydp
           @lexical_depth + n
         end
 
-        def compile_to_ruby
-          "_arg_\#{@name.to_s._nydp_name_to_rb_name}"
+        def compile_to_ruby indent, srcs
+          "\#{indent}_arg_\#{@name.to_s._nydp_name_to_rb_name}"
         end
 
         def value ctx
