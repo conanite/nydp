@@ -3,54 +3,10 @@ require 'set'
 
 module Nydp
   class << self
-    attr_accessor :logger # not used by this gem but very useful in your app
+    attr_accessor :logger # set this if you plan on using 'log
   end
 
-  class Namespace < Hash
-    def method_missing name, *args
-      if name.to_s =~ /^ns_/
-        attr = name.to_s.gsub(/=$/, '').to_sym
-        singleton_class.instance_eval do
-          attr_accessor attr
-        end
-        send name, *args
-      else
-        super
-      end
-    end
-
-    def assign name, value
-      send "ns_#{name.to_s._nydp_name_to_rb_name}=", value
-    end
-
-    def fetch name
-      send "ns_#{name.to_s._nydp_name_to_rb_name}"
-    end
-  end
-
-  # def self.apply_function ns, function_name, *args
-  #   vm         = VM.new(ns)
-  #   function   = Symbol.mk(function_name.to_sym, ns).value if function_name.is_a?(String) || function_name.is_a?(::Symbol)
-  #   function ||= function_name if function_name.respond_to?(:invoke)
-  #   function.invoke vm, r2n(args)
-  # rescue StandardError => e
-  #   friendly_args = args.map { |a| a.respond_to?(:_nydp_compact_inspect) ? a._nydp_compact_inspect : a }
-  #   raise Nydp::Error.new("Invoking #{function_name}\nwith args #{friendly_args._nydp_inspect}")
-  # end
-
-  def self.apply_function ns, function_name, *args
-    if function_name.is_a?(String) || function_name.is_a?(::Symbol)
-      name = Symbol.new(function_name).ruby_name
-      function = ns.send name
-    end
-
-    function ||= function_name if function_name.respond_to?(:call)
-    function.call *args
-  rescue StandardError => e
-    friendly_args = args.map { |a| a.respond_to?(:_nydp_compact_inspect) ? a._nydp_compact_inspect : a._nydp_inspect }
-    raise Nydp::Error.new("Invoking #{function_name}\nwith args #{friendly_args.inspect}")
-  end
-
+  def self.apply_function      ns, name, *args ; ns.apply name, *args                                       ; end
   def self.reader                          txt ; Nydp::StringReader.new txt                                 ; end
   def self.eval_src      ns, src_txt, name=nil ; eval_with Nydp::Runner, ns, src_txt, name                  ; end
   def self.eval_with runner, ns, src_txt, name ; runner.new(VM.new(ns), ns, reader(src_txt), nil, name).run ; end
@@ -137,3 +93,4 @@ require "nydp/tokeniser"
 require "nydp/parser"
 require "nydp/compiler"
 require "nydp/vm"
+require "nydp/namespace"
