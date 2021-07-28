@@ -20,10 +20,15 @@ class Nydp::Pair
   def +    other ; copy_append other                          ; end
   def size       ; 1 + (cdr.is_a?(Nydp::Pair) ? cdr.size : 0) ; end
   def inspect    ; "(#{inspect_rest})"                        ; end
+  def []       i ; nth i                                      ; end
   def &    other ; self.class.from_list((Set.new(self) & Array(other)).to_a)    ; end
   def |    other ; self.class.from_list((Set.new(self) | Array(other)).to_a)    ; end
   def -    other ; self.class.from_list((Set.new(self) - Array(other)).to_a)    ; end
   def proper?    ; Nydp::NIL.is?(cdr) || (cdr.is_a?(Nydp::Pair) && cdr.proper?) ; end
+
+  # def method_missing m, *args
+  #   to_a.send m, *args
+  # end
 
   # can't cache hash of symbol, breaks when unmarshalling
   def hash
@@ -152,41 +157,41 @@ class Nydp::Pair
     while xs
       yield xs.car
       xs = xs.cdr
-      # cdr.each(&block) unless Nydp::NIL.is?(cdr)
     end
   end
 
   def to_s
-    # if car.is_a?(Nydp::Symbol) && car.is?(:quote)
-    if car.is_a?(::Symbol) && (car == :quote)
+    if (car == nil)
+      "nil"
+    elsif car.is_a?(String)
+      car.inspect
+    elsif car.is_a?(Nydp::Fn)
+      car.to_s
+    elsif (car == :quote)
       if Nydp::NIL.is? cdr.cdr
         "'#{cdr.car.to_s}"
       else
         "'#{cdr.to_s}"
       end
-    # elsif car.is_a?(Nydp::Symbol) && car.is?(:"brace-list")
-    elsif car.is_a?(Symbol) && (car == :"brace-list")
+    elsif (car == :"brace-list")
       if Nydp::NIL.is? cdr
         "{}"
       else
         "{ #{cdr.to_s_rest} }"
       end
-    # elsif car.is_a?(Nydp::Symbol) && car.is?(:quasiquote)
-    elsif car.is_a?(Symbol) && (car == :quasiquote)
+    elsif (car == :quasiquote)
       if Nydp::NIL.is? cdr.cdr
         "`#{cdr.car.to_s}"
       else
         "`#{cdr.to_s}"
       end
-    # elsif car.is_a?(Nydp::Symbol) && car.is?(:unquote)
-    elsif car.is_a?(Symbol) && (car == :unquote)
+    elsif (car == :unquote)
       if Nydp::NIL.is? cdr.cdr
         ",#{cdr.car.to_s}"
       else
         ",#{cdr.to_s}"
       end
-    # elsif car.is_a?(Nydp::Symbol) && car.is?(:"unquote-splicing")
-    elsif car.is_a?(Symbol) && (car == :"unquote-splicing")
+    elsif (car == :"unquote-splicing")
       if Nydp::NIL.is? cdr.cdr
         ",@#{cdr.car.to_s}"
       else
