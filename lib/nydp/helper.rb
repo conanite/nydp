@@ -1,7 +1,7 @@
 module Nydp
   module AutoWrap
     # include this and be sure to either override #_nydp_ok? or #_nydp_whitelist
-    # #_nydp_whitelist should return a list of accessor (zero-arg) methods which are safe for nydp to invoke
+    # #_nydp_whitelist should return a list of accessor (zero-arg) methods which are safe for nydp to call
     # #_nydp_procify should return a list of methods that can be exposed to script code.
     #
     # class Blub
