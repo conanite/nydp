@@ -20,7 +20,7 @@ with arg names (a b c)\nand args (\"world\" 36 6)"
 
 "Called builtin/apply
 with args
-  <Proc:(fn (a b c) (string-pieces \"hello \" u \", \" x \" + \" y \" is \" (+ 2 y) \", thank heavens!\"))>
+  <Nydp::Fn@rubycode/NydpGenerated__A_B_C__2F5C2EF513C87E2349A55BCB331F83CC856076BBB89CDFAAA1817D62AFEEF0DB.rb:19:(fn (a b c) (string-pieces \"hello \" u \", \" x \" + \" y \" is \" (+ 2 y) \", thank heavens!\"))>
   (\"world\" 36 6)"
 
 "Called builtin/+

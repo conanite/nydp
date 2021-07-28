@@ -13,7 +13,7 @@
    "expanding
 (colon-syntax || foo)
 with
-<Proc:(fn names ((orf (hash-get colon-syntax-overrides (car [0#0#0]names)) default-colon-syntax) [0#0#0]names))>
+(fn names ((orf (hash-get colon-syntax-overrides (car names)) default-colon-syntax) names))
 Irregular ': syntax: got (|| foo) : not prefix-syntax : in :foo"))
 
 (examples-for prefix-list
