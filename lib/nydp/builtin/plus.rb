@@ -4,16 +4,14 @@ class Nydp::Builtin::Plus
   def name ; "+" ; end
 
   def builtin_call *args
-    if args == []
+    if args.empty?
       0
     else
       case args.first
-      when Nydp::Pair
-        args.reduce &:+
       when String
         args.each_with_object("") { |str, res| res << str.to_s }
       when Date
-        args.first._nydp_date + args[1]
+        (args.shift._nydp_date + builtin_call(*args)).to_ruby
       else
         args.reduce &:+
       end
