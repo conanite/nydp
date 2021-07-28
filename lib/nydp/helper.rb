@@ -19,11 +19,9 @@ module Nydp
     #
     # blubme here, now
     #
-    def _nydp_wrapper                 ; self                                     ; end
     def _nydp_ok?              method ; _nydp_whitelist.include? method          ; end
     def _nydp_procify?         method ; _nydp_procs.include? method              ; end # override to allow returning Method instances for given method name
     def _nydp_get                 key ; _nydp_safe_send(key.to_s.as_method_name) ; end
-    def to_ruby                       ; self                                     ; end
     def _nydp_safe_send meth, *args
       return send meth, *args if _nydp_ok?(meth)
       return method(meth)     if _nydp_procify?(meth)
