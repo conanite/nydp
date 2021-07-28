@@ -309,11 +309,10 @@ scoping, assignment, anonymous functions and more...")
 ;; TODO instead expand to: (hash 'k1 v1 'k2 v2 'k3 v3 ...)
 ;; TODO builtin-hash function takes care of constructing the hash
 (def brace-list-build-hash (args)
-  (w/uniq hash
-    (let mappings (pairs args)
-      `(let ,hash (hash)
-            ,@(map (fn (m) `(hash-set ,hash ,(brace-list-hash-key (car m)) ,(cadr m))) mappings)
-            ,hash))))
+  `(hash ,@(apply
+            +
+            (map (fn (kv) (list (brace-list-hash-key (car kv)) (cadr kv)))
+                 (pairs args)))))
 
 (def build-ampersand-syntax (arg)
   (if (caris 'dot-syntax arg)
