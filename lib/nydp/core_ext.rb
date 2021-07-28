@@ -13,11 +13,7 @@ end
 
 class Method
   include Nydp::Converter
-  def invoke_1 vm             ; call._nydp_wrapper                            ; end
-  def invoke_2 vm, a0         ; call(n2r(a0))._nydp_wrapper                   ; end
-  def invoke_3 vm, a0, a1     ; call(n2r(a0), n2r(a1))._nydp_wrapper          ; end
-  def invoke_4 vm, a0, a1, a2 ; call(n2r(a0), n2r(a1), n2r(a2))._nydp_wrapper ; end
-  def invoke   vm, args       ; call(*(args.map { |a| n2r a}))._nydp_wrapper  ; end
+  def _nydp_call *args ; (call *(rubify args))._nydp_wrapper ; end
 end
 
 class TrueClass
@@ -77,9 +73,9 @@ class ::Symbol
 end
 
 class ::Date
-  def _nydp_wrapper ; self                                  ; end
   def _nydp_get key ;_nydp_date.lookup key, self            ; end
   def _nydp_date    ; @__nydp_date ||= Nydp::Date.new(self) ; end
+  def nydp_type     ; :date                                 ; end
 end
 
 class ::Array
