@@ -1,12 +1,12 @@
 require "spec_helper"
 
-describe Nydp::Hash do
+describe ::Hash do
 
   let(:vm) { Nydp::VM.new(ns) }
 
   describe "#to_ruby" do
     it "converts ruby symbol key to nydp symbol key" do
-      hash = Nydp::Hash.new
+      hash = ::Hash.new
       hash[sym "boo"] = 42
 
       rhash = hash.to_ruby
@@ -15,7 +15,7 @@ describe Nydp::Hash do
     end
 
     it "converts ruby string key to nydp string key" do
-      hash = Nydp::Hash.new
+      hash = ::Hash.new
       hash["boo"] = 42
 
       rhash = hash.to_ruby
@@ -24,7 +24,7 @@ describe Nydp::Hash do
     end
 
     it "uses integer keys unconverted" do
-      hash = Nydp::Hash.new
+      hash = ::Hash.new
       hash[21] = 42
 
       rhash = hash.to_ruby
@@ -55,7 +55,7 @@ describe Nydp::Hash do
 
     describe "hash set" do
       it "sets a value on a hash" do
-        h    = Nydp::Hash.new
+        h    = ::Hash.new
         a    = Nydp::Builtin::HashSet.instance.call h, :keysym, 42
 
         expect(h.keys).    to eq [:keysym]
@@ -66,7 +66,7 @@ describe Nydp::Hash do
 
     describe "hash get" do
       it "gets a value from a hash" do
-        h    = Nydp::Hash.new
+        h    = ::Hash.new
         k    = :keysym
         v    = 42
         h[k] = v
@@ -78,7 +78,7 @@ describe Nydp::Hash do
 
     describe "key?" do
       it "returns t when key is present" do
-        h    = Nydp::Hash.new
+        h    = ::Hash.new
         k    = sym "jerry"
         v    = 42
         h[k] = v
@@ -89,7 +89,7 @@ describe Nydp::Hash do
       end
 
       it "returns nil when key is absent" do
-        h    = Nydp::Hash.new
+        h    = ::Hash.new
         k    = sym "benjamin"
 
         a = Nydp::Builtin::HashKeyPresent.instance.call h, k
@@ -100,7 +100,7 @@ describe Nydp::Hash do
 
     describe "hash keys" do
       it "returns a list of keys" do
-        h    = Nydp::Hash.new
+        h    = ::Hash.new
         h[sym "k0"] = 42
         h[sym "k1"] = 84
 
@@ -137,13 +137,13 @@ describe Nydp::Hash do
 
   describe "hash-slice" do
     it "returns a new hash containing only the given keys from the old hash" do
-      hash = Nydp::Hash.new
+      hash = ::Hash.new
       sfoo = sym "foo"
       sbar = sym "bar"
       syak = sym "yak"
       szeb = sym "zeb"
 
-      h = Nydp::Hash.new
+      h = ::Hash.new
 
       h[sfoo] = 16
       h[sbar] = 42

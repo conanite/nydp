@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe Nydp::Hash do
+describe ::Hash do
   let(:vm) { Nydp::VM.new(ns) }
 
   describe "foreign hashes" do
