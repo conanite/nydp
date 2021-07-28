@@ -7,37 +7,30 @@ describe Nydp::Symbol do
 
   describe "#inspect" do
     it "wraps itself in pipe chars if empty" do
-      # sym = Nydp::Symbol.mk "", ns
       sym = :""
       expect(sym._nydp_inspect).to eq "||"
     end
     it "wraps itself in pipe chars if nil" do
-      # sym = Nydp::Symbol.mk nil, ns
       sym = nil.to_s.to_sym
       expect(sym._nydp_inspect).to eq "||"
     end
     it "wraps itself in pipe chars if it has spaces" do
-      # sym = Nydp::Symbol.mk "hello world", ns
       sym = :"hello world"
       expect(sym._nydp_inspect).to eq "|hello world|"
     end
     it "wraps itself in pipe chars if it has pipe chars" do
-      # sym = Nydp::Symbol.mk "hello|world", ns
       sym = :"hello|world"
       expect(sym._nydp_inspect).to eq '|hello\|world|'
     end
     it "wraps itself in pipe chars if it contains quote chars" do
-      # sym = Nydp::Symbol.mk "hello 'world'", ns
       sym = :"hello 'world'"
       expect(sym._nydp_inspect).to eq "|hello 'world'|"
     end
     it "wraps itself in pipe chars if it contains doublequote chars" do
-      # sym = Nydp::Symbol.mk 'hello "world"', ns
       sym = :'hello "world"'
       expect(sym._nydp_inspect).to eq '|hello "world"|'
     end
     it "wraps itself in pipe chars if it has other punctuation" do
-      # sym = Nydp::Symbol.mk 'hello,(world)', ns
       sym = :'hello,(world)'
       expect(sym._nydp_inspect).to eq '|hello,(world)|'
     end
@@ -48,22 +41,9 @@ describe Nydp::Symbol do
     expect(sym.to_ruby).to eq :foo
   end
 
-  it "should not recognise an unknown symbol" do
-    sym = Nydp::Symbol.find :foo, ns
-    expect(sym).to eq nil
-  end
-
   it "should create a new symbol" do
     sym = Nydp::Symbol.mk :foo, ns
     expect(sym.name).to eq :foo
-  end
-
-  it "should not create a new symbol when the symbol already exists" do
-    sym1 = Nydp::Symbol.mk :baz, ns
-    sym2 = Nydp::Symbol.mk :baz, ns
-
-    expect(sym1).to eq sym2
-    expect(sym1).to equal sym2
   end
 
   it "should consider symbols == when they share the same name" do
