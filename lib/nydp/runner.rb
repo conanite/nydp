@@ -1,3 +1,4 @@
+require 'digest'
 require 'readline'
 require 'nydp/readline_history'
 
