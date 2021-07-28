@@ -37,6 +37,14 @@ module Nydp
   module Converter
     def n2r o ; o.respond_to?(:to_ruby) ? o.to_ruby : o ; end
     def r2n o ; o._nydp_wrapper                         ; end
+
+    def rubify value
+      if value.is_a?(Array)           ; value.map { |v| rubify v }
+      elsif value.is_a?(::Nydp::Pair) ; rubify(value.to_a)
+      elsif value.is_a?(::Hash)       ; { }.tap { |h| value.each { |k, v| h[rubify k] = rubify(v) } }
+      else                            ; n2r value
+      end
+    end
   end
 
   extend Converter
@@ -85,7 +93,7 @@ module Nydp
       case expr
       # when String, Float, Integer, Integer, Symbol, Nydp::Truth, Nydp::Nil
       # when String, Float, Integer, Integer, Symbol, Nydp::Truth, NilClass
-      when String, Float, Integer, Integer, Symbol, TrueClass, NilClass
+      when String, Float, Integer, Integer, Symbol, TrueClass, FalseClass, NilClass
         true
       else
         false
