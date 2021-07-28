@@ -64,11 +64,9 @@ module Nydp
 
   def self.tests *options
     toplevel do
-      verbose = options.include?(:verbose) ? "t" : "nil"
+      verbose = options.include?(:verbose) ? true : nil
       puts "welcome to nydp : running tests"
-      reader = Nydp::StringReader.new "(run-all-tests #{verbose})"
-      ns     = build_nydp
-      Nydp::Runner.new(VM.new(ns), ns, reader, nil, "<test-runner>").run
+      build_nydp.apply :"run-all-tests", verbose
     end
   end
 end
