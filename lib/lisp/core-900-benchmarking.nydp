@@ -488,27 +488,11 @@
 ;;   (for i 1 10
 ;;        (pre-compile (dox-src rbs))))
 
-(def bm-map-range () (with (a 1 b 10) (map (fn (n) (apply + (range 0 n))) (range a b))))
-(def bm-accum () (accum a (each b (range 1 10) (a b))))
-
-(def bm-sym-lex-lex-lex () (with (a 1 b 2 c 3) (+ a b c)))
-(def bm-sym-lex-lit-lex () (with (a 1 c 3) (+ a 2 c)))
-
 ;; (def bm-cond-and ()
 ;;   (with (even?   λn(eq? (mod n 2) 0)
 ;;          triple? λn(eq? (mod n 3) 0)
 ;;          big?    λn(> n 10))
 ;;         (select (andify even? triple? big?) (range -10 31))))
-
-(def bm-conditionals ()
-  (with (a 1 b 2)
-        (list
-         (if (pair? a) (no a) a)
-         (if a (pair? a) t)
-         (if (and (pair? a) (no a) a)
-             (or a b)
-             (or b a))
-         (if a (pair? a) b))))
 
 ;; (def bm-hash-fill ()
 ;;   (with (h {} v1 1 v2 2 v3 3 v4 4 v5 5 v6 6)
@@ -543,23 +527,6 @@
   ;;     (z 0) (z 1) (z 2) (z 3) (z 4) (z 5) (z 6) (z 7) (z 8) (z 9)
   ;;     (z 0) (z 1) (z 2) (z 3) (z 4) (z 5) (z 6) (z 7) (z 8) (z 9)))
 
-(in-private
- (def bm-no-closures ()
-   (list λ(+ 1 2)
-         λ(+ 1 2)
-         λ(+ 1 2)
-         λ(+ 1 2)
-         λ(+ 1 2)
-         λ(+ 1 2)
-         λ(+ 1 2)
-         λ(+ 1 2)
-         λ(+ 1 2)
-         λ(+ 1 2)))
-
- (def bm-cons () (cons 'a 'b))
- (def bm-type-of () (type-of 'a)))
-
-
 
 ;; ================================================
 ;; Benchmark: string concatenation     - 10 runs of 20000 iterations each
@@ -576,19 +543,6 @@
 ;; total 7.228159722999999, average 0.7228159722999999 per run
 ;; ================================================
 ;;    string concatenation     : total 7.228159722999999, average 0.7228159722999999 per run
-
-(def bm-string-concat ()
-  (+
-     (+ "this" "that" "another")
-     (+ "this" "that" "another")
-     (+ "this" "that" "another")
-     (+ "this" "that" "another")
-     (+ "this" "that" "another")
-     (+ "this" "that" "another")
-     (+ "this" "that" "another")
-     (+ "this" "that" "another")
-     (+ "this" "that" "another")
-     (+ "this" "that" "another")))
 
 
 ;; ================================================
@@ -607,18 +561,70 @@
 ;; ================================================
 ;;    random string     : total 6.954955385999999, average 0.6954955385999999 per run
 
-(def bm-random-string ()
-  (list (random-string)
-        (random-string)
-        (random-string)
-        (random-string)
-        (random-string)
-        (random-string)
-        (random-string)
-        (random-string)
-        (random-string)
-        (random-string)))
 
+
+(def bm-setup ()
+  (def bm-map-range () (with (a 1 b 10) (map (fn (n) (apply + (range 0 n))) (range a b))))
+
+  (def bm-accum () (accum a (each b (range 1 10) (a b))))
+
+  (def bm-sym-lex-lex-lex () (with (a 1 b 2 c 3) (+ a b c)))
+
+  (def bm-sym-lex-lit-lex () (with (a 1 c 3) (+ a 2 c)))
+
+  (def bm-conditionals ()
+    (with (a 1 b 2)
+          (list
+           (if (pair? a) (no a) a)
+           (if a (pair? a) t)
+           (if (and (pair? a) (no a) a)
+               (or a b)
+               (or b a))
+           (if a (pair? a) b))))
+
+  (in-private
+   (def bm-no-closures ()
+     (list λ(+ 1 2)
+           λ(+ 1 2)
+           λ(+ 1 2)
+           λ(+ 1 2)
+           λ(+ 1 2)
+           λ(+ 1 2)
+           λ(+ 1 2)
+           λ(+ 1 2)
+           λ(+ 1 2)
+           λ(+ 1 2)))
+
+   (def bm-cons () (cons 'a 'b))
+   (def bm-type-of () (type-of 'a)))
+
+
+  (def bm-string-concat ()
+    (+
+     (+ "this" "that" "another")
+     (+ "this" "that" "another")
+     (+ "this" "that" "another")
+     (+ "this" "that" "another")
+     (+ "this" "that" "another")
+     (+ "this" "that" "another")
+     (+ "this" "that" "another")
+     (+ "this" "that" "another")
+     (+ "this" "that" "another")
+     (+ "this" "that" "another")))
+
+  (def bm-random-string ()
+    (list (random-string)
+          (random-string)
+          (random-string)
+          (random-string)
+          (random-string)
+          (random-string)
+          (random-string)
+          (random-string)
+          (random-string)
+          (random-string)))
+
+  (assign bm-setup noop))
 
 ;; used in benchmarking
 (def bm-repeat (f n)
@@ -641,6 +647,7 @@
 
 
 (def rbs (name)
+  (bm-setup)
   (let summary nil
     (push (bm "random string    "   bm-random-string             10  20000) summary)
     (push (bm "string concatenation    "   bm-string-concat             10  20000) summary)
