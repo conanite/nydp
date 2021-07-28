@@ -56,7 +56,8 @@ module Nydp
 
         def depth   ; #{depth}                               ; end
         def inspect ; to_s                                   ; end
-        def to_s    ; "[#{depth}##{binding_index}#\#{@lexical_depth}]\#{@name}" ; end
+        # def to_s    ; "[#{depth}##{binding_index}#\#{@lexical_depth}]\#{@name}" ; end
+        def to_s    ; @name ; end
       KLASS
 
       const_set name, Class.new(Nydp::ContextSymbol) {
