@@ -11,7 +11,7 @@ module Nydp
       @instructions = []
       @args         = []
       @contexts     = []
-      @locals       = Nydp::Hash.new
+      @locals       = Hash.new
       @ns           = ns
     end
 

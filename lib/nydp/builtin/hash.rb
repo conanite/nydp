@@ -1,5 +1,3 @@
-require "nydp/hash"
-
 class Nydp::Builtin::Hash
   include Nydp::Helper, Nydp::Builtin::Base, Singleton
 
