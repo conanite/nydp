@@ -6,8 +6,7 @@ describe Nydp::Builtin::Rand do
   let(:randf) { Nydp::Builtin::Rand.instance }
 
   def get_rand *args
-    randf.invoke vm, pair_list(args)
-    # vm.pop_args(1).first
+    randf.call *args
   end
 
   describe "zero args" do

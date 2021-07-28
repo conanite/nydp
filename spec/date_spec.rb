@@ -16,18 +16,18 @@ describe Nydp::Date do
 
   it "creates a new date" do
     df = Nydp::Builtin::Date.instance
-    nd = df.invoke_4 vm, 2015, 11, 18
+    nd = df.call 2015, 11, 18
     # nd = vm.args.pop
-    expect(nd).to be_a Nydp::Date
-    expect(nd.ruby_date).to eq Date.parse("2015-11-18")
+    expect(nd).to be_a ::Date
+    expect(nd).to eq Date.parse("2015-11-18")
   end
 
   it "returns today" do
     df = Nydp::Builtin::Date.instance
-    nd = df.invoke_1 vm
+    nd = df.call
     # nd = vm.args.pop
-    expect(nd).to be_a Nydp::Date
-    expect(nd.ruby_date).to eq Date.today
+    expect(nd).to be_a ::Date
+    expect(nd).to eq Date.today
   end
 
   it "returns date components" do

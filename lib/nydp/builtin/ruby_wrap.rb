@@ -43,14 +43,6 @@ class Nydp::Builtin::RubyWrap
 class #{name}
   include Nydp::Builtin::Base, Singleton#{helpers}
 
-  def builtin_invoke_#{msize} vm#{ arg_mapper }
-    (#{code})
-  end
-
-  def builtin_invoke vm, args
-    (#{generic_code})
-  end
-
   def builtin_call #{ arg_mapper_novm }
     (#{code})
   end

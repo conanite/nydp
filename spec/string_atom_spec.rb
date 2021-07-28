@@ -30,7 +30,7 @@ describe Nydp::StringAtom do
   it "works with builtin greater-than when true" do
     f = Nydp::Builtin::GreaterThan.instance
 
-    a = f.invoke vm, pair_list([foo, bar])
+    a = f.call foo, bar
 
     expect(a).to eq bar
   end
@@ -38,7 +38,7 @@ describe Nydp::StringAtom do
   it "works with builtin greater-than when false" do
     f = Nydp::Builtin::GreaterThan.instance
 
-    a = f.invoke vm, pair_list([bar, foo])
+    a = f.call bar, foo
 
     expect(a).to eq Nydp::NIL
   end
@@ -46,7 +46,7 @@ describe Nydp::StringAtom do
   it "works with builtin less-than when true" do
     f = Nydp::Builtin::LessThan.instance
 
-    a = f.invoke vm, pair_list([bar, foo])
+    a = f.call bar, foo
 
     expect(a).to eq foo
   end
@@ -54,7 +54,7 @@ describe Nydp::StringAtom do
   it "works with builtin less-than when false" do
     f = Nydp::Builtin::LessThan.instance
 
-    a = f.invoke vm, pair_list([foo, bar])
+    a = f.call foo, bar
 
     expect(a).to eq Nydp::NIL
   end
