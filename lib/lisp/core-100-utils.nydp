@@ -97,30 +97,30 @@
 ; for each item in 'args
 (def mapply (f args) (map λa(apply f a) args))
 
+;; create a function called 'name ; each invocation of the function will
+;; return the next value in 'things, cycling around to the start if no things are left
 (mac def/cycler (name things)
-  ; create a function called 'name ; each invocation of the function will
-  ; return the next value in 'things, cycling around to the start if no things are left
   `(with (i -1 xs ',things list-len ,(len things))
          (def ,name (j)
            (comment ,(just "each call to ~name returns the next value from ~(inspect things)"))
            (nth (= i (mod (+ 1 (or j i)) list-len))
                 xs))))
 
+;; returns a list (list a b c) where
+;; 'a is a subset of 'items
+;; 'b is the sum of sizes of items in 'a : (apply + (map size-f a))
+;; 'c is the subset of 'items not in 'a
+;; invariants:
+;; b < maximum-size
+;; 'a + 'c is equal to 'items
+;; arguments:
+;; 'items is the list of things of which you have too many
+;; 'bucket is either nil, or a list if you have an existing partially-filled bucket
+;; 'size-f is a function that can tell the size of each item in 'items
+;; 'bucket-size is the size of the existing bucket, or 0 if empty
+;; 'maximum-size is the maximum allowed size for the bucket
+;; implementation note: this function exploits the behaviour of '> returning its last argument when true
 (def bucket/fill (items bucket size-f bucket-size maximum-size)
-  ; returns a list (list a b c) where
-  ; 'a is a subset of 'items
-  ; 'b is the sum of sizes of items in 'a : (apply + (map size-f a))
-  ; 'c is the subset of 'items not in 'a
-  ; invariants:
-  ; b < maximum-size
-  ; 'a + 'c is equal to 'items
-  ; arguments:
-  ; 'items is the list of things of which you have too many
-  ; 'bucket is either nil, or a list if you have an existing partially-filled bucket
-  ; 'size-f is a function that can tell the size of each item in 'items
-  ; 'bucket-size is the size of the existing bucket, or 0 if empty
-  ; 'maximum-size is the maximum allowed size for the bucket
-  ; implementation note: this function exploits the behaviour of '> returning its last argument when true
   (aif (and items
             (> maximum-size (+ (size-f (car items)) bucket-size)))
        (bucket/fill (cdr items)
@@ -136,15 +136,15 @@
                     maximum-size)
        (list (rev bucket) bucket-size items)))
 
+;; used by 'fill-buckets
 (def bucket/new (buckets)
-  ; used by 'fill-buckets
   (cons { bucket-size 0 } buckets))
 
+;; useful for pagination where each item may have a different size
+;; returns a list of hash with keys 'bucket-size and key
+;; if buckets is non-nil, assumes it is a list of previously-established buckets
+;; will add new items to first bucket if its 'bucket-size permits
 (def fill-buckets (items max buckets size-f key)
-  ; useful for pagination where each item may have a different size
-  ; returns a list of hash with keys 'bucket-size and key
-  ; if buckets is non-nil, assumes it is a list of previously-established buckets
-  ; will add new items to first bucket if its 'bucket-size permits
   (if items
       (if buckets
           (let initial (car buckets)
@@ -158,7 +158,7 @@
           (fill-buckets items max (bucket/new buckets) size-f key))
       buckets))
 
-; return the list except for the last element
+;; return the list except for the last element
 (def all-but-last (things)
   (accum acc
          ((afn (xs)

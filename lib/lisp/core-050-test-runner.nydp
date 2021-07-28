@@ -1,8 +1,8 @@
 (assign show-failed-only t)
 (assign all-tests nil)
 
+;; register a test to be run later by 'run-all-tests
 (def register-test (test)
-  ; register a test to be run later by 'run-all-tests
   (push test all-tests))
 
 (def run-all-tests (verbose)

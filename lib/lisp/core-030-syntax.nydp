@@ -106,17 +106,17 @@ scoping, assignment, anonymous functions and more...")
 (mac let (var val . body)
   `((fun (,var) ,@body) ,val))
 
+;; creates a named, locally-scoped function
+;; with the given parameter names. It is possible
+;; to reference the function by its name from within
+;; the function (to pass as an argument or for
+;; recursive invocation)
 (mac rfn (name parms . body)
-  ; creates a named, locally-scoped function
-  ; with the given parameter names. It is possible
-  ; to reference the function by its name from within
-  ; the function (to pass as an argument or for
-  ; recursive invocation)
   `(let ,name nil
      (assign ,name (fn ,parms ,@body))))
 
+;; same as 'rfn, but using the name 'self
 (mac afn (parms . body)
-  ; same as 'rfn, but using the name 'self
   `(rfn self ,parms ,@body))
 
 ;; a mix of rfn and with; creates a locally-scoped named function with
@@ -155,9 +155,9 @@ scoping, assignment, anonymous functions and more...")
       `(fn ,a2
            (and ,@(map (fn (a) `(apply ,a ,a2)) args)))))
 
+;; lazy-evaluates each argument, returns the first
+;; non-nil result, or nil if all evaluate to nil.
 (mac or args
-  ; lazy-evaluates each argument, returns the first
-  ; non-nil result, or nil if all evaluate to nil.
   (if (cdr args)
       (let arg (car args)
         (if (isa 'symbol arg)
@@ -183,8 +183,8 @@ scoping, assignment, anonymous functions and more...")
           name)
       (list 'quote name)))
 
+;; (build-hash-getters '(a b c)) => (hash-get (hash-get a 'b) 'c)
 (def build-hash-getters (names acc)
-  ;; (build-hash-getters '(a b c)) => (hash-get (hash-get a 'b) 'c)
   (if (no acc)
       (build-hash-getters (cdr names) (car names))
       names
@@ -197,12 +197,12 @@ scoping, assignment, anonymous functions and more...")
 (mac hash-lookup (names)
   (build-hash-getters names nil))
 
+;; parser expands a.b to (dot-syntax a b)
 (mac dot-syntax names
-  ; parser expands a.b to (dot-syntax a b)
   `(hash-lookup ,names))
 
+;; parser expands a$b to (dollar-syntax a b)
 (mac dollar-syntax (_ name)
-  ; parser expands a$b to (dollar-syntax a b)
   `(,name))
 
 (def dot-syntax-assignment (names value-expr)
