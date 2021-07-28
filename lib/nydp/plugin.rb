@@ -1,4 +1,4 @@
-require 'nydp/image_store'
+require 'digest'
 
 module Nydp
   PLUGINS = []
@@ -25,7 +25,9 @@ module Nydp
   def self.all_files ; PLUGINS.each_with_object([]) { |plg, list|  plg.loadfiles.each { |f| list << f } } ; end
 
   def self.build_nydp &block
-    ns = Namespace.new
+    digest = Digest::SHA256.hexdigest(Nydp.all_files.map { |f| File.read f }.join("\n"))
+
+    ns = ::Nydp::Namespace.new
     setup(ns)
     PLUGINS.each { |plg|
       loadall ns, plg, plg.loadfiles, &block
