@@ -22,7 +22,6 @@ module Nydp
     def to_s           ; ruby_date.to_s                         ; end
     def to_ruby        ; ruby_date                              ; end
     def inspect        ; ruby_date.inspect                      ; end
-    def nydp_type      ; :date                                  ; end
     def >        other ; is_date?(other) && ruby_date > other   ; end
     def <        other ; is_date?(other) && ruby_date < other   ; end
     def ==       other ; is_date?(other) && ruby_date == other  ; end
