@@ -2,7 +2,6 @@ require 'nydp/image_store'
 
 module Nydp
   PLUGINS = []
-  @@image_store = Nydp::ImageStore.new
 
   def self.plug_in  plugin ; PLUGINS << plugin                   ; end
   def self.load_rake_tasks ; PLUGINS.each &:load_rake_tasks      ; end
@@ -24,9 +23,6 @@ module Nydp
   end
 
   def self.all_files ; PLUGINS.each_with_object([]) { |plg, list|  plg.loadfiles.each { |f| list << f } } ; end
-  def self.set_image_store store ; @@image_store = store ; end
-
-  def self.get_nydp ; @@image_store.get ; end
 
   def self.build_nydp &block
     ns = Namespace.new
