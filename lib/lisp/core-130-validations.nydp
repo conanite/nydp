@@ -37,15 +37,15 @@
 ;;
 ;; example usage:
 ;;
-;; ```
-;; (validate/def invoice issue
-;;   (if (no invoice.account)
-;;       (mf "Account" "Account must be a client account"))
-;;   (if (!> invoice.total 0)
-;;       (mf "Amount"  "Amount must be greater than zero"))
-;;   (if (any? !&group invoice.invoice-items)
-;;       (mf "Group"   "Each line must be assigned to a group")))
-;; ```
+;; <pre><code>
+;;   (validate/def invoice issue
+;;     (if (no invoice.account)
+;;         (mf "Account" "Account must be a client account"))
+;;     (if (!> invoice.total 0)
+;;         (mf "Amount"  "Amount must be greater than zero"))
+;;     (if (any? !&group invoice.invoice-items)
+;;         (mf "Group"   "Each line must be assigned to a group")))
+;; </code></pre>
 ;;
 ;; if your routine makes no call to 'mf then 'validate will return an empty hash, which should be
 ;; interpreted as signifying that the object in question is error free in the given context.
