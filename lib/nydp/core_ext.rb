@@ -35,7 +35,7 @@ class NilClass
   def copy        ; self          ; end
   def assign *_   ; self          ; end
   def nydp_type   ; :nil          ; end
-  def execute     vm ; self       ; end
+  # def execute     vm ; self       ; end
   def _nydp_get    a ; self       ; end
   def _nydp_set a, v ; self       ; end
   def &        other ; self             ; end
@@ -54,7 +54,7 @@ class ::Symbol
   end
 
   def nydp_type  ; :symbol ; end
-  def execute vm ; self    ; end
+  # def execute vm ; self    ; end
 
   alias :inspect_before_nydp :inspect
   def inspect

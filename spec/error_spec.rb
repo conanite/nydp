@@ -1,7 +1,6 @@
 require 'spec_helper'
 
-describe Nydp::VM do
-  let(:vm) { Nydp::VM.new(ns) }
+describe Nydp do
 
   def run txt
     Nydp.setup ns
@@ -28,18 +27,10 @@ with args
 
       expect(error.cause.cause).to be_a ZeroDivisionError
       expect(error.cause.cause.message).to eq "divided by 0"
-
-      expect(vm.unhandled_error).to eq nil
     end
 
     it "recovers quickly from an error" do
-      begin
-        run "dflkjdgjeirgjeoi"
-      rescue
-      end
-
-      expect(vm.unhandled_error).to eq nil
-
+      run "dflkjdgjeirgjeoi"
       expect(run "(+ 2 3 4)").to eq 9
     end
   end

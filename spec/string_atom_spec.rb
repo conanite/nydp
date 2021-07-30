@@ -3,7 +3,6 @@ require "spec_helper"
 describe Nydp::StringAtom do
   let(:bar) { Nydp::StringAtom.new "BAR" }
   let(:foo) { Nydp::StringAtom.new "FOO" }
-  let(:vm)  { Nydp::VM.new(ns)           }
 
   it "is not equal to a symbol with the same represenation" do
     string = Nydp::StringAtom.new "harrypotter"

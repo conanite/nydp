@@ -3,7 +3,6 @@ require 'spec_helper'
 describe Nydp::Symbol do
   let(:bar) { Nydp::Symbol.mk :BAR, ns }
   let(:foo) { Nydp::Symbol.mk :FOO, ns }
-  let(:vm)  { Nydp::VM.new(ns)         }
 
   describe "#inspect" do
     it "wraps itself in pipe chars if empty" do

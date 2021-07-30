@@ -1,4 +1,4 @@
-require "nydp/vm"
+# require "nydp/vm"
 
 class Nydp::Builtin::HandleError
   include Nydp::Helper, Nydp::Builtin::Base, Singleton

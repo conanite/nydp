@@ -1,7 +1,6 @@
 require "spec_helper"
 
 describe ::Hash do
-  let(:vm) { Nydp::VM.new(ns) }
 
   describe "friendly non-hashes" do
     let(:ahash) { TestThing.new 123, "hello there", "private" }

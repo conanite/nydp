@@ -2,8 +2,6 @@ require "spec_helper"
 
 describe ::Hash do
 
-  let(:vm) { Nydp::VM.new(ns) }
-
   describe "#to_ruby" do
     it "converts ruby symbol key to nydp symbol key" do
       hash = ::Hash.new

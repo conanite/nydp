@@ -50,10 +50,6 @@ module Nydp
           raise "problem in \#{self.class.name}#assign, name is \#{@name}, depth is \#{depth}, index is #{binding_index}"
         end
 
-        def execute vm
-          value vm.current_context
-        end
-
         def depth   ; #{depth}                               ; end
         def inspect ; to_s                                   ; end
         # def to_s    ; "[#{depth}##{binding_index}#\#{@lexical_depth}]\#{@name}" ; end

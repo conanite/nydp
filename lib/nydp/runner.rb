@@ -38,11 +38,10 @@ module Nydp
   end
 
   class Evaluator
-    attr_accessor :vm, :ns, :name
+    attr_accessor :ns, :name
 
-    def initialize vm, ns, name
+    def initialize ns, name
       @name = name
-      @vm   = vm
       @ns   = ns
       @rubydir = FileUtils.mkdir_p "rubycode"
     end
@@ -132,8 +131,8 @@ end
   end
 
   class Runner < Evaluator
-    def initialize vm, ns, stream, printer=nil, name=nil
-      super vm, ns, name
+    def initialize ns, stream, printer=nil, name=nil
+      super ns, name
       @printer    = printer
       @parser     = Nydp.new_parser
       @tokens     = Nydp.new_tokeniser stream

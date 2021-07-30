@@ -2,7 +2,6 @@ require 'spec_helper'
 
 describe Nydp do
   let(:parser) { Nydp.new_parser  }
-  let(:vm)     { Nydp::VM.new(ns) }
 
   def run txt
     Nydp.setup ns

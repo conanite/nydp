@@ -2,7 +2,6 @@ require 'spec_helper'
 
 describe Nydp::Date do
 
-  let(:vm) { Nydp::VM.new(ns)  }
 
   it "converts ruby Date to Nydp::Date" do
     rd = Date.parse "2015-06-08"
@@ -17,7 +16,6 @@ describe Nydp::Date do
   it "creates a new date" do
     df = Nydp::Builtin::Date.instance
     nd = df.call 2015, 11, 18
-    # nd = vm.args.pop
     expect(nd).to be_a ::Date
     expect(nd).to eq Date.parse("2015-11-18")
   end
@@ -25,7 +23,6 @@ describe Nydp::Date do
   it "returns today" do
     df = Nydp::Builtin::Date.instance
     nd = df.call
-    # nd = vm.args.pop
     expect(nd).to be_a ::Date
     expect(nd).to eq Date.today
   end
@@ -47,7 +44,6 @@ describe Nydp::Date do
       minus = Nydp::Builtin::Minus.instance
 
       diff = minus.call d1, d0
-      # diff = vm.args.pop
 
       expect(d0).to be_a ::Date
       expect(diff).to eq 6
@@ -109,7 +105,6 @@ describe Nydp::Date do
       plus = Nydp::Builtin::Plus.instance
 
       sum = plus.call d0, 5
-      # sum = vm.args.pop
 
       expect(d0) .to be_a ::Date
       expect(sum).to be_a ::Date

@@ -57,7 +57,7 @@ module Nydp
       puts "nydp v#{Nydp::VERSION} repl ready in #{ms(load_time, launch_time)}ms" unless silent
       puts "^D to exit" unless silent
       return if options[:exit]
-      Nydp::Runner.new(VM.new(ns), ns, reader, $stdout, "<stdin>").run
+      Nydp::Runner.new(ns, reader, $stdout, "<stdin>").run
       # Nydp::Invocation.whazzup
     end
   end
@@ -90,5 +90,4 @@ require "nydp/string_token"
 require "nydp/tokeniser"
 require "nydp/parser"
 require "nydp/compiler"
-require "nydp/vm"
 require "nydp/namespace"

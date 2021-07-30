@@ -8,18 +8,6 @@ class Nydp::Builtin::RubyWrap
   class Coder < Struct.new(:name, :size, :code, :helpers)
     def msize ; size + 1 ; end
 
-    def arg_mapper
-      case size
-      when 0 ; ""
-      when 1 ; ", a0"
-      when 2 ; ", a0, a1"
-      when 3 ; ", a0, a1, a2"
-      when 4 ; ", a0, a1, a2, a3"
-      when 5 ; ", a0, a1, a2, a3, a4"
-      else   ; raise "maximum 5 arguments!"
-      end
-    end
-
     def arg_mapper_novm
       case size
       when 0 ; ""

@@ -56,7 +56,6 @@ class Nydp::Symbol
   def <             other ; self.name < other.name   ; end
   def <=>           other ; self.name <=> other.name ; end
   def assign value, _=nil ; @value = value           ; end
-  def execute          vm ; self.value   ; end
 
   def ns_assign ns, value
     ns.send(:"#{ruby_name}=", value)

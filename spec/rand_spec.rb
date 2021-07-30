@@ -1,8 +1,6 @@
 require "spec_helper"
 
 describe Nydp::Builtin::Rand do
-  let(:vm) { Nydp::VM.new(ns) }
-
   let(:randf) { Nydp::Builtin::Rand.instance }
 
   def get_rand *args

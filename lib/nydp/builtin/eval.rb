@@ -7,7 +7,7 @@ class Nydp::Builtin::Eval
   end
 
   def builtin_call *args
-    evaluator = Nydp::Evaluator.new Nydp::VM.new(@ns), @ns, "<eval>"
+    evaluator = Nydp::Evaluator.new @ns, "<eval>"
     evaluator.evaluate args.first
   end
 end

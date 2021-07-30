@@ -2,7 +2,6 @@ require 'spec_helper'
 
 describe Nydp::Date do
 
-  let(:vm)    { Nydp::VM.new(ns)             }
   let(:timef) { Nydp::Builtin::Time.instance }
 
   it "r2n does not convert ruby Time" do
@@ -15,7 +14,6 @@ describe Nydp::Date do
 
   it "creates a new Time instance" do
     nd = timef.call 2015, 11, 18, 18, 30, 17
-    # nd = vm.args.pop
     expect(nd).to be_a Time
     expect(nd).to eq Time.new(2015, 11, 18, 18, 30, 17)
   end

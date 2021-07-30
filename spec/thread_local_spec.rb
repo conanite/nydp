@@ -14,17 +14,16 @@ describe Nydp do
 
     Nydp.setup ns
 
-    vm = Nydp::VM.new ns
 
     t0 = Thread.new {
-      run vm, "(hash-set (thread-locals) 'testing (+ 1 2 3))"
+      run "(hash-set (thread-locals) 'testing (+ 1 2 3))"
       sleep 0.1
-      run vm, "(hash-get (thread-locals) 'testing)"
+      run "(hash-get (thread-locals) 'testing)"
     }
 
     t1 = Thread.new {
-      run vm, "(hash-set (thread-locals) 'testing (+ 6 7 8))"
-      run vm, "(hash-get (thread-locals) 'testing)"
+      run "(hash-set (thread-locals) 'testing (+ 6 7 8))"
+      run "(hash-get (thread-locals) 'testing)"
     }
 
     t0.join

@@ -43,12 +43,6 @@ module Nydp
       [condition.lexical_reach(n), loop_body.lexical_reach(n)].max
     end
 
-    def execute vm
-      while(condition.execute vm)
-        loop_body.execute(vm)
-      end
-    end
-
     def inspect
       "loop:#{condition._nydp_inspect}:#{loop_body._nydp_inspect}"
     end

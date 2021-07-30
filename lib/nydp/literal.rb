@@ -11,11 +11,6 @@ module Nydp
       new expression
     end
 
-    def execute vm
-      # vm.push_arg expression
-      expression
-    end
-
     def compile_to_ruby indent, srcs ; "#{indent}#{expression.compile_to_ruby "", srcs}" ; end
 
     def nydp_type ; :literal            ; end
