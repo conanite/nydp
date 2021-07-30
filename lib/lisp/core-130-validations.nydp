@@ -8,10 +8,12 @@
   (def validate/fn+ (type context f)
     (hash-cons validations (list type context) f)))
 
-;;
 ;; returns a hash of error-name to list of error messages
 ;;
 ;; An empty return value signifies an error-free 'thing
+;;
+;; @thing@ the thing to validate
+;; @context@ an identifier to select the subset of validations to apply
 ;;
 (def validate (thing context)
   (returnlet msgs {}
@@ -21,17 +23,17 @@
 
 ;; declare a validation routine for type 'type in context 'context
 ;;
-;; 'type must be a symbol
-;; 'context must be a symbol
-;; 'body is one or more nydp expressions.
+;; @type@ must be a symbol
+;; @context@ must be a symbol
+;; @body@ is one or more nydp expressions.
 ;;
-;; 'body will be embedded in a function with access to the following variables :
+;; @body@ will be embedded in a function with access to the following variables :
 ;;
 ;; * the value of the 'type argument
 ;; * ctx
 ;; * mf
 ;;
-;; 'mf ("message function") is a function that takes two arguments and is used to store
+;; @mf@ ("message function") is a function that takes two arguments and is used to store
 ;; the validation error message
 ;; example: (mf "Last name" "Last name must not be empty")
 ;;
@@ -51,5 +53,14 @@
 ;;
 ;; if your routine makes no call to 'mf then 'validate will return an empty hash, which should be
 ;; interpreted as signifying that the object in question is error free in the given context.
+;;
+;; run your validations thus:
+;;
+;; <pre><code>
+;;   (let validations (validate invoice 'issue)
+;;     (if (empty? validations)
+;;         (invoice.issue)))
+;; </code></pre>
+;;
 (mac validate/def (type context . body)
   `(validate/fn+ ',type ',context (fn (,type ctx mf) ,@body)))
