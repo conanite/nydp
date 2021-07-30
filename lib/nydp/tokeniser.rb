@@ -89,7 +89,7 @@ module Nydp
           @finished = true
           return nil
         elsif comment = s.scan(COMMENT)
-          tok = [:comment, comment.gsub(/^;;?\s?/, '').strip]
+          tok = [:comment, comment.gsub(/^;;?\s?/, '')]
         elsif open_str = s.scan(QUOTE)
           tok = [:string_open_delim, open_str]
         elsif open_sym = s.scan(PIPE)
