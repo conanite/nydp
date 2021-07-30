@@ -3,7 +3,7 @@ require "spec_helper"
 describe "tokenising" do
   it "should return another stream of tokens" do
     tt = []
-      reader = Nydp::StringReader.new "(a b c 1 2 3)"
+      reader = Nydp::StringReader.new "test", "(a b c 1 2 3)"
       t = Nydp::Tokeniser.new reader
       tt = []
       tok = t.next_token
@@ -22,7 +22,7 @@ describe "tokenising" do
   end
 
   it "should return a stream of tokens, including whitespace before right-paren" do
-    reader = Nydp::StringReader.new "foo )"
+    reader = Nydp::StringReader.new "test", "foo )"
     t = Nydp::Tokeniser.new reader
     tt = []
     tok = t.next_token
@@ -35,33 +35,33 @@ describe "tokenising" do
   end
 
   it "returns nothing at all" do
-    s = Nydp::StringReader.new ""
+    s = Nydp::StringReader.new "test", ""
     tkz = Nydp::Tokeniser.new s
     expect(tkz.next_token).to be_nil
   end
 
   it "returns a whitespace token" do
-    s = Nydp::StringReader.new "  "
+    s = Nydp::StringReader.new "test", "  "
     tkz = Nydp::Tokeniser.new s
     expect(tkz.next_token).to be_nil
   end
 
   it "returns a symbol token" do
-    s = Nydp::StringReader.new "hello"
+    s = Nydp::StringReader.new "test", "hello"
     tkz = Nydp::Tokeniser.new s
     expect(tkz.next_token).to eq [:symbol, "hello"]
     expect(tkz.next_token).to be_nil
   end
 
   it "returns symbol then whitespace" do
-    s = Nydp::StringReader.new "hello  "
+    s = Nydp::StringReader.new "test", "hello  "
     tkz = Nydp::Tokeniser.new s
     expect(tkz.next_token).to eq [:symbol, "hello"]
     expect(tkz.next_token).to be_nil
   end
 
   it "returns whitespace symbol whitespace symbol whitespace" do
-    s = Nydp::StringReader.new " hello world "
+    s = Nydp::StringReader.new "test", " hello world "
     tkz = Nydp::Tokeniser.new s
     expect(tkz.next_token).to eq [:symbol, "hello"]
     expect(tkz.next_token).to eq [:symbol, "world"]
@@ -69,7 +69,7 @@ describe "tokenising" do
   end
 
   it "returns whitespace left_paren symbol whitespace symbol right_paren whitespace" do
-    s = Nydp::StringReader.new " (hello world) "
+    s = Nydp::StringReader.new "test", " (hello world) "
     tkz = Nydp::Tokeniser.new s
     expect(tkz.next_token).to eq [:left_paren, ""]
     expect(tkz.next_token).to eq [:symbol, "hello"]
@@ -79,7 +79,7 @@ describe "tokenising" do
   end
 
   it "returns whitespace left_paren with prefix symbol whitespace symbol right_paren whitespace" do
-    s = Nydp::StringReader.new " %w(hello world) "
+    s = Nydp::StringReader.new "test", " %w(hello world) "
     tkz = Nydp::Tokeniser.new s
     expect(tkz.next_token).to eq [:left_paren, "%w"]
     expect(tkz.next_token).to eq [:symbol, "hello"]
@@ -89,7 +89,7 @@ describe "tokenising" do
   end
 
   it "returns a comment" do
-    s = Nydp::StringReader.new "hello
+    s = Nydp::StringReader.new "test", "hello
 ; observe!
 world"
     tkz = Nydp::Tokeniser.new s

@@ -4,7 +4,7 @@ describe Nydp do
 
   def run txt
     Nydp.setup ns
-    Nydp::Runner.new(vm, ns, Nydp::StringReader.new(txt)).run
+    Nydp::Runner.new(ns, Nydp::StringReader.new("test", txt)).run
   end
 
   describe "unhandled_error" do

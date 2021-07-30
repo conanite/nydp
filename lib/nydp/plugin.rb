@@ -3,20 +3,32 @@ require 'digest'
 module Nydp
   PLUGINS = []
 
+  module PluginHelper
+    def base_path ; "" ; end # override this to provide common prefix for plugin filenames
+
+    def file_readers filenames, bp=base_path
+      filenames.map { |f| Nydp::FileReader.new(f.gsub(bp, ""), f) }
+    end
+
+    def relative_path name
+      # File.join File.expand_path(File.dirname(__FILE__)), name
+      File.join File.expand_path(File.dirname(caller[0].split(/:\d+:/)[0])), name
+    end
+  end
+
   def self.plug_in  plugin ; PLUGINS << plugin                   ; end
   def self.load_rake_tasks ; PLUGINS.each &:load_rake_tasks      ; end
   def self.setup        ns ; PLUGINS.each { |plg| plg.setup ns } ; end
-  def self.loadfiles       ; PLUGINS.map(&:loadfiles).flatten    ; end
-  def self.testfiles       ; PLUGINS.map(&:testfiles).flatten    ; end
+  # def self.loadfiles       ; PLUGINS.map(&:loadfiles).flatten    ; end
+  # def self.testfiles       ; PLUGINS.map(&:testfiles).flatten    ; end
+
   def self.plugin_names    ; PLUGINS.map(&:name)                 ; end
+
   def self.loadall ns, plugin, files
-    vm = VM.new(ns)
     apply_function ns, :"script-run", :"plugin-start", plugin.name if plugin
     files.each { |f|
-      script_name = f.gsub plugin.base_path, ""
-      reader = Nydp::StreamReader.new(File.new(f))
-      Nydp::Runner.new(vm, ns, reader, nil, (script_name || f)).run
-      yield script_name if block_given?
+      Nydp::Runner.new(ns, f, nil, f.name).run
+      yield f.name if block_given?
     }
   ensure
     apply_function ns, :"script-run", :"plugin-end", plugin.name if plugin
@@ -25,7 +37,10 @@ module Nydp
   def self.all_files ; PLUGINS.each_with_object([]) { |plg, list|  plg.loadfiles.each { |f| list << f } } ; end
 
   def self.build_nydp &block
-    digest = Digest::SHA256.hexdigest(Nydp.all_files.map { |f| File.read f }.join("\n"))
+    # digest = Digest::SHA256.hexdigest(all_files.map { |f| f.read }.join("\n"))
+    # puts
+    # puts "digest for all code : #{digest}"
+    # puts
 
     ns = ::Nydp::Namespace.new
     setup(ns)

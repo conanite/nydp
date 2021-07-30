@@ -6,13 +6,13 @@ module Nydp
     attr_accessor :logger # set this if you plan on using 'log
   end
 
-  def self.apply_function      ns, name, *args ; ns.apply name, *args                                       ; end
-  def self.reader                          txt ; Nydp::StringReader.new txt                                 ; end
-  def self.eval_src      ns, src_txt, name=nil ; eval_with Nydp::Runner, ns, src_txt, name                  ; end
-  def self.eval_with runner, ns, src_txt, name ; runner.new(VM.new(ns), ns, reader(src_txt), nil, name).run ; end
-  def self.ms                           t1, t0 ; ((t1 - t0) * 1000).to_i                                    ; end
-  def self.new_tokeniser                reader ; Nydp::Tokeniser.new reader                                 ; end
-  def self.new_parser                          ; Nydp::Parser.new                                           ; end
+  def self.apply_function      ns, name, *args ; ns.apply name, *args                                 ; end
+  def self.reader                    name, txt ; Nydp::StringReader.new name, txt                     ; end
+  def self.eval_src      ns, src_txt, name=nil ; eval_with Nydp::Runner, ns, src_txt, name            ; end
+  def self.eval_with runner, ns, src_txt, name ; runner.new(ns, reader(name, src_txt), nil, name).run ; end
+  def self.ms                           t1, t0 ; ((t1 - t0) * 1000).to_i                              ; end
+  def self.new_tokeniser                reader ; Nydp::Tokeniser.new reader                           ; end
+  def self.new_parser                          ; Nydp::Parser.new                                     ; end
 
   def self.indent_message indent, msg
     msg.split(/\n/).map { |line| "#{indent}#{line}" }.join("\n")

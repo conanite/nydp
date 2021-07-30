@@ -48,7 +48,7 @@ describe Nydp::Parser do
   let(:string_pieces)    { :"string-pieces"      }
 
   it "should return a stream of tokens" do
-    reader = Nydp::StringReader.new ""
+    reader = Nydp::StringReader.new "test", ""
     t = Nydp.new_tokeniser reader
     expect(t.next_token).to eq nil
   end

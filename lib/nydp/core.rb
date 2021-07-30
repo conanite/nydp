@@ -2,11 +2,9 @@ require 'nydp/plugin'
 
 module Nydp
   class Core
-    def name ; "Nydp Core" ; end
+    include Nydp::PluginHelper
 
-    def relative_path name
-      File.join File.expand_path(File.dirname(__FILE__)), name
-    end
+    def name ; "Nydp Core" ; end
 
     def base_path
       relative_path "../lisp/"
@@ -17,11 +15,11 @@ module Nydp
     end
 
     def loadfiles
-      Dir.glob(relative_path '../lisp/core-*.nydp').sort
+      file_readers Dir.glob(relative_path '../lisp/core-*.nydp').sort
     end
 
     def testfiles
-      Dir.glob(relative_path '../lisp/tests/**/*.nydp')
+      file_readers Dir.glob(relative_path '../lisp/tests/**/*.nydp')
     end
 
     def setup ns

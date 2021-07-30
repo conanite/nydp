@@ -1,8 +1,8 @@
 require 'spec_helper'
 
 describe Nydp do
-  def run vm, txt
-    Nydp::Runner.new(vm, ns, Nydp::StringReader.new(txt)).run
+  def run txt
+    Nydp::Runner.new(ns, Nydp::StringReader.new("test", txt)).run
   end
 
   it "should isolate threadlocal values" do

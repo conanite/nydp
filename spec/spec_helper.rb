@@ -8,7 +8,7 @@ module SpecHelper
   end
 
   def parse txt
-    Nydp.new_parser.expression(Nydp.new_tokeniser Nydp::StringReader.new(txt))
+    Nydp.new_parser.expression(Nydp.new_tokeniser Nydp::StringReader.new("test", txt))
   end
 
   def pair_list xs, last=Nydp::NIL

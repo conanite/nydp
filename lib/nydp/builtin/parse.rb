@@ -3,7 +3,7 @@ class Nydp::Builtin::Parse
 
   def builtin_call arg
     parser = Nydp.new_parser
-    tokens = Nydp.new_tokeniser Nydp::StringReader.new arg.to_s
+    tokens = Nydp.new_tokeniser Nydp::StringReader.new "parse", arg.to_s
     exprs  = []
     while !tokens.finished
       expr = parser.expression(tokens)

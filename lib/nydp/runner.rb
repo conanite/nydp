@@ -4,16 +4,47 @@ require 'nydp/readline_history'
 
 module Nydp
   class StringReader
-    def initialize string ; @string = string ; end
+    attr_accessor :name
+
+    def initialize name, string
+      @name, @string, @read = name, string, string
+    end
+
     def nextline
-      s = @string ; @string = nil ; s
+      s = @read ; @read = nil ; s
+    end
+
+    def read
+      @string
     end
   end
 
   class StreamReader
-    def initialize stream ; @stream = stream ; end
+    attr_accessor :name
+
+    def initialize name, stream
+      @name, @stream = name, stream
+    end
+
     def nextline
       @stream.readline unless @stream.eof?
+    end
+
+    def read
+      ""
+    end
+  end
+
+  class FileReader < StreamReader
+    attr_accessor :filename
+
+    def initialize name, filename
+      super name, File.new(filename)
+      @filename = filename
+    end
+
+    def read
+      File.read filename
     end
   end
 

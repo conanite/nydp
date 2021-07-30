@@ -38,7 +38,7 @@ describe Nydp::Parser do
   let(:colosyn)          { :"colon-syntax"        }
 
   def parse_string txt
-    reader = Nydp::StringReader.new txt
+    reader = Nydp::StringReader.new "test", txt
     Nydp.new_parser.embedded(Nydp.new_tokeniser(reader))
   end
 
