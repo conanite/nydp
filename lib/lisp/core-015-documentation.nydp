@@ -230,7 +230,7 @@
           ',name))
        (dox-add-doc ',(dox-build-def-name name)
                     'def
-                    ',(+ (fetch-and-clear-comments) (map car (hash-get body-forms 'comment)))
+                    (+ (fetch-and-clear-comments) ',(map car (hash-get body-forms 'comment)))
                     ',args
                     '(def ,name ,args ,@(hash-get body-forms nil))
                     ',(map car (hash-get body-forms 'chapter)))))
