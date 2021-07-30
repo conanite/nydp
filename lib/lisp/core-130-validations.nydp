@@ -47,6 +47,8 @@
 ;;         (mf "Group"   "Each line must be assigned to a group")))
 ;; </code></pre>
 ;;
+;; <br>
+;;
 ;; if your routine makes no call to 'mf then 'validate will return an empty hash, which should be
 ;; interpreted as signifying that the object in question is error free in the given context.
 (mac validate/def (type context . body)
