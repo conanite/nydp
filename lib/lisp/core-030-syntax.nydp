@@ -115,7 +115,7 @@ scoping, assignment, anonymous functions and more...")
   `(let ,name nil
      (assign ,name (fn ,parms ,@body))))
 
-;; same as 'rfn, but using the name 'self
+;; same as @rfn@, but using the name @self@
 (mac afn (parms . body)
   `(rfn self ,parms ,@body))
 
@@ -130,12 +130,17 @@ scoping, assignment, anonymous functions and more...")
        (assign ,name (fun ,(map car ppairs) ,@body))
        (,name ,@(map cadr ppairs)))))
 
-(let uniq-counter 0
-  (def uniq (prefix)
-    (assign uniq-counter (+ uniq-counter 1))
-    (sym (join-str prefix "-" (list uniq-counter))))
-  (def reset-uniq-counter ()
-    (assign uniq-counter 0)))
+;; increments a counter and appends it to prefix
+;; return value should be unique until @unique-counter@ is reset
+;; @unique-counter@ is reset before compiling a new expression, so under normal circumstances,
+;; the returned value is unique within an expression, but not across the entire system.
+;; Don't use these values for global variables!
+(def uniq (prefix)
+  (assign uniq-counter (+ uniq-counter 1))
+  (sym (join-str prefix "-" (list uniq-counter))))
+
+(def reset-uniq-counter ()
+  (assign uniq-counter 0))
 
 ;; creates a lexical scope with a unique symbol assigned to
 ;; each variable in 'vars ; executes the 'body.
@@ -145,10 +150,10 @@ scoping, assignment, anonymous functions and more...")
              ,@body)
       `(let ,vars (uniq ',vars) ,@body)))
 
-;; (andify a b c) is equivalent to
-;; (fn args (and (apply a args) (apply b args) (apply c args)))
+;; @(andify a b c)@ is equivalent to
+;; @(fn args (and (apply a args) (apply b args) (apply c args)))@
 ;; or more simply
-;; (fn (x) (and (a x) (b x) (c x)))
+;; @(fn (x) (and (a x) (b x) (c x)))@
 ;; note: alias as 'andf ??
 (mac andify args
   (w/uniq a2

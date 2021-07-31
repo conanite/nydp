@@ -1,3 +1,5 @@
+(assign uniq-counter 0)
+
 (assign mac-expand
         (fn (names macfn expr)
             (cond macfn
@@ -54,6 +56,15 @@
 ; builtin pre-compile does nothing; override here to provide macro-expansion
 (assign pre-compile
         (fn (arg)
+            (pre-compile-with macs arg)))
+
+;; this is the entry point for the interpreter ; we need to reset uniq-counter for each new expression
+;; (for performance purposes only - to ensure identical nydp code produces identical ruby code) ; but
+;; we can't reset uniq-counter in the middle of pre-compiling an expression, otherwise @uniq@ won't be
+;; even slightly unique any more
+(assign pre-compile-new-expression
+        (fn (arg)
+            (assign uniq-counter 0)
             (pre-compile-with macs arg)))
 
 ; we override this later to provide argument deconstruction

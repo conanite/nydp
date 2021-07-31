@@ -151,7 +151,7 @@ end
     end
 
     def pre_compile expr
-      Nydp.apply_function ns, :"pre-compile", expr
+      Nydp.apply_function ns, :"pre-compile-new-expression", expr
     end
 
     def evaluate expr

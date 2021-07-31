@@ -75,7 +75,7 @@ module Nydp
       ns.assign(:"hash-merge"      , Nydp::Builtin::HashMerge.instance               )
       ns.assign(:"hash-slice"      , Nydp::Builtin::HashSlice.instance               )
       ns.assign(:"vm-info"         , Nydp::Builtin::VmInfo.instance                  )
-      ns.assign(:"pre-compile"     , Nydp::Builtin::PreCompile.instance              )
+      ns.assign(:"pre-compile-new-expression", Nydp::Builtin::PreCompile.instance    )
       ns.assign(:"script-run"      , Nydp::Builtin::ScriptRun.instance               )
       ns.assign(:"**"              , Nydp::Builtin::MathPower.instance               )
       ns.assign(:"⌊"               , Nydp::Builtin::MathFloor.instance               )
