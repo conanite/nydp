@@ -147,6 +147,8 @@ end
     end
 
     def eval_compiled compiled_expr, precompiled, src, manifest
+      return nil if precompiled == nil
+
       name    = if src.respond_to? :cadr
                   src.cadr
                 else
@@ -166,7 +168,7 @@ end
     end
 
     def pre_compile expr
-      Nydp.apply_function ns, :"pre-compile-new-expression", expr
+      ns.apply :"pre-compile-new-expression", expr
     end
 
     def evaluate expr, manifest=[]
