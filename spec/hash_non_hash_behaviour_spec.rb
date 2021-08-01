@@ -37,7 +37,7 @@ describe ::Hash do
 
     describe "hash set" do
       it "does nothing, returns its value" do
-        k    = Nydp::Symbol.mk "keysym", ns
+        k    = :keysym
         v    = "foobar"
 
         begin

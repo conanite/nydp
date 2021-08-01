@@ -1,21 +1,21 @@
 require "spec_helper"
 
 describe Nydp::StringAtom do
-  let(:bar) { Nydp::StringAtom.new "BAR" }
-  let(:foo) { Nydp::StringAtom.new "FOO" }
+  let(:bar) { "BAR" }
+  let(:foo) { "FOO" }
 
   it "is not equal to a symbol with the same represenation" do
-    string = Nydp::StringAtom.new "harrypotter"
-    symbol = Nydp::Symbol.mk "harrypotter", ns
-    compare = Nydp::StringAtom.new symbol.to_s
+    string = "harrypotter"
+    symbol = :harrypotter
+    compare = symbol.to_s
     expect(string == compare).to eq true
     expect(string == symbol) .to eq false
   end
 
   it "is not equal to a list with the same represenation" do
-    string = Nydp::StringAtom.new "(FOO BAR)"
+    string = '("FOO" "BAR")'
     list   = Nydp::Pair.from_list [foo, bar]
-    compare = Nydp::StringAtom.new list.to_s
+    compare = list.to_s
     expect(string == compare).to eq true
     expect(string == list)   .to eq false
   end

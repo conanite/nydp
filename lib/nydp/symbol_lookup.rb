@@ -25,8 +25,7 @@ module Nydp
         end
       end
 
-      Nydp::Symbol.mk name, ns
-      # name
+      Nydp::Symbol.new name.to_s.to_sym
     end
   end
 end

@@ -113,7 +113,7 @@ describe ::Hash do
 
     describe "hash set" do
       it "does nothing, returns its value" do
-        k    = Nydp::Symbol.mk "keysym", ns
+        k    = :keysym
         v    = "foobar"
         a    = Nydp::Builtin::HashSet.instance.call ahash, k, v
 
@@ -124,7 +124,7 @@ describe ::Hash do
 
     describe "hash get" do
       it "converts ruby value to nydp value" do
-        k    = Nydp::Symbol.mk "keysym", ns
+        k    = :keysym
 
         a = Nydp::Builtin::HashGet.instance.call ahash, k
 

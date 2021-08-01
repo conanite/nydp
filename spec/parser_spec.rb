@@ -1,29 +1,6 @@
 require 'spec_helper'
 
 describe Nydp::Parser do
-  # let(:empty)            { Nydp::Symbol.mk :"",                   ns }
-  # let(:aa)               { Nydp::Symbol.mk :aa,                   ns }
-  # let(:a)                { Nydp::Symbol.mk :a,                    ns }
-  # let(:b)                { Nydp::Symbol.mk :b,                    ns }
-  # let(:c)                { Nydp::Symbol.mk :c,                    ns }
-  # let(:d)                { Nydp::Symbol.mk :d,                    ns }
-  # let(:zz)               { Nydp::Symbol.mk :zz,                   ns }
-  # let(:foo)              { Nydp::Symbol.mk :foo,                  ns }
-  # let(:bar)              { Nydp::Symbol.mk :bar,                  ns }
-  # let(:foobar)           { Nydp::Symbol.mk :foobar,               ns }
-  # let(:zab)              { Nydp::Symbol.mk :zab,                  ns }
-  # let(:quote)            { Nydp::Symbol.mk :quote,                ns }
-  # let(:quasiquote)       { Nydp::Symbol.mk :quasiquote,           ns }
-  # let(:unquote)          { Nydp::Symbol.mk :unquote,              ns }
-  # let(:prefix_list)      { Nydp::Symbol.mk :"prefix-list",        ns }
-  # let(:unquote_splicing) { Nydp::Symbol.mk :"unquote-splicing",   ns }
-  # let(:comment)          { Nydp::Symbol.mk :comment,              ns }
-  # let(:dotsyn)           { Nydp::Symbol.mk :"dot-syntax",         ns }
-  # let(:cocosyn)          { Nydp::Symbol.mk :"colon-colon-syntax", ns }
-  # let(:colosyn)          { Nydp::Symbol.mk :"colon-syntax",       ns }
-  # let(:atsyn)            { Nydp::Symbol.mk :"at-syntax",          ns }
-  # let(:string_pieces)    { Nydp::Symbol.mk :"string-pieces",      ns }
-
   let(:empty)            { :""                   }
   let(:aa)               { :aa                   }
   let(:a)                { :a                    }

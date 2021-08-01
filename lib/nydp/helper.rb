@@ -85,7 +85,6 @@ module Nydp
     end
 
     def sym name, ns
-      # Nydp::Symbol.mk name, ns
       name.to_s.to_sym
     end
 

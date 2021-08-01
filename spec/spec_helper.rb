@@ -3,7 +3,6 @@ require 'nydp/symbol'
 
 module SpecHelper
   def sym name
-    # Nydp::Symbol.mk name.to_sym, ns
     name.to_s.to_sym
   end
 

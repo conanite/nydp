@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Nydp::Literal do
   it "returns a ruby symbol in #to_ruby" do
-    sym = Nydp::Symbol.mk :foo, ns
+    sym = :foo
     lit = Nydp::Literal.new sym
     expect(lit.to_ruby).to eq :foo
   end
@@ -21,10 +21,9 @@ describe Nydp::Literal do
 
   describe "false" do
     it "is stored in toplevel namespace" do
-      Nydp::Core.new.setup ns
-      # nydp_false = Nydp::Symbol.mk :false, ns
-      # expect(nydp_false.value).to eq false
-      expect(ns.ns_false).to eq false
+      false_ns = Nydp::Namespace.new
+      Nydp::Core.new.setup false_ns
+      expect(false_ns.ns_false).to eq false
     end
   end
 end

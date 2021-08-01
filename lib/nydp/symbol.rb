@@ -38,12 +38,6 @@ class Nydp::Symbol
     nil
   end
 
-  def self.mk name, ns
-    name = name.to_s.to_sym
-    # ns[name] ||= new(name)
-    new(name)
-  end
-
   def self.find name, ns ; ns[name.to_sym] ;  end
 
   def nydp_type           ; :symbol                  ; end
