@@ -87,9 +87,6 @@ module Nydp
       ns.assign(:"set-intersection", Nydp::Builtin::SetIntersection.instance         )
       ns.assign(:"⋃"               , Nydp::Builtin::SetUnion.instance                )
       ns.assign(:"set-union"       , Nydp::Builtin::SetUnion.instance                )
-
-      # TODO this is for exploration purposes only, to be deleted
-      ns.assign("compile-to-ruby"  , Nydp::Builtin::RubyWrap::CompileToRuby.instance )
     end
   end
 end
