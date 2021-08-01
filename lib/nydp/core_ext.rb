@@ -6,6 +6,7 @@ class Object
   def _nydp_inspect         ; inspect       ; end
   def _nydp_compact_inspect ; _nydp_inspect ; end
   def _nydp_call      *args ; call *args    ; end
+  def _nydp_callable    src ; self          ; end
   def lexical_reach       n ; n             ; end
   def to_ruby               ; self          ; end
   def compile_to_ruby indent, srcs ; "#{indent}#{inspect}" ; end
@@ -40,7 +41,8 @@ class NilClass
   def _nydp_set a, v ; self       ; end
   def &        other ; self             ; end
   def |        other ; other            ; end
-  def compile_to_ruby indent, srcs ; "#{indent}nil"     ; end
+  def compile_to_ruby indent, srcs ; "#{indent}nil"      ; end
+  def _nydp_callable src ; raise "can't apply nil : #{src}" ; end
 end
 
 class FalseClass

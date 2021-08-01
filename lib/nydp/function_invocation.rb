@@ -22,9 +22,9 @@ module Nydp
         fn = ra.shift
 
         if ra.empty?
-          "#{indent}#{fn}._nydp_call()"
+          "#{indent}#{fn}._nydp_callable(#{@expr.first.to_s.inspect})._nydp_call()"
         else
-          "#{indent}#{fn}._nydp_call(
+          "#{indent}#{fn}._nydp_callable(#{@expr.first.to_s.inspect})._nydp_call(
 #{ra.join(",\n")}
 #{indent})"
         end
