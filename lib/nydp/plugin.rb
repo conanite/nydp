@@ -56,8 +56,11 @@ module Nydp
     digest   = Digest::SHA256.hexdigest(digest + plugin.loadfiles.map { |f| f.read }.join("\n"))
     mname    = "Manifest_#{digest}"
 
+    if Nydp.logger
+      Nydp.logger.info "manifest name for plugin #{plugin.name.inspect} is #{mname.inspect}"
+    end
+
     begin
-      puts "loading manifest #{mname} for plugin #{plugin.name.inspect}"
       require mname
       const_get(mname).build ns
 
