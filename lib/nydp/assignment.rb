@@ -21,7 +21,7 @@ module Nydp
       "(assign #{@name} #{@value_src._nydp_inspect})"
     end
 
-    def compile_to_ruby indent, srcs
+    def compile_to_ruby indent, srcs, opts=nil
       "#{indent}(#{@name.compile_to_ruby "", srcs} = #{@value.compile_to_ruby indent, srcs})"
     end
 

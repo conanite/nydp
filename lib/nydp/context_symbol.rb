@@ -34,7 +34,7 @@ module Nydp
           @lexical_depth + n
         end
 
-        def compile_to_ruby indent, srcs
+        def compile_to_ruby indent, srcs, opts=nil
           "\#{indent}_arg_\#{@name.to_s._nydp_name_to_rb_name}"
         end
 

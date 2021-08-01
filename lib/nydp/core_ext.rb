@@ -9,7 +9,7 @@ class Object
   def _nydp_callable    src ; self          ; end
   def lexical_reach       n ; n             ; end
   def to_ruby               ; self          ; end
-  def compile_to_ruby indent, srcs ; "#{indent}#{inspect}" ; end
+  def compile_to_ruby indent, srcs, opts=nil ; "#{indent}#{inspect}" ; end
 end
 
 class Method
@@ -23,7 +23,7 @@ class TrueClass
   def nydp_type       ; :truth ; end
   def _nydp_get     a ; self   ; end
   def _nydp_set  a, v ; self   ; end
-  def compile_to_ruby indent, srcs ; "#{indent}true" ; end
+  def compile_to_ruby indent, srcs, opts=nil ; "#{indent}true" ; end
 end
 
 class NilClass
@@ -41,7 +41,7 @@ class NilClass
   def _nydp_set a, v ; self       ; end
   def &        other ; self             ; end
   def |        other ; other            ; end
-  def compile_to_ruby indent, srcs ; "#{indent}nil"      ; end
+  def compile_to_ruby indent, srcs, opts=nil ; "#{indent}nil"      ; end
   def _nydp_callable src ; raise "can't apply nil : #{src}" ; end
 end
 

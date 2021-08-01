@@ -77,7 +77,7 @@ class Nydp::Pair
     a.cdr
   end
 
-  def compile_to_ruby indent, srcs
+  def compile_to_ruby indent, srcs, opts=nil
     a,x = [], self
     while x.is_a?(Nydp::Pair)
       a << x.car.compile_to_ruby("", srcs)

@@ -62,9 +62,9 @@ module Nydp
       end
     end
 
-    def compile_to_ruby indent, srcs
+    def compile_to_ruby indent, srcs, opts=nil
       "#{indent}while (#{condition.compile_to_ruby "", srcs})
-#{loop_body.compile_to_ruby(indent + "  ", srcs)}
+#{loop_body.compile_to_ruby(indent + "  ", srcs, cando: true)}
 #{indent}end"
     end
   end

@@ -31,7 +31,21 @@ module Nydp
       body.map { |b| b.lexical_reach(n - 1)  }.max
     end
 
-    def compile_to_ruby indent, srcs
+    def can_do?
+      arg_names == nil
+    end
+
+    def compile_do_expr_to_ruby indent, srcs
+      body.
+        map { |expr| expr.compile_to_ruby("  ", srcs, cando: true) }.
+        to_a.
+        join("\n").
+        split(/\n/).
+        map { |e| "#{indent}  #{e}" }.
+        join("\n")
+    end
+
+    def compile_to_ruby indent, srcs, opts={}
       an        = arg_names
       rubyargs  = []
       src_index = srcs.length
@@ -58,13 +72,7 @@ module Nydp
       if rest_arg
         code << "#{indent}  #{rest_arg} = #{rest_arg}._nydp_wrapper\n"
       end
-      bodycode = body.map { |expr|
-        if expr.respond_to? :compile_to_ruby
-          expr.compile_to_ruby("  ", srcs)
-        else
-          raise "can't compile_to_ruby : #{expr._nydp_inspect} (#{expr.class})"
-        end
-      }.to_a
+      bodycode = body.map { |expr| expr.compile_to_ruby("  ", srcs, cando: true) }.to_a
 
       bodycode.push "#{bodycode.pop}._nydp_wrapper"
       code << bodycode.join("\n").split(/\n/).map { |e| "#{indent}  #{e}" }.join("\n")

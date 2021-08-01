@@ -28,7 +28,7 @@ class Nydp::Symbol
     "ns_#{name.to_s._nydp_name_to_rb_name}"
   end
 
-  def compile_to_ruby indent, src
+  def compile_to_ruby indent, src, opts=nil
     "#{indent}ns.#{ruby_name}"
   end
 

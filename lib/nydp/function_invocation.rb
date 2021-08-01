@@ -5,30 +5,50 @@ module Nydp
   module Invocation
     @@sig_counts = Hash.new { |h,k| h[k] = 0}
 
-    # def self.sig name ; @@sig_counts[name] += 1 ; end
-
-    # def self.whazzup
-    #   puts @@sig_counts.to_a.sort_by { |c| c[1] }.map { |c| "#{c[1]}\t#{c[0]}"}
-    # end
-
     class Base
       include Helper
       def initialize expr, source, sig=nil
         @expr, @source, @sig = expr, source, sig
       end
 
-      def compile_to_ruby indent, srcs
+      def compile_to_ruby indent, srcs, opts={}
+        ruby = if opts[:cando]
+                 compile_do_expr_to_ruby indent, srcs
+               end
+
+        ruby ||= normal_compile_to_ruby indent, srcs
+      end
+
+      def compile_do_expr_to_ruby indent, srcs
+        if @expr.car.is_a?(InterpretedFunction) && !@expr.cdr && @expr.car.can_do?
+          @expr.car.compile_do_expr_to_ruby indent, srcs
+        end
+      end
+
+      def normal_compile_to_ruby indent, srcs
         ra = @expr.map { |e| e.compile_to_ruby "#{indent}  ", srcs}
         fn = ra.shift
 
         if ra.empty?
-          "#{indent}#{fn}._nydp_callable(#{@expr.first.to_s.inspect})._nydp_call()"
+          "#{indent}#{fn}._nydp_call()"
         else
-          "#{indent}#{fn}._nydp_callable(#{@expr.first.to_s.inspect})._nydp_call(
-#{ra.join(",\n")}
-#{indent})"
+          "#{indent}#{fn}._nydp_call(
+#{ra.join(",\n")})"
         end
       end
+
+#       def compile_to_ruby indent, srcs
+#         ra = @expr.map { |e| e.compile_to_ruby "#{indent}  ", srcs}
+#         fn = ra.shift
+
+#         if ra.empty?
+#           "#{indent}#{fn}._nydp_callable(#{@expr.first.to_s.inspect})._nydp_call()"
+#         else
+#           "#{indent}#{fn}._nydp_callable(#{@expr.first.to_s.inspect})._nydp_call(
+# #{ra.join(",\n")}
+# #{indent})"
+#         end
+#       end
 
       def handle e, f, invoker, *args
         case e
@@ -445,8 +465,8 @@ module Nydp
       function_instruction.lexical_reach(n)
     end
 
-    def compile_to_ruby indent, srcs
-      ra = argument_instructions.map { |e| e.compile_to_ruby "#{indent}  ", srcs }
+    def compile_to_ruby indent, srcs, opts=nil
+      ra = argument_instructions.map { |e| e.compile_to_ruby "#{indent}  ", srcs, cando: true }
       if ra.length == 1
         "#{indent}#{ra.shift}._nydp_call()"
       else
