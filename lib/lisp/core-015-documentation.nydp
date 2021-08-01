@@ -77,9 +77,6 @@
        (hash-set hsh 'texts    texts       )
        (hash-set hsh 'args     args        )
        (hash-set hsh 'src      src         )
-       (hash-set hsh 'chapters (cons (chapter-current) chapters))
-       (hash-set hsh 'file     this-script )
-       (hash-set hsh 'plugin   this-plugin )
        hsh)
 
      (def dox-new (item)
@@ -87,11 +84,19 @@
        (hash-cons types (hash-get item 'what) item)
        (dox-add-to-chapters item (hash-get item 'what) (hash-get item 'chapters) (hash)))
 
-     (def dox-add-doc (name what texts args src chapters more)
-       (cond (no (privately))
-             (dox-new (dox-build (if more more (hash)) name what texts args src chapters))))
+     (def dox-add-doc (name what texts args src etc)
+       (handle-error
+        (fn (errors) (error "failed to add dox for " name " - " what))
+        (fn ()
+            (cond (no etc)
+                  (error (inspect name) " : please provide arguments (name what texts args src etc) where etc is a hash with at least keys (chapters plugin file)"))
+            (cond (no (privately))
+                  (dox-new
+                   (dox-build etc name what texts args src))))))
 
      (def dox-add-to-chapters (item type chapters already)
+       (cond (pair? (car chapters))
+             (error "dox-add-to-chapters : expected symbol, got " (inspect (car chapters)) " for " (inspect item)))
        (cond chapters
          (cond (no (hash-get already (car chapters)))
            (do (hash-set            already        (car chapters)                       t)
@@ -191,6 +196,16 @@
 
 (def dox-build-def-name (name) name)
 
+(def dox-chapters-expr-helper (chaps)
+  (cond chaps
+        `(quote (,@chaps))))
+
+(def dox-chapters-expr (chaps)
+  (cond (chapter-current)
+        (dox-chapters-expr-helper (cons (chapter-current) (apply + nil chaps)))
+        (cond chaps
+              (dox-chapters-expr-helper (apply + chaps)))))
+
 ;; used internally by 'mac
 (def define-mac-expr (name args body-forms)
   `(do (hash-set macs ',name (fun ,args ,@(hash-get body-forms nil)))
@@ -199,7 +214,9 @@
                     ',(+ (fetch-and-clear-comments) (map car (hash-get body-forms 'comment)))
                     ',args
                     '(mac ,name ,args ,@(hash-get body-forms nil))
-                    ',(map car (hash-get body-forms 'chapter)))))
+                    (hash 'chapters ,(dox-chapters-expr (hash-get body-forms 'chapter))
+                          'plugin   ',this-plugin
+                          'file     ',this-script))))
 
 (hash-set macs 'mac
           (fn (name args . body)
@@ -210,14 +227,18 @@
              '("define a new global macro")
              '(name args . body)
              '`(hash-set macs ',name (fn ,args ,@body))
-             '(nydp-core))
+             (hash 'chapters '(nydp-core)
+                   'plugin   this-plugin
+                   'file     this-script))
 
 (dox-add-doc 'do
              'mac
              '("perform a series of operations")
              'args
              '`((fn nil ,@args))
-             '(nydp-core))
+             (hash 'chapters '(nydp-core)
+                   'plugin   this-plugin
+                   'file     this-script))
 
 ;; override later to use '= instead of 'assign, giving us hash-assignment and other goodies for free
 (mac def-assign args `(assign ,@args))
@@ -230,10 +251,12 @@
           ',name))
        (dox-add-doc ',(dox-build-def-name name)
                     'def
-                    (+ (fetch-and-clear-comments) ',(map car (hash-get body-forms 'comment)))
+                    ',(+ (fetch-and-clear-comments) (map car (hash-get body-forms 'comment)))
                     ',args
                     '(def ,name ,args ,@(hash-get body-forms nil))
-                    ',(map car (hash-get body-forms 'chapter)))))
+                    (hash 'chapters ,(dox-chapters-expr (hash-get body-forms 'chapter))
+                          'plugin   ',this-plugin
+                          'file     ',this-script))))
 
 ;; define a new function in the global namespace
 (mac def (name args . body)

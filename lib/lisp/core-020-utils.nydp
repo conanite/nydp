@@ -16,7 +16,7 @@
                                 `(cond ,(car args) ,(cadr args)))
                           (car args))
                     nil)
-             '(flow-control))
+             (dox/attrs (flow-control)))
 
 (dox-add-doc 'map
              'def
@@ -27,21 +27,21 @@
                   (cons (f (car things)) (map f (cdr things)))
                   things
                   (f things))
-             '(list-manipulation))
+             (dox/attrs (list-manipulation)))
 
 (dox-add-doc 'rev
              'def
              '("returns 'things in reverse order")
              '(things)
              '(if (pair? things) (rev (cdr things) (cons (car things) last-cdr)) last-cdr)
-             '(list-manipulation))
+             (dox/attrs (list-manipulation)))
 
 (dox-add-doc 'hash-cons
              'def
              '("push 'v onto the value for 'k in 'h")
              '(h k v)
              '(hash-set h k (cons v (hash-get h k)))
-             '(hash-manipulation))
+             (dox/attrs (hash-manipulation)))
 
 ;; equivalent to (join-str "~prefix~joint~(car things)" joint (cdr things)) - except
 ;; 'string-pieces hasn't been defined yet, and if it were, it would be defined in terms of

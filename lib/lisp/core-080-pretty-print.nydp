@@ -74,7 +74,8 @@
                     'pp/def
                     (list "pretty-printer for forms starting with ~(quote ,name)")
                     ',args
-                    '(pp/def ,name ,args ,@body))))
+                    '(pp/def ,name ,args ,@body)
+                    (hash))))
 
 (pp/def string-pieces    (pp form indent) (pp/string-pieces pp (cdr form)))
 (pp/def quasiquote       (pp form indent) "`~(pp (cadr form) (cons "" indent))" )
