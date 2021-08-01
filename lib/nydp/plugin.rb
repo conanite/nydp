@@ -19,35 +19,55 @@ module Nydp
   def self.plug_in  plugin ; PLUGINS << plugin                   ; end
   def self.load_rake_tasks ; PLUGINS.each &:load_rake_tasks      ; end
   def self.setup        ns ; PLUGINS.each { |plg| plg.setup ns } ; end
-  # def self.loadfiles       ; PLUGINS.map(&:loadfiles).flatten    ; end
-  # def self.testfiles       ; PLUGINS.map(&:testfiles).flatten    ; end
-
   def self.plugin_names    ; PLUGINS.map(&:name)                 ; end
 
-  def self.loadall ns, plugin, files
-    apply_function ns, :"script-run", :"plugin-start", plugin.name if plugin
+  def self.loadall ns, plugin, files, manifest
+    ns.apply :"script-run", :"plugin-start", plugin.name if plugin
     files.each { |f|
-      Nydp::Runner.new(ns, f, nil, f.name).run
+      Nydp::Runner.new(ns, f, nil, f.name, manifest).run
       yield f.name if block_given?
     }
   ensure
-    apply_function ns, :"script-run", :"plugin-end", plugin.name if plugin
+    ns.apply :"script-run", :"plugin-end", plugin.name if plugin
   end
 
   def self.all_files ; PLUGINS.each_with_object([]) { |plg, list|  plg.loadfiles.each { |f| list << f } } ; end
 
   def self.build_nydp &block
-    # digest = Digest::SHA256.hexdigest(all_files.map { |f| f.read }.join("\n"))
-    # puts
-    # puts "digest for all code : #{digest}"
-    # puts
+    rc = File.expand_path("rubycode")
+    $LOAD_PATH.unshift rc unless $LOAD_PATH.include?(rc)
+
+    digest   = Digest::SHA256.hexdigest(all_files.map { |f| f.read }.join("\n"))
+    mname    = "Manifest_#{digest}"
 
     ns = ::Nydp::Namespace.new
     setup(ns)
-    PLUGINS.each { |plg|
-      loadall ns, plg, plg.loadfiles, &block
-      loadall ns, plg, plg.testfiles, &block
+
+    digest = ""
+
+    PLUGINS.each { |plugin|
+      digest = install_plugin ns, plugin, digest, &block
     }
+
     ns
+  end
+
+  def self.install_plugin ns, plugin, digest, &block
+    digest   = Digest::SHA256.hexdigest(digest + plugin.loadfiles.map { |f| f.read }.join("\n"))
+    mname    = "Manifest_#{digest}"
+
+    begin
+      puts "loading manifest #{mname} for plugin #{plugin.name.inspect}"
+      require mname
+      const_get(mname).build ns
+
+    rescue LoadError => e
+      manifest = []
+      loadall ns, plugin, plugin.loadfiles, manifest, &block
+      loadall ns, plugin, plugin.testfiles, manifest, &block
+      Nydp::Evaluator.mk_manifest "Manifest_#{digest}", manifest
+    end
+
+    digest
   end
 end

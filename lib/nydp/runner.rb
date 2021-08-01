@@ -85,6 +85,19 @@ module Nydp
       end
     end
 
+    def self.mk_manifest name, class_list
+      class_expr = <<KLA
+#{class_list.map {|k| "require '#{k}'" }.join("\n")}
+
+class #{name}
+  def self.build ns
+    #{class_list.map {|k| "#{k}.new(ns).call" }.join("\n    ")}
+  end
+end
+KLA
+      File.open("rubycode/#{name}.rb", "w") { |f| f.write class_expr }
+    end
+
     def mk_ruby_source src, precompiled, compiled_expr, cname
       srcs       = []
       ruby_expr  = compiled_expr.compile_to_ruby "    ", srcs
@@ -130,10 +143,10 @@ end
               mk_ruby_source src, precompiled, compiled_expr, cname
             end
 
-      eval txt, nil, fname
+      eval(txt, nil, fname) || raise("failed to generate class #{cname} from src #{src}")
     end
 
-    def eval_compiled compiled_expr, precompiled, src
+    def eval_compiled compiled_expr, precompiled, src, manifest
       name    = if src.respond_to? :cadr
                   src.cadr
                 else
@@ -143,6 +156,8 @@ end
       cname   = "NydpGenerated_#{name}_#{digest.upcase}"
 
       kla     = mk_ruby_class src, precompiled, compiled_expr, cname
+
+      manifest << cname
 
       kla.new(ns).call
 
@@ -154,19 +169,20 @@ end
       Nydp.apply_function ns, :"pre-compile-new-expression", expr
     end
 
-    def evaluate expr
+    def evaluate expr, manifest=[]
       precompiled = pre_compile(expr)
       compiled    = compile_expr precompiled
-      eval_compiled compiled, precompiled, expr
+      eval_compiled compiled, precompiled, expr, manifest
     end
   end
 
   class Runner < Evaluator
-    def initialize ns, stream, printer=nil, name=nil
+    def initialize ns, stream, printer=nil, name=nil, manifest=[]
       super ns, name
       @printer    = printer
       @parser     = Nydp.new_parser
       @tokens     = Nydp.new_tokeniser stream
+      @manifest   = manifest
     end
 
     def print val
@@ -179,7 +195,7 @@ end
       begin
         while !@tokens.finished
           expr = @parser.expression(@tokens)
-          print(res = evaluate(expr)) unless expr.nil?
+          print(res = evaluate(expr, @manifest)) unless expr.nil?
         end
       ensure
         Nydp.apply_function ns, :"script-run", :"script-end", name
