@@ -161,13 +161,7 @@ class Nydp::Pair
   end
 
   def to_s
-    if (car == nil)
-      "nil"
-    elsif car.is_a?(String)
-      car.inspect
-    elsif car.is_a?(Nydp::Fn)
-      car.to_s
-    elsif (car == :quote)
+    if (car == :quote)
       if Nydp::NIL.is? cdr.cdr
         "'#{cdr.car.to_s}"
       else
@@ -202,6 +196,16 @@ class Nydp::Pair
     end
   end
 
+  def to_s_car
+    if (car == nil)
+      "nil"
+    elsif car.is_a?(String)
+      car.inspect
+    else
+      car.to_s
+    end
+  end
+
   def to_s_rest
     cdr_s = if cdr.is_a?(self.class)
               cdr.to_s_rest
@@ -211,7 +215,7 @@ class Nydp::Pair
               ". #{cdr.to_s}"
             end
 
-    [car.to_s, cdr_s].compact.join " "
+    [to_s_car, cdr_s].compact.join " "
   end
 
   def inspect_rest
