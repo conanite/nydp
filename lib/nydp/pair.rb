@@ -131,6 +131,11 @@ class Nydp::Pair
     list
   end
 
+  # this breaks everything even though it seems like the logical thing to do...
+  # def to_ary
+  #   to_a
+  # end
+
   def self.parse_list list
     if list.slice(-2) == :"."
       from_list(list[0...-2], list.slice(-1))
