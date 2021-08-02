@@ -95,7 +95,11 @@ class #{name}
   end
 end
 KLA
-      File.open("rubycode/#{name}.rb", "w") { |f| f.write class_expr }
+      File.open("rubycode/#{name}.rb", "w") { |f|
+        fullpath = File.expand_path("rubycode/#{name}.rb")
+        Nydp.logger.info "writing #{fullpath}" if Nydp.logger
+        f.write class_expr
+      }
     end
 
     class CompiledExpression
