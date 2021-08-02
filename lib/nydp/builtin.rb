@@ -19,6 +19,8 @@ module Nydp::Builtin
       handle_error e, *args
     end
 
+    alias _nydp_call call
+
     def name
       cname = self.class.name.split("::").last
       cname = cname.gsub(/([a-z])([A-Z])/) { |m| "#{m[0]}-#{m[1].downcase}" }

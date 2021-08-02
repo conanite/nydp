@@ -5,7 +5,7 @@ class Object
   def _nydp_wrapper         ; self          ; end
   def _nydp_inspect         ; inspect       ; end
   def _nydp_compact_inspect ; _nydp_inspect ; end
-  def _nydp_call      *args ; call *args    ; end
+  # def _nydp_call      *args ; call *args    ; end
   def _nydp_callable    src ; self          ; end
   def lexical_reach       n ; n             ; end
   def to_ruby               ; self          ; end
@@ -15,6 +15,10 @@ end
 class Method
   include Nydp::Converter
   def _nydp_call *args ; (call *(rubify args))._nydp_wrapper ; end
+end
+
+class Proc
+  alias _nydp_call call
 end
 
 class TrueClass

@@ -18,6 +18,7 @@ module Nydp
     def nydp_type
       :fn
     end
+    alias _nydp_call call
   end
 
   class InterpretedFunction
