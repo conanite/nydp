@@ -98,6 +98,17 @@ KLA
       File.open("rubycode/#{name}.rb", "w") { |f| f.write class_expr }
     end
 
+    class CompiledExpression
+      attr_accessor :ns
+      def initialize ns
+        @ns = ns
+      end
+
+      def list *things
+        Nydp::Pair.from_list things
+      end
+    end
+
     def mk_ruby_source src, precompiled, compiled_expr, cname
       srcs       = []
       ruby_expr  = compiled_expr.compile_to_ruby "    ", srcs
@@ -107,14 +118,9 @@ KLA
         six += 1
         s
       }
-      class_expr = "class #{cname}
-  attr_accessor :ns
+      class_expr = "class #{cname} < Nydp::Runner::CompiledExpression
 
 #{srcs.join("\n")}
-
-  def initialize ns
-    @ns = ns
-  end
 
   def src
     #{src.inspect.inspect}

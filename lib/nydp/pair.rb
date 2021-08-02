@@ -85,7 +85,7 @@ class Nydp::Pair
     end
 
     if !x || (x.is_a?(Nydp::Literal) && !x.expression)
-      "#{indent}Nydp::Pair.from_list([" + a.join(", ") + "])"
+      "#{indent}list(" + a.join(", ") + ")"
 
     else
       "#{indent}Nydp::Pair.from_list([" + a.join(", ") + "], #{x.compile_to_ruby "", srcs})"

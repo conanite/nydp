@@ -53,7 +53,9 @@ module Nydp
   end
 
   def self.install_plugin ns, plugin, digest, &block
-    digest   = Digest::SHA256.hexdigest(digest + plugin.loadfiles.map { |f| f.read }.join("\n"))
+    f0       = plugin.loadfiles.map { |f| f.read }.join("\n")
+    f1       = plugin.testfiles.map { |f| f.read }.join("\n")
+    digest   = Digest::SHA256.hexdigest([digest, f0, f1].join("\n"))
     mname    = "Manifest_#{digest}"
 
     if Nydp.logger
