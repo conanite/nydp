@@ -31,9 +31,11 @@
 
 (dox-add-doc 'rev
              'def
-             '("returns 'things in reverse order")
+             '("@things@ - the list to be reversed"
+               "@last-cdr@ - (normally nil) - an item (atom, list, nil, anything) "
+               "to be consed to the end of the reversed list.")
              '(things)
-             '(if (pair? things) (rev (cdr things) (cons (car things) last-cdr)) last-cdr)
+             '(def rev (things last-cdr) (loop (pair? things) ((fn nil (assign last-cdr (cons (car things) last-cdr)) (assign things (cdr things))))) last-cdr)
              (dox/attrs (list-manipulation)))
 
 (dox-add-doc 'hash-cons
