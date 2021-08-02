@@ -146,26 +146,25 @@ end
     end
 
     def mk_ruby_class src, precompiled, compiled_expr, cname
-      fname = "rubycode/#{cname}.rb"
-      txt = if File.exists?(fname)
-              File.read(fname)
-            else
-              mk_ruby_source src, precompiled, compiled_expr, cname
-            end
+      begin
+        require cname
+        self.class.const_get(cname)
 
-      eval(txt, nil, fname) || raise("failed to generate class #{cname} from src #{src}")
+      rescue LoadError => e
+        fname = "rubycode/#{cname}.rb"
+        txt   = mk_ruby_source src, precompiled, compiled_expr, cname
+
+        eval(txt, nil, fname) || raise("failed to generate class #{cname} from src #{src}")
+      end
     end
 
     def eval_compiled compiled_expr, precompiled, src, manifest
       return nil if precompiled == nil
 
-      name    = if src.respond_to? :cadr
-                  src.cadr
-                else
-                  src
-                end.to_s.gsub(/[^a-zA-Z0-9]/, '_').gsub(/_+/, '_').upcase[0,20]
+      # name    = (src.respond_to?(:cadr) ? src.cadr : src).to_s.gsub(/[^a-zA-Z0-9]/, '_').gsub(/_+/, '_').upcase[0,25]
       digest  = Digest::SHA256.hexdigest(precompiled.inspect)
-      cname   = "NydpGenerated_#{name}_#{digest.upcase}"
+      # cname   = "NydpGenerated_#{name}_#{digest.upcase}"
+      cname   = "NydpGenerated_#{digest.upcase}"
 
       kla     = mk_ruby_class src, precompiled, compiled_expr, cname
 

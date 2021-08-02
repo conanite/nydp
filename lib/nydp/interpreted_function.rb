@@ -12,8 +12,12 @@ module Nydp
     def to_s
       src
     end
+    def container_class_name
+      file, line = source_location
+      [file.split(/\//).last, line].join(":")
+    end
     def inspect
-      "<#{self.class.name}@#{source_location.join(":")}:#{src}>"
+      "<#{self.class.name}@#{container_class_name}:#{src}>"
     end
     def nydp_type
       :fn
