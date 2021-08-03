@@ -285,6 +285,18 @@ toto")
    (pp '(percent-syntax || (dot-syntax x y)))
    "%x.y")
 
+  ("percent-syntax with args"
+   (pp '(%tr.klakla
+             (%td:otherkla:joinstr ", " (map &firstname ppl))
+             (%td:otherkla:joinstr ", " (map &email ppl))))
+   "(%tr.klakla
+  (%td:otherkla:joinstr
+    \", \"
+    (map &firstname ppl))
+  (%td:otherkla:joinstr
+    \", \"
+    (map &email ppl)))")
+
   ("brace list"
    (pp '(let hello {a 1 b "two" c 'three d ,four e (sub invocation) f {sub brace list here} }))
 "(let hello { a 1

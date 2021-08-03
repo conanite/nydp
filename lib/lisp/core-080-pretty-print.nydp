@@ -135,8 +135,15 @@
   (and (pair? form)
        (> (len:pp/flatly form) 40)))
 
+(def percent-syntax? (form)
+  (and (pair? form)
+       (sym? (car form))
+       (string-match (to-string (car form)) "^%")))
+
 (def pp/breaker (form)
-  (if (pair? form)
+  (if (percent-syntax? form)
+      (pp/split-form form 1)
+      (pair? form)
       (let key (car form)
         (if (or (eq? 'if key)
                 (eq? 'cond key))
@@ -163,6 +170,8 @@
 (def pp/indent (sym indent)
   (if (or (no sym) (pair? sym))
       indent
+      (string-match (to-string sym) "^%")
+      (cons " " indent)
       (cons (string-replace "." " " " ~sym") indent)))
 
 (def pprint (form indent)
