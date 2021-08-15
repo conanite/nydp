@@ -290,6 +290,16 @@
 ;; given an arg 'f, invoke 'f with no args
 (def self-invoke (f) (f))
 
+;; returns a function @r@ that takes one argument, @f@
+;; which when called, applies @f@ to the given @args@
+;;
+;; example: @(map (self-invoker 3) (list sqrt sqr ln inv exp fib fact))@
+;; returns (1.732 9 1.098 0.333 20.085 4 6)
+;; being respectively the sqrt, square, log, inverse, e**x, fibonacci, factorial of 3 (assuming such functions are previously defined)
+;;
+(def self-invoker args
+  λf(apply f args))
+
 ;; returns the first element of 'things iff it is the only element of 'things
 (def list-single-element (things)
   (if (no (cdr things)) (car things)))
