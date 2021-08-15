@@ -75,6 +75,7 @@ CODE
   core_builder.build(:Car           , 1, %{ a0.car }                        )
   core_builder.build(:Cdr           , 1, %{ a0.cdr }                        )
   core_builder.build(:Log           , 1, %{ Nydp.logger.info(a0.to_s) }     )
+  core_builder.build(:Ln            , 1, %{ Math.log(a0) }                  )
   core_builder.build(:Modulo        , 2, %{ a0 % a1 }                       )
   core_builder.build(:Sqrt          , 1, %{ Math.sqrt a0 }                  )
   core_builder.build(:Regexp        , 1, %{ ::Regexp.compile(a0) }          )

@@ -27,6 +27,7 @@ module Nydp
       ns.assign(:car               , Nydp::Builtin::RubyWrap::Car.instance           )
       ns.assign(:cdr               , Nydp::Builtin::RubyWrap::Cdr.instance           )
       ns.assign(:log               , Nydp::Builtin::RubyWrap::Log.instance           )
+      ns.assign(:ln                , Nydp::Builtin::RubyWrap::Ln.instance            )
       ns.assign(:mod               , Nydp::Builtin::RubyWrap::Modulo.instance        )
       ns.assign(:sqrt              , Nydp::Builtin::RubyWrap::Sqrt.instance          )
       ns.assign(:regexp            , Nydp::Builtin::RubyWrap::Regexp.instance        )

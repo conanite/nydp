@@ -176,6 +176,13 @@
              nil
              (dox/attrs (math)))
 
+(dox-add-doc 'ln
+             'def
+             '("return the natural logarithm of 'arg")
+             '(arg)
+             nil
+             (dox/attrs (math)))
+
 (dox-add-doc 'sym
              'def
              '("return the symbol for the given string 'arg")
