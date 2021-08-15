@@ -300,7 +300,10 @@ scoping, assignment, anonymous functions and more...")
 ; increment the value at 'place by 'inc (default 1)
 (mac ++ (place inc) `(= ,place (+ ,place ,(or inc 1))))
 
-; override previous definition to allow expressions like (def hsh.foo (arg arg2) ...)
+;; decrement the value at 'place by 'inc (default 1)
+(mac -- (place inc) `(= ,place (- ,place ,(or inc 1))))
+
+;; override previous definition to allow expressions like (def hsh.foo (arg arg2) ...)
 (mac def-assign args `(= ,@args))
 
 ; evaluate ,val and assign result to ,place only if ,place is already nil
