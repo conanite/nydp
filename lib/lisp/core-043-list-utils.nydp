@@ -11,34 +11,34 @@
 (mac accum (accfn-name . body)
   (w/uniq (things last-cons)
     `(with (,last-cons  (cons)
-            ,things     ,last-cons
-            ,accfn-name (fn (a)
-                            (= ,last-cons (cdr-set ,last-cons (cons a)))
-                            a)
-            accum-end   (fn (a)
-                            (= ,last-cons (cdr-set ,last-cons a))
-                            a))
-         ,@body
-         (cdr ,things))))
+             ,things     ,last-cons
+             ,accfn-name (fn (a)
+                           (= ,last-cons (cdr-set ,last-cons (cons a)))
+                           a)
+             accum-end   (fn (a)
+                           (= ,last-cons (cdr-set ,last-cons a))
+                           a))
+       ,@body
+       (cdr ,things))))
 
 (def list-length (things)
   (let cc 0
     (loop (pair? things)
-          (do
-              (++ cc)
-              (= things (cdr things))))
+      (do
+        (++ cc)
+        (= things (cdr things))))
     (if things (+ cc 1) cc)))
 
 ;; slice 'things into a list of lists each with maximum 'slice-size items
 (def list-slices (things slice-size)
-     (chapter pagination)
-     (if things
-         (if (> slice-size (len things))
-             (list things)
-             (cons (firstn slice-size things)
-                   (list-slices (nthcdr slice-size things)
-                                slice-size)))
-         nil))
+  (chapter pagination)
+  (if things
+    (if (> slice-size (len things))
+      (list things)
+      (cons (firstn slice-size things)
+        (list-slices (nthcdr slice-size things)
+          slice-size)))
+    nil))
 
 ;; return a new list with 'inbetween in between every element of 'things
 (def intersperse (inbetween things)
@@ -164,11 +164,11 @@
 
 (def detect-helper (f things found)
   (loop (and (no found) (pair? things))
-        (let it (car things)
-          (= found (and (f it) (or it t))
-             things (cdr things))))
+    (let it (car things)
+      (= found (and (f it) (or it t))
+        things (cdr things))))
   (if (and (no found) things)
-      (= found (and (f things) things)))
+    (= found (and (f things) things)))
   found)
 
 
@@ -287,7 +287,7 @@
       (matchers things)
       t))
 
-; given an arg 'f, invoke 'f with no args
+;; given an arg 'f, invoke 'f with no args
 (def self-invoke (f) (f))
 
 ;; returns the first element of 'things iff it is the only element of 'things

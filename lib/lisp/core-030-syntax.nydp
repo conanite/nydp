@@ -297,7 +297,7 @@ scoping, assignment, anonymous functions and more...")
 (mac #= (name value)
   `(do (= ,name ,value) nil))
 
-; increment the value at 'place by 'inc (default 1)
+;; increment the value at 'place by 'inc (default 1)
 (mac ++ (place inc) `(= ,place (+ ,place ,(or inc 1))))
 
 ;; decrement the value at 'place by 'inc (default 1)
@@ -306,7 +306,7 @@ scoping, assignment, anonymous functions and more...")
 ;; override previous definition to allow expressions like (def hsh.foo (arg arg2) ...)
 (mac def-assign args `(= ,@args))
 
-; evaluate ,val and assign result to ,place only if ,place is already nil
+;; evaluate ,val and assign result to ,place only if ,place is already nil
 (mac or= (place val) `(or ,place (= ,place ,val)))
 
 (def brace-list-hash-key (k)
