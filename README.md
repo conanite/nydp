@@ -43,7 +43,7 @@ Suppose you want to invoke the function named `question` with some arguments. Do
 ```ruby
 ns     = Nydp.build_nydp     # keep this for later re-use, it's expensive to set up
 
-answer = Nydp.apply_function ns, :question, :life, ["The Universe", and_also(everything)]
+answer = ns.apply :question, :life, ["The Universe", and_also(everything)]
 
 ==> 42
 ```
@@ -173,11 +173,16 @@ nydp > (map %td:&lastname german-composers)
 
 ```
 
-So, @%td@ expands to @(percent-syntax || td)@, @&lastname@ to @(ampersand-syntax || lastname)@, and the whole @%td:&lastname@ to @(colon-syntax (percent-syntax || td) (ampersand-syntax || lastname))@. Luckily for you, there's a fine @colon-syntax@ macro that knows how to build a function out of these bits and pieces.
+So, `%td` expands to `(percent-syntax || td)`, `&lastname` to `(ampersand-syntax || lastname)`,
+and the whole `%td:&lastname` to `(colon-syntax (percent-syntax || td) (ampersand-syntax || lastname))`.
+Luckily for you, there's a fine `colon-syntax` macro that knows how to build a function out of these bits
+and pieces.
 
-Look for `SYMBOL_OPERATORS` in [parser.rb](lib/nydp/parser.rb) to see which syntax is recognised and in which order. The order of these definitions defines special-syntax-operator precedence.
+Look for `SYMBOL_OPERATORS` in [parser.rb](lib/nydp/parser.rb) to see which syntax is recognised and in
+which order. The order of these definitions defines special-syntax-operator precedence.
 
-Any character that is not special syntax will be recognised as part of a symbol. At time of writing, this includes the plus sign, hyphen, and slash.
+Any character that is not special syntax will be recognised as part of a symbol. At time of writing, this
+includes the plus sign, hyphen, and slash.
 
 ```lisp
 
@@ -228,7 +233,7 @@ nydp > (let bar "Mister Nice Guy" "hello, ~bar")
 
 nydp > (let s "\"hello, \~world\"" (parse s))
 
-==> (string-pieces "hello, " world) ; "hello, ", followed by the interpolation @world@
+==> (string-pieces "hello, " world) ; "hello, ", followed by the interpolation `world`
 
 ; It is possible to nest interpolations. Note that as with many popular language features, just because you can do something, does not mean you should:
 
