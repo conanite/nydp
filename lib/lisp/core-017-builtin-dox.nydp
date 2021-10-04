@@ -349,6 +349,20 @@
              nil
              (dox/attrs (string-manipulation)))
 
+(dox-add-doc 'string/pad-left
+             'def
+             '("return a new string with 'padding added to the left of 'str such that is 'length characters long")
+             '(str length padding)
+             nil
+             (dox/attrs (string-manipulation)))
+
+(dox-add-doc 'string/pad-right
+             'def
+             '("return a new string with 'padding added to the right of 'str such that is 'length characters long")
+             '(str length padding)
+             nil
+             (dox/attrs (string-manipulation)))
+
 (dox-add-doc 'string-replace
              'def
              '("replace 'pattern with 'replacement in 'str")

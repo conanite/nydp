@@ -42,9 +42,9 @@
 ;;
 ;; same as (add-hook 'transaction (fn (account amount) (update account total (+ account.total amount))))
 ;;
-;; if 'body is nil and 'args is a symbol, for example
+;; if 'body is a symbol and 'args is nil, for example
 ;;
-;; (on transaction notify)
+;; (on transaction () notify)
 ;;
 ;; 'notify must be a predefined function accepting any arguments to the 'transaction event ; the example is equivalent to
 ;;
