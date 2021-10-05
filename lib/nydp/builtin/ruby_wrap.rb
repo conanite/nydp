@@ -80,4 +80,5 @@ CODE
   core_builder.build(:Regexp        , 1, %{ ::Regexp.compile(a0) }          )
   core_builder.build(:StringPadLeft , 3, %{ a0.to_s.rjust(a1, a2.to_s) }    )
   core_builder.build(:StringPadRight, 3, %{ a0.to_s.ljust(a1, a2.to_s) }    )
+  core_builder.build(:ToList        , 1, %{ a0.to_a._nydp_wrapper }         )
 end

@@ -384,6 +384,13 @@
              nil
              (dox/attrs (string-manipulation)))
 
+(dox-add-doc 'to-list
+             'def
+             '("tries to convert 'thing to a list (for Hash instances, returns a list of two-element lists)")
+             '(thing)
+             nil
+             (dox/attrs (string-manipulation)))
+
 (dox-add-doc 'time
              'def
              '("with no args, return the current time."
