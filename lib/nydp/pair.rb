@@ -178,6 +178,14 @@ class Nydp::Pair
       else
         "{ #{cdr.to_s_rest} }"
       end
+    elsif (car == :"percent-syntax")
+      cdr.to_a.compact.join("%")
+    elsif (car == :"colon-syntax")
+      cdr.to_a.compact.join(":")
+    elsif (car == :"dot-syntax")
+      cdr.to_a.compact.join(".")
+    elsif (car == :"prefix-list")
+      "#{cdr.car.to_s}#{cdr.cdr.car.to_s}"
     elsif (car == :quasiquote)
       if Nydp::NIL.is? cdr.cdr
         "`#{cdr.car.to_s}"
@@ -206,6 +214,8 @@ class Nydp::Pair
       "nil"
     elsif car.is_a?(String)
       car.inspect
+    elsif car.is_a?(Symbol)
+      car._nydp_inspect
     else
       car.to_s
     end
@@ -214,9 +224,7 @@ class Nydp::Pair
   def to_s_rest
     cdr_s = if cdr.is_a?(self.class)
               cdr.to_s_rest
-            elsif Nydp::NIL.is? cdr
-              nil
-            else
+            elsif cdr
               ". #{cdr.to_s}"
             end
 
