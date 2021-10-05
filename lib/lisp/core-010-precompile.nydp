@@ -31,11 +31,16 @@
             (cond (pair? arg)
                   (cond (eq? (car arg) 'quote)
                         arg
-                        (pre-compile-each names
-                                          (mac-expand names
-                                                      (hash-get names
-                                                                (car arg))
-                                                      arg)))
+                        (cond (isa 'symbol (car arg))
+                          (pre-compile-each
+                            names
+                            (mac-expand names
+                              (hash-get names
+                                (car arg))
+                              arg))
+                          (pre-compile-each
+                            names
+                            arg)))
                   arg)))
 
 (assign pre-compile-debug
