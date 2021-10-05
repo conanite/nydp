@@ -161,11 +161,8 @@ end
     def eval_compiled compiled_expr, precompiled, src, manifest
       return nil if precompiled == nil
 
-      # name    = (src.respond_to?(:cadr) ? src.cadr : src).to_s.gsub(/[^a-zA-Z0-9]/, '_').gsub(/_+/, '_').upcase[0,25]
       digest  = Digest::SHA256.hexdigest(precompiled.inspect)
-      # cname   = "NydpGenerated_#{name}_#{digest.upcase}"
       cname   = "NydpGenerated_#{digest.upcase}"
-
       kla     = mk_ruby_class src, precompiled, compiled_expr, cname
 
       manifest << cname
