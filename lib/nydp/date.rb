@@ -38,13 +38,17 @@ module Nydp
       last_year  next_year  beginning_of_year  end_of_year
       last_month next_month beginning_of_month end_of_month
       last_week  next_week  beginning_of_week  end_of_week
-      yesterday  tomorrow   age
+      yesterday  tomorrow   age                past?
+      future?
     } + @@pass_through
 
     def year               y, m, d, w ; y ; end
     def month              y, m, d, w ; m ; end
     def day                y, m, d, w ; d ; end
     def week_day           y, m, d, w ; w ; end
+
+    def future?                       ; ruby_date > Date.today       ; end
+    def past?                         ; ruby_date < Date.today       ; end
 
     def last_year          y, m, d, w ; ruby_date.prev_year          ; end
     def next_year          y, m, d, w ; ruby_date.next_year          ; end
@@ -75,11 +79,11 @@ module Nydp
       class_eval "def #{n} * ; ruby_date.#{n} ; end"
     end
 
-    def _nydp_keys                ; @@keys.to_a                                                              ; end
-    def dispatch  key, y, m, d, w ; self.send(key, y, m, d, w) if _nydp_keys.include?(key)                   ; end
-    def splat                date ; [date.year, date.month, date.day, date.wday]                             ; end
-    def lookup          key, date ; r2n(dispatch(key.to_s.gsub(/-/, '_').to_sym, *splat(date)))              ; end
-    def _nydp_get             key ; lookup key, ruby_date                                                    ; end
+    def _nydp_keys                ; @@keys.to_a                                                 ; end
+    def dispatch  key, y, m, d, w ; self.send(key, y, m, d, w) if _nydp_keys.include?(key)      ; end
+    def splat                date ; [date.year, date.month, date.day, date.wday]                ; end
+    def lookup          key, date ; r2n(dispatch(key.to_s.gsub(/-/, '_').to_sym, *splat(date))) ; end
+    def _nydp_get             key ; lookup key, ruby_date                                       ; end
     def change       amount, attr
       if    attr == :day   ; (ruby_date + amount)
       elsif attr == :week  ; (ruby_date + (7 * amount))
