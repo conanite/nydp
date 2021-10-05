@@ -13,41 +13,41 @@
 (assign macs (hash))
 
 (assign pre-compile-each
-        (fn (names args)
-            (cond args
-                  (cond (pair? args)
+        (fn (names exprs)
+            (cond exprs
+                  (cond (pair? exprs)
                         (cons (pre-compile-with names
-                                                (car args))
+                                                (car exprs))
                               (pre-compile-each names
-                                                (cdr args)))
-                        args))))
+                                                (cdr exprs)))
+                        exprs))))
 
 (assign pre-compile-msg
         (fn (src compiled)
             compiled))
 
 (assign pre-compile-raw
-        (fn (names arg)
-            (cond (pair? arg)
-                  (cond (eq? (car arg) 'quote)
-                        arg
-                        (cond (isa 'symbol (car arg))
+        (fn (names expr)
+            (cond (pair? expr)
+                  (cond (eq? (car expr) 'quote)
+                        expr
+                        (cond (isa 'symbol (car expr))
                           (pre-compile-each
                             names
                             (mac-expand names
                               (hash-get names
-                                (car arg))
-                              arg))
+                                (car expr))
+                              expr))
                           (pre-compile-each
                             names
-                            arg)))
-                  arg)))
+                            expr)))
+                  expr)))
 
 (assign pre-compile-debug
-        (fn (names arg)
-            (pre-compile-msg arg
+        (fn (names expr)
+            (pre-compile-msg expr
                              (pre-compile-raw names
-                                              arg))))
+                                              expr))))
 
 (assign debug-pre-compile
         (fn (arg)
@@ -60,17 +60,17 @@
 
 ; builtin pre-compile does nothing; override here to provide macro-expansion
 (assign pre-compile
-        (fn (arg)
-            (pre-compile-with macs arg)))
+        (fn (expr)
+            (pre-compile-with macs expr)))
 
 ;; this is the entry point for the interpreter ; we need to reset uniq-counter for each new expression
 ;; (for performance purposes only - to ensure identical nydp code produces identical ruby code) ; but
 ;; we can't reset uniq-counter in the middle of pre-compiling an expression, otherwise @uniq@ won't be
 ;; even slightly unique any more
 (assign pre-compile-new-expression
-        (fn (arg)
+        (fn (expr)
             (assign uniq-counter 0)
-            (pre-compile-with macs arg)))
+            (pre-compile-with macs expr)))
 
 ; we override this later to provide argument deconstruction
 (hash-set macs 'fun
