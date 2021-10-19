@@ -30,9 +30,9 @@ module Nydp
         fn = ra.shift
 
         if ra.empty?
-          "#{indent}#{fn}._nydp_call()"
+          "#{indent}# #{@expr.inspect.split(/\n/).join(' ')}\n#{indent}#{fn}._nydp_call()"
         else
-          "#{indent}#{fn}._nydp_call(
+          "#{indent}# #{@expr.inspect.split(/\n/).join(' ')}\n#{indent}#{fn}._nydp_call(
 #{ra.join(",\n")})"
         end
       end
