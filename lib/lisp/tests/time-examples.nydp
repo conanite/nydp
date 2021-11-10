@@ -18,4 +18,11 @@
 
  ("returns its year"      (&year  (date (time 1999 12 31 13 29 52)))     1999)
  ("returns its month"     (&month (date (time 1999 12 31 13 29 52)))       12)
- ("returns its day"       (&day   (date (time 1999 12 31 13 29 52)))       31))
+ ("returns its day"       (&day   (date (time 1999 12 31 13 29 52)))       31)
+
+ ("returns its year"      (&year  (time 1999 12 31 13 29 52))     1999)
+ ("returns its month"     (&month (time 1999 12 31 13 29 52))       12)
+ ("returns its day"       (&day   (time 1999 12 31 13 29 52))       31)
+ ("returns its hour"      (&hour  (time 1999 12 31 13 29 52))       13)
+ ("returns its minute"    (&min   (time 1999 12 31 13 29 52))       29)
+ ("returns its second"    (&sec   (time 1999 12 31 13 29 52))       52))

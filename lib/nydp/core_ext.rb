@@ -79,9 +79,16 @@ class ::Symbol
 end
 
 class ::Date
-  def _nydp_get key ;_nydp_date.lookup key, self            ; end
+  def _nydp_get key ; _nydp_date.lookup key, self           ; end
   def _nydp_date    ; @__nydp_date ||= Nydp::Date.new(self) ; end
   def nydp_type     ; :date                                 ; end
+end
+
+class ::Time
+  @@wl = Set.new %i{ year month day hour min sec }
+  def _nydp_time_get key ; send(key) if @@wl.include?(key) ; end
+  def _nydp_get      key ; _nydp_time_get(key.to_s.to_sym) ; end
+  def nydp_type          ; :time                           ; end
 end
 
 class ::Array
