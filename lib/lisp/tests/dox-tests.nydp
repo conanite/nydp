@@ -1,5 +1,5 @@
 (mac this-is-a-well-documented-macro (a b c)
-  ; documentation for me!
+  ; documentation for this mac!
   `(foo ,a ,b ,c))
 
 (mac this-is-an-undocumented-macro (a b c)
@@ -23,7 +23,7 @@
 
   ("finds documentation for a documented macro"
    (hash-get (car:dox-lookup 'this-is-a-well-documented-macro) 'texts)
-   ("documentation for me!"))
+   ("documentation for this mac!"))
 
   ("finds arg names for a documented macro"
    (hash-get (car:dox-lookup 'this-is-a-well-documented-macro) 'args)
