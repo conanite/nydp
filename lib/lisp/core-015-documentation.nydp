@@ -136,7 +136,7 @@
 (def plugin-start (name) (assign this-plugin name) (chapter-end))
 (def plugin-end   (name) (assign this-plugin nil ) (chapter-end))
 (def script-start (name) (assign this-script name) (chapter-end))
-(def script-end   (name) (assign this-script nil ) (chapter-end))
+(def script-end   (name) (assign this-script nil ) (fetch-and-clear-comments) (chapter-end))
 
 (def script-run (event name)
   (cond (eq? event 'plugin-start)
