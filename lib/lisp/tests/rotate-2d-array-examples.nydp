@@ -1,0 +1,26 @@
+(examples-for rotate-2d-array
+  ("returns nothing for nothing"
+   (rotate-2d-array nil)
+   nil)
+
+  ("returns transformed array"
+   (rotate-2d-array
+     '((a b c d)
+       (1 2 3 4)
+       (w x y z)
+       (one two three four)
+       (un deux trois quatre)))
+   ((a 1 w one un)
+    (b 2 x two deux)
+    (c 3 y three trois)
+    (d 4 z four quatre)))
+
+  ("first given list determines number of lists"
+   (rotate-2d-array
+     '((a b)
+       (1 2 3 4)
+       (w x y z)
+       (one two three four)
+       (un deux trois quatre)))
+   ((a 1 w one un)
+    (b 2 x two deux))))
