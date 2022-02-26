@@ -224,6 +224,23 @@
      (list/fill '(a b c) λ(++ idx) 10))
    (a b c 1 2 3 4 5 6 7)))
 
+(examples-for list/index-of
+  ("returns nil if thing is not found"
+    (list/index-of '(1 2 3 4) 5)
+    nil)
+
+  ("returns 0 if thing is first in the list"
+   (list/index-of '(a b c d a b c d) 'a)
+   0)
+
+  ("returns 1 if thing is second in the list"
+   (list/index-of '(a b c d a b c d) 'b)
+   1)
+
+  ("returns 2 if thing is third in the list"
+   (list/index-of '(a b c d a b c d) 'c)
+   2))
+
 (examples-for list/last
   ("returns the thing if it's nil"
    (list/last nil)

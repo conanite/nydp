@@ -2,7 +2,7 @@
 ;;
 ;; Acknowledgements to Paul Graham, Robert Morris, and their ancestor programmers.
 ;; nydp's main inspiration is arc, and many nydp features (including, but not limited
-;; to, 'do, 'rfn, 'loop, 'for) were directly inspired by (aka stolen from) arc.arc. See
+;; to, 'do, 'rfn, 'for) were directly inspired by (aka stolen from) arc.arc. See
 ;; README.md however for some significant differences
 
 (assign   noop (fn))

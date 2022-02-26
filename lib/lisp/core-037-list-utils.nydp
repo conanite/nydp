@@ -27,6 +27,19 @@
            things (cdr things)))
   (or things it))
 
+;; finds the index of 'it in a list 'things, such that for example,
+;; given a list 'my-list and an item 'thingy in the list,
+;; (nth (list/index-of my-list thingy) my-list) will return the value of thingy
+(def list/index-of (things it)
+  (with (found nil
+         i     -1)
+    (loop (and things
+               (no found))
+     (= found  (eq? (car things) it)
+        things (cdr things)
+        i      (+ i 1)))
+    (and found i)))
+
 ; invokes 'f for each element of 'things, last element processed first
 ; ( "r" in "eachr" = "rightmost first" )
 (def eachr (f things)
