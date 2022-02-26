@@ -75,6 +75,7 @@ Examples for ~name
                nil
                target))))
 
+;; like mac-expand but only goes n steps
 (def explain-mac (n expr)
   (if (eq? n 0)
       expr

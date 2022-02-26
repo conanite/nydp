@@ -171,7 +171,6 @@
     (= found (and (f things) things)))
   found)
 
-
 ;; if 'f is a function,
 ;;   if 'things is a list, return the first item in the list for which 'f returns non-nil
 ;;   otherwise, return 'things if (f things) is non-nil
@@ -309,3 +308,11 @@
   (let c (counter)
     (map (fn (thing) (f thing (c)))
          things)))
+
+;; takes a list of lists, returns a list of lists
+;; transforms ((1 2 3) (a b c) (+ - *)) into ((1 a +) (2 b -) (3 c *))
+;; the number of lists returned will be the number of items in the first of the given lists
+(def rotate-2d-array (list-of-lists)
+  (with (size (len:car list-of-lists)
+         maps (map (fn (i) (fn (things) (nth i things))) (range 0 size)))
+    (map (fn (mapper) (map mapper list-of-lists)) maps)))

@@ -49,14 +49,13 @@
   `(fn (arg)
        (,f ,@args arg)))
 
+;; if ,key is already in ,hsh - return the associated value.
+;; if ,key is not already in ,hsh - evaluate ,val, store the result
+;; under ,key in ,hsh, and return it
 (mac cache-get (hsh key val)
-  ; if ,key is already in ,hsh - return the associated value.
-  ; if ,key is not already in ,hsh - evaluate ,val, store the result
-  ; under ,key in ,hsh, and return it
-  (w/uniq (h k v)
-          `(with (,h ,hsh ,k ,key)
-                 (let ,v (hash-get ,h ,k)
-                   (or ,v (returnlet ,v ,val (hash-set ,h ,k ,v)))))))
+  (w/uniq (h k)
+    `(with (,h ,hsh ,k ,key)
+       (or= (hash-get ,h ,k) ,val))))
 
 ;; same as 'def, but caches the result, keyed on args, so for a given set of args the result
 ;; is only ever calculated once
