@@ -40,6 +40,20 @@
         i      (+ i 1)))
     (and found i)))
 
+;; finds the item before and the item after the given item in the  given list.
+;; For example,
+;; (list/around '(a b c d e f) 'd) will return '(c e)
+(def list/around (things it)
+  (with (n    (list/index-of things it)
+         n1   (and n (+ n 1))
+         prev (and n
+                   (> n 0)
+                   (nth (- n 1) things))
+         next (and n
+                   (< n1 (len things))
+                   (nth n1 things)))
+    (list prev next)))
+
 ; invokes 'f for each element of 'things, last element processed first
 ; ( "r" in "eachr" = "rightmost first" )
 (def eachr (f things)

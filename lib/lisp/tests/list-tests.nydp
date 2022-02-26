@@ -241,6 +241,35 @@
    (list/index-of '(a b c d a b c d) 'c)
    2))
 
+(examples-for list/around
+  ("returns nil,nil if item is not in the list"
+   (list/around '(1 2 3 4 5) 6)
+   (nil nil))
+
+  ("returns nil,next if item is at the start of the list"
+   (list/around '(1 2 3 4 5) 1)
+   (nil 2))
+
+  ("returns prev,nil if item is at the end of the list"
+   (list/around '(1 2 3 4 5) 5)
+   (4 nil))
+
+  ("returns nil,nil if item is the only element of the list"
+   (list/around '(42) 42)
+   (nil nil))
+
+  ("returns prev,next if item is the second element of a longer list list"
+   (list/around '(1 2 3 4 5) 2)
+   (1 3))
+
+  ("returns prev,next if item is the second-last element of a longer list list"
+   (list/around '(1 2 3 4 5) 4)
+   (3 5))
+
+  ("returns prev,next if item is anywhere in the middle of a longer list list"
+   (list/around '(1 2 3 4 5) 3)
+   (2 4)))
+
 (examples-for list/last
   ("returns the thing if it's nil"
    (list/last nil)
