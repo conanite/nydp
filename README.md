@@ -254,12 +254,31 @@ By default, `string-pieces` is a function that just concatenates the string valu
 
 Sorry. While technically possible ... why bother?
 
+#### 6. No tail-call optimisation / tail-call elimination
+
+This isn't completely true. For performance reasons, the nydp stack maps directly to the underlying ruby stack, and it is possible to enable TCO in your ruby VM. Nydp doesn't enable it for you though, you'll need to take care of this yourself. So basically nydp doesn't guarantee you TCO, but if you're in control of your deployment environment, you can still have it.
+
+As a result, nydp has an extra keyword, 'loop, so that recursive solutions can be rewritten as iterative ones. For example
+
+```lisp
+(def elegant-recursive-solution (n f things)
+  (if (> n 0)
+      (elegant-recursive-solution (- n 1) (cdr things))
+      (f things)))
+
+;; can be rewritten as
+(def stupid-iterative-solution (n f things)
+  (loop (> n 0)
+    (= things (cdr things)
+       n (- n 1)))
+  (f things))
+```
 
 ## Besides that, what can Nydp do?
 
 #### 1. Functions and variables exist in the same namespace.
 #### 2. Macros are maintained in a hash called 'macs in the main namespace.
-#### 3. General [tail call elimination](https://en.wikipedia.org/wiki/Tail_call) allowing recursion without stack overflow in some cases.
+#### 3. Loop construct (see above under 'no tail-call optimisation')
 #### 4. 'if like Arc:
 
 ```lisp
@@ -395,11 +414,11 @@ In this case, the regex matches an initial 'λ ; there is no constraint however 
 
 Once the 'dox system is bootstrapped, any further use of 'mac or 'def will create documentation.
 
-Any comments at the start of the form body will be used to generate help text. For example:
+Comments immediately prior to the start of the form body will be used to generate help text. For example:
 
 ```lisp
-nydp > (def foo (x y)
-         ; return the foo of x and y
+nydp > ; return the foo of x and y
+       (def foo (x y)
          (* x y))
 
 nydp > (dox foo)
