@@ -143,12 +143,6 @@
                         (firstn (- n 1)
                                 (cdr things)))))
 
-(def nthcdr (n things)
-  ; returns the nth cdr of the list 'things
-  (if (> n 0)
-      (nthcdr (- n 1) (cdr things))
-      things))
-
 ;; return a new list which is the concatenation of all the given lists
 ;; 'things is a list
 ;; 'more-thingses is a list of lists

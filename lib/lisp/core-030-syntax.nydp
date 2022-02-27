@@ -371,11 +371,19 @@ scoping, assignment, anonymous functions and more...")
 (mac aif (expr . body)
   `(ifv it ,expr ,@body))
 
+;; returns the nth cdr of the list 'things
+(def nthcdr (n things)
+  (loop (> n 0)
+    (= things (cdr things)
+      n (- n 1)))
+  things)
+
 ;; returns the n-th item in the list 'things
 (def nth (n things)
-  (if (eq? n 0)
-      (car things)
-      (nth (- n 1) (cdr things))))
+  (loop (> n 0)
+    (= things (cdr things)
+      n (- n 1)))
+  (car things))
 
 (def destructure/with (var args n)
   ; provides the argument expression to 'with when
