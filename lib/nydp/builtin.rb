@@ -1,10 +1,17 @@
 module Nydp::Builtin
   module Base
+    @@reraise_errors = []
     include Nydp::Helper
+
+    def self.ignore_errors kla
+      @@reraise_errors << kla
+    end
+
+    ignore_errors Nydp::Error
 
     def handle_error e, *args
       case e
-      when Nydp::Error
+      when *@@reraise_errors
         raise e
       else
         arg_msg = args.map { |a| "  #{a._nydp_inspect}"}.join("\n")
