@@ -59,8 +59,8 @@
                   (car body)
                   `(fn ,args ,@body))
     (w/uniq dox-item
-      `(let ,dox-item (car:dox-lookup ',event)
-         (if (no ,dox-item) (error "unknown hook ~(just ',event)"))
+      `(let ,dox-item (or (car:dox-lookup ',event)
+                          (dox-add-doc ',event 'hook))
          (add-hook ',event ,hookfn)
          (hash-cons ,dox-item 'hooks
             { src      ',hookfn
