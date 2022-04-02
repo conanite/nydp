@@ -9,8 +9,7 @@ module Nydp
       @nydp_cause = nydp_cause
     end
 
-    def cause
-      @nydp_cause || super
-    end
+    def nydp_type ; :error               ; end
+    def cause     ; @nydp_cause || super ; end
   end
 end
