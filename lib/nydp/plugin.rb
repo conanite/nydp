@@ -2,6 +2,7 @@ require 'digest'
 
 module Nydp
   PLUGINS = []
+  COMMENT_RX = /^\s*# /
 
   module PluginHelper
     def base_path ; "" ; end # override this to provide common prefix for plugin filenames
@@ -16,6 +17,26 @@ module Nydp
     end
   end
 
+  def self.nydp_from_backtrace str
+    file, line, meth = str.split(/:/)
+    line = line.to_i - 1
+    filepath = File.expand_path file
+
+    if filepath.start_with? base_gen_path
+      code = File.read filepath
+      lines = code.split /\n/
+
+      while line > 0 && !(lines[line] =~ COMMENT_RX)
+        line = line - 1
+      end
+
+      return lines[line].sub COMMENT_RX, ''
+    end
+
+    str
+  end
+
+  def self.base_gen_path   ; File.expand_path("rubycode")        ; end
   def self.plug_in  plugin ; PLUGINS << plugin                   ; end
   def self.load_rake_tasks ; PLUGINS.each &:load_rake_tasks      ; end
   def self.setup        ns ; PLUGINS.each { |plg| plg.setup ns } ; end
@@ -34,7 +55,7 @@ module Nydp
   def self.all_files ; PLUGINS.each_with_object([]) { |plg, list|  plg.loadfiles.each { |f| list << f } } ; end
 
   def self.build_nydp &block
-    rc = File.expand_path("rubycode")
+    rc = base_gen_path
     $LOAD_PATH.unshift rc unless $LOAD_PATH.include?(rc)
 
     digest   = Digest::SHA256.hexdigest(all_files.map { |f| f.read }.join("\n"))

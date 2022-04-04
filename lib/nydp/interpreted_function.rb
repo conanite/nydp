@@ -5,19 +5,18 @@ require 'nydp/closure'
 module Nydp
   class Fn < Proc
     attr_accessor :src
-    def initialize src, &b
+    def initialize &b
       super &b
-      @src = src
     end
     def to_s
-      src
+      Nydp.nydp_from_backtrace(source_location.join(":"))
     end
     def container_class_name
       file, line = source_location
       [file.split(/\//).last, line].join(":")
     end
     def inspect
-      "<#{self.class.name}@#{container_class_name}:#{src}>"
+      Nydp.nydp_from_backtrace(source_location.join(":"))
     end
     def nydp_type
       :fn
@@ -71,9 +70,14 @@ module Nydp
         rubyargs = ""
       else
         rubyargs = "|#{rubyargs.join ","}|"
+        # rubyargs = "(#{rubyargs.join ","})"
       end
 
-      code = "#{indent}(Nydp::Fn.new(@@src_#{src_index}) {#{rubyargs}\n"
+      # code = "#{indent}(Nydp::Fn.new(@@src_#{src_index}) {#{rubyargs}\n"
+      code = "#{indent}# (fn #{arg_names} #{body.to_a.join(" ").gsub(/\n/, '\n')})\n"
+      code << "#{indent}(Nydp::Fn.new {#{rubyargs}\n"
+      # code << "#{indent}(Proc.new {#{rubyargs}\n"
+      # code = "(->#{rubyargs} {\n"
       if rest_arg
         code << "#{indent}  #{rest_arg} = #{rest_arg}._nydp_wrapper\n"
       end

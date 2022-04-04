@@ -123,7 +123,7 @@
   (cons (firstn n form)
         (map list (nthcdr n form))))
 
-(def pp/flatly (form)
+(def pp/flatly (form indent)
   (if (pair? form)
       (let special (hash-get pp/special-forms (car form))
         (if special
