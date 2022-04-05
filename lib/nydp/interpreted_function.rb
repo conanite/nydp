@@ -18,6 +18,9 @@ module Nydp
     def inspect
       Nydp.nydp_from_backtrace(source_location.join(":"))
     end
+    def src
+      Nydp.nydp_from_backtrace(source_location.join(":"))
+    end
     def nydp_type
       :fn
     end
