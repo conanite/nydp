@@ -30,13 +30,21 @@ module Nydp
         line = line - 1
       end
 
-      return lines[line].sub COMMENT_RX, ''
+      if (line >= 0 && (lines[line] =~ COMMENT_RX))
+        return ["# " + str.sub(base_gen_path + '/', ''), lines[line].sub(COMMENT_RX, '')].join("\n")
+      else
+        return str
+      end
     end
 
     str
   end
 
-  def self.base_gen_path   ; File.expand_path("rubycode")        ; end
+  def self.enhance_backtrace bt
+    bt.map { |s| nydp_from_backtrace s }
+  end
+
+  def self.base_gen_path   ; File.expand_path("rubycode/")       ; end
   def self.plug_in  plugin ; PLUGINS << plugin                   ; end
   def self.load_rake_tasks ; PLUGINS.each &:load_rake_tasks      ; end
   def self.setup        ns ; PLUGINS.each { |plg| plg.setup ns } ; end
