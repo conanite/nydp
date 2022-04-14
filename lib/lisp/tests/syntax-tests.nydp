@@ -13,6 +13,7 @@
    "expanding
 (colon-syntax || foo)
 with
+# NydpGenerated_D5FEA04F6E33706A6789A4F7BD15E937C3CFFAF5C16B89D54087F38BD4E594D1.rb:23
 (fn names ((orf (hash-get colon-syntax-overrides (car names)) default-colon-syntax) names))
 Irregular ': syntax: got (|| foo) : not prefix-syntax : in :foo"))
 

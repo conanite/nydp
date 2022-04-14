@@ -6,11 +6,11 @@ module Nydp
       name = Compiler.compile args.car, bindings, ns
       raise "can't assign to #{name._nydp_inspect} : expression was #{args}" unless name.respond_to?(:assign)
       value_expr = args.cdr.car
-      Assignment.new name, Compiler.compile(value_expr, bindings, ns), value_expr
+      Assignment.new name, Compiler.compile(value_expr, bindings, ns), args
     end
 
-    def initialize name, value, value_src
-      @name, @value, @value_src = name, value, value_src
+    def initialize name, value, src
+      @name, @value, @src = name, value, src
     end
 
     def lexical_reach n
@@ -18,11 +18,13 @@ module Nydp
     end
 
     def to_s
-      "(assign #{@name} #{@value_src._nydp_inspect})"
+      "(assign #{@src.car} #{@src.cdr.car})"
     end
 
     def compile_to_ruby indent, srcs, opts=nil
-      "#{indent}(#{@name.compile_to_ruby "", srcs} = #{@value.compile_to_ruby indent, srcs})"
+      "#{indent}# #{to_s.split(/\n/).join(' ')}\n" +
+        "#{indent}(#{@name.compile_to_ruby "", srcs} =\n" +
+        "#{indent}#{@value.compile_to_ruby indent, srcs})"
     end
 
     def inspect; to_s ; end

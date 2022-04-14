@@ -225,6 +225,10 @@
    (a b c 1 2 3 4 5 6 7)))
 
 (examples-for list/index-of
+  ("returns nil if thing is not found in an empty list"
+    (list/index-of 5 '())
+    nil)
+
   ("returns nil if thing is not found"
     (list/index-of 5 '(1 2 3 4))
     nil)
@@ -242,6 +246,10 @@
    2))
 
 (examples-for list/around-thing
+  ("returns nil,nil if item is not in the empty list"
+   (list/around-thing 6 '())
+   (nil nil))
+
   ("returns nil,nil if item is not in the list"
    (list/around-thing 6 '(1 2 3 4 5))
    (nil nil))
@@ -275,12 +283,24 @@
    (list/around nil '(a b c d e))
    (nil nil))
 
+  ("returns nil,nil if index is nil and list is empty"
+   (list/around nil '())
+   (nil nil))
+
   ("returns nil,nil if index is negative"
    (list/around -1 '(a b c d e))
    (nil nil))
 
+  ("returns nil,nil if index is negative and list is empty"
+   (list/around -1 '())
+   (nil nil))
+
   ("returns nil,nil if index is out of range"
    (list/around 10 '(a b c d e))
+   (nil nil))
+
+  ("returns nil,nil if index is out of range and list is empty"
+   (list/around 10 '())
    (nil nil))
 
   ("returns nil,nil if index is even slightly out of range"
@@ -290,6 +310,14 @@
   ("returns nil,next if index is zero"
    (list/around 0 '(a b c d e))
    (nil b))
+
+  ("returns nil,nil if index is zero and list is empty"
+   (list/around 0 '())
+   (nil nil))
+
+  ("returns nil,nil if index is one and list is empty"
+   (list/around 1 '())
+   (nil nil))
 
   ("returns prev,nil index is at the end of the list"
    (list/around 4 '(a b c d e))
