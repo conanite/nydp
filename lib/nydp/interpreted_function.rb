@@ -22,6 +22,12 @@ module Nydp
     def nydp_type
       :fn
     end
+
+    # def _nydp_call *args
+    #   call *args
+    # rescue => e
+    #   raise Nydp::Error, "error in #{src}"
+    # end
     alias _nydp_call call
   end
 
