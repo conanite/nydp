@@ -26,7 +26,7 @@ module Nydp
       puts "\n#{indent}Caused by:"
       handle_run_error e.cause, "#{indent}    "
     else
-      e.backtrace.each do |b|
+      Nydp.enhance_backtrace(e.backtrace).each do |b|
         puts "#{indent}#{b}"
       end
     end

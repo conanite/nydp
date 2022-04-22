@@ -9,11 +9,13 @@ class Nydp::Builtin::HandleError
     rescue Exception => e
       o = e
       msgs = []
+      traces = []
       while e
         msgs << e.message
+        traces << Nydp.enhance_backtrace(e.backtrace)
         e = e.cause
       end
-      res = handler.call msgs._nydp_wrapper
+      res = handler.call msgs._nydp_wrapper, traces._nydp_wrapper
     end
     res._nydp_wrapper
   end
