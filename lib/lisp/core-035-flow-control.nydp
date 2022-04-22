@@ -4,8 +4,8 @@
   ; executes 'body. If an error is raised, executes 'handler. Inside
   ; 'handler, the parameter 'errors is a list of error messages extracted from
   ; the sequence of errors that led here (Exception#cause in ruby or Throwable.getCause() in java)
-  `(handle-error (fn (errors) ,handler)
-                 (fn ()       ,@body)))
+  `(handle-error (fn (errors traces) ,handler)
+                 (fn ()              ,@body)))
 
 ;; executes 'body. Afterwards, executes 'protection.
 ;; 'protection is always executed even if there is an error.
