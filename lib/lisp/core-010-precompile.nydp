@@ -4,7 +4,7 @@
         (fn (names macfn expr)
             (cond macfn
                   (handle-error
-                   (fn (errors)
+                   (fn (errors traces)
                        (error "expanding" (inspect expr) "with" macfn))
                    (fn ()
                        (pre-compile-with names (apply macfn (cdr expr)))))

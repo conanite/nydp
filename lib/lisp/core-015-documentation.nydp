@@ -86,7 +86,7 @@
 
      (def dox-add-doc (name what texts args src etc)
        (handle-error
-        (fn (errors) (error "failed to add dox for " name " - " what))
+        (fn (errors traces) (error "failed to add dox for " name " - " what))
         (fn ()
             (cond (no etc)
                   (error (inspect name) " : please provide arguments (name what texts args src etc) where etc is a hash with at least keys (chapters plugin file)"))
