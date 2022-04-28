@@ -29,11 +29,20 @@ module Nydp
         ra = @expr.map { |e| e.compile_to_ruby "#{indent}  ", srcs}.to_a
         fn = ra.shift
 
+        src_expr = @expr.inspect.split(/\n/).join(' ')
+
+
+
         if ra.empty?
-          "#{indent}# #{@expr.inspect.split(/\n/).join(' ')}\n#{indent}#{fn}._nydp_call()"
+          "#{indent}  # #{src_expr}
+#{fn}.
+#{indent}  # #{src_expr}
+#{indent}  _nydp_call()"
         else
-          "#{indent}# #{@expr.inspect.split(/\n/).join(' ')}\n#{indent}#{fn}._nydp_call(
-#{ra.join(",\n")})"
+          "#{indent}  # #{src_expr}
+#{fn}.
+#{indent}  # #{src_expr}
+#{indent}  _nydp_call(#{ra.join(",\n")})"
         end
       end
 

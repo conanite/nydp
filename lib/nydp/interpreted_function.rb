@@ -48,7 +48,7 @@ module Nydp
         map { |expr| expr.compile_to_ruby("  ", srcs, cando: true) }.
         to_a.
         join("\n").
-        split(/\n/).
+        split(/\n/). # need join-split to separate out embedded newlines (TODO worry about newlines within literal strings?)
         map { |e| "#{indent}  #{e}" }.
         join("\n")
     end
