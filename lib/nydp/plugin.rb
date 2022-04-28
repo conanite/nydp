@@ -2,7 +2,7 @@ require 'digest'
 
 module Nydp
   PLUGINS = []
-  COMMENT_RX = /^\s*# /
+  COMMENT_RX = /^.*##> /
 
   module PluginHelper
     def base_path ; "" ; end # override this to provide common prefix for plugin filenames
@@ -31,7 +31,8 @@ module Nydp
       end
 
       if (line >= 0 && (lines[line] =~ COMMENT_RX))
-        return [(filepath.sub(base_gen_path + '/', '') + ":" + original_line), lines[line].sub(COMMENT_RX, '')].join("\n")
+        comment = lines[line].sub(COMMENT_RX, '')
+        return [(filepath.sub(base_gen_path + '/', '') + ":" + original_line), comment].join("\n")
       else
         return str
       end

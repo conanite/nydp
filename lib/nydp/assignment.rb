@@ -22,7 +22,7 @@ module Nydp
     end
 
     def compile_to_ruby indent, srcs, opts=nil
-      "#{indent}# #{to_s.split(/\n/).join(' ')}\n" +
+      "#{indent}##> #{to_s.split(/\n/).join('\n')}\n" +
         "#{indent}(#{@name.compile_to_ruby "", srcs} =\n" +
         "#{indent}#{@value.compile_to_ruby indent, srcs})"
     end

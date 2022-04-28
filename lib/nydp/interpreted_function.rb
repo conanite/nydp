@@ -78,7 +78,7 @@ module Nydp
       end
 
       # code = "#{indent}(Nydp::Fn.new(@@src_#{src_index}) {#{rubyargs}\n"
-      code = "#{indent}# (fn #{arg_names._nydp_inspect} #{body.to_a.map(&:_nydp_inspect).join(" ").gsub(/\n/, '\n')})\n"
+      code = "#{indent}##> (fn #{arg_names._nydp_inspect} #{body.to_a.map(&:_nydp_inspect).join(" ").gsub(/\n/, '\n')})\n"
       code << "#{indent}(Nydp::Fn.new {#{rubyargs}\n"
       # code << "#{indent}(Proc.new {#{rubyargs}\n"
       # code = "(->#{rubyargs} {\n"
