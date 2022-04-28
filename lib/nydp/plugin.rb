@@ -18,8 +18,8 @@ module Nydp
   end
 
   def self.nydp_from_backtrace str
-    file, line, meth = str.split(/:/)
-    line = line.to_i - 1
+    file, original_line, meth = str.split(/:/)
+    line = original_line.to_i - 1
     filepath = File.expand_path file
 
     if filepath.start_with? base_gen_path
@@ -31,7 +31,7 @@ module Nydp
       end
 
       if (line >= 0 && (lines[line] =~ COMMENT_RX))
-        return [(filepath.sub(base_gen_path + '/', '') + ":" + (line + 1).to_s), lines[line].sub(COMMENT_RX, '')].join("\n")
+        return [(filepath.sub(base_gen_path + '/', '') + ":" + original_line), lines[line].sub(COMMENT_RX, '')].join("\n")
       else
         return str
       end
