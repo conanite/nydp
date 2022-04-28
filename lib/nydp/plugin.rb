@@ -31,7 +31,7 @@ module Nydp
       end
 
       if (line >= 0 && (lines[line] =~ COMMENT_RX))
-        comment = lines[line].sub(COMMENT_RX, '')
+        comment = lines[line].sub(COMMENT_RX, '').gsub(/\\n/, "\n")
         return [(filepath.sub(base_gen_path + '/', '') + ":" + original_line), comment].join("\n")
       else
         return str
