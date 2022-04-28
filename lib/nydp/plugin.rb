@@ -19,7 +19,7 @@ module Nydp
 
   def self.nydp_from_backtrace str
     file, original_line, meth = str.split(/:/)
-    line = original_line.to_i - 1
+    line = original_line.to_i - 2 # -1 to convert from 1-based index to zero-based index ; -1 to start looking backwards from previous line
     filepath = File.expand_path file
 
     if filepath.start_with? base_gen_path
