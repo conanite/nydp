@@ -50,3 +50,11 @@ class Nydp::Builtin::HashSlice
     h.slice(*slice.to_a)
   end
 end
+
+class Nydp::Builtin::HashToArray
+  include Nydp::Helper, Nydp::Builtin::Base, Singleton
+
+  def builtin_call h
+    h.to_a._nydp_wrapper
+  end
+end

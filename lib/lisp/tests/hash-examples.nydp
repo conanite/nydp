@@ -27,6 +27,19 @@
   ("  t for a hash"    (hash? {a 1 b 2})       t  )
   ("nil for a symbol"  (hash? 'foo)            nil))
 
+(examples-for hash-to-array
+  ("returns empty list for empty hash"
+   (hash-to-array {})
+   ())
+
+  ("returns one-element list for single-element hash"
+   (hash-to-array { a 1})
+   ((a 1)))
+
+  ("returns a list of two-element lists"
+   (hash-to-array { a 1 b 2 c 3 })
+   ((a 1) (b 2) (c 3))))
+
 (examples-for hash-slice
   ("returns a new hash containing only the specified keys"
    (let h (hash-slice { a 1 b 2 c 3 d 4 } '(a b e f))
