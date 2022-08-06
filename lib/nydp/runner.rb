@@ -151,6 +151,7 @@ end
         self.class.const_get(cname)
 
       rescue LoadError => e
+        # compiled_expr    = compile_expr precompiled # TODO : delete line in #evaluate and uncomment this one
         fname = "rubycode/#{cname}.rb"
         txt   = mk_ruby_source src, precompiled, compiled_expr, cname
 
@@ -173,13 +174,9 @@ end
       raise Nydp::Error, "failed to eval #{compiled_expr._nydp_inspect} from src #{src._nydp_inspect}"
     end
 
-    def pre_compile expr
-      ns.apply :"pre-compile-new-expression", expr
-    end
-
     def evaluate expr, manifest=[]
-      precompiled = pre_compile(expr)
-      compiled    = compile_expr precompiled
+      precompiled = ns.apply :"pre-compile-new-expression", expr
+      compiled    = compile_expr precompiled # TODO : we don't need this step if the class already exists! Do it later only when we need it
       eval_compiled compiled, precompiled, expr, manifest
     end
   end

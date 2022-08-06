@@ -26,14 +26,23 @@ module Nydp
       end
 
       def normal_compile_to_ruby indent, srcs
-        ra = @expr.map { |e| e.compile_to_ruby "#{indent}  ", srcs}
+        ra = @expr.map { |e| e.compile_to_ruby "#{indent}  ", srcs}.to_a
         fn = ra.shift
 
+        src_expr = @expr.inspect.split(/\n/).join('\n')
+
+
+
         if ra.empty?
-          "#{indent}# #{@expr.inspect.split(/\n/).join(' ')}\n#{indent}#{fn}._nydp_call()"
+          "#{indent}  ##> #{src_expr}
+#{fn}.
+#{indent}  ##> #{src_expr}
+#{indent}  _nydp_call()"
         else
-          "#{indent}# #{@expr.inspect.split(/\n/).join(' ')}\n#{indent}#{fn}._nydp_call(
-#{ra.join(",\n")})"
+          "#{indent}  ##> #{src_expr}
+#{fn}.
+#{indent}  ##> #{src_expr}
+#{indent}  _nydp_call(#{ra.join(",\n")})"
         end
       end
 
@@ -150,7 +159,7 @@ module Nydp
       end
 
       def execute vm
-        i = @expr.cons_map { |x| x.execute(vm)}
+        i = @expr.map { |x| x.execute(vm)}
         i.car.invoke vm, i.cdr
 
 #        Invocation.sig @sig
@@ -466,7 +475,7 @@ module Nydp
     end
 
     def compile_to_ruby indent, srcs, opts=nil
-      ra = argument_instructions.map { |e| e.compile_to_ruby "#{indent}  ", srcs, cando: true }
+      ra = argument_instructions.map { |e| e.compile_to_ruby "#{indent}  ", srcs, cando: true }.to_a
       if ra.length == 1
         "#{indent}#{ra.shift}._nydp_call()"
       else
@@ -480,9 +489,9 @@ module Nydp
 
     def self.build expression, bindings, ns
       compiled   = Compiler.compile_each(expression, bindings, ns)
-      invocation_sig = compiled.map { |x| sig x }.join("_")
+      # invocation_sig = compiled.map { |x| sig x }.join("_")
 
-      cname  = "Invocation_#{invocation_sig}"
+      # cname  = "Invocation_#{invocation_sig}"
 
       # exists = Invocation::SIGS.include? "Nydp::Invocation::#{cname}"
       # if exists

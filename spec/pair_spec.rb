@@ -12,7 +12,7 @@ describe Nydp::Pair do
     it "behaves like ruby #map" do
       list = pair_list [1,2,3]
       mapped = list.map { |x| x * 2 }
-      expect(mapped).to eq [2,4,6]
+      expect(mapped).to eq pair_list([2,4,6])
     end
   end
 

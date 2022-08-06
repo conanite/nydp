@@ -63,7 +63,7 @@ module Nydp
     end
 
     def compile_to_ruby indent, srcs, opts=nil
-      "#{indent}# #{to_s.split(/\n/).join(' ')}\n" +
+      "#{indent}##> #{to_s.split(/\n/).join('\n')}\n" +
       "#{indent}while (#{condition.compile_to_ruby "", srcs})
 #{loop_body.compile_to_ruby(indent + "  ", srcs, cando: true)}
 #{indent}end"

@@ -66,15 +66,20 @@ class Nydp::Pair
     a.cdr
   end
 
-  def cons_map
+  def map
     a    = last = cons
     x    = self
-    while x
+    while (x.is_a? Nydp::Pair)
       last = last.cdr = cons(yield x.car)
       x    = x.cdr
     end
 
+    last.cdr = yield(x) unless x == nil
     a.cdr
+  end
+
+  def join str
+    to_a.join(str)
   end
 
   def compile_to_ruby indent, srcs, opts=nil
@@ -86,7 +91,6 @@ class Nydp::Pair
 
     if !x || (x.is_a?(Nydp::Literal) && !x.expression)
       "#{indent}list(" + a.join(", ") + ")"
-
     else
       "#{indent}Nydp::Pair.from_list([" + a.join(", ") + "], #{x.compile_to_ruby "", srcs})"
     end

@@ -2,7 +2,7 @@ require 'digest'
 
 module Nydp
   PLUGINS = []
-  COMMENT_RX = /^\s*# /
+  COMMENT_RX = /^.*##> /
 
   module PluginHelper
     def base_path ; "" ; end # override this to provide common prefix for plugin filenames
@@ -18,8 +18,8 @@ module Nydp
   end
 
   def self.nydp_from_backtrace str
-    file, line, meth = str.split(/:/)
-    line = line.to_i - 1
+    file, original_line, meth = str.split(/:/)
+    line = original_line.to_i - 2 # -1 to convert from 1-based index to zero-based index ; -1 to start looking backwards from previous line
     filepath = File.expand_path file
 
     if filepath.start_with? base_gen_path
@@ -31,7 +31,8 @@ module Nydp
       end
 
       if (line >= 0 && (lines[line] =~ COMMENT_RX))
-        return ["# " + str.sub(base_gen_path + '/', ''), lines[line].sub(COMMENT_RX, '')].join("\n")
+        comment = lines[line].sub(COMMENT_RX, '').gsub(/\\n/, "\n")
+        return [(filepath.sub(base_gen_path + '/', '') + ":" + original_line), comment].join("\n")
       else
         return str
       end

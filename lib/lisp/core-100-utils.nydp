@@ -48,12 +48,16 @@
 ; return a list containing all the elements of 'things, but with no duplicates
 (def uniqify (things) (reject (seen?) things))
 
+;; like 'group-by, but uses and returns the supplied 'h parameter which should be a hash instance
+(def group-by-h (f h things)
+  (returning h
+    (each thing things
+          (hash-cons h (f thing) thing))))
+
 ;; return a hash of 'things keyed by (f thing) for
 ;; each thing in 'things
 (def group-by (f things)
-  (returnlet hsh {}
-    (each thing things
-          (hash-cons hsh (f thing) thing))))
+  (group-by-h f {} things))
 
 (with (m2i λd(+ (* 12 d.year) (- d.month 1))
        i2m λi(date (/ i 12) (+ 1 (mod i 12)) 1))

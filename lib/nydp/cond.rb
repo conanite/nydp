@@ -22,11 +22,13 @@ module Nydp
 
     def compile_to_ruby indent, srcs, opts=nil
       if (!@when_false) || (@when_false.is_a?(Nydp::Literal) && !@when_false.expression)
-        "#{indent}if (#{@condition.compile_to_ruby "", srcs})
+        "#{indent}##> #{inspect.split(/\n/).join('\n')}
+#{indent}if (#{@condition.compile_to_ruby "", srcs})
 #{@when_true.compile_to_ruby(indent + "  ", srcs, cando: true)}
 #{indent}end"
       else
-        "#{indent}if (#{@condition.compile_to_ruby "", srcs})
+        "#{indent}##> #{inspect.split(/\n/).join('\n')}
+#{indent}if (#{@condition.compile_to_ruby "", srcs})
 #{@when_true.compile_to_ruby(indent + "  ", srcs, cando: true)}
 #{indent}else
 #{@when_false.compile_to_ruby(indent + "  ", srcs, cando: true)}
