@@ -24,8 +24,7 @@
 ;;
 (def hash-transform-values (f h pre)
   (returnlet newh {}
-    (map-hash λkvi(hash-set newh k (f k v i)))))
-
+    (map-hash λkvi(hash-set newh k (f k v i)) h)))
 
 ;; Return a new hash where keys are (map f things) and values are the corresponding things.
 ;; No attempt is made to avoid clobbering items. Use 'group-by if there are duplicate keys.

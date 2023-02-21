@@ -128,3 +128,9 @@
          (let hsh { (joinstr " " zi chi) 10 "yesterday" 11 }
            (list "hello world" (hash-get hsh "hello world") "yesterday" (hash-get hsh "yesterday"))))
    ("hello world" 10 "yesterday" 11)))
+
+(examples-for hash-transform-values
+  ("returns a new hash with the same keys as the given hash, where each corresponding value is transformed by the given transform function"
+   (let h { a 1 b 2 c 3 d 4 }
+     (to-list (hash-transform-values λkvi(* v v) h)))
+   ((a 1) (b 4) (c 9) (d 16))))
