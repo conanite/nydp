@@ -58,3 +58,14 @@
        (each ,kvar (hash-keys ,xs)
          (let ,vvar (hash-get ,xs ,kvar)
            ,@body)))))
+
+;; merge two hashes of the format k => (v0 v1...)
+;;
+;; example: h0 is { a (1 2) b (3 4) }, h1 is { a (2 5) c (6 7) }
+;;
+;; (hash/merge-lists h0 h1) will be: { a (1 2 5) b (3 4) c (6 7) }
+;;
+(def hash/merge-lists (h0 h1)
+  (returnlet h (hash-merge { } h0)
+    (each k (hash-keys h1)
+      (= h.,k (⋃ h.,k h1.,k)))))
