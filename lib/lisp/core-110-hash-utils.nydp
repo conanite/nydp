@@ -22,7 +22,7 @@
 ;; v, the value
 ;; i, the index
 ;;
-(def hash-transform-values (f h pre)
+(def hash-transform-values (f h)
   (returnlet newh {}
     (map-hash λkvi(hash-set newh k (f k v i)) h)))
 
