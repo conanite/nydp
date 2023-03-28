@@ -54,3 +54,9 @@
              "\nand args "        (inspect args)))
    (apply (string-eval-fn str arg-names)
           args)))
+
+;; if txt is not blank/empty, return concatenation of before, txt, after
+(def maybe-wrap-text (txt before after)
+  (if (nb txt)
+      (j before txt after)
+      txt))
