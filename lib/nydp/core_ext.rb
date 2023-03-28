@@ -4,6 +4,7 @@ class Object
   def _nydp_keys      ; []      ; end
   def _nydp_wrapper         ; self          ; end
   def _nydp_inspect         ; inspect       ; end
+  def _nydp_to_s            ; to_s          ; end
   def _nydp_compact_inspect ; _nydp_inspect ; end
   # def _nydp_call      *args ; call *args    ; end
   def _nydp_callable    src ; self          ; end
@@ -27,6 +28,7 @@ class TrueClass
   def nydp_type       ; :truth ; end
   def _nydp_get     a ; self   ; end
   def _nydp_set  a, v ; self   ; end
+  def _nydp_to_s      ; "t"    ; end
   def compile_to_ruby indent, srcs, opts=nil ; "#{indent}true" ; end
 end
 
