@@ -47,8 +47,8 @@ module Nydp
     def day                y, m, d, w ; d ; end
     def week_day           y, m, d, w ; w ; end
 
-    def future?                       ; ruby_date > Date.today       ; end
-    def past?                         ; ruby_date < Date.today       ; end
+    def future?                    *_ ; ruby_date > ::Date.today     ; end
+    def past?                      *_ ; ruby_date < ::Date.today     ; end
 
     def last_year          y, m, d, w ; ruby_date.prev_year          ; end
     def next_year          y, m, d, w ; ruby_date.next_year          ; end
