@@ -62,7 +62,7 @@
 
 ;; finds the item before and the item after the given item in the  given list.
 ;; For example,
-;; (list/around '(a b c d e f) 'd) will return '(c e)
+;; (list/around λx(eq? x 'd) '(a b c d e f) ) will return '(c e)
 (def list/around-f (f things)
   (list/around
     (list/find-index f things)

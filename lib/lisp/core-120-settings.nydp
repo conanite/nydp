@@ -39,7 +39,11 @@
          (hash-set initial-settings ',(sym name) ',initial)
          (set-setting ,(sym name) ,initial))))
 
-;; get the value of the given setting. Raises an error if the setting is unknown
+;; get the value of the given setting. Raises an error if the setting is unknown.
+;; (note for testing: when using set-settings in ruby, make sure to quote string values, eg
+;;  set-settings "key.for.setting" => "this is the value".inspect
+;;  or alternatively,
+;;  set-settings "key.for.setting" => '"this is the value"'
 (def setting (name)
   (aif (hash-get settings (sym name))
        (on-err (error "can't get value of setting ~name : stored object is ~(inspect it)")
