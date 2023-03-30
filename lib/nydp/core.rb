@@ -33,6 +33,7 @@ module Nydp
       ns.assign(:regexp            , Nydp::Builtin::RubyWrap::Regexp.instance        )
       ns.assign("string/pad-left"  , Nydp::Builtin::RubyWrap::StringPadLeft.instance )
       ns.assign("string/pad-right" , Nydp::Builtin::RubyWrap::StringPadRight.instance)
+      ns.assign("string/force-encoding", Nydp::Builtin::RubyWrap::StringForceEncoding.instance)
       ns.assign("to-list"          , Nydp::Builtin::RubyWrap::ToList.instance        )
       ns.assign(:+                 , Nydp::Builtin::Plus.instance                    )
       ns.assign(:-                 , Nydp::Builtin::Minus.instance                   )
