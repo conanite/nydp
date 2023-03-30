@@ -363,6 +363,13 @@
              nil
              (dox/attrs (string-manipulation)))
 
+(dox-add-doc 'string/force-encoding
+             'def
+             '("send ruby's native #force_encoding to the string argument")
+             '(str encoding)
+             nil
+             (dox/attrs (string-manipulation)))
+
 (dox-add-doc 'string-replace
              'def
              '("replace 'pattern with 'replacement in 'str")
