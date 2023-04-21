@@ -163,7 +163,7 @@ end
       return nil if precompiled == nil
 
       digest  = Digest::SHA256.hexdigest(precompiled.inspect)
-      cname   = "NydpGenerated_#{digest.upcase}"
+      cname   = "#{GENERATED_CLASS_PREFIX}_#{digest.upcase}"
       kla     = mk_ruby_class src, precompiled, compiled_expr, cname
 
       manifest << cname
