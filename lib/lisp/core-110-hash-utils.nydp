@@ -26,12 +26,22 @@
   (returnlet newh {}
     (map-hash λkvi(hash-set newh k (f k v i)) h)))
 
-;; Return a new hash where keys are (map f things) and values are the corresponding things.
-;; No attempt is made to avoid clobbering items. Use 'group-by if there are duplicate keys.
-(def hashify (f things)
+;; Return a new hash where keys are (map f things) and corresponding values are (map g things).
+;; No attempt is made to avoid clobbering items. Use 'group-by instead, if there are duplicate keys.
+;;
+;; example: (hashify &firstname x1 people) returns { "johann" <bach record> "ludwig" <beethoven record> }
+;;
+;; reverse: (hashify x1 &firstname people) returns { <bach record> "johann" <beethoven record> "ludwig" }
+;;
+;; example: (hashify &firstname &lastname people) returns { "johann" "bach" "ludwig" "van beethoven" }
+;;
+;; example: (hashify &born &lastname people) returns { 1685 "bach" 1770 "van beethoven" }
+;;
+;; reverse example: (hashify &lastname &born  people) returns { "bach" 1685 "van beethoven" 1770 }
+(def hashify (f g things)
   (returnlet hsh {}
              (each thing things
-                   (hash-set hsh (f thing) thing))))
+                   (hash-set hsh (f thing) (g thing)))))
 
 ;; like 'group-by, except 'f returns multiple items, each of which
 ;; is used to key the thing in question
