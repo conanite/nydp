@@ -14,7 +14,9 @@
 ;; returning more code
 (mac prefix-list (prefix list)
   (let handler (find-prefix-rule prefix)
-    (and handler (handler prefix list))))
+    (if handler
+        (handler prefix list)
+        (error "unknown prefix-list syntax : ~(inspect prefix)"))))
 
 ;; define a macro to process a prefix-list where the prefix matches the given regex
 ;; param: 'regex is the regex which should match the list prefix
