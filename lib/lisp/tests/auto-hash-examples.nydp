@@ -2,4 +2,9 @@
   ("builds a hash from the existing lexical context"
    (with (a 1 b 2 c 3)
          (to-string (auto-hash a b c)))
-   "{:a=>1, :b=>2, :c=>3}"))
+   "{:a=>1, :b=>2, :c=>3}")
+
+  ("builds a hash using # prefix-syntax"
+   (with (d 2 e 4 f 6)
+         (to-string #(d e f)))
+   "{:d=>2, :e=>4, :f=>6}"))

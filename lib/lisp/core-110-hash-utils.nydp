@@ -9,6 +9,11 @@
 (mac auto-hash names
   `(brace-list ,@(flatten:map λn(list n n) names)))
 
+;; allows #(a b c) as shortcut for (auto-hash a b c)
+;; which is itself a shortcut for { a a b b c c }
+(define-prefix-list-macro "#" no-vars keys
+  `(auto-hash ,@keys))
+
 ;; like 'map, but for a hash instead of a list ; provided function 'f takes three arguments,
 ;; a key, the corresponding value from the given hash, and the index of the item in the list
 (def map-hash (f h pre)
@@ -65,6 +70,8 @@
 ;;
 ;; (hash/merge-lists h0 h1) will be: { a (1 2 5) b (3 4) c (6 7) }
 ;;
+;; Uses set-union when merging lists, so merged lists
+;; contain no duplicates.
 (def hash/merge-lists (h0 h1)
   (returnlet h (hash-merge { } h0)
     (each k (hash-keys h1)
