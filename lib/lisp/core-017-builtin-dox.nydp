@@ -321,6 +321,15 @@
              nil
              (dox/attrs (math)))
 
+(dox-add-doc 'rng
+             'def
+             '("return a random number generator ; with no args, uses a random seed."
+               "with 1 arg, seeds the rng with that number, for a reproducible sequence of random numbers."
+               "the returned rng is a function which can be called like (rand) ; eg. (let r (rng) (list (r) (r) (r))) ; returns a list of 3 random numbers")
+             'args
+             nil
+             (dox/attrs (math)))
+
 (dox-add-doc 'random-string
              'def
              '("return a random string of length 'len (default 10)")

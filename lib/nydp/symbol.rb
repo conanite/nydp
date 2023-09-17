@@ -52,6 +52,7 @@ class Nydp::Symbol
   def assign value, _=nil ; @value = value           ; end
 
   def ns_assign ns, value
+    value.is_named(@name) if value.respond_to?(:is_named)
     ns.send(:"#{ruby_name}=", value)
   end
 

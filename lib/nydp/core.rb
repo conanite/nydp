@@ -52,6 +52,7 @@ module Nydp
       ns.assign(:PI                , Math::PI                                        )
       ns.assign(:"π"               , Math::PI                                        )
       ns.assign(:rand              , Nydp::Builtin::Rand.instance                    )
+      ns.assign(:rng               , Nydp::Builtin::RNG.instance                     )
       ns.assign(:sort              , Nydp::Builtin::Sort.instance                    )
       ns.assign(:abs               , Nydp::Builtin::Abs.instance                     )
       ns.assign(:sym               , Nydp::Builtin::Sym.instance                     )

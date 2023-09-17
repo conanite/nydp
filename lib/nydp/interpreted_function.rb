@@ -16,13 +16,17 @@ module Nydp
       [file.split(/\//).last, line].join(":")
     end
     def inspect
-      Nydp.nydp_from_backtrace(source_location.join(":"))
+      [@name, Nydp.nydp_from_backtrace(source_location.join(":"))].compact.join(" : ")
     end
     def src
       Nydp.nydp_from_backtrace(source_location.join(":"))
     end
     def nydp_type
       :fn
+    end
+
+    def is_named name
+      @name = name
     end
 
     alias _nydp_call call

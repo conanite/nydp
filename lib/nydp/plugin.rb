@@ -3,6 +3,7 @@ require 'digest'
 module Nydp
   PLUGINS = []
   COMMENT_RX = /^.*##> /
+  GENERATED_CLASS_PREFIX_REGEXP = /#{Nydp::GENERATED_CLASS_PREFIX}/
 
   module PluginHelper
     def base_path ; "" ; end # override this to provide common prefix for plugin filenames
@@ -22,7 +23,7 @@ module Nydp
     line = original_line.to_i - 2 # -1 to convert from 1-based index to zero-based index ; -1 to start looking backwards from previous line
     filepath = File.expand_path file
 
-    if filepath.start_with? base_gen_path
+    if filepath =~ Nydp::GENERATED_CLASS_PREFIX_REGEXP
       code = File.read filepath
       lines = code.split /\n/
 

@@ -2,6 +2,8 @@ require 'date'
 require 'set'
 
 module Nydp
+  GENERATED_CLASS_PREFIX = "NydpGenerated"
+
   class << self
     attr_accessor :logger # set this if you plan on using 'log
   end
