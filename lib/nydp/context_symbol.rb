@@ -39,7 +39,7 @@ module Nydp
         end
 
         def value ctx
-          ctx#{getctx}.#{at_index} || Nydp::NIL
+          ctx#{getctx}.#{at_index} || nil
         rescue
           raise "failed looking up \#{@name._nydp_inspect} (\#{@name.class.name}) : lookup expression was ctx#{getctx}.#{at_index}"
         end

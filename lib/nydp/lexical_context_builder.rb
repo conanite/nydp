@@ -103,7 +103,7 @@ module Nydp::LexicalContextBuilder
       proper = arg_names.proper?
     else
       size   = 0
-      proper = Nydp::NIL.is? arg_names
+      proper = (!arg_names)
     end
     const_get(proper ? :"B_#{size}" : :"B_#{size}_Rest")
   end

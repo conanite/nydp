@@ -2,8 +2,8 @@ class Nydp::Builtin::TypeOf
   include Nydp::Builtin::Base, Singleton
 
   def builtin_call arg
-    if Nydp::NIL.is?(arg)
-      arg
+    if arg == nil
+      nil
     elsif arg.respond_to?(:nydp_type)
       arg.nydp_type.to_sym
     elsif arg.is_a? Numeric

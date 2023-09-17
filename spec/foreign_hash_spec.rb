@@ -31,7 +31,7 @@ describe ::Hash do
       it "converts ruby nil to nydp value" do
         a = Nydp::Builtin::HashGet.instance.call ahash, :keysym
 
-        expect(a).to eq Nydp::NIL
+        expect(a).to eq nil
       end
 
       it "converts ruby true to nydp value" do
@@ -39,7 +39,7 @@ describe ::Hash do
 
         a = Nydp::Builtin::HashGet.instance.call ahash, :keysym
 
-        expect(a).to eq Nydp::T
+        expect(a).to eq true
       end
     end
 
@@ -49,13 +49,13 @@ describe ::Hash do
 
         a = Nydp::Builtin::HashKeyPresent.instance.call ahash, :simon
 
-        expect(a).to eq Nydp::T
+        expect(a).to eq true
       end
 
       it "returns nil when key is absent" do
         a = Nydp::Builtin::HashKeyPresent.instance.call ahash, :simon
 
-        expect(a).to eq Nydp::NIL
+        expect(a).to eq nil
       end
     end
 

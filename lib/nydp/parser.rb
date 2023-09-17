@@ -3,11 +3,11 @@ module Nydp
     def sym name
       n = name.to_s.to_sym
       if n == :nil
-        Nydp::NIL
+        nil
       elsif n == :t
-        Nydp::T
+        true
       else
-        name.to_s.to_sym
+        n
       end
     end
 

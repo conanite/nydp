@@ -29,7 +29,7 @@ module Nydp
   end
 
   class InterpretedFunction
-    NIL = Nydp::NIL
+    NIL = nil
     include Helper
     extend Helper
 
@@ -111,7 +111,7 @@ module Nydp
       instructions << Nydp::Compiler.compile(body_forms.car, bindings, ns)
 
       rest = body_forms.cdr
-      if Nydp::NIL.is? rest
+      if !rest
         return Pair.from_list(instructions)
       else
         # PopArg is necessary because each expression pushes an arg onto the arg stack.

@@ -83,7 +83,7 @@ describe ::Hash do
 
         a = Nydp::Builtin::HashKeyPresent.instance.call h, k
 
-        expect(a).to eq Nydp::T
+        expect(a).to eq true
       end
 
       it "returns nil when key is absent" do
@@ -92,7 +92,7 @@ describe ::Hash do
 
         a = Nydp::Builtin::HashKeyPresent.instance.call h, k
 
-        expect(a).to eq Nydp::NIL
+        expect(a).to eq nil
       end
     end
 
@@ -109,7 +109,7 @@ describe ::Hash do
   end
 
   describe "get/set nil" do
-    let(:ahash) { Nydp::NIL }
+    let(:ahash) { nil }
 
     describe "hash set" do
       it "does nothing, returns its value" do
@@ -117,7 +117,7 @@ describe ::Hash do
         v    = "foobar"
         a    = Nydp::Builtin::HashSet.instance.call ahash, k, v
 
-        expect(ahash).     to eq Nydp::NIL
+        expect(ahash).     to eq nil
         expect(a).         to eq v
       end
     end
@@ -128,7 +128,7 @@ describe ::Hash do
 
         a = Nydp::Builtin::HashGet.instance.call ahash, k
 
-        expect(a).to eq Nydp::NIL
+        expect(a).to eq nil
       end
     end
   end

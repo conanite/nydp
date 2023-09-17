@@ -33,8 +33,8 @@ class Nydp::Symbol
   end
 
   def self.special name
-    return Nydp::NIL if name == :nil
-    return Nydp::T   if name == :t
+    return nil  if name == :nil
+    return true if name == :t
     nil
   end
 

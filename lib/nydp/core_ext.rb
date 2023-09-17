@@ -52,7 +52,7 @@ class NilClass
 end
 
 class FalseClass
-  def _nydp_wrapper ; Nydp::NIL ; end
+  def _nydp_wrapper ; nil ; end
 end
 
 class ::Symbol

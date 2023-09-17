@@ -1,5 +1,5 @@
 class Nydp::Pair
-  NIL = Nydp::NIL
+  NIL = nil
   include Nydp::Helper, Enumerable
   extend Nydp::Helper
 
@@ -24,7 +24,7 @@ class Nydp::Pair
   def &    other ; self.class.from_list((Set.new(self) & Array(other)).to_a)    ; end
   def |    other ; self.class.from_list((Set.new(self) | Array(other)).to_a)    ; end
   def -    other ; self.class.from_list((Set.new(self) - Array(other)).to_a)    ; end
-  def proper?    ; Nydp::NIL.is?(cdr) || (cdr.is_a?(Nydp::Pair) && cdr.proper?) ; end
+  def proper?    ; (!cdr) || (cdr.is_a?(Nydp::Pair) && cdr.proper?)             ; end
 
   # def method_missing m, *args
   #   to_a.send m, *args
@@ -74,7 +74,7 @@ class Nydp::Pair
       x    = x.cdr
     end
 
-    last.cdr = yield(x) unless x == nil
+    last.cdr = yield(x) if x
     a.cdr
   end
 
@@ -148,7 +148,7 @@ class Nydp::Pair
     end
   end
 
-  def self.from_list list, last=Nydp::NIL, n=list.size-1
+  def self.from_list list, last=nil, n=list.size-1
     while (n >= 0)
       last = cons(list[n], last)
       n -= 1
@@ -171,13 +171,13 @@ class Nydp::Pair
 
   def to_s
     if (car == :quote)
-      if Nydp::NIL.is? cdr.cdr
+      if !cdr.cdr
         "'#{cdr.car.to_s}"
       else
         "'#{cdr.to_s}"
       end
     elsif (car == :"brace-list")
-      if Nydp::NIL.is? cdr
+      if !cdr
         "{}"
       else
         "{ #{cdr.to_s_rest} }"
@@ -191,19 +191,19 @@ class Nydp::Pair
     elsif (car == :"prefix-list")
       "#{cdr.car.to_s}#{cdr.cdr.car.to_s}"
     elsif (car == :quasiquote)
-      if Nydp::NIL.is? cdr.cdr
+      if !cdr.cdr
         "`#{cdr.car.to_s}"
       else
         "`#{cdr.to_s}"
       end
     elsif (car == :unquote)
-      if Nydp::NIL.is? cdr.cdr
+      if !cdr.cdr
         ",#{cdr.car.to_s}"
       else
         ",#{cdr.to_s}"
       end
     elsif (car == :"unquote-splicing")
-      if Nydp::NIL.is? cdr.cdr
+      if !cdr.cdr
         ",@#{cdr.car.to_s}"
       else
         ",@#{cdr.to_s}"
@@ -214,7 +214,7 @@ class Nydp::Pair
   end
 
   def to_s_car
-    if (car == nil)
+    if (!car)
       "nil"
     elsif car.is_a?(String)
       car.inspect
@@ -238,7 +238,7 @@ class Nydp::Pair
   def inspect_rest
     res = [car._nydp_inspect]
     it = cdr
-    while it && it != Nydp::NIL
+    while it
       if it.is_a?(self.class)
         res << it.car._nydp_inspect
         it = it.cdr
@@ -250,15 +250,4 @@ class Nydp::Pair
     end
     res.compact.join " "
   end
-
-  # def append thing
-  #   if Nydp::NIL.is? self.cdr
-  #     self.cdr = thing
-  #   elsif pair? self.cdr
-  #     self.cdr.append thing
-  #   else
-  #     raise "can't append #{thing} to list #{self} : cdr is #{self.cdr._nydp_inspect}"
-  #   end
-  #   self
-  # end
 end

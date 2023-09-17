@@ -32,11 +32,11 @@ module Nydp
     end
 
     def self.maybe_cons a, b
-      Nydp::NIL.is?(a) ? b : cons(a, b)
+      (a == nil) ? b : cons(a, b)
     end
 
     def self.compile_each expr, bindings, ns
-      if Nydp::NIL.is?(expr)
+      if expr == nil
         expr
       elsif pair?(expr)
         maybe_cons compile(expr.car, bindings, ns), compile_each(expr.cdr, bindings, ns)

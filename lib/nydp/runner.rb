@@ -79,7 +79,7 @@ module Nydp
 
     def compile_expr expr
       begin
-        Compiler.compile(expr, Nydp::NIL, ns)
+        Compiler.compile(expr, nil, ns)
       rescue StandardError => e
         raise Nydp::Error, "failed to compile #{expr._nydp_inspect}"
       end
@@ -160,7 +160,7 @@ end
     end
 
     def eval_compiled compiled_expr, precompiled, src, manifest
-      return nil if precompiled == nil
+      return nil unless precompiled
 
       digest  = Digest::SHA256.hexdigest(precompiled.inspect)
       cname   = "NydpGenerated_#{digest.upcase}"
@@ -196,7 +196,7 @@ end
 
     def run
       Nydp.apply_function ns, :"script-run", :"script-start", name
-      res = Nydp::NIL
+      res = nil
       begin
         while !@tokens.finished
           expr = @parser.expression(@tokens)

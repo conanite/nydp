@@ -28,7 +28,7 @@ describe Nydp::Pair do
     end
 
     it "is false for (nil) == nil" do
-      expect(Nydp::Pair.from_list([Nydp::NIL]) == Nydp::NIL).to eq false
+      expect(Nydp::Pair.from_list([nil]) == nil).to eq false
     end
 
     it "should be true for nested empty lists" do
