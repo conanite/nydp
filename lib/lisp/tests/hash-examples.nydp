@@ -40,6 +40,11 @@
    (hash-to-array { a 1 b 2 c 3 })
    ((a 1) (b 2) (c 3))))
 
+(examples-for map-hash
+  ("converts a hash to a list of objects"
+   (to-string:map-hash (fn (k v) { name k price v }) { a 1 b 2 c 3 })
+   "({:name=>:a, :price=>1} {:name=>:b, :price=>2} {:name=>:c, :price=>3})"))
+
 (examples-for hash-slice
   ("returns a new hash containing only the specified keys"
    (let h (hash-slice { a 1 b 2 c 3 d 4 } '(a b e f))
