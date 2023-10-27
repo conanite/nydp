@@ -43,25 +43,27 @@ module Nydp
   end
 
   def self.repl options={ }
-    toplevel do
-      launch_time      = Time.now
-      silent           = options.delete :silent
-      ns               = options.delete :ns
-      last_script_time = Time.now
-      puts "welcome to nydp #{options.inspect}" unless silent
-      reader = Nydp::ReadlineReader.new $stdin, "nydp > "
-      ns   ||= build_nydp do |script|
-        this_script_time = Time.now
-        puts "script #{script} time #{ms this_script_time, last_script_time}ms" if options[:verbose]
-        last_script_time = this_script_time
-      end
-      load_time = Time.now
-      puts "nydp v#{Nydp::VERSION} repl ready in #{ms(load_time, launch_time)}ms" unless silent
-      puts "^D to exit" unless silent
-      return if options[:exit]
-      Nydp::Runner.new(ns, reader, $stdout, "<stdin>").run
-      # Nydp::Invocation.whazzup
+    launch_time      = Time.now
+    silent           = options.delete :silent
+    ns               = options.delete :ns
+    last_script_time = Time.now
+    puts "welcome to nydp #{options.inspect}" unless silent
+    reader = Nydp::ReadlineReader.new $stdin, "nydp > "
+    ns   ||= build_nydp do |script|
+      this_script_time = Time.now
+      puts "script #{script} time #{ms this_script_time, last_script_time}ms" if options[:verbose]
+      last_script_time = this_script_time
     end
+    load_time = Time.now
+    puts "nydp v#{Nydp::VERSION} repl ready in #{ms(load_time, launch_time)}ms" unless silent
+    puts "^D to exit" unless silent
+    while !options[:exit]
+      toplevel do
+        Nydp::Runner.new(ns, reader, $stdout, "<stdin>").run
+        options[:exit] = true
+      end
+    end
+    # Nydp::Invocation.whazzup
   end
 
   def self.tests *options
