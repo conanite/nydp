@@ -32,3 +32,6 @@
 (define-prefix-list-macro "^λ.*" vars expr
   (let var-list (map sym (collect !empty? (cdr:string-split vars "")))
     `(fn ,var-list ,expr)))
+
+(define-prefix-list-macro "\~" vars expr
+  `(to-string ,expr))

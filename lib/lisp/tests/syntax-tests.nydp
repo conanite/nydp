@@ -37,3 +37,10 @@ Irregular ': syntax: got (|| foo) : not prefix-syntax : in :foo"))
   ("with two args, to be sure"
    (λpq(+ p (* p q)) 3 5)
    18))
+
+(examples-for tilde-prefix-expansion
+  ("tilde expands to to-string"
+   (with (a (to-string (date "2004-03-12"))
+          b ~(date "2004-03-12"))
+     (list a b))
+   ("2004-03-12" "2004-03-12")))
