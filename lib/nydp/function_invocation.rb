@@ -25,22 +25,27 @@ module Nydp
 
       def normal_compile_to_ruby indent, srcs
         ra = @expr.map { |e| e.compile_to_ruby "#{indent}  ", srcs}.to_a
+        fn_expr = @expr.first.to_s.inspect.gsub("\'", "\\\\'")
         fn = ra.shift
 
         src_expr = @expr.inspect.split(/\n/).join('\n')
 
-
-
         if ra.empty?
           "#{indent}  ##> #{src_expr}
-#{fn}.
-#{indent}  ##> #{src_expr}
-#{indent}  _nydp_call()"
+#{indent}  (begin ; #{fn}.
+#{indent}    ##> #{src_expr}
+#{indent}    _nydp_call()
+#{indent}   rescue CantCallNil => e
+#{indent}    (raise 'can\\'t call nil : #{fn_expr}')
+#{indent}   end)"
         else
           "#{indent}  ##> #{src_expr}
-#{fn}.
-#{indent}  ##> #{src_expr}
-#{indent}  _nydp_call(#{ra.join(",\n")})"
+#{indent}  (begin ; #{fn}.
+#{indent}    ##> #{src_expr}
+#{indent}    _nydp_call(#{ra.join(",\n")})
+#{indent}   rescue CantCallNil => e
+#{indent}    (raise 'can\\'t call nil : #{fn_expr}')
+#{indent}   end)"
         end
       end
 

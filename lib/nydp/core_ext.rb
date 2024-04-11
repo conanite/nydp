@@ -30,23 +30,25 @@ class TrueClass
   def compile_to_ruby indent, srcs, opts=nil ; "#{indent}true" ; end
 end
 
+class CantCallNil < NoMethodError
+end
+
 class NilClass
-  def car         ; self          ; end
-  def cdr         ; self          ; end
-  def size        ; 0             ; end
-  def is?   other ; self.equal? other  ; end
-  def isnt? other ; !self.equal? other ; end
-  def + other     ; other         ; end
-  def copy        ; self          ; end
-  def assign *_   ; self          ; end
-  def nydp_type   ; :nil          ; end
-  # def execute     vm ; self       ; end
-  def _nydp_get    a ; self       ; end
-  def _nydp_set a, v ; self       ; end
-  def &        other ; self             ; end
-  def |        other ; other            ; end
-  def compile_to_ruby indent, srcs, opts=nil ; "#{indent}nil"      ; end
-  def _nydp_callable src ; raise "can't apply nil : #{src}" ; end
+  def car            ; self               ; end
+  def cdr            ; self               ; end
+  def size           ; 0                  ; end
+  def is?      other ; self.equal? other  ; end
+  def isnt?    other ; !self.equal? other ; end
+  def +        other ; other              ; end
+  def copy           ; self               ; end
+  def assign      *_ ; self               ; end
+  def nydp_type      ; :nil               ; end
+  def _nydp_get    a ; self               ; end
+  def _nydp_set a, v ; self               ; end
+  def &        other ; self               ; end
+  def |        other ; other              ; end
+  def _nydp_call  *_ ; raise CantCallNil  ; end
+  def compile_to_ruby i, s, o=nil ; "#{i}nil"      ; end
 end
 
 class FalseClass
