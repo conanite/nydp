@@ -8,10 +8,6 @@ module Nydp
   #     # @loop_body, @condition = loop_body, cons(condition)
   #   end
 
-  #   def lexical_reach n
-  #     @loop_body.lexical_reach(n)
-  #   end
-
   #   def execute vm
   #     if vm.args.pop
   #       vm.push_ctx_instructions @condition
@@ -37,10 +33,6 @@ module Nydp
 
     def initialize cond, loop_body
       @condition, @loop_body = cond, loop_body
-    end
-
-    def lexical_reach n
-      [condition.lexical_reach(n), loop_body.lexical_reach(n)].max
     end
 
     def inspect

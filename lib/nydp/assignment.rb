@@ -13,10 +13,6 @@ module Nydp
       @name, @value, @src = name, value, src
     end
 
-    def lexical_reach n
-      [@name.lexical_reach(n), @value.lexical_reach(n)].max
-    end
-
     def to_s
       "(assign #{@src.car} #{@src.cdr.car})"
     end
@@ -28,11 +24,5 @@ module Nydp
     end
 
     def inspect; to_s ; end
-
-    def execute vm
-      @name.assign @value.execute(vm), vm.current_context
-    rescue
-      raise "assigning #{@value._nydp_inspect} to #{@name._nydp_inspect}"
-    end
   end
 end

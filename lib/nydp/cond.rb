@@ -8,10 +8,6 @@ module Nydp
       @condition, @when_true, @when_false = cond, when_true, when_false
     end
 
-    def lexical_reach n
-      [@condition.lexical_reach(n), @when_true.lexical_reach(n), @when_false.lexical_reach(n)].max
-    end
-
     def execute vm
       if (@condition.execute(vm))
         @when_true.execute(vm)
@@ -76,10 +72,6 @@ module Nydp
       @condition, @when_true, @when_false = cond, when_true, when_false
     end
 
-    def lexical_reach n
-      [@condition.lexical_reach(n), @when_true.lexical_reach(n), @when_false.lexical_reach(n)].max
-    end
-
     def inspect ; "cond:#{@condition._nydp_inspect}:#{@when_true._nydp_inspect}:#{@when_false._nydp_inspect}" ; end
     def to_s    ; "(cond #{@condition.to_s} #{@when_true.to_s} #{@when_false.to_s})" ; end
     # def compile_to_ruby indent
@@ -94,14 +86,6 @@ module Nydp
       else
         @when_false.execute(vm)
       end
-    end
-
-    def lexical_reach n
-      cr = @condition.lexical_reach(n)
-      ct = @when_true.lexical_reach(n)
-      cf = @when_false.lexical_reach(n)
-
-      [cr, ct, cf].max
     end
 
     def self.build cond, when_true, when_false

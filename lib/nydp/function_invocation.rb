@@ -79,11 +79,6 @@ module Nydp
         end
       end
 
-      # TODO: speed up compilation by writing custom #lexical_reach for sig-based subclasses (when you know which elements of #expr are lexical symbols)
-      def lexical_reach n
-        @expr.map { |x| x.lexical_reach n}.max
-      end
-
       def inspect ; "(" + @expr.map { |x| x._nydp_inspect }.join(' ') + ")" ; end
       def source  ; @source       ; end
       def to_s    ; source.to_s   ; end
@@ -93,10 +88,6 @@ module Nydp
   class FunctionInvocation
     extend Helper
     attr_accessor :function_instruction, :argument_instructions
-
-    def lexical_reach n
-      function_instruction.lexical_reach(n)
-    end
 
     def compile_to_ruby indent, srcs, opts=nil
       ra = argument_instructions.map { |e| e.compile_to_ruby "#{indent}  ", srcs, cando: true }.to_a

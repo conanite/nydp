@@ -39,10 +39,6 @@ module Nydp
 
     attr_accessor :arg_names, :body, :context_builder
 
-    def lexical_reach n
-      body.map { |b| b.lexical_reach(n - 1)  }.max
-    end
-
     def can_do?
       arg_names == nil
     end
@@ -100,10 +96,8 @@ module Nydp
       my_params = { }
       index_parameters arg_list, my_params
       body = compile_body body, cons(my_params, bindings), [], ns
-      reach = body.map { |b| b.lexical_reach(-1)  }.max
 
-      ifn_klass     = reach >= 0 ? InterpretedFunctionWithClosure : InterpretedFunctionWithoutClosure
-      ifn           = ifn_klass.new
+      ifn           = InterpretedFunction.new
       ifn.arg_names = arg_list
       ifn.body      = body
 

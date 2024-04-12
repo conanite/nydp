@@ -6,7 +6,6 @@ class Object
   def _nydp_inspect         ; inspect       ; end
   def _nydp_to_s            ; to_s          ; end
   def _nydp_compact_inspect ; _nydp_inspect ; end
-  def lexical_reach       n ; n             ; end
   def to_ruby               ; self          ; end
   def compile_to_ruby indent, srcs, opts=nil ; "#{indent}#{inspect}" ; end
 end
