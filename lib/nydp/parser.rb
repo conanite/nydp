@@ -40,6 +40,8 @@ module Nydp
       return Pair.from_list [pfx] + syms.map { |s| parse_symbol s }
     end
 
+    SOLO_OPERATORS = [ /^@$/, /^\*$/, /^\.$/ ]
+
     SYMBOL_OPERATORS =
       [
         [ /\!/,     "bang-syntax"       ],
@@ -52,6 +54,7 @@ module Nydp
         [ /->/,     "arrow-syntax"      ],
         [ /[=][>]/, "rocket-syntax"     ],
         [ /@/,      "at-syntax"         ],
+        [ /\*/,     "asterisk-syntax"   ],
       ]
 
     def parse_symbol txt
@@ -69,9 +72,7 @@ module Nydp
         Pair.from_list [sym(:"unquote-splicing"), parse_symbol($1)]
       when /^,(.*)$/
         Pair.from_list [sym(:unquote), parse_symbol($1)]
-      when /^\.$/
-        sym txt
-      when /^@$/
+      when *SOLO_OPERATORS
         sym txt
       else
         SYMBOL_OPERATORS.each do |rgx, name|

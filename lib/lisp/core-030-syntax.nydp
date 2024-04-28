@@ -202,6 +202,13 @@ scoping, assignment, anonymous functions and more...")
 (mac hash-lookup (names)
   (build-hash-getters names nil))
 
+(mac prefix-asterisk-syntax (names)
+  (join-str "*" "*" names))
+
+(mac asterisk-syntax names
+  (if (eq? (car names) '||)
+      `(prefix-asterisk-syntax ,@(cdr names))))
+
 ;; parser expands a.b to (dot-syntax a b)
 (mac dot-syntax names
   `(hash-lookup ,names))
