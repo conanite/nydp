@@ -193,7 +193,7 @@ scoping, assignment, anonymous functions and more...")
   (if (no acc)
       (build-hash-getters (cdr names) (car names))
       names
-      (build-hash-getters (cdr names) `(hash-get ,acc ,(build-hash-get-key (car names))))
+      (build-hash-getters (cdr names) `(hash-get ,acc ,(build-hash-get-key (pre-compile (car names)))))
       acc))
 
 (def build-hash-lookup-from (root names)
@@ -202,12 +202,13 @@ scoping, assignment, anonymous functions and more...")
 (mac hash-lookup (names)
   (build-hash-getters names nil))
 
-(mac prefix-asterisk-syntax (names)
-  (join-str "*" "*" names))
+(mac prefix-asterisk-syntax names
+  (sym (join-str "" "*" names)))
 
 (mac asterisk-syntax names
   (if (eq? (car names) '||)
-      `(prefix-asterisk-syntax ,@(cdr names))))
+      `(prefix-asterisk-syntax ,@(cdr names))
+      (sym (join-str (car names) "*" (cdr name)))))
 
 ;; parser expands a.b to (dot-syntax a b)
 (mac dot-syntax names

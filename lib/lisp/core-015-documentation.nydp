@@ -220,7 +220,10 @@
 
 (hash-set macs 'mac
           (fn (name args . body)
-              (define-mac-expr name args (filter-forms (build-def-hash) body))))
+              (define-mac-expr
+                (pre-compile name)
+                args
+                (filter-forms (build-def-hash) body))))
 
 (dox-add-doc 'mac
              'mac
