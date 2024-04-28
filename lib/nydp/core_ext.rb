@@ -105,6 +105,8 @@ class ::String
   def as_method_name ; self.gsub(/-/, '_').to_sym ; end
   def nydp_type      ; :string                    ; end
   def _hex_ord       ; ord.to_s(16).rjust(2, '0') ; end
+  def car            ; self[0]                    ; end
+  def cdr            ; self[1..-1]                ; end
 end
 
 class ::Hash

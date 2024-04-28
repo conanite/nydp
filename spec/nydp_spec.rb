@@ -106,6 +106,15 @@ describe Nydp do
     end
   end
 
+  describe "car/cdr on String" do
+    it "returns the first character of a String" do
+      expect(run '(car "foobar")').to eq 'f'
+    end
+    it "returns all but the first character of a String" do
+      expect(run '(cdr "foobar")').to eq 'oobar'
+    end
+  end
+
   describe "eval" do
     it "should eval the given expression and return the result" do
       code = "(eval '(+ 2 (* 3 5)))"
