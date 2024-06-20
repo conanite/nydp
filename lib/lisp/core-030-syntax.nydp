@@ -218,6 +218,19 @@ scoping, assignment, anonymous functions and more...")
 (mac dollar-syntax (_ name)
   `(,name))
 
+(mac ifv (var expr . body)
+  `(let ,var ,expr
+     (if ,var
+         ,@(if (cddr body)
+               `(,(car body) (ifv ,var ,@(cdr body)))
+               body))))
+
+; like if, except the value of each condition is locally bound to the variable 'it
+; eg (aif (find thing) (show it))
+; source: arc.arc
+(mac aif (expr . body)
+  `(ifv it ,expr ,@body))
+
 (def dot-syntax-assignment (names value-expr)
   (let rnames (rev names)
     `(hash-set ,(build-hash-getters (rev (cdr rnames)) nil)
@@ -263,7 +276,25 @@ scoping, assignment, anonymous functions and more...")
           `(let ,destructuring-assign ,value
              ,@(destructuring-assigns name destructuring-assign))))
 
+(assign assignment-expression-builders (hash))
+
+(mac def-assignment-builder (name vars . builder)
+  `(hash-set assignment-expression-buiders ,name
+     (fn ,vars ,@builder)))
+
+(def special-assign-expr (name value)
+  (aif (hash-get assignment-expression-builders (car name))
+    (it name value)
+    (destructuring-assign name value)))
+
 ;; used internally by '= macro
+;;
+;; use 'def-assignment-builder to handle special cases
+;; for example, to handle (= (foo x) 42), you need
+;;
+;; (def-assignment-builder foo (n v)
+;;   (set-foo x 42)) ;; made-up example
+;;
 (def assign-expr (nv)
   (let name  (car nv)
     (let value (cadr nv)
@@ -278,7 +309,7 @@ scoping, assignment, anonymous functions and more...")
           (caris 'at-syntax name)
           `(hash-set @ ',(caddr name) ,value)
           (pair? name)
-          (destructuring-assign name value)
+          (special-assign-expr name value)
           (error "unknown assignment to place: " (inspect name))))))
 
 ;; generic assignment which unlike builtin 'assign, knows how to assign
@@ -365,19 +396,6 @@ scoping, assignment, anonymous functions and more...")
 ;; destructive with 'val, but you want 'val before it gets changed. Note that if 'val is mutated
 ;; (eg hash), the mutated value will be returned. See also 'returnlet
 (mac returning (val . body) (w/uniq retval `(returnlet ,retval ,val ,@body)))
-
-(mac ifv (var expr . body)
-  `(let ,var ,expr
-     (if ,var
-         ,@(if (cddr body)
-               `(,(car body) (ifv ,var ,@(cdr body)))
-               body))))
-
-; like if, except the value of each condition is locally bound to the variable 'it
-; eg (aif (find thing) (show it))
-; source: arc.arc
-(mac aif (expr . body)
-  `(ifv it ,expr ,@body))
 
 ;; returns the nth cdr of the list 'things
 (def nthcdr (n things)
