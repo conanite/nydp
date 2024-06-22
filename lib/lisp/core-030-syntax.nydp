@@ -231,15 +231,6 @@ scoping, assignment, anonymous functions and more...")
 (mac aif (expr . body)
   `(ifv it ,expr ,@body))
 
-(def dot-syntax-assignment (names value-expr)
-  (let rnames (rev names)
-    `(hash-set ,(build-hash-getters (rev (cdr rnames)) nil)
-               ,(build-hash-get-key:car rnames)
-               ,value-expr)))
-
-(def hash-get-assignment (lookup value)
-  `(hash-set ,@lookup ,value))
-
 (def ampersand-expression? (name)
   (and (pair? name)
        (caris 'ampersand-syntax (car name))))
@@ -256,7 +247,11 @@ scoping, assignment, anonymous functions and more...")
   (let k (cadr:cdar place)
     (let hsh (cadr place)
       (if (caris 'dot-syntax k)
-          (dot-syntax-assignment (cons hsh (cdr k)) value)
+          (special-assign-expr
+            (cons
+              'dot-syntax
+              (cons hsh (cdr k)))
+            value)
           `(hash-set ,hsh ',k ,value)))))
 
 ;; used internally by 'destructuring-assign
@@ -279,12 +274,24 @@ scoping, assignment, anonymous functions and more...")
 (assign assignment-expression-builders (hash))
 
 (mac def-assignment-builder (name vars . builder)
-  `(hash-set assignment-expression-buiders ,name
+  `(hash-set assignment-expression-builders ',name
      (fn ,vars ,@builder)))
+
+(def-assignment-builder dot-syntax (names value-expr)
+  (let rnames (rev names)
+    `(hash-set ,(build-hash-getters (rev (cdr rnames)) nil)
+               ,(build-hash-get-key:car rnames)
+               ,value-expr)))
+
+(def-assignment-builder hash-get (lookup value)
+  `(hash-set ,@lookup ,value))
+
+(def-assignment-builder at-syntax (name value)
+  `(hash-set @ ',(cadr name) ,value))
 
 (def special-assign-expr (name value)
   (aif (hash-get assignment-expression-builders (car name))
-    (it name value)
+    (it (cdr name) value)
     (destructuring-assign name value)))
 
 ;; used internally by '= macro
@@ -300,14 +307,8 @@ scoping, assignment, anonymous functions and more...")
     (let value (cadr nv)
       (if (isa 'symbol name)
           `(assign ,name ,value)
-          (caris 'dot-syntax name)
-          (dot-syntax-assignment (cdr name) value)
-          (caris 'hash-get name)
-          (hash-get-assignment (cdr name) value)
           (ampersand-expression? name)
           (ampersand-expression-assignment name value)
-          (caris 'at-syntax name)
-          `(hash-set @ ',(caddr name) ,value)
           (pair? name)
           (special-assign-expr name value)
           (error "unknown assignment to place: " (inspect name))))))
