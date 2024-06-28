@@ -46,6 +46,7 @@ class NilClass
   def _nydp_set a, v ; self               ; end
   def &        other ; self               ; end
   def |        other ; other              ; end
+  def threes         ; self               ; end
   def _nydp_call  *_ ; raise CantCallNil  ; end
   def compile_to_ruby i, s, o=nil ; "#{i}nil"      ; end
 end

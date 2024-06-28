@@ -30,6 +30,16 @@ class Nydp::Pair
   #   to_a.send m, *args
   # end
 
+  def threes
+    a = []
+    x = self
+    while (x.is_a? Nydp::Pair)
+      a << [x.car, x.cdr.car, x.cdr.cdr.car]
+      x = x.cdr.cdr.cdr
+    end
+    a
+  end
+
   # can't cache hash of symbol, breaks when unmarshalling
   def hash
     a    = 0

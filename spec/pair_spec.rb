@@ -16,6 +16,23 @@ describe Nydp::Pair do
     end
   end
 
+  describe :threes do
+    it "returns nil for nil" do
+      expect(nil.threes).to be_nil
+    end
+
+    it "groups elements in threes" do
+      expect(pair_list([:a                        ]).to_a).to eq [:a]
+      expect(pair_list([:a                        ]).threes).to eq [[:a, nil, nil]]
+      expect(pair_list([:a, :b                    ]).threes).to eq [[:a, :b, nil]]
+      expect(pair_list([:a, :b, :c                ]).threes).to eq [[:a, :b, :c]]
+      expect(pair_list([:a, :b, :c, :d            ]).threes).to eq [[:a, :b, :c], [:d, nil, nil]]
+      expect(pair_list([:a, :b, :c, :d, :e        ]).threes).to eq [[:a, :b, :c], [:d, :e, nil]]
+      expect(pair_list([:a, :b, :c, :d, :e, :f    ]).threes).to eq [[:a, :b, :c], [:d, :e, :f]]
+      expect(pair_list([:a, :b, :c, :d, :e, :f, :g]).threes).to eq [[:a, :b, :c], [:d, :e, :f], [:g, nil, nil]]
+    end
+  end
+
   describe :== do
     it "should be true for two empty lists" do
       expect(Nydp::Pair.new(Nydp::NIL, Nydp::NIL)).to eq Nydp::Pair.new(Nydp::NIL, Nydp::NIL)
