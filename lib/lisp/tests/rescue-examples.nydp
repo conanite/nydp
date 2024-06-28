@@ -1,0 +1,16 @@
+(examples-for rescue
+  ("does not catch the error if the exception class is not specified"
+   (on-err
+     "error was correctly ignored : ~errors"
+     (rescue
+       (/ 1 0)
+       nydp/error ne
+       "there was a nydp error"))
+   "error was correctly ignored : divided by 0")
+
+  ("catches the specified error"
+   (rescue
+     (/ 1 0)
+     zero-division-error zde
+     "there was a zero-division error ~(inspect zde)")
+   "there was a zero-division error #<ZeroDivisionError: divided by 0>")

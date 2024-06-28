@@ -1,5 +1,6 @@
 require 'nydp/cond'
 require 'nydp/loop'
+require 'nydp/rescue'
 require 'nydp/function_invocation'
 require 'nydp/interpreted_function'
 require 'nydp/literal'
@@ -56,6 +57,8 @@ module Nydp
         Assignment.build expression.cdr, bindings, ns
       elsif sym?(key, :fn)
         InterpretedFunction.build expression.cadr, expression.cddr, bindings, ns
+      elsif sym?(key, :rescue)
+        Rescue.build expression.cdr, bindings, ns
       else
         FunctionInvocation.build expression, bindings, ns
       end

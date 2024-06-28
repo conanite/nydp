@@ -3,11 +3,11 @@ module Nydp::Builtin
     @@reraise_errors = []
     include Nydp::Helper
 
-    def self.ignore_errors kla
-      @@reraise_errors << kla
+    def self.ignore_errors *kla
+      @@reraise_errors.concat kla
     end
 
-    ignore_errors Nydp::Error
+    ignore_errors Nydp::Error, ZeroDivisionError
 
     def handle_error e, *args
       case e

@@ -24,7 +24,10 @@ module Nydp
     puts "#{indent}#{e.class.name}"
     puts "#{indent_message indent, e.message}"
     if e.cause
-      puts "#{indent}#{e.backtrace.first}"
+      puts "#{indent}#{e.backtrace[0]}"
+      puts "#{indent}#{e.backtrace[1]}"
+      puts "#{indent}#{e.backtrace[2]}"
+      puts "#{indent}#{e.backtrace[3]}"
       puts "\n#{indent}Caused by:"
       handle_run_error e.cause, "#{indent}    "
     else
