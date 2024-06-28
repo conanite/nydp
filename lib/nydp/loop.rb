@@ -1,31 +1,4 @@
 module Nydp
-  # class LoopBodyInstruction
-  #   extend Helper
-  #   include Helper
-
-  #   def initialize loop_body, condition
-  #     @loop_body, @condition = loop_body, cons(Nydp::PopArg, cons(condition))
-  #     # @loop_body, @condition = loop_body, cons(condition)
-  #   end
-
-  #   def execute vm
-  #     if vm.args.pop
-  #       vm.push_ctx_instructions @condition
-  #       @loop_body.execute vm
-  #     else
-  #       vm.push_arg nil
-  #     end
-  #   end
-
-  #   def inspect
-  #     "loop_body:#{@loop_body._nydp_inspect}"
-  #   end
-
-  #   def to_s
-  #     "#{@loop_body.to_s}"
-  #   end
-  # end
-
   class Loop
     extend Helper
     include Helper

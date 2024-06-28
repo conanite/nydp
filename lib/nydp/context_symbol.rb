@@ -1,4 +1,5 @@
 module Nydp
+  # TODO we only need #compile_to_ruby on ContextSymbol directly, no class generation needed
   class ContextSymbol
     def self.const_missing const
       if const.to_s =~ /^ContextSymbol_\d+_\d+$/

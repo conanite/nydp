@@ -15,7 +15,6 @@ module Nydp
     end
 
     def self.compile_expr expression, bindings, ns
-      # if expression.is_a? Nydp::Symbol
       if expression.is_a? ::Symbol
         SymbolLookup.build expression, bindings, ns
       elsif literal? expression
