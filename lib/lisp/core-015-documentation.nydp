@@ -5,19 +5,25 @@
 (def fetch-and-clear-comments ()
   ((fn (c) (assign comments nil) c) (rev comments)))
 
-(def filter-comments (form acc)
-  (if (no form)
-      (rev acc)
-      (pair? form)
-      (filter-comments (cdr form)
-                       (if (if (pair? (car form))
-                               (eq? (caar form)
-                                    'comment))
-                           acc
-                           (cons (filter-comments (car form)
-                                                  nil)
-                                 acc)))
-      form))
+(def filter-comments-helper-0 (form acc)
+  (loop (pair? form)
+        ((fn nil
+           (if (if (pair? (car form))
+                   (eq? (caar form) 'comment))
+               nil
+               (assign acc
+                 (cdr-set acc
+                   (cons (filter-comments (car form))))))
+           (assign form (cdr form)))))
+  (if form
+      (cdr-set acc form)))
+
+(def filter-comments-helper-1 (form acc)
+  (filter-comments-helper-0 form acc)
+  (cdr acc))
+
+(def filter-comments (form)
+  (filter-comments-helper-1 form (cons)))
 
 (hash-set macs 'do
           (fn forms

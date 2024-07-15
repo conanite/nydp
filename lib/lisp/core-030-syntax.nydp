@@ -381,13 +381,16 @@ scoping, assignment, anonymous functions and more...")
 ;; interprets "{ }" as new hash
 (mac brace-list-empty () '(hash))
 
-;; parser expands { foo bar } to (brace-list foo bar)
-(mac brace-list args
+(mac brace-list-no-comments args
   (if (no args)
       `(brace-list-empty)
       (no (cdr args))
       `(brace-list-mono ,(car args))
       (brace-list-build-hash args)))
+
+;; parser expands { foo bar } to (brace-list foo bar)
+(mac brace-list args
+  `(brace-list-no-comments ,@(filter-comments args)))
 
 ;; stores ,val in ,var, executes ,@body, returns ,var. Saves a line of code at the end of
 ;; 'let. If 'body assigns to 'var, the assigned value of 'var will be returned. See also 'returning

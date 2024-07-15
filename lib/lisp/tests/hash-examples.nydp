@@ -131,6 +131,14 @@
      (list 'foo hsh.foo 'bar hsh.bar))
    (foo 1 bar 2))
 
+  ("build a hash table from brace-list syntax, ignoring comments"
+   (let hsh { foo 1 ; foo is going to be one
+              bar 2 ; bar is going to be two
+              ; there are no other elements
+              }
+     (list 'foo hsh.foo 'bar hsh.bar))
+   (foo 1 bar 2))
+
   ("single-item brace list is just the thing itself"
    (let zi 10 "finds the ~{zi}th item")
    "finds the 10th item")

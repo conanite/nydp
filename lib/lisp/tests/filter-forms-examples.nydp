@@ -40,8 +40,6 @@
     ((push foo bar) (more macaroni) (and cheese))
     (let x 1 (drive faster) (finish cheese))))
 
-
-
   ("find no comments"
    (hash-values (filter-forms { comment nil } '((this) (that))))
    (nil ((this) (that))))
@@ -62,23 +60,27 @@
 
 (examples-for filter-comments
   ("returns nil for nil"
-   (filter-comments nil nil)
+   (filter-comments nil)
    nil)
 
   ("returns atom for atom"
-   (filter-comments 12 nil)
+   (filter-comments 12)
    12)
 
   ("returns list for list"
-   (filter-comments '(a b c d) nil)
+   (filter-comments '(a b c d))
    (a b c d))
 
+  ("leaves uncommented nested improper lists unchanged"
+   (filter-comments '(fn (a b . c) d (e f . g)))
+   (fn (a b . c) d (e f . g)))
+
   ("returns list without comment for list with comment"
-   (filter-comments '(a b (comment "hahaha") c d) nil)
+   (filter-comments '(a b (comment "hahaha") c d))
    (a b c d))
 
   ("returns nothing for comment"
-   (filter-comments '((comment "hahaha")) nil)
+   (filter-comments '((comment "hahaha")))
    nil)
 
   ("weeds out nested comments"
