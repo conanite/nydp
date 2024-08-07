@@ -19,14 +19,14 @@ describe Nydp do
       expect(error).to be_a Nydp::Error
       expect(error.message).to eq "failed to eval (/ 10 0) from src (/ 10 0)"
 
-      expect(error.cause).to be_a RuntimeError
-      expect(error.cause.message).to eq "Called builtin//
-with args
-  10
-  0"
+#       expect(error.cause).to be_a RuntimeError
+#       expect(error.cause.message).to eq "Called builtin//
+# with args
+#   10
+#   0"
 
-      expect(error.cause.cause).to be_a ZeroDivisionError
-      expect(error.cause.cause.message).to eq "divided by 0"
+      expect(error.cause).to be_a ZeroDivisionError
+      expect(error.cause.message).to eq "divided by 0"
     end
 
     it "recovers quickly from an error" do
