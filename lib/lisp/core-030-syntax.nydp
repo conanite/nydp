@@ -334,8 +334,8 @@ scoping, assignment, anonymous functions and more...")
      ,@body) nil))
 
 ;; quiet assignment ; like =, but expression returns nil
-(mac #= (name value)
-  `(do (= ,name ,value) nil))
+(mac #= name-value-pairs
+  `(do (= ,@name-value-pairs) nil))
 
 ;; increment the value at 'place by 'inc (default 1)
 (mac ++ (place inc) `(= ,place (+ ,place ,(or inc 1))))
