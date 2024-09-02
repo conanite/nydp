@@ -1,3 +1,29 @@
+(examples-for >=
+  ("is true for a descending list of arguments"
+   (>= 5 5 4 4 3 3 2 2 1 1 0 0 -1 -1)
+   -1)
+
+  ("is true for a strictly descending list of arguments"
+   (>= 5 4 3 2 1 0 -1)
+   -1)
+
+  ("is nil for any nondescending list of arguments"
+   (>= 5 4 3 2 3 1 0 -1)
+   nil))
+
+(examples-for <=
+  ("is true for a ascending list of arguments"
+   (<= -1 -1 0 0 1 1 2 2 3 3 4 4 5 5)
+   5)
+
+  ("is true for a strictly ascending list of arguments"
+   (<= -1 0 1 2 3 4 5)
+   5)
+
+  ("is nil for any nonascending list of arguments"
+   (<= -1 0 3 1 2 3 4 5)
+   nil))
+
 (examples-for sqrt
   ("sqrt"
    (sqrt 6.25)

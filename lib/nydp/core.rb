@@ -41,6 +41,8 @@ module Nydp
       ns.assign(:/                 , Nydp::Builtin::Divide.instance                  )
       ns.assign(:>                 , Nydp::Builtin::GreaterThan.instance             )
       ns.assign(:<                 , Nydp::Builtin::LessThan.instance                )
+      ns.assign(:>=                , Nydp::Builtin::GtEq.instance                    )
+      ns.assign(:<=                , Nydp::Builtin::LtEq.instance                    )
       ns.assign(:eval              , Nydp::Builtin::Eval.new(ns)                     )
       ns.assign(:false             , false                                           )
       ns.assign(:hash              , Nydp::Builtin::Hash.instance                    )

@@ -1,11 +1,11 @@
-class Nydp::Builtin::LessThan
+class Nydp::Builtin::LtEq
   include Nydp::Builtin::Base, Singleton
 
-  def name ; "<" ; end
+  def name ; "<=" ; end
 
   def builtin_call arg, *args
     while !args.empty?
-      return nil unless args.first && (arg < args.first)
+      return nil unless args.first && (arg <= args.first)
       arg = args.shift
     end
     return arg
