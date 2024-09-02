@@ -71,6 +71,7 @@
       (= res (cdr-set res things))))
 
 (def collect (f things)
+  (if (no f) (error "collect : f is nil"))
   (let res (cons)
     (collect-helper f things res)
     (cdr res)))
@@ -86,6 +87,7 @@
 
 ;; return all the items in 'things for which 'f returns nil
 (def reject (f things)
+  (if (no f) (error "reject : f is nil"))
   (collect !f things))
 
 ;; repeatedly assigns an element of 'things to 'var,
@@ -112,6 +114,7 @@
 
 ;; used internally by 'reduce
 (def reduce-helper (f a things)
+  (if (no f) (error "reduce : f is nil"))
   (loop (pair? things)
         (= a      (f a (car things))
            things (cdr things)))
@@ -157,6 +160,7 @@
       (apply joinlists more-thingses)))
 
 (def detect-helper (f things found)
+  (if (no f) (error "detect : f is nil"))
   (loop (and (no found) (pair? things))
     (let it (car things)
       (= found (and (f it) (or it t))
@@ -243,27 +247,30 @@
                        (map m things)))
                list))
 
+;; if 'things is a list, true when f(thing) is non-nil for each thing in things
+;; if 'things is an atom, true when f(things) is non-nil
 (def all? (f things)
-  ; if 'things is a list, true when f(thing) is non-nil for each thing in things
-  ; if 'things is an atom, true when f(things) is non-nil
+  (if (no f) (error "all? : f is nil"))
   (if (pair? things)
       (and (f:car things)
            (or (no:cdr things)
                (all? f (cdr things))))
       (f things)))
 
+;; if 'things is a list, true when f(thing) is non-nil for at least one thing in things
+;; if 'things is an atom, true when f(thing) is non-nil
 (def any? (f things)
-  ; if 'things is a list, true when f(thing) is non-nil for at least one thing in things
-  ; if 'things is an atom, true when f(thing) is non-nil
+  (if (no f) (error "any? : f is nil"))
   (if (pair? things)
       (or (f:car things)
           (and (cdr things)
                (any? f (cdr things))))
       (f things)))
 
+;; if 'things is a list, true when f(thing) is nil for each thing in things
+;; if 'things is an atom, true when f(things) is nil
 (def none? (f things)
-  ; if 'things is a list, true when f(thing) is nil for each thing in things
-  ; if 'things is an atom, true when f(things) is nil
+  (if (no f) (error "none? : f is nil"))
   (if (pair? things)
       (and (no:f:car things)
            (none? f (cdr things)))
