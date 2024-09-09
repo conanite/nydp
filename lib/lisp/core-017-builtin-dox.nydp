@@ -405,7 +405,14 @@
              '("tries to convert 'thing to a list (for Hash instances, returns a list of two-element lists)")
              '(thing)
              nil
-             (dox/attrs (string-manipulation)))
+             (dox/attrs (list-manipulation)))
+
+(dox-add-doc 'to-native-list
+             'def
+             '("tries to convert 'thing to a native language array because sometimes you have no other choice")
+             '(thing)
+             nil
+             (dox/attrs (list-manipulation)))
 
 (dox-add-doc 'time
              'def
