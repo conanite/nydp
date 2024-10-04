@@ -1,4 +1,16 @@
 (examples-for >=
+  ("is nil if arg is nil"
+   (>= nil)
+   nil)
+
+  ("is nil if first arg is nil"
+   (>= nil 2)
+   nil)
+
+  ("is nil if other arg is nil"
+   (>= 3 nil 2)
+   nil)
+
   ("is true for a descending list of arguments"
    (>= 5 5 4 4 3 3 2 2 1 1 0 0 -1 -1)
    -1)
@@ -12,6 +24,18 @@
    nil))
 
 (examples-for <=
+  ("is nil if arg is nil"
+   (<= nil)
+   nil)
+
+  ("is nil if first arg is nil"
+   (<= nil 2)
+   nil)
+
+  ("is nil if other arg is nil"
+   (<= 2 nil 3)
+   nil)
+
   ("is true for a ascending list of arguments"
    (<= -1 -1 0 0 1 1 2 2 3 3 4 4 5 5)
    5)
