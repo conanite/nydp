@@ -94,7 +94,7 @@
        (handle-error
         (fn (errors traces)
           (error "failed to add dox for " name " - "
-            (inspect (hash what what texts texts args args src src etc etc))))
+            (inspect (hash 'what what 'texts texts 'args args 'src src 'etc etc))))
         (fn ()
             (cond (no etc)
                   (error (inspect name) " : missing etc argument, please provide a hash with at least keys (chapters plugin file)"))
