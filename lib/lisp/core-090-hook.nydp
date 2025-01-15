@@ -60,7 +60,7 @@
                   `(fn ,args ,@body))
     (w/uniq dox-item
       `(let ,dox-item (or (car:dox-lookup ',event)
-                          (dox-add-doc ',event 'hook "" args (dox/attrs)))
+                          (dox-add-doc ',event 'hook "" args '(on ,event ,args ,@body) (dox/attrs {})))
          (add-hook ',event ,hookfn)
          (hash-cons ,dox-item 'hooks
             { src      ',hookfn
