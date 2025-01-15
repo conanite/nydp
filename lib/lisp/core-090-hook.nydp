@@ -38,21 +38,21 @@
 ;; install a hook for a particular kind of event
 ;;
 ;; example
-;; (on transaction (account amount) (update account total (+ account.total amount)))
+;; (on new-transaction (account amount) (update account total (+ account.total amount)))
 ;;
-;; same as (add-hook 'transaction (fn (account amount) (update account total (+ account.total amount))))
+;; same as (add-hook 'new-transaction (fn (account amount) (update account total (+ account.total amount))))
 ;;
 ;; if 'body is a symbol and 'args is nil, for example
 ;;
-;; (on transaction () notify)
+;; (on new-transaction () notify)
 ;;
-;; 'notify must be a predefined function accepting any arguments to the 'transaction event ; the example is equivalent to
+;; 'notify must be a predefined function accepting any arguments to the 'new-transaction event ; the example is equivalent to
 ;;
-;; (add-hook 'transaction (fn args (apply notify args)))
+;; (add-hook 'new-transaction (fn args (apply notify args)))
 ;;
 ;; or more simply
 ;;
-;; (add-hook 'transaction (fn (account amount) (notify account amount)))
+;; (add-hook 'new-transaction (fn (account amount) (notify account amount)))
 ;;
 (mac on (event args . body)
   (let hookfn (if (isa 'symbol (car body))
