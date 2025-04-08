@@ -1,0 +1,12 @@
+(examples-for ns-lookup
+  ("car is car"
+   (apply
+     (ns-lookup 'car)
+     (list (list "yes" "no")))
+   "yes")
+
+  ("\"+\" is +"
+   (apply
+     (ns-lookup "+")
+     (list 38 4))
+   42))

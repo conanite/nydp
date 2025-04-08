@@ -50,6 +50,7 @@ module Nydp
       ns.assign(:apply             , Nydp::Builtin::Apply.instance                   )
       ns.assign(:date              , Nydp::Builtin::Date.instance                    )
       ns.assign(:error             , Nydp::Builtin::Error.instance                   )
+      ns.assign(:"ns-lookup"       , Nydp::Builtin::NsLookup.new(ns)                 )
       ns.assign(:parse             , Nydp::Builtin::Parse.instance                   )
       ns.assign(:p                 , Nydp::Builtin::Puts.instance                    )
       ns.assign(:PI                , Math::PI                                        )
